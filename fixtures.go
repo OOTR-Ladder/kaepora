@@ -1,39 +1,38 @@
 package main
 
 import (
-	"database/sql"
+	"context"
+	"kaepora/internal/back"
+	"kaepora/internal/util"
 
-	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
 
-func loadFixtures() {
+func loadFixtures() error {
 	db, err := sqlx.Connect("sqlite3", "./kaepora.db")
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	db.SetMaxOpenConns(1)
 
-	gameID := uuid.New()
-
-	tx := db.MustBegin()
-	tx.MustExec(
-		`INSERT INTO Game (ID, Name, Generator) VALUES
-        (?, "The Legend of Zelda: Ocarina of Time", "OoT-Randomizer:v5.2")`,
-		gameID,
-	)
-	tx.MustExec(
-		`INSERT INTO League (ID, GameID, Name, Settings) VALUES
-        (:stdID, :gameID, "Standard", "AJWGAJARB2BCAAJWAAJBASAGJBHNTHA3EA2UTVAFAA"),
-        (:randomID, :gameID, "Random rules", "A2WGAJARB2BCAAJWAAJBASAGJBHNTHA3EA2UTVAFAA")`,
-
-		sql.Named("stdID", uuid.New()),
-		sql.Named("randomID", uuid.New()),
-		sql.Named("gameID", gameID),
-	)
-
-	if err := tx.Commit(); err != nil {
-		panic(err)
+	game := back.NewGame("The Legend of Zelda: Ocarina of Time", "OoT-Randomizer:v5.2")
+	leagues := []back.League{
+		back.NewLeague("Standard", "std", game.ID, "AJWGAJARB2BCAAJWAAJBASAGJBHNTHA3EA2UTVAFAA"),
+		back.NewLeague("Random rules", "rand", game.ID, "A2WGAJARB2BCAAJWAAJBASAGJBHNTHA3EA2UTVAFAA"),
 	}
+
+	return util.Transaction(context.Background(), db, func(tx *sqlx.Tx) error {
+		if err := game.Insert(tx); err != nil {
+			return err
+		}
+
+		for _, v := range leagues {
+			if err := v.Insert(tx); err != nil {
+				return nil
+			}
+		}
+
+		return nil
+	})
 }

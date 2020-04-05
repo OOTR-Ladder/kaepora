@@ -3,7 +3,7 @@ VERSION ?= $(shell git describe --tags 2>/dev/null || echo "unknown")
 GOLANGCI=./golangci-lint
 BUILDFLAGS=-tags 'sqlite_json' -ldflags '-X main.Version=${VERSION}'
 
-all: $(EXEC) migrate
+all: $(EXEC) $(GOLANGCI) migrate
 
 $(EXEC):
 	go build $(BUILDFLAGS)

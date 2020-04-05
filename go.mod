@@ -6,6 +6,7 @@ require (
 	cloud.google.com/go v0.56.0 // indirect
 	cloud.google.com/go/spanner v1.4.0 // indirect
 	github.com/ClickHouse/clickhouse-go v1.3.14 // indirect
+	github.com/Masterminds/squirrel v1.2.0
 	github.com/aws/aws-sdk-go v1.30.4 // indirect
 	github.com/bombsimon/wsl/v2 v2.2.0 // indirect
 	github.com/cockroachdb/cockroach-go v0.0.0-20200312223839-f565e4789405 // indirect

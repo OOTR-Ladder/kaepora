@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -14,17 +15,23 @@ var Version = "unknown" // nolint:gochecknoglobals
 func main() {
 	flag.Parse()
 
-	switch flag.Arg(0) { // nolint, TODO
+	var err error
+
+	switch flag.Arg(0) {
 	case "version":
 		fmt.Fprintf(os.Stdout, "Kaepora %s\n", Version)
 	case "dev:fixtures":
-		loadFixtures()
+		err = loadFixtures()
 	case "help":
 		fmt.Fprint(os.Stdout, help())
 		return
 	default:
 		fmt.Fprint(os.Stderr, help())
 		os.Exit(1)
+	}
+
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 
