@@ -1,0 +1,8 @@
+# Binaries
+/golangci-lint
+/kaepora
+/migrate
+
+/kaepora.db
+/kaepora.db-journal
+/vendor
