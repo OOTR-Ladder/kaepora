@@ -75,7 +75,7 @@ func (bot *Bot) Close() error {
 }
 
 func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if m.Author == nil || m.Author.ID == s.State.User.ID {
+	if m.Author == nil || m.Author.ID == s.State.User.ID || m.Author.Bot {
 		return
 	}
 
@@ -84,8 +84,8 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 	}
 
 	log.Printf(
-		"<%s#%s(%s)@%s#%s> %s",
-		m.Author.Username, m.Author.Discriminator,
+		"<%s(%s)@%s#%s> %s",
+		m.Author.String(),
 		m.Author.ID,
 		m.GuildID, m.ChannelID,
 		m.Content,
@@ -102,7 +102,7 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 		msg := fmt.Sprintf("%s There was an error processing your command.", m.Author.Mention())
 
 		if errors.Is(err, errPublic("")) {
-			msg = fmt.Sprintf("%s\n```%s\n```", msg, err)
+			msg = fmt.Sprintf("%s\n```%s\n```\nIf you need help, send `!help`.", msg, err)
 		} else {
 			msg = fmt.Sprintf("%s\n<@%s> will check the logs when he has time.", msg, bot.adminUserID)
 		}
@@ -113,18 +113,34 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 	}
 }
 
+func parseCommand(cmd string) (string, []string) {
+	parts := strings.Split(cmd, " ")
+
+	switch len(parts) {
+	case 0:
+		return "", nil
+	case 1:
+		return parts[0], nil
+	default:
+		return parts[0], parts[1:]
+	}
+}
+
 func (bot *Bot) dispatch(s *discordgo.Session, m *discordgo.Message) error {
-	command := strings.SplitN(m.Content, " ", 2)
-	switch command[0] { // nolint:gocritic, TODO
+	command, args := parseCommand(m.Content)
+
+	switch command { // nolint:gocritic, TODO
 	case "!help":
 		_, err := s.ChannelMessageSend(m.ChannelID, help())
 		return err
 	case "!dev":
-		return bot.dispatchDev(s, m, command[1:])
+		return bot.dispatchDev(s, m, args)
 	case "!games":
-		return bot.dispatchGames(s, m, command[1:])
+		return bot.dispatchGames(s, m, args)
 	case "!leagues":
-		return bot.dispatchLeagues(s, m, command[1:])
+		return bot.dispatchLeagues(s, m, args)
+	case "!self":
+		return bot.dispatchSelf(s, m, args)
 	default:
 		return errPublic(fmt.Sprintf("invalid command: %v", m.Content))
 	}
@@ -154,7 +170,8 @@ func help() string {
 '''
 !games                # list games
 !help                 # display this help message
-!leagues              # list leagues and their "short code"
-!leagues SHORTCODE    # show league details
+!leagues              # list leagues
+!self name NAME       # set your display name to NAME
+!self register        # create your account and link it to your Discord account
 '''`, "'''", "```")
 }

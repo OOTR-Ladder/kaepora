@@ -23,6 +23,7 @@ CREATE TABLE "Player" (
     "ID"        blob(16) NOT NULL,
     "CreatedAt" INT      NOT NULL,
     "Name"      TEXT     NOT NULL,
+    "DiscordID" TEXT     NULL,
 
     PRIMARY KEY ("ID")
 );

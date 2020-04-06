@@ -1,14 +1,12 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"kaepora/internal/back"
 	"log"
 	"os"
 
-	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -34,7 +32,7 @@ func main() {
 
 	switch flag.Arg(0) {
 	case "fixtures":
-		if err := loadFixtures(back); err != nil {
+		if err := back.LoadFixtures(); err != nil {
 			log.Fatal(err)
 		}
 	case "serve":
@@ -62,26 +60,4 @@ COMMANDS
 `,
 		os.Args[0],
 	)
-}
-
-func loadFixtures(b *back.Back) error {
-	game := back.NewGame("The Legend of Zelda: Ocarina of Time", "OoT-Randomizer:v5.2")
-	leagues := []back.League{
-		back.NewLeague("Standard", "std", game.ID, "AJWGAJARB2BCAAJWAAJBASAGJBHNTHA3EA2UTVAFAA"),
-		back.NewLeague("Random rules", "rand", game.ID, "A2WGAJARB2BCAAJWAAJBASAGJBHNTHA3EA2UTVAFAA"),
-	}
-
-	return b.Transaction(context.Background(), func(tx *sqlx.Tx) error {
-		if err := game.Insert(tx); err != nil {
-			return err
-		}
-
-		for _, v := range leagues {
-			if err := v.Insert(tx); err != nil {
-				return nil
-			}
-		}
-
-		return nil
-	})
 }

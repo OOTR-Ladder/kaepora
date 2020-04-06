@@ -12,31 +12,9 @@ func (bot *Bot) dispatchLeagues(s *discordgo.Session, m *discordgo.Message, args
 	switch len(args) {
 	case 0:
 		return bot.displayLeagues(s, m.ChannelID)
-	case 1:
-		return bot.displayLeagueDetails(s, m.ChannelID, args[0])
 	default:
 		return errPublic("bad arguments count")
 	}
-}
-
-func (bot *Bot) displayLeagueDetails(s *discordgo.Session, channelID string, shortCode string) error {
-	league, err := bot.back.GetLeagueByShortcode(shortCode)
-	if err != nil {
-		return err
-	}
-
-	game, err := bot.back.GetGameByID(league.GameID)
-	if err != nil {
-		return err
-	}
-
-	var buf strings.Builder
-	fmt.Fprintf(&buf, "Name: %s\nShortCode: `%s`\n", league.Name, league.ShortCode)
-	fmt.Fprintf(&buf, "Game: %s\n", game.Name)
-	fmt.Fprintf(&buf, "Settings: `%s`\n", league.Settings)
-
-	_, err = s.ChannelMessageSend(channelID, buf.String())
-	return err
 }
 
 func (bot *Bot) displayLeagues(s *discordgo.Session, channelID string) error {

@@ -1,7 +1,6 @@
 package back
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
@@ -24,10 +23,10 @@ func New(sqlDriver string, sqlDSN string) (*Back, error) {
 	}, nil
 }
 
-type TransactionCallback func(*sqlx.Tx) error
+type transactionCallback func(*sqlx.Tx) error
 
-func (b *Back) Transaction(ctx context.Context, cb TransactionCallback) error {
-	tx, err := b.db.BeginTxx(ctx, nil)
+func (b *Back) transaction(cb transactionCallback) error {
+	tx, err := b.db.Beginx()
 	if err != nil {
 		return err
 	}
@@ -45,4 +44,26 @@ func (b *Back) Transaction(ctx context.Context, cb TransactionCallback) error {
 
 type Storable interface {
 	Store(*sqlx.Tx) error
+}
+
+func (b *Back) LoadFixtures() error {
+	game := NewGame("The Legend of Zelda: Ocarina of Time", "OoT-Randomizer:v5.2")
+	leagues := []League{
+		NewLeague("Standard", "std", game.ID, "AJWGAJARB2BCAAJWAAJBASAGJBHNTHA3EA2UTVAFAA"),
+		NewLeague("Random rules", "rand", game.ID, "A2WGAJARB2BCAAJWAAJBASAGJBHNTHA3EA2UTVAFAA"),
+	}
+
+	return b.transaction(func(tx *sqlx.Tx) error {
+		if err := game.Insert(tx); err != nil {
+			return err
+		}
+
+		for _, v := range leagues {
+			if err := v.Insert(tx); err != nil {
+				return nil
+			}
+		}
+
+		return nil
+	})
 }
