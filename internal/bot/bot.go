@@ -2,6 +2,8 @@ package bot
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"kaepora/internal/back"
 	"log"
 	"os"
@@ -12,9 +14,10 @@ import (
 )
 
 type Bot struct {
-	back  *back.Back
-	token string
-	dg    *discordgo.Session
+	back        *back.Back
+	token       string
+	dg          *discordgo.Session
+	adminUserID string
 
 	closed bool
 	closer chan<- struct{}
@@ -27,10 +30,11 @@ func New(back *back.Back, token string, closer chan<- struct{}) (*Bot, error) {
 	}
 
 	bot := &Bot{
-		back:   back,
-		closer: closer,
-		token:  token,
-		dg:     dg,
+		back:        back,
+		closer:      closer,
+		adminUserID: os.Getenv("KAEPORA_ADMIN_USER"),
+		token:       token,
+		dg:          dg,
 	}
 
 	dg.AddHandler(bot.handleMessage)
@@ -87,32 +91,70 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 		m.Content,
 	)
 
-	bot.dispatch(s, m.Message)
-}
+	defer func() {
+		r := recover()
+		if r != nil {
+			log.Print("panic: ", r)
+		}
+	}()
 
-func (bot *Bot) dispatch(s *discordgo.Session, m *discordgo.Message) {
-	command := strings.SplitN(m.Content, " ", 2)
-	switch command[0] { // nolint:gocritic, TODO
-	case "!dev":
-		bot.dispatchDev(s, m, command[1:])
-	default:
-		log.Printf("error: invalid command: %v", m.Content)
+	if err := bot.dispatch(s, m.Message); err != nil {
+		msg := fmt.Sprintf("%s There was an error processing your command.", m.Author.Mention())
+
+		if errors.Is(err, errPublic("")) {
+			msg = fmt.Sprintf("%s\n```%s\n```", msg, err)
+		} else {
+			msg = fmt.Sprintf("%s\n<@%s> will check the logs when he has time.", msg, bot.adminUserID)
+		}
+
+		_, _ = s.ChannelMessageSend(m.ChannelID, msg)
+
+		log.Printf("error: %s", err)
 	}
 }
 
-func (bot *Bot) dispatchDev(_ *discordgo.Session, m *discordgo.Message, args []string) {
-	if m.Author.ID != os.Getenv("KAEPORA_ADMIN_USER") {
-		log.Printf("error: !dev command ran by a non-admin: %v", args)
-		return
+func (bot *Bot) dispatch(s *discordgo.Session, m *discordgo.Message) error {
+	command := strings.SplitN(m.Content, " ", 2)
+	switch command[0] { // nolint:gocritic, TODO
+	case "!help":
+		_, err := s.ChannelMessageSend(m.ChannelID, help())
+		return err
+	case "!dev":
+		return bot.dispatchDev(s, m, command[1:])
+	case "!games":
+		return bot.dispatchGames(s, m, command[1:])
+	case "!leagues":
+		return bot.dispatchLeagues(s, m, command[1:])
+	default:
+		return errPublic(fmt.Sprintf("invalid command: %v", m.Content))
+	}
+}
+
+func (bot *Bot) dispatchDev(_ *discordgo.Session, m *discordgo.Message, args []string) error {
+	if m.Author.ID != bot.adminUserID {
+		return fmt.Errorf("!dev command ran by a non-admin: %v", args)
 	}
 
 	if len(args) < 1 {
-		log.Printf("error: !dev command has no arguments")
-		return
+		return fmt.Errorf("error: !dev command has no arguments")
 	}
 
 	switch args[0] { // nolint:gocritic, TODO
 	case "down":
 		bot.Close()
+	case "panic":
+		panic("an admin asked me to panic")
 	}
+
+	return nil
+}
+
+func help() string {
+	return strings.ReplaceAll(`Available commands:
+'''
+!games                # list games
+!help                 # display this help message
+!leagues              # list leagues and their "short code"
+!leagues SHORTCODE    # show league details
+'''`, "'''", "```")
 }

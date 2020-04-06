@@ -42,3 +42,22 @@ func (g *Game) Insert(tx *sqlx.Tx) error {
 
 	return nil
 }
+
+func (b *Back) GetGames() ([]Game, error) {
+	var ret []Game
+	if err := b.db.Select(&ret, "SELECT * FROM Game ORDER BY Name ASC"); err != nil {
+		return nil, err
+	}
+
+	return ret, nil
+}
+
+func (b *Back) GetGameByID(id util.UUIDAsBlob) (Game, error) {
+	var ret Game
+	query := `SELECT * FROM Game WHERE Game.ID = ? LIMIT 1`
+	if err := b.db.Get(&ret, query, id); err != nil {
+		return Game{}, err
+	}
+
+	return ret, nil
+}

@@ -47,3 +47,32 @@ func (l *League) Insert(tx *sqlx.Tx) error {
 
 	return nil
 }
+
+func (b *Back) GetLeagues() ([]League, error) {
+	var ret []League
+	if err := b.db.Select(&ret, "SELECT * FROM League ORDER BY League.Name ASC"); err != nil {
+		return nil, err
+	}
+
+	return ret, nil
+}
+
+func (b *Back) GetLeaguesByGameID(gameID util.UUIDAsBlob) ([]League, error) {
+	var ret []League
+	query := `SELECT * FROM League WHERE League.GameID = ? ORDER BY League.Name ASC`
+	if err := b.db.Select(&ret, query, gameID); err != nil {
+		return nil, err
+	}
+
+	return ret, nil
+}
+
+func (b *Back) GetLeagueByShortcode(shortCode string) (League, error) {
+	var ret League
+	query := `SELECT * FROM League WHERE League.ShortCode = ? LIMIT 1`
+	if err := b.db.Get(&ret, query, shortCode); err != nil {
+		return League{}, err
+	}
+
+	return ret, nil
+}

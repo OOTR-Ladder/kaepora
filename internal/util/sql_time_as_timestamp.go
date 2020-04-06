@@ -19,17 +19,20 @@ func (t TimeAsTimestamp) Time() time.Time {
 }
 
 func (t *TimeAsTimestamp) Scan(src interface{}) error {
-	str, ok := src.([]byte)
-	if !ok {
-		return fmt.Errorf("expected []byte, got %T", src)
-	}
+	switch src := src.(type) {
+	case []byte:
+		tmp, err := strconv.ParseInt(string(src), 10, 64)
+		if err != nil {
+			return err
+		}
 
-	tmp, err := strconv.ParseInt(string(str), 10, 64)
-	if err != nil {
-		return err
+		*t = TimeAsTimestamp(time.Unix(tmp, 0))
+	case int64:
+		tmp := TimeAsTimestamp(time.Unix(src, 0))
+		*t = tmp
+	default:
+		return fmt.Errorf("expected []byte or int64, got %T", src)
 	}
-
-	*t = TimeAsTimestamp(time.Unix(tmp, 0))
 
 	return nil
 }
