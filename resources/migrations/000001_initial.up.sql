@@ -28,6 +28,9 @@ CREATE TABLE "Player" (
     PRIMARY KEY ("ID")
 );
 
+CREATE UNIQUE INDEX idx_unique_Name      ON Player (Name);
+CREATE UNIQUE INDEX idx_unique_DiscordID ON Player (DiscordID);
+
 CREATE TABLE "PlayerRating" (
     "PlayerID"  blob(16) NOT NULL,
     "LeagueID"  blob(16) NOT NULL,
