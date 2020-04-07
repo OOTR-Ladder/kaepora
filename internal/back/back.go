@@ -31,8 +31,6 @@ func (b *Back) Run(wg *sync.WaitGroup, done <-chan struct{}) {
 	log.Print("info: starting Back dæmon")
 
 	for {
-		log.Print("debug: back cron")
-
 		e := []error{
 			b.prepareScheduledSessions(),
 		}

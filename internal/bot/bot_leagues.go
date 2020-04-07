@@ -6,9 +6,11 @@ import (
 	"strings"
 	"text/tabwriter"
 	"time"
+
+	"github.com/bwmarrin/discordgo"
 )
 
-func (bot *Bot) dispatchLeagues(args []string, out io.Writer) error {
+func (bot *Bot) cmdLeagues(_ *discordgo.Message, args []string, out io.Writer) error {
 	switch len(args) {
 	case 0:
 		return bot.displayLeagues(out)

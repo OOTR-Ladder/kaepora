@@ -10,33 +10,19 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func (bot *Bot) dispatchSelf(m *discordgo.Message, args []string, out io.Writer) error {
+func (bot *Bot) cmdRename(m *discordgo.Message, args []string, out io.Writer) error {
 	if len(args) < 1 {
-		return errPublic("need a subcommand")
+		return errPublic("your forgot to tell me your desired name")
 	}
 
-	command := args[0]
-	args = args[1:]
-
-	switch command {
-	case "register":
-		return bot.registerDiscordPlayer(m.Author, out)
-	case "name":
-		if len(args) < 1 {
-			return errPublic("your forgot to tell me your desired name")
-		}
-
-		name := strings.Trim(strings.Join(args, " "), "  \t\n")
-		return bot.setDiscordPlayerName(m.Author.ID, name, out)
-	default:
-		return errPublic("bad subcommand")
-	}
+	name := strings.Trim(strings.Join(args, " "), "  \t\n")
+	return bot.setDiscordPlayerName(m.Author.ID, name, out)
 }
 
 func (bot *Bot) setDiscordPlayerName(discordID string, name string, out io.Writer) error {
 	player, err := bot.back.GetPlayerByDiscordID(discordID)
 	if err != nil {
-		return errPublic("you need to register first")
+		return errPublic("you need to `!register` first")
 	}
 	if player.Name == name {
 		return errPublic("that's your name already")
@@ -59,7 +45,8 @@ func (bot *Bot) setDiscordPlayerName(discordID string, name string, out io.Write
 	return err
 }
 
-func (bot *Bot) registerDiscordPlayer(user *discordgo.User, out io.Writer) error {
+func (bot *Bot) cmdRegister(m *discordgo.Message, _ []string, out io.Writer) error {
+	user := m.Author
 	if _, err := bot.back.GetPlayerByDiscordID(user.ID); err == nil {
 		return errPublic("you are already registered")
 	}

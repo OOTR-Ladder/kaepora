@@ -70,10 +70,32 @@ func NewMatchSession(leagueID util.UUIDAsBlob, startDate time.Time) MatchSession
 	}
 }
 
-func (b *Back) GetMatchSessionByStartDate(startDate time.Time) (MatchSession, error) {
+func (b *Back) GetMatchSessionByStartDate(leagueID util.UUIDAsBlob, startDate time.Time) (MatchSession, error) {
 	var ret MatchSession
-	query := `SELECT * FROM MatchSession WHERE MatchSession.StartDate = ? LIMIT 1`
-	if err := b.db.Get(&ret, query, util.TimeAsDateTimeTZ(startDate)); err != nil {
+	query := `SELECT * FROM MatchSession WHERE MatchSession.LeagueID = ? && MatchSession.StartDate = ? LIMIT 1`
+	if err := b.db.Get(&ret, query, leagueID, util.TimeAsDateTimeTZ(startDate)); err != nil {
+		return MatchSession{}, err
+	}
+
+	return ret, nil
+}
+
+func (b *Back) GetNextJoinableMatchSessionForLeague(leagueID util.UUIDAsBlob) (MatchSession, error) {
+	var ret MatchSession
+	query := `
+        SELECT * FROM MatchSession
+        WHERE MatchSession.LeagueID = ? &&
+              MatchSession.StartDate > ? &&
+              MatchSession.Status = ?
+        ORDER BY MatchSession.StartDate ASC
+        LIMIT 1`
+
+	if err := b.db.Get(
+		&ret, query,
+		leagueID,
+		util.TimeAsDateTimeTZ(time.Now()),
+		MatchSessionStatusJoinable,
+	); err != nil {
 		return MatchSession{}, err
 	}
 
@@ -123,4 +145,27 @@ func encodePlayerIDs(ids []uuid.UUID) []byte {
 	}
 
 	return ret
+}
+
+func (b *Back) UpdateMatchSession(s MatchSession) error {
+	return b.transaction(s.Update)
+}
+
+func (s *MatchSession) Update(tx *sqlx.Tx) error {
+	query, args, err := squirrel.Update("MatchSession").SetMap(squirrel.Eq{
+		"StartDate": s.StartDate,
+		"Status":    s.Status,
+		"PlayerIDs": s.PlayerIDs,
+	}).
+		Where("MatchSession.ID = ?", s.ID).
+		ToSql()
+	if err != nil {
+		return err
+	}
+
+	if _, err := tx.Exec(query, args...); err != nil {
+		return err
+	}
+
+	return nil
 }

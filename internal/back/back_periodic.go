@@ -20,7 +20,7 @@ func (b *Back) prepareScheduledSessions() error {
 				continue
 			}
 
-			if _, err := b.GetMatchSessionByStartDate(next); err != sql.ErrNoRows {
+			if _, err := b.GetMatchSessionByStartDate(league.ID, next); err != sql.ErrNoRows {
 				if err == nil {
 					continue // MatchSession already exists
 				}

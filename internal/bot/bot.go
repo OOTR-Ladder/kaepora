@@ -15,6 +15,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+type commandHandler func(m *discordgo.Message, args []string, w io.Writer) error
+
 type Bot struct {
 	back *back.Back
 
@@ -22,6 +24,8 @@ type Bot struct {
 	token       string
 	dg          *discordgo.Session
 	adminUserID string
+
+	handlers map[string]commandHandler
 }
 
 func New(back *back.Back, token string) (*Bot, error) {
@@ -39,6 +43,20 @@ func New(back *back.Back, token string) (*Bot, error) {
 	}
 
 	dg.AddHandler(bot.handleMessage)
+
+	bot.handlers = map[string]commandHandler{
+		"!dev":      bot.cmdDev,
+		"!games":    bot.cmdGames,
+		"!help":     bot.cmdHelp,
+		"!leagues":  bot.cmdLeagues,
+		"!register": bot.cmdRegister,
+		"!rename":   bot.cmdRename,
+
+		"!cancel":  bot.cmdCancel,
+		"!forfeit": bot.cmdForfeit,
+		"!join":    bot.cmdJoin,
+		"!stop":    bot.cmdStop,
+	}
 
 	return bot, nil
 }
@@ -140,63 +158,45 @@ func parseCommand(cmd string) (string, []string) {
 	}
 }
 
-func (bot *Bot) dispatch(m *discordgo.Message, out io.Writer) error {
+func (bot *Bot) dispatch(m *discordgo.Message, w io.Writer) error {
 	command, args := parseCommand(m.Content)
-
-	switch command { // nolint:gocritic, TODO
-	case "!help":
-		fmt.Fprint(out, help())
-		return nil
-	case "!dev":
-		return bot.dispatchDev(m, args, out)
-	case "!games":
-		return bot.dispatchGames(args, out)
-	case "!leagues":
-		return bot.dispatchLeagues(args, out)
-	case "!self":
-		return bot.dispatchSelf(m, args, out)
-	default:
+	handler, ok := bot.handlers[command]
+	if !ok {
 		return errPublic(fmt.Sprintf("invalid command: %v", m.Content))
 	}
+
+	return handler(m, args, w)
 }
 
-func (bot *Bot) dispatchDev(m *discordgo.Message, args []string, out io.Writer) error {
+func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
+	// TODO hardcoded delays in doc
+	fmt.Fprint(w, strings.ReplaceAll(`Available commands:
+'''
+# Management
+!games             # list games
+!help              # display this help message
+!leagues           # list leagues
+!register          # create your account and link it to your Discord account
+!rename NAME       # set your display name to NAME
+
+# Racing
+!cancel            # cancel joining the next race without penalty until T-30m
+!forfeit           # forfeit (and thus lose) the current race
+!join SHORTCODE    # join the next race of the given league (see !leagues)
+!stop              # stop your race timer and register your final time
+'''`, "'''", "```"))
+
 	if m.Author.ID != bot.adminUserID {
-		return fmt.Errorf("!dev command ran by a non-admin: %v", args)
+		return nil
 	}
 
-	if len(args) < 1 {
-		return errPublic("need a subcommand")
-	}
-
-	switch args[0] { // nolint:gocritic, TODO
-	case "panic":
-		panic("an admin asked me to panic")
-	case "uptime":
-		fmt.Fprintf(out, "The bot has been online for %s", time.Since(bot.startedAt))
-	case "error":
-		return errPublic("here's your error")
-	case "url":
-		fmt.Fprintf(
-			out,
-			"https://discordapp.com/api/oauth2/authorize?client_id=%s&scope=bot&permissions=%d",
-			bot.dg.State.User.ID,
-			discordgo.PermissionReadMessages|discordgo.PermissionSendMessages|
-				discordgo.PermissionEmbedLinks|discordgo.PermissionAttachFiles|
-				discordgo.PermissionManageMessages|discordgo.PermissionMentionEveryone,
-		)
-	}
+	fmt.Fprint(w, strings.ReplaceAll(`Admin-only commands:
+'''
+!dev error     error out
+!dev panic     panic and abort
+!dev uptime    display for how long the server has been running
+!dev url       display the link to use when adding the bot to a new server
+'''`, "'''", "```"))
 
 	return nil
-}
-
-func help() string {
-	return strings.ReplaceAll(`Available commands:
-'''
-!games                # list games
-!help                 # display this help message
-!leagues              # list leagues
-!self name NAME       # set your display name to NAME
-!self register        # create your account and link it to your Discord account
-'''`, "'''", "```")
 }
