@@ -76,22 +76,6 @@ func (bot *Bot) Close() error {
 }
 
 func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if m.Author == nil || m.Author.ID == s.State.User.ID || m.Author.Bot {
-		return
-	}
-
-	if !strings.HasPrefix(m.Content, "!") {
-		return
-	}
-
-	log.Printf(
-		"<%s(%s)@%s#%s> %s",
-		m.Author.String(),
-		m.Author.ID,
-		m.GuildID, m.ChannelID,
-		m.Content,
-	)
-
 	defer func() {
 		r := recover()
 		if r != nil {
@@ -99,7 +83,23 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 		}
 	}()
 
-	out := newChannelWriter(s, m.ChannelID, m.Author)
+	// Ignore webooks, self, bots, non-commands.
+	if m.Author == nil || m.Author.ID == s.State.User.ID ||
+		m.Author.Bot || !strings.HasPrefix(m.Content, "!") {
+		return
+	}
+
+	log.Printf(
+		"<%s(%s)@%s#%s> %s",
+		m.Author.String(), m.Author.ID,
+		m.GuildID, m.ChannelID,
+		m.Content,
+	)
+
+	out, err := newUserChannelWriter(s, m.Author)
+	if err != nil {
+		log.Print(err)
+	}
 	defer func() {
 		if err := out.Flush(); err != nil {
 			log.Printf("error when sending message: %s", err)
@@ -108,7 +108,7 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 
 	if err := bot.dispatch(m.Message, out); err != nil {
 		out.Reset()
-		fmt.Fprintf(out, "%s There was an error processing your command.\n", m.Author.Mention())
+		fmt.Fprintln(out, "There was an error processing your command.")
 
 		if errors.Is(err, errPublic("")) {
 			fmt.Fprintf(out, "```%s\n```\nIf you need help, send `!help`.", err)
@@ -116,8 +116,29 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 			fmt.Fprintf(out, "<@%s> will check the logs when he has time.", bot.adminUserID)
 		}
 
-		log.Printf("error: %s", err)
+		log.Printf("dispatch error: %s", err)
 	}
+
+	if err := bot.maybeCleanupMessage(s, m.ChannelID, m.Message.ID); err != nil {
+		log.Printf("unable to cleanup message: %s", err)
+	}
+}
+
+func (bot *Bot) maybeCleanupMessage(s *discordgo.Session, channelID string, messageID string) error {
+	channel, err := s.Channel(channelID)
+	if err != nil {
+		return err
+	}
+
+	if channel.Type != discordgo.ChannelTypeGuildText {
+		return nil
+	}
+
+	if err := s.ChannelMessageDelete(channelID, messageID); err != nil {
+		log.Printf("unable to delete message: %s", err)
+	}
+
+	return nil
 }
 
 func parseCommand(cmd string) (string, []string) {
