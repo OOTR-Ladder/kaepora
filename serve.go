@@ -25,12 +25,12 @@ func serve(b *back.Back) error {
 	go bot.Serve(&wg, done)
 
 	sig := <-signaled
-	log.Printf("received signal %d", sig)
+	log.Printf("warning: received signal %d", sig)
 	close(done)
 
-	log.Print("waiting for complete shutdown")
+	log.Print("info: waiting for complete shutdown")
 	wg.Wait()
-	log.Print("shutdown complete")
+	log.Print("info: shutdown complete")
 
 	return nil
 }

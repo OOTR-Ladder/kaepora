@@ -11,7 +11,10 @@ $(EXEC):
 migrate:
 	go build -tags "sqlite3 sqlite_json" github.com/golang-migrate/migrate/v4/cmd/migrate
 
-.PHONY: $(EXEC) vendor upgrade lint
+.PHONY: $(EXEC) vendor upgrade lint test
+
+test:
+	go test ./...
 
 vendor:
 	go get -v

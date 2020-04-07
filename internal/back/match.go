@@ -5,8 +5,10 @@ import (
 )
 
 type Match struct {
-	ID        util.UUIDAsBlob
-	LeagueID  util.UUIDAsBlob
+	ID             util.UUIDAsBlob
+	LeagueID       util.UUIDAsBlob
+	MatchSessionID util.UUIDAsBlob
+
 	CreatedAt util.TimeAsTimestamp
 	StartedAt util.NullTimeAsTimestamp
 	EndedAt   util.NullTimeAsTimestamp
@@ -18,21 +20,21 @@ type Match struct {
 	Entries []MatchEntry `db:"-"`
 }
 
-type MatchStatus int
+type MatchEntryStatus int
 
 const ( // this is stored in DB, don't change values
-	MatchStatusWaiting    = 0
-	MatchStatusInProgress = 1
-	MatchStatusForfeit    = 2 // (hard loss)
-	MatchStatusCanceled   = 3 // (no impact on score)
+	MatchEntryStatusWaiting    MatchEntryStatus = 0
+	MatchEntryStatusInProgress MatchEntryStatus = 1
+	MatchEntryStatusFinished   MatchEntryStatus = 2
+	MatchEntryStatusForfeit    MatchEntryStatus = 3 // (automatic loss)
 )
 
-type MatchOutcome int
+type MatchEntryOutcome int
 
 const ( // this is stored in DB, don't change values
-	MatchOutcomeLoss = -1
-	MatchOutcomeDraw = 0
-	MatchOutcomeWin  = 1
+	MatchEntryOutcomeLoss MatchEntryOutcome = -1
+	MatchEntryOutcomeDraw MatchEntryOutcome = 0
+	MatchEntryOutcomeWin  MatchEntryOutcome = 1
 )
 
 type MatchEntry struct {
@@ -42,6 +44,6 @@ type MatchEntry struct {
 	StartedAt util.NullTimeAsTimestamp
 	EndedAt   util.NullTimeAsTimestamp
 
-	Status  MatchStatus
-	Outcome MatchOutcome
+	Status  MatchEntryStatus
+	Outcome MatchEntryOutcome
 }

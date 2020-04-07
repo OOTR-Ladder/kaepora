@@ -46,7 +46,7 @@ func (w *channelWriter) Flush() error {
 	}
 
 	_, err := w.dg.ChannelMessageSend(w.channelID, w.buf.String())
-	log.Print("<self> " + w.buf.String())
+	log.Print("info: <self> " + w.buf.String())
 	w.buf.Reset()
 	return err
 }

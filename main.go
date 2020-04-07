@@ -14,6 +14,7 @@ import (
 var Version = "unknown" // nolint:gochecknoglobals
 
 func main() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	flag.Parse()
 
 	switch flag.Arg(0) { // commands not requiring a back

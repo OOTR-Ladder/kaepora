@@ -15,6 +15,7 @@ type League struct {
 	ShortCode string
 	GameID    util.UUIDAsBlob
 	Settings  string
+	Schedule  Schedule
 }
 
 func NewLeague(name string, shortCode string, gameID util.UUIDAsBlob, settings string) League {
@@ -25,6 +26,7 @@ func NewLeague(name string, shortCode string, gameID util.UUIDAsBlob, settings s
 		Name:      name,
 		ShortCode: shortCode,
 		Settings:  settings,
+		Schedule:  NewSchedule(),
 	}
 }
 
@@ -36,6 +38,7 @@ func (l *League) Insert(tx *sqlx.Tx) error {
 		"Name":      l.Name,
 		"ShortCode": l.ShortCode,
 		"Settings":  l.Settings,
+		"Schedule":  l.Schedule,
 	}).ToSql()
 	if err != nil {
 		return err

@@ -3,11 +3,9 @@ package bot
 import (
 	"fmt"
 	"io"
-
-	"github.com/bwmarrin/discordgo"
 )
 
-func (bot *Bot) dispatchGames(m *discordgo.Message, args []string, out io.Writer) error {
+func (bot *Bot) dispatchGames(args []string, out io.Writer) error {
 	if len(args) > 0 {
 		return errPublic("this command takes no argument")
 	}

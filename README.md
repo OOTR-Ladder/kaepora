@@ -1,10 +1,12 @@
 # Kaepora
 The _Ocarina of Time Randomizer_ leagues.
 
-## Build
+## Build and run
 ```shell
 $ # Install Go: https://golang.org/dl/
 $ make
+$ ./kaepora fixtures
+$ ./kaepora serve
 ```
 
 ## Hacking

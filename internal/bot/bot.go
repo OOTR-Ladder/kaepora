@@ -7,6 +7,7 @@ import (
 	"kaepora/internal/back"
 	"log"
 	"os"
+	"runtime/debug"
 	"strings"
 	"sync"
 	"time"
@@ -43,7 +44,7 @@ func New(back *back.Back, token string) (*Bot, error) {
 }
 
 func (bot *Bot) Serve(wg *sync.WaitGroup, done <-chan struct{}) {
-	log.Println("starting Discord bot")
+	log.Println("info: starting Discord bot")
 	wg.Add(1)
 	defer wg.Done()
 	if err := bot.dg.Open(); err != nil {
@@ -53,18 +54,11 @@ func (bot *Bot) Serve(wg *sync.WaitGroup, done <-chan struct{}) {
 	<-done
 
 	if err := bot.dg.Close(); err != nil {
-		log.Printf("error closing Discord bot: %s", err)
+		log.Printf("error: could not close Discord bot: %s", err)
 	}
 }
 
 func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
-	defer func() {
-		r := recover()
-		if r != nil {
-			log.Print("panic: ", r)
-		}
-	}()
-
 	// Ignore webooks, self, bots, non-commands.
 	if m.Author == nil || m.Author.ID == s.State.User.ID ||
 		m.Author.Bot || !strings.HasPrefix(m.Content, "!") {
@@ -72,7 +66,7 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 	}
 
 	log.Printf(
-		"<%s(%s)@%s#%s> %s",
+		"info: <%s(%s)@%s#%s> %s",
 		m.Author.String(), m.Author.ID,
 		m.GuildID, m.ChannelID,
 		m.Content,
@@ -80,11 +74,21 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 
 	out, err := newUserChannelWriter(s, m.Author)
 	if err != nil {
-		log.Print(err)
+		log.Printf("error: could not create channel writer: %s", err)
 	}
 	defer func() {
 		if err := out.Flush(); err != nil {
-			log.Printf("error when sending message: %s", err)
+			log.Printf("error: could not send message: %s", err)
+		}
+	}()
+
+	defer func() {
+		r := recover()
+		if r != nil {
+			out.Reset()
+			fmt.Fprintf(out, "Someting went very wrong, please tell <@%s>.", bot.adminUserID)
+			log.Print("panic: ", r)
+			log.Print(debug.Stack())
 		}
 	}()
 
@@ -98,11 +102,11 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 			fmt.Fprintf(out, "<@%s> will check the logs when he has time.", bot.adminUserID)
 		}
 
-		log.Printf("dispatch error: %s", err)
+		log.Printf("error: failed to process command: %s", err)
 	}
 
 	if err := bot.maybeCleanupMessage(s, m.ChannelID, m.Message.ID); err != nil {
-		log.Printf("unable to cleanup message: %s", err)
+		log.Printf("error: unable to cleanup message: %s", err)
 	}
 }
 
@@ -117,7 +121,7 @@ func (bot *Bot) maybeCleanupMessage(s *discordgo.Session, channelID string, mess
 	}
 
 	if err := s.ChannelMessageDelete(channelID, messageID); err != nil {
-		log.Printf("unable to delete message: %s", err)
+		log.Printf("error: unable to delete message: %s", err)
 	}
 
 	return nil
@@ -146,9 +150,9 @@ func (bot *Bot) dispatch(m *discordgo.Message, out io.Writer) error {
 	case "!dev":
 		return bot.dispatchDev(m, args, out)
 	case "!games":
-		return bot.dispatchGames(m, args, out)
+		return bot.dispatchGames(args, out)
 	case "!leagues":
-		return bot.dispatchLeagues(m, args, out)
+		return bot.dispatchLeagues(args, out)
 	case "!self":
 		return bot.dispatchSelf(m, args, out)
 	default:
