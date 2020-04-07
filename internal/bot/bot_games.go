@@ -2,37 +2,34 @@ package bot
 
 import (
 	"fmt"
-	"strings"
+	"io"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-func (bot *Bot) dispatchGames(s *discordgo.Session, m *discordgo.Message, args []string) error {
+func (bot *Bot) dispatchGames(m *discordgo.Message, args []string, out io.Writer) error {
 	if len(args) > 0 {
 		return errPublic("this command takes no argument")
 	}
 
-	return bot.displayGames(s, m.ChannelID)
+	return bot.displayGames(out)
 }
 
-func (bot *Bot) displayGames(s *discordgo.Session, channelID string) error {
+func (bot *Bot) displayGames(out io.Writer) error {
 	games, err := bot.back.GetGames()
 	if err != nil {
 		return err
 	}
 
 	if len(games) == 0 {
-		_, err := s.ChannelMessageSend(channelID, "There is no registered game yet.")
-		return err
+		fmt.Fprint(out, "There is no registered game yet.")
+		return nil
 	}
 
-	var buf strings.Builder
-
-	buf.WriteString("Here are the available games:\n\n")
+	fmt.Fprint(out, "Here are the available games:\n\n")
 	for k, v := range games {
-		fmt.Fprintf(&buf, "%d. %s\n", k+1, v.Name)
+		fmt.Fprintf(out, "%d. %s\n", k+1, v.Name)
 	}
 
-	_, err = s.ChannelMessageSend(channelID, buf.String())
-	return err
+	return nil
 }

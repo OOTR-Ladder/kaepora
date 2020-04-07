@@ -2,40 +2,38 @@ package bot
 
 import (
 	"fmt"
-	"strings"
+	"io"
 	"text/tabwriter"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-func (bot *Bot) dispatchLeagues(s *discordgo.Session, m *discordgo.Message, args []string) error {
+func (bot *Bot) dispatchLeagues(m *discordgo.Message, args []string, out io.Writer) error {
 	switch len(args) {
 	case 0:
-		return bot.displayLeagues(s, m.ChannelID)
+		return bot.displayLeagues(out)
 	default:
 		return errPublic("bad arguments count")
 	}
 }
 
-func (bot *Bot) displayLeagues(s *discordgo.Session, channelID string) error {
+func (bot *Bot) displayLeagues(out io.Writer) error {
 	games, err := bot.back.GetGames()
 	if err != nil {
 		return err
 	}
 
-	var buf strings.Builder
-
 	for k, game := range games {
-		fmt.Fprintf(&buf, "%d. Leagues for _%s_:\n", k+1, game.Name)
+		fmt.Fprintf(out, "%d. Leagues for _%s_:\n", k+1, game.Name)
 
 		leagues, err := bot.back.GetLeaguesByGameID(game.ID)
 		if err != nil {
 			return err
 		}
 
-		buf.WriteString("```\n")
+		fmt.Fprint(out, "```\n")
 
-		table := tabwriter.NewWriter(&buf, 0, 0, 1, ' ', 0)
+		table := tabwriter.NewWriter(out, 0, 0, 1, ' ', 0)
 
 		fmt.Fprintln(table, "shortcode\tname\tsettings")
 		fmt.Fprintln(table, "\t\t")
@@ -44,9 +42,8 @@ func (bot *Bot) displayLeagues(s *discordgo.Session, channelID string) error {
 		}
 		table.Flush()
 
-		buf.WriteString("```\n")
+		fmt.Fprint(out, "```\n")
 	}
 
-	_, err = s.ChannelMessageSend(channelID, buf.String())
-	return err
+	return nil
 }

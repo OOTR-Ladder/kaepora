@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"kaepora/internal/back"
 	"log"
 	"os"
@@ -98,16 +99,22 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 		}
 	}()
 
-	if err := bot.dispatch(s, m.Message); err != nil {
-		msg := fmt.Sprintf("%s There was an error processing your command.", m.Author.Mention())
+	out := newChannelWriter(s, m.ChannelID, m.Author)
+	defer func() {
+		if err := out.Flush(); err != nil {
+			log.Printf("error when sending message: %s", err)
+		}
+	}()
+
+	if err := bot.dispatch(m.Message, out); err != nil {
+		out.Reset()
+		fmt.Fprintf(out, "%s There was an error processing your command.\n", m.Author.Mention())
 
 		if errors.Is(err, errPublic("")) {
-			msg = fmt.Sprintf("%s\n```%s\n```\nIf you need help, send `!help`.", msg, err)
+			fmt.Fprintf(out, "```%s\n```\nIf you need help, send `!help`.", err)
 		} else {
-			msg = fmt.Sprintf("%s\n<@%s> will check the logs when he has time.", msg, bot.adminUserID)
+			fmt.Fprintf(out, "<@%s> will check the logs when he has time.", bot.adminUserID)
 		}
-
-		_, _ = s.ChannelMessageSend(m.ChannelID, msg)
 
 		log.Printf("error: %s", err)
 	}
@@ -126,33 +133,33 @@ func parseCommand(cmd string) (string, []string) {
 	}
 }
 
-func (bot *Bot) dispatch(s *discordgo.Session, m *discordgo.Message) error {
+func (bot *Bot) dispatch(m *discordgo.Message, out io.Writer) error {
 	command, args := parseCommand(m.Content)
 
 	switch command { // nolint:gocritic, TODO
 	case "!help":
-		_, err := s.ChannelMessageSend(m.ChannelID, help())
-		return err
+		fmt.Fprint(out, help())
+		return nil
 	case "!dev":
-		return bot.dispatchDev(s, m, args)
+		return bot.dispatchDev(m, args, out)
 	case "!games":
-		return bot.dispatchGames(s, m, args)
+		return bot.dispatchGames(m, args, out)
 	case "!leagues":
-		return bot.dispatchLeagues(s, m, args)
+		return bot.dispatchLeagues(m, args, out)
 	case "!self":
-		return bot.dispatchSelf(s, m, args)
+		return bot.dispatchSelf(m, args, out)
 	default:
 		return errPublic(fmt.Sprintf("invalid command: %v", m.Content))
 	}
 }
 
-func (bot *Bot) dispatchDev(_ *discordgo.Session, m *discordgo.Message, args []string) error {
+func (bot *Bot) dispatchDev(m *discordgo.Message, args []string, out io.Writer) error {
 	if m.Author.ID != bot.adminUserID {
 		return fmt.Errorf("!dev command ran by a non-admin: %v", args)
 	}
 
 	if len(args) < 1 {
-		return fmt.Errorf("error: !dev command has no arguments")
+		return errPublic("need a subcommand")
 	}
 
 	switch args[0] { // nolint:gocritic, TODO
@@ -160,6 +167,17 @@ func (bot *Bot) dispatchDev(_ *discordgo.Session, m *discordgo.Message, args []s
 		bot.Close()
 	case "panic":
 		panic("an admin asked me to panic")
+	case "error":
+		return errPublic("here's your error")
+	case "url":
+		fmt.Fprintf(
+			out,
+			"https://discordapp.com/api/oauth2/authorize?client_id=%s&scope=bot&permissions=%d",
+			bot.dg.State.User.ID,
+			discordgo.PermissionReadMessages|discordgo.PermissionSendMessages|
+				discordgo.PermissionEmbedLinks|discordgo.PermissionAttachFiles|
+				discordgo.PermissionManageMessages|discordgo.PermissionMentionEveryone,
+		)
 	}
 
 	return nil

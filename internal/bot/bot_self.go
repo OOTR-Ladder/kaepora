@@ -2,6 +2,7 @@ package bot
 
 import (
 	"fmt"
+	"io"
 	"kaepora/internal/back"
 	"kaepora/internal/util"
 	"strings"
@@ -9,7 +10,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func (bot *Bot) dispatchSelf(s *discordgo.Session, m *discordgo.Message, args []string) error {
+func (bot *Bot) dispatchSelf(m *discordgo.Message, args []string, out io.Writer) error {
 	if len(args) < 1 {
 		return errPublic("need a subcommand")
 	}
@@ -19,23 +20,20 @@ func (bot *Bot) dispatchSelf(s *discordgo.Session, m *discordgo.Message, args []
 
 	switch command {
 	case "register":
-		return bot.registerDiscordPlayer(s, m.Author, m.ChannelID)
+		return bot.registerDiscordPlayer(m.Author, out)
 	case "name":
 		if len(args) < 1 {
-			return errPublic("your forgot to tell me your name")
+			return errPublic("your forgot to tell me your desired name")
 		}
-		return bot.setDiscordPlayerName(
-			s,
-			m.Author.ID,
-			strings.Trim(strings.Join(args, " "), "  \t\n"),
-			m.ChannelID,
-		)
+
+		name := strings.Trim(strings.Join(args, " "), "  \t\n")
+		return bot.setDiscordPlayerName(m.Author.ID, name, out)
 	default:
 		return errPublic("bad subcommand")
 	}
 }
 
-func (bot *Bot) setDiscordPlayerName(s *discordgo.Session, discordID string, name string, channelID string) error {
+func (bot *Bot) setDiscordPlayerName(discordID string, name string, out io.Writer) error {
 	player, err := bot.back.GetPlayerByDiscordID(discordID)
 	if err != nil {
 		return errPublic("you need to register first")
@@ -57,14 +55,11 @@ func (bot *Bot) setDiscordPlayerName(s *discordgo.Session, discordID string, nam
 		return err
 	}
 
-	_, err = s.ChannelMessageSend(channelID, fmt.Sprintf(
-		"You'll be henceforth known as `%s` on the leaderboards.",
-		player.Name,
-	))
+	fmt.Fprintf(out, "You'll be henceforth known as `%s` on the leaderboards.", player.Name)
 	return err
 }
 
-func (bot *Bot) registerDiscordPlayer(s *discordgo.Session, user *discordgo.User, channelID string) error {
+func (bot *Bot) registerDiscordPlayer(user *discordgo.User, out io.Writer) error {
 	if _, err := bot.back.GetPlayerByDiscordID(user.ID); err == nil {
 		return errPublic("you are already registered")
 	}
@@ -75,9 +70,7 @@ func (bot *Bot) registerDiscordPlayer(s *discordgo.Session, user *discordgo.User
 		return err
 	}
 
-	_, err := s.ChannelMessageSend(channelID, fmt.Sprintf(
-		"You have been registered as `%s`, see you on the leaderboards.",
-		player.Name,
-	))
-	return err
+	fmt.Fprintf(out, "You have been registered as `%s`, see you on the leaderboards.", player.Name)
+
+	return nil
 }
