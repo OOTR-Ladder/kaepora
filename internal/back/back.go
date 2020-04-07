@@ -2,12 +2,22 @@ package back
 
 import (
 	"fmt"
+	"log"
+	"sync"
 
 	"github.com/jmoiron/sqlx"
 )
 
 type Back struct {
 	db *sqlx.DB
+}
+
+func (b *Back) Run(wg *sync.WaitGroup, done <-chan struct{}) {
+	wg.Add(1)
+	defer wg.Done()
+	log.Print("starting Back dæmon")
+
+	<-done
 }
 
 func New(sqlDriver string, sqlDSN string) (*Back, error) {

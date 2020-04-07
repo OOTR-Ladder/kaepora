@@ -3,6 +3,7 @@ package bot
 import (
 	"bytes"
 	"fmt"
+	"log"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -45,6 +46,7 @@ func (w *channelWriter) Flush() error {
 	}
 
 	_, err := w.dg.ChannelMessageSend(w.channelID, w.buf.String())
+	log.Print("<self> " + w.buf.String())
 	w.buf.Reset()
 	return err
 }

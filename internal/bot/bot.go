@@ -1,7 +1,6 @@
 package bot
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -9,22 +8,22 @@ import (
 	"log"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
 
 type Bot struct {
-	back        *back.Back
+	back *back.Back
+
+	startedAt   time.Time
 	token       string
 	dg          *discordgo.Session
 	adminUserID string
-
-	closed bool
-	closer chan<- struct{}
 }
 
-func New(back *back.Back, token string, closer chan<- struct{}) (*Bot, error) {
+func New(back *back.Back, token string) (*Bot, error) {
 	dg, err := discordgo.New("Bot " + token)
 	if err != nil {
 		return nil, err
@@ -32,10 +31,10 @@ func New(back *back.Back, token string, closer chan<- struct{}) (*Bot, error) {
 
 	bot := &Bot{
 		back:        back,
-		closer:      closer,
 		adminUserID: os.Getenv("KAEPORA_ADMIN_USER"),
 		token:       token,
 		dg:          dg,
+		startedAt:   time.Now(),
 	}
 
 	dg.AddHandler(bot.handleMessage)
@@ -43,36 +42,19 @@ func New(back *back.Back, token string, closer chan<- struct{}) (*Bot, error) {
 	return bot, nil
 }
 
-func (bot *Bot) Serve() {
-	if bot.closed {
-		log.Panic("attempted to serve closed bot")
-		return
-	}
-
+func (bot *Bot) Serve(wg *sync.WaitGroup, done <-chan struct{}) {
 	log.Println("starting Discord bot")
-
+	wg.Add(1)
+	defer wg.Done()
 	if err := bot.dg.Open(); err != nil {
 		log.Panic(err)
 	}
-}
 
-func (bot *Bot) Close() error {
-	if bot.closed { // don't close twice
-		return nil
-	}
-
-	log.Println("closing Discord bot")
-
-	_, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	close(bot.closer)
-	bot.closed = true
+	<-done
 
 	if err := bot.dg.Close(); err != nil {
-		return err
+		log.Printf("error closing Discord bot: %s", err)
 	}
-
-	return nil
 }
 
 func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -184,10 +166,10 @@ func (bot *Bot) dispatchDev(m *discordgo.Message, args []string, out io.Writer) 
 	}
 
 	switch args[0] { // nolint:gocritic, TODO
-	case "down":
-		bot.Close()
 	case "panic":
 		panic("an admin asked me to panic")
+	case "uptime":
+		fmt.Fprintf(out, "The bot has been online for %s", time.Since(bot.startedAt))
 	case "error":
 		return errPublic("here's your error")
 	case "url":
