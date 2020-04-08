@@ -15,7 +15,14 @@ type Back struct {
 }
 
 func New(sqlDriver string, sqlDSN string) (*Back, error) {
-	db, err := sqlx.Connect("sqlite3", "./kaepora.db")
+	// Why even bother converting names? A single greppable string across all
+	// your source code is better than any odd conversion scheme you could ever
+	// come up with.
+	// HACK: This is global but putting this in init() makes test ugly.
+	// As only the Back relies on the DB, this seems like an okay-ish place.
+	sqlx.NameMapper = func(v string) string { return v }
+
+	db, err := sqlx.Connect("sqlite3", sqlDSN)
 	if err != nil {
 		return nil, err
 	}
@@ -31,8 +38,11 @@ func (b *Back) Run(wg *sync.WaitGroup, done <-chan struct{}) {
 	log.Print("info: starting Back dæmon")
 
 	for {
-		e := []error{
-			b.prepareScheduledSessions(),
+		e := []error{ // order matters
+			b.createNextScheduledMatchSessions(),
+			b.makeMatchSessionsJoinable(),
+			b.makeMatchSessionsPreparing(),
+			b.doMatchMaking(),
 		}
 
 		if err := util.ConcatErrors(e); err != nil {
@@ -73,8 +83,8 @@ func (b *Back) LoadFixtures() error {
 		NewLeague("Random rules", "rand", game.ID, "A2WGAJARB2BCAAJWAAJBASAGJBHNTHA3EA2UTVAFAA"),
 	}
 
-	leagues[0].Schedule.SetAll([]string{"21:00 Europe/Paris", "21:00 Asia/Tokyo"})
-	leagues[1].Schedule.SetAll([]string{"19:00 America/Mexico_City", "20:00 Europe/Berlin"})
+	leagues[0].Schedule.SetAll([]string{"21:00 Europe/Paris"})
+	leagues[1].Schedule.SetAll([]string{"21:00 Europe/Paris"})
 
 	return b.transaction(func(tx *sqlx.Tx) error {
 		if err := game.Insert(tx); err != nil {

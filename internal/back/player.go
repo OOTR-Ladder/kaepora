@@ -2,6 +2,7 @@ package back
 
 import (
 	"database/sql"
+	"fmt"
 	"kaepora/internal/util"
 	"time"
 
@@ -64,26 +65,52 @@ func (b *Back) UpdatePlayer(p Player) error {
 	return b.transaction(p.Update)
 }
 
-func (b *Back) RegisterPlayer(p Player) error {
-	return b.transaction(p.Insert)
-}
-
-func (b *Back) GetPlayerByDiscordID(discordID string) (Player, error) {
-	var ret Player
-	query := `SELECT * FROM Player WHERE Player.DiscordID = ? LIMIT 1`
-	if err := b.db.Get(&ret, query, discordID); err != nil {
-		return Player{}, err
-	}
-
-	return ret, nil
-}
-
-func (b *Back) GetPlayerByName(name string) (Player, error) {
+func getPlayerByName(tx *sqlx.Tx, name string) (Player, error) {
 	var ret Player
 	query := `SELECT * FROM Player WHERE Player.Name = ? LIMIT 1`
-	if err := b.db.Get(&ret, query, name); err != nil {
+	if err := tx.Get(&ret, query, name); err != nil {
 		return Player{}, err
 	}
 
 	return ret, nil
+}
+
+func (b *Back) UpdateDiscordPlayerName(discordID string, name string) error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		player, err := getPlayerByDiscordID(tx, discordID)
+		if err != nil {
+			return util.ErrPublic("you need to `!register` first")
+		}
+
+		if player.Name == name {
+			return util.ErrPublic("that's your name already")
+		}
+
+		if len(name) < 3 || len(name) > 32 {
+			return util.ErrPublic("your name must be between 3 and 32 characters")
+		}
+
+		if _, err := getPlayerByName(tx, name); err == nil {
+			return util.ErrPublic("this name is taken already")
+		}
+
+		player.Name = name
+		return player.Update(tx)
+	})
+}
+
+func (b *Back) RegisterDiscordPlayer(discordID, name string) error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		if _, err := getPlayerByDiscordID(tx, discordID); err == nil {
+			return util.ErrPublic("you are already registered")
+		}
+
+		if _, err := getPlayerByName(tx, name); err == nil {
+			return util.ErrPublic(fmt.Sprintf("the name `%s` is taken already, please give me another name", name))
+		}
+
+		player := NewPlayer(name)
+		player.DiscordID = util.NullString(discordID)
+		return player.Insert(tx)
+	})
 }

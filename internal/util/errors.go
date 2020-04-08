@@ -5,6 +5,18 @@ import (
 	"strings"
 )
 
+// ErrPublic is an error we are allowed to show to the end-user.
+type ErrPublic string
+
+func (e ErrPublic) Error() string {
+	return string(e)
+}
+
+func (e ErrPublic) Is(v error) bool {
+	_, ok := v.(ErrPublic)
+	return ok
+}
+
 func ConcatErrors(errs []error) error {
 	if len(errs) == 0 {
 		return nil

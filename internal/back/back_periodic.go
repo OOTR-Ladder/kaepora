@@ -2,6 +2,7 @@ package back
 
 import (
 	"database/sql"
+	"errors"
 	"kaepora/internal/util"
 	"log"
 	"time"
@@ -9,13 +10,15 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func (b *Back) prepareScheduledSessions() error {
-	leagues, err := b.GetLeagues()
-	if err != nil {
-		return err
-	}
-
+// createNextScheduledMatchSessions look for leagues with scheduled races and
+// creates the MatchSession for the very next race.
+func (b *Back) createNextScheduledMatchSessions() error {
 	return b.transaction(func(tx *sqlx.Tx) error {
+		leagues, err := getLeagues(tx)
+		if err != nil {
+			return err
+		}
+
 		// Create MatchSession
 		for _, league := range leagues {
 			next := league.Schedule.Next()
@@ -23,7 +26,7 @@ func (b *Back) prepareScheduledSessions() error {
 				continue
 			}
 
-			if _, err := b.GetMatchSessionByStartDate(league.ID, next); err != sql.ErrNoRows {
+			if _, err := getMatchSessionByStartDate(tx, league.ID, next); err != sql.ErrNoRows {
 				if err == nil {
 					continue // MatchSession already exists
 				}
@@ -38,13 +41,20 @@ func (b *Back) prepareScheduledSessions() error {
 			}
 		}
 
-		// Mark sessions as joinable when they reach the proper offset
+		return nil
+	})
+}
+
+// makeMatchSessionsJoinable looks for races that have reached the time at
+// which they can be joined by players and update their status.
+func (b *Back) makeMatchSessionsJoinable() error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		min := time.Now().Add(-MatchSessionPreparationOffset)
 		max := time.Now().Add(-MatchSessionJoinableAfterOffset)
-		min := time.Now().Add(-MatchSessionCancellableUntilOffset)
 		res, err := tx.Exec(`
             UPDATE MatchSession SET Status = ?
             WHERE DATETIME(StartDate) > DATETIME(?)
-              AND DATETIME(StartDate) < DATETIME(?)
+              AND DATETIME(StartDate) <= DATETIME(?)
               AND Status = ?
         `,
 			MatchSessionStatusJoinable,
@@ -61,5 +71,44 @@ func (b *Back) prepareScheduledSessions() error {
 		}
 
 		return nil
+	})
+}
+
+// makeMatchSessionsPreparing takes races that are past their "joinable" state
+// and put them in the "preparing" state
+func (b *Back) makeMatchSessionsPreparing() error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		min := time.Now()
+		max := time.Now().Add(-MatchSessionPreparationOffset)
+		res, err := tx.Exec(`
+            UPDATE MatchSession SET Status = ?
+            WHERE DATETIME(StartDate) > DATETIME(?)
+              AND DATETIME(StartDate) <= DATETIME(?)
+              AND Status = ?
+        `,
+			MatchSessionStatusPreparing,
+			util.TimeAsDateTimeTZ(min),
+			util.TimeAsDateTimeTZ(max),
+			MatchSessionStatusJoinable,
+		)
+		if err != nil {
+			return err
+		}
+
+		if cnt, err := res.RowsAffected(); cnt > 0 && err == nil {
+			log.Printf("info: marked %d MatchSession as preparing", cnt)
+		}
+
+		return nil
+	})
+}
+
+// doMatchMaking creates all Match and MatchEntry on Matches that reached the
+// preparing state, and dispatches seeds to the players.
+// This is done in a different transaction than makeMatchSessionsPreparing to
+// ensure no one can join when we matchmake/generate the seeds.
+func (b *Back) doMatchMaking() error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		return errors.New("not implemented: actually creating the matches")
 	})
 }

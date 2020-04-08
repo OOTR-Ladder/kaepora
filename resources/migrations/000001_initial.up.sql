@@ -99,13 +99,14 @@ CREATE TABLE "MatchEntry" (
     "CreatedAt" INT      NOT NULL,
     "StartedAt" INT      NULL,
     "EndedAt"   INT      NULL,
+    "Comment"   TEXT     NULL, -- post-race player comments
 
     -- 0: MatchEntryStatusWaiting,  1: MatchEntryStatusInProgress,
     -- 2: MatchEntryStatusFinished, 3: MatchEntryStatusForfeit
-    "Status"    INT      NOT NULL DEFAULT 0,
+    "Status"    INT NOT NULL DEFAULT 0,
 
     -- -1: MatchOutcomeLoss, 0: MatchOutcomeDraw, 1: MatchOutcomeWin
-    "Outcome"   INT      NOT NULL, -- only valid if Status > 1
+    "Outcome" INT NOT NULL, -- only valid if Status > 1
 
     PRIMARY KEY ("MatchID", "PlayerID"),
     FOREIGN KEY(MatchID)  REFERENCES Match(ID)  ON UPDATE CASCADE ON DELETE RESTRICT,

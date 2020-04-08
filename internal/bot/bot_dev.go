@@ -3,6 +3,7 @@ package bot
 import (
 	"fmt"
 	"io"
+	"kaepora/internal/util"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -14,7 +15,7 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 	}
 
 	if len(args) < 1 {
-		return errPublic("need a subcommand")
+		return util.ErrPublic("need a subcommand")
 	}
 
 	switch args[0] { // nolint:gocritic, TODO
@@ -23,7 +24,7 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 	case "uptime":
 		fmt.Fprintf(out, "The bot has been online for %s", time.Since(bot.startedAt))
 	case "error":
-		return errPublic("here's your error")
+		return util.ErrPublic("here's your error")
 	case "url":
 		fmt.Fprintf(
 			out,

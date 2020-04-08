@@ -1,7 +1,6 @@
 package back
 
 import (
-	"database/sql"
 	"kaepora/internal/util"
 	"time"
 
@@ -13,7 +12,7 @@ type Game struct {
 	ID        util.UUIDAsBlob
 	CreatedAt util.TimeAsTimestamp
 	Name      string
-	Generator sql.NullString
+	Generator string
 }
 
 func NewGame(name string, generator string) Game {
@@ -21,7 +20,7 @@ func NewGame(name string, generator string) Game {
 		ID:        util.NewUUIDAsBlob(),
 		CreatedAt: util.TimeAsTimestamp(time.Now()),
 		Name:      name,
-		Generator: util.NullString(generator),
+		Generator: generator,
 	}
 }
 
@@ -43,19 +42,19 @@ func (g *Game) Insert(tx *sqlx.Tx) error {
 	return nil
 }
 
-func (b *Back) GetGames() ([]Game, error) {
+func getGames(tx *sqlx.Tx) ([]Game, error) {
 	var ret []Game
-	if err := b.db.Select(&ret, "SELECT * FROM Game ORDER BY Name ASC"); err != nil {
+	if err := tx.Select(&ret, "SELECT * FROM Game ORDER BY Name ASC"); err != nil {
 		return nil, err
 	}
 
 	return ret, nil
 }
 
-func (b *Back) GetGameByID(id util.UUIDAsBlob) (Game, error) {
+func getGameByID(tx *sqlx.Tx, id util.UUIDAsBlob) (Game, error) {
 	var ret Game
 	query := `SELECT * FROM Game WHERE Game.ID = ? LIMIT 1`
-	if err := b.db.Get(&ret, query, id); err != nil {
+	if err := tx.Get(&ret, query, id); err != nil {
 		return Game{}, err
 	}
 

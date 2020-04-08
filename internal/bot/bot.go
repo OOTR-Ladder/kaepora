@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"kaepora/internal/back"
+	"kaepora/internal/util"
 	"log"
 	"os"
 	"runtime/debug"
@@ -46,16 +47,15 @@ func New(back *back.Back, token string) (*Bot, error) {
 
 	bot.handlers = map[string]commandHandler{
 		"!dev":      bot.cmdDev,
-		"!games":    bot.cmdGames,
 		"!help":     bot.cmdHelp,
 		"!leagues":  bot.cmdLeagues,
 		"!register": bot.cmdRegister,
 		"!rename":   bot.cmdRename,
 
-		"!cancel":  bot.cmdCancel,
-		"!forfeit": bot.cmdForfeit,
-		"!join":    bot.cmdJoin,
-		"!stop":    bot.cmdStop,
+		"!cancel":   bot.cmdCancel,
+		"!complete": bot.cmdComplete,
+		"!forfeit":  bot.cmdForfeit,
+		"!join":     bot.cmdJoin,
 	}
 
 	return bot, nil
@@ -114,7 +114,7 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 		out.Reset()
 		fmt.Fprintln(out, "There was an error processing your command.")
 
-		if errors.Is(err, errPublic("")) {
+		if errors.Is(err, util.ErrPublic("")) {
 			fmt.Fprintf(out, "```%s\n```\nIf you need help, send `!help`.", err)
 		} else {
 			fmt.Fprintf(out, "<@%s> will check the logs when he has time.", bot.adminUserID)
@@ -162,7 +162,7 @@ func (bot *Bot) dispatch(m *discordgo.Message, w io.Writer) error {
 	command, args := parseCommand(m.Content)
 	handler, ok := bot.handlers[command]
 	if !ok {
-		return errPublic(fmt.Sprintf("invalid command: %v", m.Content))
+		return util.ErrPublic(fmt.Sprintf("invalid command: %v", m.Content))
 	}
 
 	return handler(m, args, w)
@@ -178,17 +178,15 @@ func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
 		return ret
 	}
 	joinOffset := truncate(back.MatchSessionJoinableAfterOffset)
-	cancelOffset := truncate(back.MatchSessionCancellableUntilOffset)
 	prepOffset := truncate(back.MatchSessionPreparationOffset)
 
 	// nolint:lll
 	fmt.Fprintf(w, `**Available commands**:
 %[1]s
 # Management
-!games             # list games
 !help              # display this help message
 !leagues           # list leagues
-!register          # create your account and link it to your Discord account
+!register [NAME]   # create your account and link it to your Discord account
 !rename NAME       # set your display name to NAME
 
 # Racing
@@ -200,14 +198,13 @@ func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
 
 **Racing**:
 You can freely join a race and cancel without consequences between T%[2]s and T%[3]s.
-Be aware that if you join a race that is past its cancellation period (T%[3]s), you won't be able to cancel it and **you will have to forfeit.**
-You can't join a race that is in progress or has begun its preparation phase (T%[4]s).
-If you are caught cheating or attempting to guess who your opponent is **you will be banned**.
+When the race reaches its preparation phase at T%[3]s you can no longer cancel and must either complete or forfeit the race.
+You can't join a race that is in progress or has begun its preparation phase (T%[3]s).
+If you are caught cheating, using an alt, or breaking a league's rules **you will be banned**.
 `,
 
 		"```",
 		joinOffset,
-		cancelOffset,
 		prepOffset,
 	)
 

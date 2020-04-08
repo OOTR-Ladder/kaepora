@@ -12,11 +12,9 @@ import (
 
 const (
 	// joinable after T+offset (mind the negative offsets)
-	MatchSessionJoinableAfterOffset = -2 * time.Hour
-	// cancellable until T+offset
-	MatchSessionCancellableUntilOffset = -30 * time.Minute
-	// player receive seeds at T+offset
-	MatchSessionPreparationOffset = -10 * time.Minute
+	MatchSessionJoinableAfterOffset = -1 * time.Hour
+	// player receive seeds at T+offset and can no longer join/cancel
+	MatchSessionPreparationOffset = -15 * time.Minute
 )
 
 type MatchSessionStatus int
@@ -89,10 +87,20 @@ func NewMatchSession(leagueID util.UUIDAsBlob, startDate time.Time) MatchSession
 	}
 }
 
-func (b *Back) GetMatchSessionByStartDate(leagueID util.UUIDAsBlob, startDate time.Time) (MatchSession, error) {
+func getMatchSessionByStartDate(tx *sqlx.Tx, leagueID util.UUIDAsBlob, startDate time.Time) (MatchSession, error) {
 	var ret MatchSession
 	query := `SELECT * FROM MatchSession WHERE MatchSession.LeagueID = ? AND MatchSession.StartDate = ? LIMIT 1`
-	if err := b.db.Get(&ret, query, leagueID, util.TimeAsDateTimeTZ(startDate)); err != nil {
+	if err := tx.Get(&ret, query, leagueID, util.TimeAsDateTimeTZ(startDate)); err != nil {
+		return MatchSession{}, err
+	}
+
+	return ret, nil
+}
+
+func getMatchSessionByID(tx *sqlx.Tx, id util.UUIDAsBlob) (MatchSession, error) {
+	var ret MatchSession
+	query := `SELECT * FROM MatchSession WHERE MatchSession.ID = ? LIMIT 1`
+	if err := tx.Get(&ret, query, id); err != nil {
 		return MatchSession{}, err
 	}
 
@@ -100,7 +108,7 @@ func (b *Back) GetMatchSessionByStartDate(leagueID util.UUIDAsBlob, startDate ti
 }
 
 // nolint:interfacer
-func (b *Back) GetPlayerActiveSession(playerID uuid.UUID) (MatchSession, error) {
+func getPlayerActiveSession(tx *sqlx.Tx, playerID uuid.UUID) (MatchSession, error) {
 	var ret MatchSession
 	query := `
         SELECT * FROM MatchSession
@@ -109,7 +117,7 @@ func (b *Back) GetPlayerActiveSession(playerID uuid.UUID) (MatchSession, error) 
         ORDER BY MatchSession.StartDate ASC
         LIMIT 1`
 
-	if err := b.db.Get(
+	if err := tx.Get(
 		&ret, query,
 		MatchSessionStatusJoinable,
 		MatchSessionStatusPreparing,
@@ -122,7 +130,7 @@ func (b *Back) GetPlayerActiveSession(playerID uuid.UUID) (MatchSession, error) 
 	return ret, nil
 }
 
-func (b *Back) GetNextMatchSessionForLeague(leagueID util.UUIDAsBlob) (MatchSession, error) {
+func getNextMatchSessionForLeague(tx *sqlx.Tx, leagueID util.UUIDAsBlob) (MatchSession, error) {
 	var ret MatchSession
 	query := `
         SELECT * FROM MatchSession
@@ -131,7 +139,7 @@ func (b *Back) GetNextMatchSessionForLeague(leagueID util.UUIDAsBlob) (MatchSess
         ORDER BY MatchSession.StartDate ASC
         LIMIT 1`
 
-	if err := b.db.Get(
+	if err := tx.Get(
 		&ret, query,
 		leagueID,
 		util.TimeAsDateTimeTZ(time.Now()),
@@ -142,7 +150,7 @@ func (b *Back) GetNextMatchSessionForLeague(leagueID util.UUIDAsBlob) (MatchSess
 	return ret, nil
 }
 
-func (b *Back) GetNextJoinableMatchSessionForLeague(leagueID util.UUIDAsBlob) (MatchSession, error) {
+func getNextJoinableMatchSessionForLeague(tx *sqlx.Tx, leagueID util.UUIDAsBlob) (MatchSession, error) {
 	var ret MatchSession
 	query := `
         SELECT * FROM MatchSession
@@ -152,7 +160,7 @@ func (b *Back) GetNextJoinableMatchSessionForLeague(leagueID util.UUIDAsBlob) (M
         ORDER BY MatchSession.StartDate ASC
         LIMIT 1`
 
-	if err := b.db.Get(
+	if err := tx.Get(
 		&ret, query,
 		leagueID,
 		util.TimeAsDateTimeTZ(time.Now()),
@@ -223,17 +231,38 @@ func encodePlayerIDs(ids []uuid.UUID) []byte {
 	return ret
 }
 
-func (b *Back) UpdateMatchSession(s MatchSession) error {
-	return b.transaction(s.Update)
-}
-
-func (s *MatchSession) CanCancel() bool {
-	if s.Status != MatchSessionStatusJoinable {
-		return false
+func (s *MatchSession) CanCancel() error {
+	if s.Status == MatchSessionStatusWaiting {
+		// unreachable
+		return util.ErrPublic("you can't cancel a race that is not yet open to join")
 	}
 
-	deadline := s.StartDate.Time().Add(MatchSessionCancellableUntilOffset)
-	return !time.Now().After(deadline)
+	if s.Status != MatchSessionStatusJoinable {
+		return util.ErrPublic("you can't cancel a race that is not in its joinable phase")
+	}
+
+	deadline := s.StartDate.Time().Add(MatchSessionPreparationOffset)
+	if time.Now().After(deadline) {
+		return util.ErrPublic("this race is no longer cancellable, you will have to `!forfeit`")
+	}
+
+	return nil
+}
+
+func (s *MatchSession) CanForfeit() error {
+	if err := s.CanCancel(); err == nil {
+		return util.ErrPublic("you can `!cancel` the current race wihout taking a loss!")
+	}
+
+	if s.Status == MatchSessionStatusClosed {
+		return util.ErrPublic("you can't cancel a race that has already finished")
+	}
+
+	if s.Status != MatchSessionStatusPreparing && s.Status != MatchSessionStatusInProgress {
+		return util.ErrPublic("you can't cancel a race that has not started or is not in its preparation phase")
+	}
+
+	return nil
 }
 
 func (s *MatchSession) Update(tx *sqlx.Tx) error {
