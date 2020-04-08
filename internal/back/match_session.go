@@ -10,14 +10,23 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+const (
+	// joinable after T+offset (mind the negative offsets)
+	MatchSessionJoinableAfterOffset = -2 * time.Hour
+	// cancellable until T+offset
+	MatchSessionCancellableUntilOffset = -30 * time.Minute
+	// player receive seeds at T+offset
+	MatchSessionPreparationOffset = -10 * time.Minute
+)
+
 type MatchSessionStatus int
 
 const (
 	MatchSessionStatusWaiting    MatchSessionStatus = 0 // waiting for StartDate - 30m
 	MatchSessionStatusJoinable   MatchSessionStatus = 1 // waiting for runners to join
-	MatchSessionStatusPreparing  MatchSessionStatus = 2 // runners setting up race (StartDate - 10m)
+	MatchSessionStatusPreparing  MatchSessionStatus = 2 // runners setting up race
 	MatchSessionStatusInProgress MatchSessionStatus = 3 // runners still racing
-	MatchSessionStatusInClosed   MatchSessionStatus = 4 // everyone finished
+	MatchSessionStatusClosed     MatchSessionStatus = 4 // everyone finished
 )
 
 type MatchSession struct {
@@ -59,6 +68,16 @@ func (s *MatchSession) GetPlayerIDs() []uuid.UUID {
 	return uuids
 }
 
+func (s *MatchSession) HasPlayerID(needle uuid.UUID) bool {
+	for _, v := range s.GetPlayerIDs() {
+		if v == needle {
+			return true
+		}
+	}
+
+	return false
+}
+
 func NewMatchSession(leagueID util.UUIDAsBlob, startDate time.Time) MatchSession {
 	return MatchSession{
 		ID:        util.NewUUIDAsBlob(),
@@ -72,8 +91,51 @@ func NewMatchSession(leagueID util.UUIDAsBlob, startDate time.Time) MatchSession
 
 func (b *Back) GetMatchSessionByStartDate(leagueID util.UUIDAsBlob, startDate time.Time) (MatchSession, error) {
 	var ret MatchSession
-	query := `SELECT * FROM MatchSession WHERE MatchSession.LeagueID = ? && MatchSession.StartDate = ? LIMIT 1`
+	query := `SELECT * FROM MatchSession WHERE MatchSession.LeagueID = ? AND MatchSession.StartDate = ? LIMIT 1`
 	if err := b.db.Get(&ret, query, leagueID, util.TimeAsDateTimeTZ(startDate)); err != nil {
+		return MatchSession{}, err
+	}
+
+	return ret, nil
+}
+
+// nolint:interfacer
+func (b *Back) GetPlayerActiveSession(playerID uuid.UUID) (MatchSession, error) {
+	var ret MatchSession
+	query := `
+        SELECT * FROM MatchSession
+        WHERE MatchSession.Status IN(?, ?, ?) AND
+            PlayerIDs LIKE ?
+        ORDER BY MatchSession.StartDate ASC
+        LIMIT 1`
+
+	if err := b.db.Get(
+		&ret, query,
+		MatchSessionStatusJoinable,
+		MatchSessionStatusPreparing,
+		MatchSessionStatusInProgress,
+		`%"`+playerID.String()+`"%`,
+	); err != nil {
+		return MatchSession{}, err
+	}
+
+	return ret, nil
+}
+
+func (b *Back) GetNextMatchSessionForLeague(leagueID util.UUIDAsBlob) (MatchSession, error) {
+	var ret MatchSession
+	query := `
+        SELECT * FROM MatchSession
+        WHERE MatchSession.LeagueID = ? AND
+              DATETIME(MatchSession.StartDate) > DATETIME(?)
+        ORDER BY MatchSession.StartDate ASC
+        LIMIT 1`
+
+	if err := b.db.Get(
+		&ret, query,
+		leagueID,
+		util.TimeAsDateTimeTZ(time.Now()),
+	); err != nil {
 		return MatchSession{}, err
 	}
 
@@ -84,8 +146,8 @@ func (b *Back) GetNextJoinableMatchSessionForLeague(leagueID util.UUIDAsBlob) (M
 	var ret MatchSession
 	query := `
         SELECT * FROM MatchSession
-        WHERE MatchSession.LeagueID = ? &&
-              MatchSession.StartDate > ? &&
+        WHERE MatchSession.LeagueID = ? AND
+              DATETIME(MatchSession.StartDate) > DATETIME(?) AND
               MatchSession.Status = ?
         ORDER BY MatchSession.StartDate ASC
         LIMIT 1`
@@ -138,6 +200,20 @@ func (s *MatchSession) AddPlayerID(collectionToAdd ...uuid.UUID) {
 	s.PlayerIDs = encodePlayerIDs(uuids)
 }
 
+func (s *MatchSession) RemovePlayerID(toRemove uuid.UUID) {
+	current := s.GetPlayerIDs()
+	uuids := make([]uuid.UUID, 0, len(current))
+
+	for k := range current {
+		if current[k] == toRemove {
+			continue
+		}
+		uuids = append(uuids, current[k])
+	}
+
+	s.PlayerIDs = encodePlayerIDs(uuids)
+}
+
 func encodePlayerIDs(ids []uuid.UUID) []byte {
 	ret, err := json.Marshal(ids)
 	if err != nil {
@@ -149,6 +225,15 @@ func encodePlayerIDs(ids []uuid.UUID) []byte {
 
 func (b *Back) UpdateMatchSession(s MatchSession) error {
 	return b.transaction(s.Update)
+}
+
+func (s *MatchSession) CanCancel() bool {
+	if s.Status != MatchSessionStatusJoinable {
+		return false
+	}
+
+	deadline := s.StartDate.Time().Add(MatchSessionCancellableUntilOffset)
+	return !time.Now().After(deadline)
 }
 
 func (s *MatchSession) Update(tx *sqlx.Tx) error {

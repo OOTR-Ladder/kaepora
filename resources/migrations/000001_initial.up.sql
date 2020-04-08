@@ -14,7 +14,11 @@ CREATE TABLE "League" (
     "ShortCode" TEXT     NOT NULL,
     "GameID"    blob(16) NOT NULL,
     "Settings"  TEXT     NOT NULL, -- tied to the parent Game generator
-    "Schedule" TEXT      NOT NULL, -- JSON, eg. {"Mon": ["20:00 Europe/Paris"]}
+
+    -- JSON, eg. {"Mon": ["20:00 Europe/Paris"]}, the Schedule is only used for
+    -- generating MatchSession, all runtime race stuff is done using the
+    -- resulting MatchSession.
+    "Schedule" TEXT      NOT NULL,
 
     PRIMARY KEY ("ID"),
     FOREIGN KEY(GameID) REFERENCES Game(ID) ON UPDATE CASCADE ON DELETE RESTRICT
@@ -68,6 +72,8 @@ CREATE TABLE "MatchSession" (
     PRIMARY KEY ("ID"),
     FOREIGN KEY(LeagueID) REFERENCES League(ID) ON UPDATE CASCADE ON DELETE RESTRICT
 );
+
+CREATE INDEX idx_Status ON MatchSession (Status);
 
 CREATE TABLE "Match" (
     "ID"             blob(16) NOT NULL,

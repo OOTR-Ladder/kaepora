@@ -41,15 +41,16 @@ func (bot *Bot) displayLeagues(out io.Writer) error {
 		fmt.Fprintln(table, "\t\t\t\t")
 		now := time.Now()
 		for _, league := range leagues {
-			next := league.Schedule.Next()
 			var nextStr, nextDeltaStr string
-			if !next.IsZero() {
-				nextStr = next.Format("2006-01-02 15:04 MST")
-				nextDeltaStr = strings.TrimSuffix(next.Sub(now).Truncate(time.Minute).String(), "0s")
+			next, err := bot.back.GetNextMatchSessionForLeague(league.ID)
+			if err == nil {
+				nextStr = next.StartDate.Time().Format("2006-01-02 15:04 MST")
+				delta := next.StartDate.Time().Sub(now).Truncate(time.Minute)
+				nextDeltaStr = "(in " + strings.TrimSuffix(delta.String(), "0s") + ")"
 			}
 
 			fmt.Fprintf(
-				table, "%s\t%s\t%s\t(in %s)\t%.64s\n",
+				table, "%s\t%s\t%s\t%s\t%.64s\n",
 				league.ShortCode, league.Name,
 				nextStr, nextDeltaStr, league.Settings,
 			)

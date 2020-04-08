@@ -169,9 +169,21 @@ func (bot *Bot) dispatch(m *discordgo.Message, w io.Writer) error {
 }
 
 func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
-	// TODO hardcoded delays in doc
-	fmt.Fprint(w, strings.ReplaceAll(`Available commands:
-'''
+	truncate := func(v time.Duration) string {
+		ret := strings.TrimSuffix(v.Truncate(time.Second).String(), "0s")
+		if strings.HasSuffix(ret, "h0m") {
+			return strings.TrimSuffix(ret, "0m")
+		}
+
+		return ret
+	}
+	joinOffset := truncate(back.MatchSessionJoinableAfterOffset)
+	cancelOffset := truncate(back.MatchSessionCancellableUntilOffset)
+	prepOffset := truncate(back.MatchSessionPreparationOffset)
+
+	// nolint:lll
+	fmt.Fprintf(w, `**Available commands**:
+%[1]s
 # Management
 !games             # list games
 !help              # display this help message
@@ -180,23 +192,39 @@ func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
 !rename NAME       # set your display name to NAME
 
 # Racing
-!cancel            # cancel joining the next race without penalty until T-30m
+!cancel            # cancel joining the next race without penalty until T%[3]s
+!complete          # stop your race timer and register your final time
 !forfeit           # forfeit (and thus lose) the current race
 !join SHORTCODE    # join the next race of the given league (see !leagues)
-!stop              # stop your race timer and register your final time
-'''`, "'''", "```"))
+%[1]s
+
+**Racing**:
+You can freely join a race and cancel without consequences between T%[2]s and T%[3]s.
+Be aware that if you join a race that is past its cancellation period (T%[3]s), you won't be able to cancel it and **you will have to forfeit.**
+You can't join a race that is in progress or has begun its preparation phase (T%[4]s).
+If you are caught cheating or attempting to guess who your opponent is **you will be banned**.
+`,
+
+		"```",
+		joinOffset,
+		cancelOffset,
+		prepOffset,
+	)
 
 	if m.Author.ID != bot.adminUserID {
 		return nil
 	}
 
-	fmt.Fprint(w, strings.ReplaceAll(`Admin-only commands:
-'''
+	fmt.Fprintf(w, `
+**Admin-only commands**:
+%[1]s
 !dev error     error out
 !dev panic     panic and abort
 !dev uptime    display for how long the server has been running
 !dev url       display the link to use when adding the bot to a new server
-'''`, "'''", "```"))
+%[1]s`,
+		"```",
+	)
 
 	return nil
 }

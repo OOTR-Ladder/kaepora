@@ -79,3 +79,13 @@ func (b *Back) GetLeagueByShortcode(shortCode string) (League, error) {
 
 	return ret, nil
 }
+
+func (b *Back) GetLeagueByID(id util.UUIDAsBlob) (League, error) {
+	var ret League
+	query := `SELECT * FROM League WHERE League.ID = ? LIMIT 1`
+	if err := b.db.Get(&ret, query, id); err != nil {
+		return League{}, err
+	}
+
+	return ret, nil
+}

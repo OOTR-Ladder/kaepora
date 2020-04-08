@@ -3,6 +3,7 @@ package back
 import (
 	"database/sql/driver"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
 )
@@ -91,7 +92,14 @@ func (s *Schedule) hoursForWeekday(day string) []string {
 }
 
 func (s *Schedule) Scan(src interface{}) error {
-	return json.Unmarshal(src.([]byte), s)
+	switch src := src.(type) {
+	case string:
+		return json.Unmarshal([]byte(src), s)
+	case []byte:
+		return json.Unmarshal(src, s)
+	default:
+		return fmt.Errorf("expected []byte or string, got %T", src)
+	}
 }
 
 func (s Schedule) Value() (driver.Value, error) {
