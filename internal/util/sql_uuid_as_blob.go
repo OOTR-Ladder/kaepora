@@ -23,6 +23,10 @@ func (t UUIDAsBlob) UUID() uuid.UUID {
 	return uuid.UUID(t)
 }
 
+func (t UUIDAsBlob) String() string {
+	return t.UUID().String()
+}
+
 func (t *UUIDAsBlob) Scan(src interface{}) error {
 	slice, ok := src.([]byte)
 	if !ok {

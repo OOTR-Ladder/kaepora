@@ -67,5 +67,5 @@ func (ns NullTimeAsTimestamp) Value() (driver.Value, error) {
 		return nil, nil
 	}
 
-	return ns.Time, nil
+	return ns.Time.Value()
 }

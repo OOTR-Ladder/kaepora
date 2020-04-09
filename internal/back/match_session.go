@@ -265,7 +265,7 @@ func (s *MatchSession) CanForfeit() error {
 	return nil
 }
 
-func (s *MatchSession) Update(tx *sqlx.Tx) error {
+func (s *MatchSession) update(tx *sqlx.Tx) error {
 	query, args, err := squirrel.Update("MatchSession").SetMap(squirrel.Eq{
 		"StartDate": s.StartDate,
 		"Status":    s.Status,

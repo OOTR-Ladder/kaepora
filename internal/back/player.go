@@ -8,6 +8,7 @@ import (
 
 	"github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
+	glicko "github.com/zelenin/go-glicko2"
 )
 
 type Player struct {
@@ -15,6 +16,8 @@ type Player struct {
 	CreatedAt util.TimeAsTimestamp
 	Name      string
 	DiscordID sql.NullString
+
+	Rating PlayerRating `db:"-"`
 }
 
 func NewPlayer(name string) Player {
@@ -23,6 +26,10 @@ func NewPlayer(name string) Player {
 		CreatedAt: util.TimeAsTimestamp(time.Now()),
 		Name:      name,
 	}
+}
+
+func (p *Player) GlickoRating() *glicko.Rating {
+	return p.Rating.GlickoRating()
 }
 
 func (p *Player) Insert(tx *sqlx.Tx) error {
@@ -47,9 +54,7 @@ func (p *Player) Update(tx *sqlx.Tx) error {
 	query, args, err := squirrel.Update("Player").SetMap(squirrel.Eq{
 		"Name":      p.Name,
 		"DiscordID": p.DiscordID,
-	}).
-		Where("Player.ID = ?", p.ID).
-		ToSql()
+	}).Where("Player.ID = ?", p.ID).ToSql()
 	if err != nil {
 		return err
 	}
@@ -69,6 +74,16 @@ func getPlayerByName(tx *sqlx.Tx, name string) (Player, error) {
 	var ret Player
 	query := `SELECT * FROM Player WHERE Player.Name = ? LIMIT 1`
 	if err := tx.Get(&ret, query, name); err != nil {
+		return Player{}, err
+	}
+
+	return ret, nil
+}
+
+func getPlayerByID(tx *sqlx.Tx, id util.UUIDAsBlob) (Player, error) {
+	var ret Player
+	query := `SELECT * FROM Player WHERE Player.ID = ? LIMIT 1`
+	if err := tx.Get(&ret, query, id); err != nil {
 		return Player{}, err
 	}
 

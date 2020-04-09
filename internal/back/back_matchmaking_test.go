@@ -23,8 +23,18 @@ func TestMatchMaking(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := prepareSession(back, session); err != nil {
+	sessions, err := prepareSession(back, session)
+	if err != nil {
 		t.Fatal(err)
+	}
+
+	if err := back.doMatchMaking(sessions); err != nil {
+		t.Fatal(err)
+	}
+
+	// She drops after being able to cancel: forfeit and loss
+	if err := haveZeldaForfeit(back); err != nil {
+		t.Error(err)
 	}
 }
 
@@ -36,7 +46,7 @@ func haveRauruCancel(back *Back) error {
 	}); err != nil {
 		return err
 	}
-	if _, err := back.ForfeitActiveMatchSession(player); err == nil {
+	if _, err := back.ForfeitActiveMatch(player); err == nil {
 		return errors.New("expected an error when forfeiting a cancellable MatchSession")
 	}
 	if _, err := back.CancelActiveMatchSession(player); err != nil {
@@ -46,20 +56,25 @@ func haveRauruCancel(back *Back) error {
 	return nil
 }
 
+// TODO: this tests should fail 1/7 runs, take a random player rather than Zoldo
 func haveZeldaForfeit(back *Back) error {
 	var player Player
 	if err := back.transaction(func(tx *sqlx.Tx) (err error) {
 		player, err = getPlayerByName(tx, "Zelda")
 		return err
 	}); err != nil {
-		return err
+		return fmt.Errorf("can get player: %s", err)
 	}
 	if _, err := back.CancelActiveMatchSession(player); err == nil {
 		return errors.New("expected an error when cancelling after MatchSessionCancellableUntilOffset")
 	}
 
-	if _, err := back.ForfeitActiveMatchSession(player); err != nil {
-		return err
+	match, err := back.ForfeitActiveMatch(player)
+	if err != nil {
+		return fmt.Errorf("can't forfeit: %s", err)
+	}
+	if match.EndedAt.Valid {
+		return errors.New("match should not have ended")
 	}
 
 	return nil
@@ -90,39 +105,32 @@ func haveZFGBeLate(back *Back, session MatchSession) error {
 	return nil
 }
 
-func prepareSession(back *Back, session MatchSession) error {
+func prepareSession(back *Back, session MatchSession) ([]MatchSession, error) {
+	var ret []MatchSession
+
 	// He drops _before_ the race. No loss.
 	if err := haveRauruCancel(back); err != nil {
-		return fmt.Errorf("could not cancel: %s", err)
+		return nil, fmt.Errorf("could not cancel: %s", err)
 	}
 
 	// Fake being in the "preparing" time slice
 	session.StartDate = util.TimeAsDateTimeTZ(time.Now().Add(-MatchSessionPreparationOffset))
-	if err := back.transaction(session.Update); err != nil {
-		return err
+	if err := back.transaction(session.update); err != nil {
+		return nil, err
 	}
 
-	if err := back.makeMatchSessionsPreparing(); err != nil {
-		return fmt.Errorf("unable to put MatchSession in preparing state: %w", err)
+	var err error
+	ret, err = back.makeMatchSessionsPreparing()
+	if err != nil {
+		return nil, fmt.Errorf("unable to put MatchSession in preparing state: %w", err)
 	}
 
 	// Too slow buddy, should have joined before.
 	if err := haveZFGBeLate(back, session); err != nil {
-		return fmt.Errorf("could not fail to join: %s", err)
+		return nil, fmt.Errorf("could not fail to join: %s", err)
 	}
 
-	/* TODO implement doMatchMaking
-	if err := back.doMatchMaking(); err != nil {
-		return fmt.Errorf("doMatchMaking: %w", err)
-	}
-
-	// She drops after being able to cancel: forfeit and loss
-	if err := haveZeldaForfeit(back); err != nil {
-		return fmt.Errorf("could not forfeit: %s", err)
-	}
-	*/
-
-	return nil
+	return ret, nil
 }
 
 func createSessionAndJoin(back *Back) (MatchSession, error) {

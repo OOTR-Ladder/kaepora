@@ -2,7 +2,6 @@ package back
 
 import (
 	"fmt"
-	"kaepora/internal/util"
 	"log"
 	"sync"
 	"time"
@@ -38,15 +37,8 @@ func (b *Back) Run(wg *sync.WaitGroup, done <-chan struct{}) {
 	log.Print("info: starting Back dæmon")
 
 	for {
-		e := []error{ // order matters
-			b.createNextScheduledMatchSessions(),
-			b.makeMatchSessionsJoinable(),
-			b.makeMatchSessionsPreparing(),
-			b.doMatchMaking(),
-		}
-
-		if err := util.ConcatErrors(e); err != nil {
-			log.Printf("errors: %s", err)
+		if err := b.runPeriodicTasks(); err != nil {
+			log.Printf("error: runPeriodicTasks: %s", err)
 		}
 
 		select {

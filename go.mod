@@ -44,6 +44,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/viper v1.6.2 // indirect
 	github.com/xanzy/go-gitlab v0.31.0 // indirect
+	github.com/zelenin/go-glicko2 v0.0.1
 	go.mongodb.org/mongo-driver v1.3.2 // indirect
 	golang.org/x/crypto v0.0.0-20200406173513-056763e48d71 // indirect
 	golang.org/x/sys v0.0.0-20200409092240-59c9f1ba88fa // indirect

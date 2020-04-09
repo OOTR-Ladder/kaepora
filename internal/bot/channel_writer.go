@@ -19,7 +19,7 @@ type channelWriter struct {
 func newUserChannelWriter(dg *discordgo.Session, user *discordgo.User) (*channelWriter, error) {
 	channel, err := dg.UserChannelCreate(user.ID)
 	if err != nil {
-		return nil, fmt.Errorf("unable to create user channel: %s", err)
+		return nil, fmt.Errorf("unable to create user channel: %w", err)
 	}
 
 	return newChannelWriter(dg, channel.ID), nil

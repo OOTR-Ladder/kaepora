@@ -59,10 +59,33 @@ This _will not_ count as a loss and won't affect your rankings.`)
 	return nil
 }
 
-func (bot *Bot) cmdComplete(_ *discordgo.Message, _ []string, _ io.Writer) error {
-	return util.ErrPublic("not implemented")
+func (bot *Bot) cmdComplete(m *discordgo.Message, _ []string, w io.Writer) error {
+	player, err := bot.back.GetPlayerByDiscordID(m.Author.ID)
+	if err != nil {
+		return util.ErrPublic("you need to `!register` first")
+	}
+
+	if _, err := bot.back.CompleteActiveMatch(player); err != nil {
+		return err
+	}
+
+	fmt.Fprint(w, `You have completed your race! Results are TBD though.`)
+
+	return nil
 }
 
-func (bot *Bot) cmdForfeit(_ *discordgo.Message, _ []string, _ io.Writer) error {
-	return util.ErrPublic("not implemented")
+func (bot *Bot) cmdForfeit(m *discordgo.Message, _ []string, w io.Writer) error {
+	player, err := bot.back.GetPlayerByDiscordID(m.Author.ID)
+	if err != nil {
+		return util.ErrPublic("you need to `!register` first")
+	}
+
+	if _, err := bot.back.ForfeitActiveMatch(player); err != nil {
+		return err
+	}
+
+	fmt.Fprint(w, `You have forfeited your current race.
+If your opponent completes the race you will receive a loss, if your opponent also forfeits the race will be a draw.`)
+
+	return nil
 }

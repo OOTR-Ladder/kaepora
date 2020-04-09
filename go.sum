@@ -679,6 +679,8 @@ github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q
 github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:aYKd//L2LvnjZzWKhF00oedf4jCCReLcmhLdhm1A27Q=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
+github.com/zelenin/go-glicko2 v0.0.1 h1:1fElA+WuehBUw58eArkVN91Cj2gR1Bz2Ygz/NOJz864=
+github.com/zelenin/go-glicko2 v0.0.1/go.mod h1:nvUFxncrGQmnDIxxxGKP2GVeCx1E9dABHjR88DCzd7A=
 github.com/zenazn/goji v0.9.0/go.mod h1:7S9M489iMyHBNxwZnk9/EHS098H4/F6TATF2mIxtB1Q=
 gitlab.com/cznic/ebnf2y v1.0.0/go.mod h1:jx14dqOldV2pRvSi8HASTB/k5fkIv2TwjYAp5py0MTs=
 gitlab.com/cznic/golex v1.0.0/go.mod h1:vkWdDgqbbThjRHoOLU7yNPgMxaubAkwnvF/4zeG8cvU=
