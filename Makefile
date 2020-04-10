@@ -22,13 +22,13 @@ randomizer:
 	rm docker/OoT-Randomizer/.dockerignore
 
 coverage:
-	go test -covermode=count -coverprofile=coverage.cov ./...
+	go test -covermode=count -coverprofile=coverage.cov --timeout=6s ./...
 	go tool cover -html=coverage.cov -o coverage.html
 	rm coverage.cov
 	sensible-browser coverage.html
 
 test:
-	go test ./...
+	go test --timeout=6s ./...
 
 vendor:
 	go get -v

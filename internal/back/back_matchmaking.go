@@ -174,7 +174,7 @@ func joinCurrentMatchSessionTx(
 func (b *Back) doMatchMaking(sessions []MatchSession) error {
 	return b.transaction(func(tx *sqlx.Tx) error {
 		for k := range sessions {
-			if err := matchMakeSession(tx, sessions[k]); err != nil {
+			if err := b.matchMakeSession(tx, sessions[k]); err != nil {
 				return err
 			}
 
@@ -204,13 +204,16 @@ type pair struct {
 }
 
 // I'm going to do things the sqlite way and JOIN nothing here, don't be afraid.
-func matchMakeSession(tx *sqlx.Tx, session MatchSession) error {
+func (b *Back) matchMakeSession(tx *sqlx.Tx, session MatchSession) error {
 	session, err := ensureSessionIsValidForMatchMaking(tx, session)
 	if err != nil {
 		return err
 	}
 	if session.Status != MatchSessionStatusInProgress {
 		return nil
+	}
+	if err := b.sendSessionCountdownNotification(tx, session); err != nil {
+		return err
 	}
 
 	players, err := getSessionPlayersSortedByRating(tx, session)

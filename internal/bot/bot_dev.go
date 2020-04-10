@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"kaepora/internal/util"
+	"strings"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -13,7 +14,6 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 	if m.Author.ID != bot.adminUserID {
 		return fmt.Errorf("!dev command ran by a non-admin: %v", args)
 	}
-
 	if len(args) < 1 {
 		return util.ErrPublic("need a subcommand")
 	}
@@ -34,6 +34,16 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 				discordgo.PermissionEmbedLinks|discordgo.PermissionAttachFiles|
 				discordgo.PermissionManageMessages|discordgo.PermissionMentionEveryone,
 		)
+	case "setannounce": // SHORTCODE
+		shortcode := strings.Join(args[1:], " ")
+		err := bot.back.SetLeagueAnnounceChannel(shortcode, m.ChannelID)
+		if err != nil {
+			return err
+		}
+
+		channel := newChannelWriter(bot.dg, m.ChannelID)
+		defer channel.Flush()
+		fmt.Fprintf(channel, "Announcements for league `%s` now will now happen in this channel.", shortcode)
 	}
 
 	return nil

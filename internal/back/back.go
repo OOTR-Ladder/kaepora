@@ -10,7 +10,8 @@ import (
 )
 
 type Back struct {
-	db *sqlx.DB
+	db            *sqlx.DB
+	notifications chan Notification
 }
 
 func New(sqlDriver string, sqlDSN string) (*Back, error) {
@@ -27,8 +28,13 @@ func New(sqlDriver string, sqlDSN string) (*Back, error) {
 	}
 
 	return &Back{
-		db: db,
+		db:            db,
+		notifications: make(chan Notification, 32),
 	}, nil
+}
+
+func (b *Back) GetNotificationsChan() <-chan Notification {
+	return b.notifications
 }
 
 func (b *Back) Run(wg *sync.WaitGroup, done <-chan struct{}) {

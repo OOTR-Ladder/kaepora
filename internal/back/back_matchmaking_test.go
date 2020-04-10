@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"kaepora/internal/util"
+	"log"
 	"os"
 	"testing"
 	"time"
@@ -18,6 +19,14 @@ import (
 
 func TestMatchMaking(t *testing.T) {
 	back := createFixturedTestBack(t)
+
+	// Consume notifications to avoid filling and blocking the chan
+	go func(c <-chan Notification) {
+		for {
+			notif := <-c
+			log.Printf("got notification: %s", notif.String())
+		}
+	}(back.GetNotificationsChan())
 
 	session, err := createSessionAndJoin(back)
 	if err != nil {
@@ -277,6 +286,7 @@ func fixtures(tx *sqlx.Tx) error {
 	}
 
 	for _, v := range leagues {
+		v.AnnounceDiscordChannelID = "DEADBEEF"
 		if err := v.insert(tx); err != nil {
 			return err
 		}
