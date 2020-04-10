@@ -16,7 +16,7 @@ require (
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-critic/go-critic v0.4.3 // indirect
-	github.com/gocql/gocql v0.0.0-20200324094621-6d895e38b0a5 // indirect
+	github.com/gocql/gocql v0.0.0-20200410100145-b454769479c6 // indirect
 	github.com/golang-migrate/migrate/v4 v4.10.0
 	github.com/golangci/gocyclo v0.0.0-20180528144436-0a533e8fa43d // indirect
 	github.com/golangci/golangci-lint v1.24.0
@@ -35,6 +35,7 @@ require (
 	github.com/mitchellh/mapstructure v1.2.2 // indirect
 	github.com/nakagami/firebirdsql v0.0.0-20200406064823-1a78d260c2bc // indirect
 	github.com/pelletier/go-toml v1.7.0 // indirect
+	github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0 // indirect
 	github.com/securego/gosec v0.0.0-20200401082031-e946c8c39989 // indirect
 	github.com/shopspring/decimal v0.0.0-20200227202807-02e2044944cc // indirect
 	github.com/sirupsen/logrus v1.5.0 // indirect
@@ -42,15 +43,15 @@ require (
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/cobra v0.0.7 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
-	github.com/spf13/viper v1.6.2 // indirect
+	github.com/spf13/viper v1.6.3 // indirect
 	github.com/xanzy/go-gitlab v0.31.0 // indirect
 	github.com/zelenin/go-glicko2 v0.0.1
 	go.mongodb.org/mongo-driver v1.3.2 // indirect
 	golang.org/x/crypto v0.0.0-20200406173513-056763e48d71 // indirect
 	golang.org/x/sys v0.0.0-20200409092240-59c9f1ba88fa // indirect
-	golang.org/x/tools v0.0.0-20200408132156-9ee5ef7a2c0d // indirect
+	golang.org/x/tools v0.0.0-20200410132612-ae9902aceb98 // indirect
 	google.golang.org/api v0.21.0 // indirect
-	google.golang.org/genproto v0.0.0-20200409111301-baae70f3302d // indirect
+	google.golang.org/genproto v0.0.0-20200410110633-0848e9f44c36 // indirect
 	google.golang.org/grpc v1.28.1 // indirect
 	gopkg.in/ini.v1 v1.55.0 // indirect
 	modernc.org/ql v1.0.1 // indirect
