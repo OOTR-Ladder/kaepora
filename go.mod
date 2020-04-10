@@ -5,9 +5,9 @@ go 1.14
 require (
 	cloud.google.com/go v0.56.0 // indirect
 	cloud.google.com/go/spanner v1.4.0 // indirect
-	github.com/ClickHouse/clickhouse-go v1.3.14 // indirect
+	github.com/ClickHouse/clickhouse-go v1.4.0 // indirect
 	github.com/Masterminds/squirrel v1.2.0
-	github.com/aws/aws-sdk-go v1.30.4 // indirect
+	github.com/aws/aws-sdk-go v1.30.7 // indirect
 	github.com/bombsimon/wsl/v2 v2.2.0 // indirect
 	github.com/bwmarrin/discordgo v0.20.2
 	github.com/cockroachdb/cockroach-go v0.0.0-20200312223839-f565e4789405 // indirect
@@ -29,7 +29,7 @@ require (
 	github.com/jackc/pgconn v1.5.0 // indirect
 	github.com/jirfag/go-printf-func-name v0.0.0-20200119135958-7558a9eaa5af // indirect
 	github.com/jmoiron/sqlx v1.2.1-0.20190826204134-d7d95172beb5
-	github.com/klauspost/compress v1.10.3 // indirect
+	github.com/klauspost/compress v1.10.4 // indirect
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/mitchellh/mapstructure v1.2.2 // indirect
@@ -44,12 +44,14 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/viper v1.6.2 // indirect
 	github.com/xanzy/go-gitlab v0.31.0 // indirect
-	go.mongodb.org/mongo-driver v1.3.1 // indirect
-	golang.org/x/crypto v0.0.0-20200403201458-baeed622b8d8 // indirect
-	golang.org/x/sys v0.0.0-20200406113430-c6e801f48ba2 // indirect
-	golang.org/x/tools v0.0.0-20200406144418-7db14c95bfa9 // indirect
+	github.com/zelenin/go-glicko2 v0.0.1
+	go.mongodb.org/mongo-driver v1.3.2 // indirect
+	golang.org/x/crypto v0.0.0-20200406173513-056763e48d71 // indirect
+	golang.org/x/sys v0.0.0-20200409092240-59c9f1ba88fa // indirect
+	golang.org/x/tools v0.0.0-20200408132156-9ee5ef7a2c0d // indirect
 	google.golang.org/api v0.21.0 // indirect
-	google.golang.org/genproto v0.0.0-20200406120821-33397c535dc2 // indirect
+	google.golang.org/genproto v0.0.0-20200409111301-baae70f3302d // indirect
+	google.golang.org/grpc v1.28.1 // indirect
 	gopkg.in/ini.v1 v1.55.0 // indirect
 	modernc.org/ql v1.0.1 // indirect
 	mvdan.cc/unparam v0.0.0-20200314162735-0ac8026f7d06 // indirect

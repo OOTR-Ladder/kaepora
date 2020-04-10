@@ -15,6 +15,7 @@ type League struct {
 	ShortCode string
 	GameID    util.UUIDAsBlob
 	Settings  string
+	Schedule  Schedule
 }
 
 func NewLeague(name string, shortCode string, gameID util.UUIDAsBlob, settings string) League {
@@ -25,6 +26,7 @@ func NewLeague(name string, shortCode string, gameID util.UUIDAsBlob, settings s
 		Name:      name,
 		ShortCode: shortCode,
 		Settings:  settings,
+		Schedule:  NewSchedule(),
 	}
 }
 
@@ -36,6 +38,7 @@ func (l *League) Insert(tx *sqlx.Tx) error {
 		"Name":      l.Name,
 		"ShortCode": l.ShortCode,
 		"Settings":  l.Settings,
+		"Schedule":  l.Schedule,
 	}).ToSql()
 	if err != nil {
 		return err
@@ -48,29 +51,29 @@ func (l *League) Insert(tx *sqlx.Tx) error {
 	return nil
 }
 
-func (b *Back) GetLeagues() ([]League, error) {
+func getLeagues(tx *sqlx.Tx) ([]League, error) {
 	var ret []League
-	if err := b.db.Select(&ret, "SELECT * FROM League ORDER BY League.Name ASC"); err != nil {
+	if err := tx.Select(&ret, "SELECT * FROM League ORDER BY League.Name ASC"); err != nil {
 		return nil, err
 	}
 
 	return ret, nil
 }
 
-func (b *Back) GetLeaguesByGameID(gameID util.UUIDAsBlob) ([]League, error) {
-	var ret []League
-	query := `SELECT * FROM League WHERE League.GameID = ? ORDER BY League.Name ASC`
-	if err := b.db.Select(&ret, query, gameID); err != nil {
-		return nil, err
-	}
-
-	return ret, nil
-}
-
-func (b *Back) GetLeagueByShortcode(shortCode string) (League, error) {
+func getLeagueByShortCode(tx *sqlx.Tx, shortCode string) (League, error) {
 	var ret League
 	query := `SELECT * FROM League WHERE League.ShortCode = ? LIMIT 1`
-	if err := b.db.Get(&ret, query, shortCode); err != nil {
+	if err := tx.Get(&ret, query, shortCode); err != nil {
+		return League{}, err
+	}
+
+	return ret, nil
+}
+
+func getLeagueByID(tx *sqlx.Tx, id util.UUIDAsBlob) (League, error) {
+	var ret League
+	query := `SELECT * FROM League WHERE League.ID = ? LIMIT 1`
+	if err := tx.Get(&ret, query, id); err != nil {
 		return League{}, err
 	}
 

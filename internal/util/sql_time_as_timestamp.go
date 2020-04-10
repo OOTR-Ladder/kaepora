@@ -42,6 +42,13 @@ type NullTimeAsTimestamp struct {
 	Valid bool // Valid is true if TimeAsTimestamp is not NULL
 }
 
+func NewNullTimeAsTimestamp(t time.Time) NullTimeAsTimestamp {
+	return NullTimeAsTimestamp{
+		Time:  TimeAsTimestamp(t),
+		Valid: !t.IsZero(),
+	}
+}
+
 // Scan implements the Scanner interface.
 func (ns *NullTimeAsTimestamp) Scan(value interface{}) error {
 	if value == nil {
@@ -60,5 +67,5 @@ func (ns NullTimeAsTimestamp) Value() (driver.Value, error) {
 		return nil, nil
 	}
 
-	return ns.Time, nil
+	return ns.Time.Value()
 }

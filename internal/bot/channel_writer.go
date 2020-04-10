@@ -3,6 +3,7 @@ package bot
 import (
 	"bytes"
 	"fmt"
+	"log"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -18,7 +19,7 @@ type channelWriter struct {
 func newUserChannelWriter(dg *discordgo.Session, user *discordgo.User) (*channelWriter, error) {
 	channel, err := dg.UserChannelCreate(user.ID)
 	if err != nil {
-		return nil, fmt.Errorf("unable to create user channel: %s", err)
+		return nil, fmt.Errorf("unable to create user channel: %w", err)
 	}
 
 	return newChannelWriter(dg, channel.ID), nil
@@ -45,6 +46,7 @@ func (w *channelWriter) Flush() error {
 	}
 
 	_, err := w.dg.ChannelMessageSend(w.channelID, w.buf.String())
+	log.Print("info: <self> " + w.buf.String())
 	w.buf.Reset()
 	return err
 }

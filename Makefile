@@ -11,7 +11,16 @@ $(EXEC):
 migrate:
 	go build -tags "sqlite3 sqlite_json" github.com/golang-migrate/migrate/v4/cmd/migrate
 
-.PHONY: $(EXEC) vendor upgrade lint
+.PHONY: $(EXEC) vendor upgrade lint test coverage
+
+coverage:
+	go test -covermode=count -coverprofile=coverage.cov ./...
+	go tool cover -html=coverage.cov -o coverage.html
+	rm coverage.cov
+	sensible-browser coverage.html
+
+test:
+	go test ./...
 
 vendor:
 	go get -v

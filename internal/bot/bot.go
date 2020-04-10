@@ -1,30 +1,35 @@
 package bot
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"io"
 	"kaepora/internal/back"
+	"kaepora/internal/util"
 	"log"
 	"os"
+	"runtime/debug"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
 
+type commandHandler func(m *discordgo.Message, args []string, w io.Writer) error
+
 type Bot struct {
-	back        *back.Back
+	back *back.Back
+
+	startedAt   time.Time
 	token       string
 	dg          *discordgo.Session
 	adminUserID string
 
-	closed bool
-	closer chan<- struct{}
+	handlers map[string]commandHandler
 }
 
-func New(back *back.Back, token string, closer chan<- struct{}) (*Bot, error) {
+func New(back *back.Back, token string) (*Bot, error) {
 	dg, err := discordgo.New("Bot " + token)
 	if err != nil {
 		return nil, err
@@ -32,57 +37,46 @@ func New(back *back.Back, token string, closer chan<- struct{}) (*Bot, error) {
 
 	bot := &Bot{
 		back:        back,
-		closer:      closer,
 		adminUserID: os.Getenv("KAEPORA_ADMIN_USER"),
 		token:       token,
 		dg:          dg,
+		startedAt:   time.Now(),
 	}
 
 	dg.AddHandler(bot.handleMessage)
 
+	bot.handlers = map[string]commandHandler{
+		"!dev":      bot.cmdDev,
+		"!help":     bot.cmdHelp,
+		"!leagues":  bot.cmdLeagues,
+		"!register": bot.cmdRegister,
+		"!rename":   bot.cmdRename,
+
+		"!cancel":   bot.cmdCancel,
+		"!complete": bot.cmdComplete,
+		"!forfeit":  bot.cmdForfeit,
+		"!join":     bot.cmdJoin,
+	}
+
 	return bot, nil
 }
 
-func (bot *Bot) Serve() {
-	if bot.closed {
-		log.Panic("attempted to serve closed bot")
-		return
-	}
-
-	log.Println("starting Discord bot")
-
+func (bot *Bot) Serve(wg *sync.WaitGroup, done <-chan struct{}) {
+	log.Println("info: starting Discord bot")
+	wg.Add(1)
+	defer wg.Done()
 	if err := bot.dg.Open(); err != nil {
 		log.Panic(err)
 	}
-}
 
-func (bot *Bot) Close() error {
-	if bot.closed { // don't close twice
-		return nil
-	}
-
-	log.Println("closing Discord bot")
-
-	_, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	close(bot.closer)
-	bot.closed = true
+	<-done
 
 	if err := bot.dg.Close(); err != nil {
-		return err
+		log.Printf("error: could not close Discord bot: %s", err)
 	}
-
-	return nil
 }
 
 func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
-	defer func() {
-		r := recover()
-		if r != nil {
-			log.Print("panic: ", r)
-		}
-	}()
-
 	// Ignore webooks, self, bots, non-commands.
 	if m.Author == nil || m.Author.ID == s.State.User.ID ||
 		m.Author.Bot || !strings.HasPrefix(m.Content, "!") {
@@ -90,7 +84,7 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 	}
 
 	log.Printf(
-		"<%s(%s)@%s#%s> %s",
+		"info: <%s(%s)@%s#%s> %s",
 		m.Author.String(), m.Author.ID,
 		m.GuildID, m.ChannelID,
 		m.Content,
@@ -98,11 +92,21 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 
 	out, err := newUserChannelWriter(s, m.Author)
 	if err != nil {
-		log.Print(err)
+		log.Printf("error: could not create channel writer: %s", err)
 	}
 	defer func() {
 		if err := out.Flush(); err != nil {
-			log.Printf("error when sending message: %s", err)
+			log.Printf("error: could not send message: %s", err)
+		}
+	}()
+
+	defer func() {
+		r := recover()
+		if r != nil {
+			out.Reset()
+			fmt.Fprintf(out, "Someting went very wrong, please tell <@%s>.", bot.adminUserID)
+			log.Print("panic: ", r)
+			log.Print(debug.Stack())
 		}
 	}()
 
@@ -110,17 +114,17 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 		out.Reset()
 		fmt.Fprintln(out, "There was an error processing your command.")
 
-		if errors.Is(err, errPublic("")) {
+		if errors.Is(err, util.ErrPublic("")) {
 			fmt.Fprintf(out, "```%s\n```\nIf you need help, send `!help`.", err)
 		} else {
 			fmt.Fprintf(out, "<@%s> will check the logs when he has time.", bot.adminUserID)
 		}
 
-		log.Printf("dispatch error: %s", err)
+		log.Printf("error: failed to process command: %s", err)
 	}
 
 	if err := bot.maybeCleanupMessage(s, m.ChannelID, m.Message.ID); err != nil {
-		log.Printf("unable to cleanup message: %s", err)
+		log.Printf("error: unable to cleanup message: %s", err)
 	}
 }
 
@@ -135,7 +139,7 @@ func (bot *Bot) maybeCleanupMessage(s *discordgo.Session, channelID string, mess
 	}
 
 	if err := s.ChannelMessageDelete(channelID, messageID); err != nil {
-		log.Printf("unable to delete message: %s", err)
+		log.Printf("error: unable to delete message: %s", err)
 	}
 
 	return nil
@@ -154,63 +158,70 @@ func parseCommand(cmd string) (string, []string) {
 	}
 }
 
-func (bot *Bot) dispatch(m *discordgo.Message, out io.Writer) error {
+func (bot *Bot) dispatch(m *discordgo.Message, w io.Writer) error {
 	command, args := parseCommand(m.Content)
-
-	switch command { // nolint:gocritic, TODO
-	case "!help":
-		fmt.Fprint(out, help())
-		return nil
-	case "!dev":
-		return bot.dispatchDev(m, args, out)
-	case "!games":
-		return bot.dispatchGames(m, args, out)
-	case "!leagues":
-		return bot.dispatchLeagues(m, args, out)
-	case "!self":
-		return bot.dispatchSelf(m, args, out)
-	default:
-		return errPublic(fmt.Sprintf("invalid command: %v", m.Content))
+	handler, ok := bot.handlers[command]
+	if !ok {
+		return util.ErrPublic(fmt.Sprintf("invalid command: %v", m.Content))
 	}
+
+	return handler(m, args, w)
 }
 
-func (bot *Bot) dispatchDev(m *discordgo.Message, args []string, out io.Writer) error {
+func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
+	truncate := func(v time.Duration) string {
+		ret := strings.TrimSuffix(v.Truncate(time.Second).String(), "0s")
+		if strings.HasSuffix(ret, "h0m") {
+			return strings.TrimSuffix(ret, "0m")
+		}
+
+		return ret
+	}
+	joinOffset := truncate(back.MatchSessionJoinableAfterOffset)
+	prepOffset := truncate(back.MatchSessionPreparationOffset)
+
+	// nolint:lll
+	fmt.Fprintf(w, `**Available commands**:
+%[1]s
+# Management
+!help              # display this help message
+!leagues           # list leagues
+!register [NAME]   # create your account and link it to your Discord account
+!rename NAME       # set your display name to NAME
+
+# Racing
+!cancel            # cancel joining the next race without penalty until T%[3]s
+!complete          # stop your race timer and register your final time
+!forfeit           # forfeit (and thus lose) the current race
+!join SHORTCODE    # join the next race of the given league (see !leagues)
+%[1]s
+
+**Racing**:
+You can freely join a race and cancel without consequences between T%[2]s and T%[3]s.
+When the race reaches its preparation phase at T%[3]s you can no longer cancel and must either complete or forfeit the race.
+You can't join a race that is in progress or has begun its preparation phase (T%[3]s).
+If you are caught cheating, using an alt, or breaking a league's rules **you will be banned**.
+`,
+
+		"```",
+		joinOffset,
+		prepOffset,
+	)
+
 	if m.Author.ID != bot.adminUserID {
-		return fmt.Errorf("!dev command ran by a non-admin: %v", args)
+		return nil
 	}
 
-	if len(args) < 1 {
-		return errPublic("need a subcommand")
-	}
-
-	switch args[0] { // nolint:gocritic, TODO
-	case "down":
-		bot.Close()
-	case "panic":
-		panic("an admin asked me to panic")
-	case "error":
-		return errPublic("here's your error")
-	case "url":
-		fmt.Fprintf(
-			out,
-			"https://discordapp.com/api/oauth2/authorize?client_id=%s&scope=bot&permissions=%d",
-			bot.dg.State.User.ID,
-			discordgo.PermissionReadMessages|discordgo.PermissionSendMessages|
-				discordgo.PermissionEmbedLinks|discordgo.PermissionAttachFiles|
-				discordgo.PermissionManageMessages|discordgo.PermissionMentionEveryone,
-		)
-	}
+	fmt.Fprintf(w, `
+**Admin-only commands**:
+%[1]s
+!dev error     error out
+!dev panic     panic and abort
+!dev uptime    display for how long the server has been running
+!dev url       display the link to use when adding the bot to a new server
+%[1]s`,
+		"```",
+	)
 
 	return nil
-}
-
-func help() string {
-	return strings.ReplaceAll(`Available commands:
-'''
-!games                # list games
-!help                 # display this help message
-!leagues              # list leagues
-!self name NAME       # set your display name to NAME
-!self register        # create your account and link it to your Discord account
-'''`, "'''", "```")
 }

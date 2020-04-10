@@ -3,6 +3,10 @@
 /kaepora
 /migrate
 
+# Runtime
 /kaepora.db
 /kaepora.db-journal
+/coverage.cov
+/coverage.html
+
 /vendor
