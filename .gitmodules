@@ -1,0 +1,3 @@
+[submodule "docker/OoT-Randomizer"]
+	path = docker/OoT-Randomizer
+	url = https://github.com/TestRunnerSRL/OoT-Randomizer.git

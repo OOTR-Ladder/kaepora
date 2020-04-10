@@ -11,7 +11,15 @@ $(EXEC):
 migrate:
 	go build -tags "sqlite3 sqlite_json" github.com/golang-migrate/migrate/v4/cmd/migrate
 
-.PHONY: $(EXEC) vendor upgrade lint test coverage
+.PHONY: $(EXEC) vendor upgrade lint test coverage randomizer
+
+
+randomizer:
+	cp docker/.dockerignore docker/OoT-Randomizer/
+	docker build docker/OoT-Randomizer \
+		-f docker/OoT-Randomizer.dockerfile \
+		-t oot-randomizer:$(shell git -C docker/OoT-Randomizer describe --tags)
+	rm docker/OoT-Randomizer/.dockerignore
 
 coverage:
 	go test -covermode=count -coverprofile=coverage.cov ./...
