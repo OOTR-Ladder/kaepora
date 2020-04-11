@@ -196,7 +196,7 @@ func createJoinableSession(back *Back) (MatchSession, League, error) {
 
 		// TODO: use the schedule to create the session
 		session = NewMatchSession(league.ID, time.Now().Add(-MatchSessionJoinableAfterOffset))
-		if err := session.Insert(tx); err != nil {
+		if err := session.insert(tx); err != nil {
 			return fmt.Errorf("failed to insert MatchSession: %w", err)
 		}
 
@@ -272,19 +272,19 @@ func fixtures(tx *sqlx.Tx) error {
 		"Our Lord and Savior ZFG",
 	}
 
-	if err := game.Insert(tx); err != nil {
+	if err := game.insert(tx); err != nil {
 		return err
 	}
 
 	for _, v := range leagues {
-		if err := v.Insert(tx); err != nil {
+		if err := v.insert(tx); err != nil {
 			return err
 		}
 	}
 
 	for _, v := range playerNames {
 		player := NewPlayer(v)
-		if err := player.Insert(tx); err != nil {
+		if err := player.insert(tx); err != nil {
 			return err
 		}
 	}

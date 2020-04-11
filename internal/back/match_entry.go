@@ -47,7 +47,7 @@ func NewMatchEntry(matchID, playerID util.UUIDAsBlob) MatchEntry {
 	}
 }
 
-func (m *MatchEntry) Insert(tx *sqlx.Tx) error {
+func (m *MatchEntry) insert(tx *sqlx.Tx) error {
 	query, args, err := squirrel.Insert("MatchEntry").SetMap(squirrel.Eq{
 		"MatchID":   m.MatchID,
 		"PlayerID":  m.PlayerID,

@@ -227,16 +227,16 @@ func matchMakeSession(tx *sqlx.Tx, session MatchSession) error {
 		if err != nil {
 			return err
 		}
-		if err := match.Insert(tx); err != nil {
+		if err := match.insert(tx); err != nil {
 			return err
 		}
 
 		e1 := NewMatchEntry(match.ID, pairs[k].p1.ID)
-		if err := e1.Insert(tx); err != nil {
+		if err := e1.insert(tx); err != nil {
 			return err
 		}
 		e2 := NewMatchEntry(match.ID, pairs[k].p2.ID)
-		if err := e2.Insert(tx); err != nil {
+		if err := e2.insert(tx); err != nil {
 			return err
 		}
 	}

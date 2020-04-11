@@ -56,7 +56,7 @@ func (b *Back) createNextScheduledMatchSessions() error {
 
 			log.Printf("info: creating MatchSession for League %s at %s", league.ShortCode, next)
 			sess := NewMatchSession(league.ID, next)
-			if err := sess.Insert(tx); err != nil {
+			if err := sess.insert(tx); err != nil {
 				return err
 			}
 		}

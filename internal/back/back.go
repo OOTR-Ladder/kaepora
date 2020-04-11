@@ -79,12 +79,12 @@ func (b *Back) LoadFixtures() error {
 	leagues[1].Schedule.SetAll([]string{"21:00 Europe/Paris"})
 
 	return b.transaction(func(tx *sqlx.Tx) error {
-		if err := game.Insert(tx); err != nil {
+		if err := game.insert(tx); err != nil {
 			return err
 		}
 
 		for _, v := range leagues {
-			if err := v.Insert(tx); err != nil {
+			if err := v.insert(tx); err != nil {
 				return err
 			}
 		}

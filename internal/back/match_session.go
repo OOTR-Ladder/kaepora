@@ -146,7 +146,7 @@ func getNextJoinableMatchSessionForLeague(tx *sqlx.Tx, leagueID util.UUIDAsBlob)
 	return ret, nil
 }
 
-func (s *MatchSession) Insert(tx *sqlx.Tx) error {
+func (s *MatchSession) insert(tx *sqlx.Tx) error {
 	query, args, err := squirrel.Insert("MatchSession").SetMap(squirrel.Eq{
 		"ID":        s.ID,
 		"CreatedAt": s.CreatedAt,

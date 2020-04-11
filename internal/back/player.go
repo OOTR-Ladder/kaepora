@@ -32,7 +32,7 @@ func (p *Player) GlickoRating() *glicko.Rating {
 	return p.Rating.GlickoRating()
 }
 
-func (p *Player) Insert(tx *sqlx.Tx) error {
+func (p *Player) insert(tx *sqlx.Tx) error {
 	query, args, err := squirrel.Insert("Player").SetMap(squirrel.Eq{
 		"ID":        p.ID,
 		"CreatedAt": p.CreatedAt,
@@ -126,6 +126,6 @@ func (b *Back) RegisterDiscordPlayer(discordID, name string) error {
 
 		player := NewPlayer(name)
 		player.DiscordID = util.NullString(discordID)
-		return player.Insert(tx)
+		return player.insert(tx)
 	})
 }

@@ -30,7 +30,7 @@ func NewLeague(name string, shortCode string, gameID util.UUIDAsBlob, settings s
 	}
 }
 
-func (l *League) Insert(tx *sqlx.Tx) error {
+func (l *League) insert(tx *sqlx.Tx) error {
 	query, args, err := squirrel.Insert("League").SetMap(squirrel.Eq{
 		"ID":        l.ID,
 		"CreatedAt": l.CreatedAt,
