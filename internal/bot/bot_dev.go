@@ -44,6 +44,11 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 		channel := newChannelWriter(bot.dg, m.ChannelID)
 		defer channel.Flush()
 		fmt.Fprintf(channel, "Announcements for league `%s` now will now happen in this channel.", shortcode)
+	case "seed": // SHORTCODE SEED
+		if len(args) != 3 {
+			return util.ErrPublic("expected 2 arguments: SHORTCODE SEED")
+		}
+		return bot.back.SendDevSeed(m.Author.ID, args[1], args[2])
 	}
 
 	return nil

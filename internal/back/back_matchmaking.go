@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"database/sql"
 	"fmt"
+	"kaepora/internal/generator"
 	"kaepora/internal/util"
 	"log"
 	"math/big"
@@ -34,8 +35,92 @@ func (b *Back) doMatchMaking(sessions []MatchSession) error {
 }
 
 func (b *Back) generateAndSendSeeds(tx *sqlx.Tx, session MatchSession) error {
-	// TODO
+	matches, err := getMatchesBySessionID(tx, session.ID)
+	if err != nil {
+		return err
+	}
+	log.Printf("debug: got %d matches to generate seeds for", len(matches))
+
+	var e []error
+
+	for k := range matches {
+		p1, err := getPlayerByID(tx, matches[k].Entries[0].PlayerID)
+		if err != nil {
+			e = append(e, err)
+			continue
+		}
+		p2, err := getPlayerByID(tx, matches[k].Entries[1].PlayerID)
+		if err != nil {
+			e = append(e, err)
+			continue
+		}
+
+		go func(match Match) {
+			log.Printf("debug: generating seed %s for match %s", match.Seed, match.ID)
+			if err := b.generateAndSendMatchSeed(match, session, p1, p2); err != nil {
+				log.Printf("unable to generate and send seed: %s", err)
+			}
+		}(matches[k])
+	}
+
+	return util.ConcatErrors(e)
+}
+
+func (b *Back) generateAndSendMatchSeed(
+	match Match,
+	session MatchSession,
+	p1, p2 Player,
+) error {
+	gen, err := generator.NewGenerator(match.Generator)
+	if err != nil {
+		return err
+	}
+
+	patch, err := gen.Generate(match.Settings, match.Seed)
+	if err != nil {
+		return err
+	}
+
+	b.sendMatchSeedNotification(match, session, patch, p1, p2)
+
 	return nil
+}
+
+func (b *Back) SendDevSeed(
+	discordID string,
+	leagueShortCode string,
+	seed string,
+) error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		league, err := getLeagueByShortCode(tx, leagueShortCode)
+		if err != nil {
+			return fmt.Errorf("could not find League: %w", err)
+		}
+
+		game, err := getGameByID(tx, league.GameID)
+		if err != nil {
+			return fmt.Errorf("could not find Game: %w", err)
+		}
+
+		player, err := getPlayerByDiscordID(tx, discordID)
+		if err != nil {
+			return err
+		}
+
+		gen, err := generator.NewGenerator(game.Generator)
+		if err != nil {
+			return err
+		}
+
+		patch, err := gen.Generate(league.Settings, seed)
+		if err != nil {
+			return err
+		}
+
+		b.sendMatchSeedNotification(Match{}, MatchSession{}, patch, player, Player{})
+
+		return nil
+	})
 }
 
 type pair struct {

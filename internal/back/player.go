@@ -108,7 +108,7 @@ func (b *Back) UpdateDiscordPlayerName(discordID string, name string) error {
 	return b.transaction(func(tx *sqlx.Tx) error {
 		player, err := getPlayerByDiscordID(tx, discordID)
 		if err != nil {
-			return util.ErrPublic("you need to `!register` first")
+			return nil
 		}
 
 		if player.Name == name {

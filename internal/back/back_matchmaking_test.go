@@ -51,6 +51,8 @@ func TestMatchMaking(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	time.Sleep(50 * time.Millisecond) // HACK: wait for fake seed generation
+
 	// Drops after being able to cancel: forfeit and loss
 	// There was a random player kicked out of the race already so we can't
 	// hardcode a name to forfeit.
@@ -61,7 +63,6 @@ func TestMatchMaking(t *testing.T) {
 	if err := fakeSessionStart(back, sessions[0].ID); err != nil {
 		t.Fatal(err)
 	}
-
 	if err := back.startMatchSessions(); err != nil {
 		t.Fatal(err)
 	}
@@ -73,8 +74,8 @@ func TestMatchMaking(t *testing.T) {
 	expected := map[NotificationType]int{
 		NotificationTypeMatchSessionCountdown: 3, // /* TODO created when using schedule */, joinable, preparing, starting.
 		NotificationTypeMatchSessionOddKick:   1, // that one unlucky runner
-		// TODO NotificationTypeMatchSeed:        6, // 1 per joined player
-		NotificationTypeMatchEnd: 6, // 1 per joined player
+		NotificationTypeMatchSeed:             6, // 1 per joined player
+		NotificationTypeMatchEnd:              6, // 1 per joined player
 	}
 	if !reflect.DeepEqual(expected, notifs) {
 		t.Errorf("notifications count does not match\nexpected: %#v\nactual: %#v", expected, notifs)
@@ -386,8 +387,8 @@ func createFixturedTestBack(t *testing.T) *Back {
 func fixtures(tx *sqlx.Tx) error {
 	game := NewGame("The Test Game", "test:v0")
 	leagues := []League{
-		NewLeague("The A League", "testa", game.ID, "AJWGAJARB2BGATTACAJBASAGJBHNTHA3EA2UTVAFAA"),
-		NewLeague("The B League", "testb", game.ID, "A2WGAJARB2BCAAJWAAJBASAGJBHNTWAKEUPNEOAFAA"),
+		NewLeague("The A League", "testa", game.ID, "s3.json"),
+		NewLeague("The B League", "testb", game.ID, "s3.json"),
 	}
 	playerNames := []string{
 		"Darunia", "Nabooru", "Rauru", "Ruto", "Saria", "Zelda", "Impa",

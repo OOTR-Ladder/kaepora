@@ -56,6 +56,11 @@ func getPlayerByDiscordID(tx *sqlx.Tx, discordID string) (Player, error) {
 	var ret Player
 	query := `SELECT * FROM Player WHERE Player.DiscordID = ? LIMIT 1`
 	if err := tx.Get(&ret, query, discordID); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return Player{}, util.ErrPublic(
+				"there is no player associated with this discord account, did you forget to `!register`?",
+			)
+		}
 		return Player{}, err
 	}
 

@@ -1,9 +1,12 @@
 package bot
 
 import (
+	"bytes"
 	"fmt"
 	"kaepora/internal/back"
 	"time"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 func (bot *Bot) sendNotification(notif back.Notification) error {
@@ -14,6 +17,8 @@ func (bot *Bot) sendNotification(notif back.Notification) error {
 		return bot.sendMatchEndNotification(notif)
 	case back.NotificationTypeMatchSessionEmpty:
 		return bot.sendMatchSessionEmptyNotification(notif)
+	case back.NotificationTypeMatchSeed:
+		return bot.sendMatchSeedNotification(notif)
 	default:
 		return fmt.Errorf("got unknown notification type: %d", notif.Type)
 	}
@@ -134,4 +139,33 @@ func (bot *Bot) getWriterForNotification(notif back.Notification) (*channelWrite
 	default:
 		return nil, fmt.Errorf("cannot handle recipient type: %d", notif.RecipientType)
 	}
+}
+
+func (bot *Bot) sendMatchSeedNotification(notif back.Notification) error {
+	w, err := bot.getWriterForNotification(notif)
+	if err != nil {
+		return err
+	}
+	defer w.Flush()
+
+	session := notif.Payload["MatchSession"].(back.MatchSession)
+	name := fmt.Sprintf(
+		"seed_%s.zpf",
+		session.StartDate.Time().Format("2006-01-02_15h04"),
+	)
+
+	w.files = append(w.files, &discordgo.File{
+		Name:        name,
+		ContentType: "application/zlib",
+		Reader:      bytes.NewReader(notif.Payload["patch"].([]byte)),
+	})
+
+	fmt.Fprintf(w,
+		"Here is your seed in _Patch_ format. "+
+			"You can use https://ootrandomizer.com/generator to patch your ROM.\n"+
+			"Your race starts in %s, **do not explore the seed before the match starts**.",
+		time.Until(session.StartDate.Time()).Truncate(time.Second),
+	)
+
+	return nil
 }

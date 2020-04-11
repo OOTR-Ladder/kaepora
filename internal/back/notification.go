@@ -144,3 +144,31 @@ func (b *Back) sendMatchEndNotification(tx *sqlx.Tx, match Match, player Player)
 
 	return nil
 }
+
+func (b *Back) sendMatchSeedNotification(
+	match Match,
+	session MatchSession,
+	patch []byte,
+	p1, p2 Player,
+) {
+	send := func(player Player) {
+		if !player.DiscordID.Valid {
+			log.Printf("ignored sendMatchSeedNotification to Player '%s' without a DiscordID", player.ID)
+			return
+		}
+
+		b.notifications <- Notification{
+			RecipientType: NotificationRecipientTypeDiscordUser,
+			Recipient:     player.DiscordID.String,
+			Type:          NotificationTypeMatchSeed,
+			Payload: map[string]interface{}{
+				"patch":        patch,
+				"MatchSession": session,
+				"Match":        match,
+			},
+		}
+	}
+
+	send(p1)
+	send(p2)
+}

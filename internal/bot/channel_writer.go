@@ -14,6 +14,7 @@ type channelWriter struct {
 	channelID string
 	dg        *discordgo.Session
 	buf       bytes.Buffer
+	files     []*discordgo.File
 }
 
 func newUserChannelWriter(dg *discordgo.Session, userID string) (*channelWriter, error) {
@@ -38,6 +39,7 @@ func (w *channelWriter) Write(p []byte) (int, error) {
 
 func (w *channelWriter) Reset() {
 	w.buf.Reset()
+	w.files = nil
 }
 
 func (w *channelWriter) Flush() error {
@@ -45,8 +47,14 @@ func (w *channelWriter) Flush() error {
 		return nil
 	}
 
-	_, err := w.dg.ChannelMessageSend(w.channelID, w.buf.String())
-	log.Print("info: <self> " + w.buf.String())
+	msg := discordgo.MessageSend{
+		Content: w.buf.String(),
+		Files:   w.files,
+	}
+
+	_, err := w.dg.ChannelMessageSendComplex(w.channelID, &msg)
+	log.Print("info: <self> " + msg.Content)
+
 	w.buf.Reset()
 	return err
 }

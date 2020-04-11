@@ -54,20 +54,6 @@ func (m *Match) hasEnded() bool {
 	return m.EndedAt.Valid
 }
 
-func (m *Match) getPlayerAndOpponentEntries(playerID util.UUIDAsBlob) (MatchEntry, MatchEntry, error) {
-	if len(m.Entries) != 2 {
-		return MatchEntry{}, MatchEntry{}, fmt.Errorf("invalid Match %s: not exactly 2 MatchEntry", m.ID)
-	}
-
-	if m.Entries[0].PlayerID == playerID {
-		return m.Entries[0], m.Entries[1], nil
-	} else if m.Entries[1].PlayerID == playerID {
-		return m.Entries[1], m.Entries[0], nil
-	}
-
-	return MatchEntry{}, MatchEntry{}, fmt.Errorf("could not find MatchEntry for player %s in Match %d", playerID, m.ID)
-}
-
 func (m *Match) insert(tx *sqlx.Tx) error {
 	query, args, err := squirrel.Insert("Match").SetMap(squirrel.Eq{
 		"ID":             m.ID,
@@ -81,6 +67,22 @@ func (m *Match) insert(tx *sqlx.Tx) error {
 		"Settings":  m.Settings,
 		"Seed":      m.Seed,
 	}).ToSql()
+	if err != nil {
+		return err
+	}
+
+	if _, err := tx.Exec(query, args...); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Match) update(tx *sqlx.Tx) error {
+	query, args, err := squirrel.Update("Match").SetMap(squirrel.Eq{
+		"StartedAt": m.StartedAt,
+		"EndedAt":   m.EndedAt,
+	}).Where("Match.ID = ?", m.ID).ToSql()
 	if err != nil {
 		return err
 	}
@@ -112,18 +114,33 @@ func getMatchByPlayerAndSession(tx *sqlx.Tx, player Player, session MatchSession
 	return match, nil
 }
 
-func (m *Match) update(tx *sqlx.Tx) error {
-	query, args, err := squirrel.Update("Match").SetMap(squirrel.Eq{
-		"StartedAt": m.StartedAt,
-		"EndedAt":   m.EndedAt,
-	}).Where("Match.ID = ?", m.ID).ToSql()
-	if err != nil {
-		return err
+func getMatchesBySessionID(tx *sqlx.Tx, sessionID util.UUIDAsBlob) ([]Match, error) {
+	var matches []Match
+	query := `SELECT Match.* FROM Match WHERE Match.MatchSessionID = ?`
+	if err := tx.Select(&matches, query, sessionID); err != nil {
+		return nil, fmt.Errorf("could not fetch match: %w", err)
 	}
 
-	if _, err := tx.Exec(query, args...); err != nil {
-		return err
+	for k := range matches {
+		query = `SELECT * FROM MatchEntry WHERE MatchEntry.MatchID = ?`
+		if err := tx.Select(&matches[k].Entries, query, matches[k].ID); err != nil {
+			return nil, fmt.Errorf("could not fetch entries: %w", err)
+		}
 	}
 
-	return nil
+	return matches, nil
+}
+
+func (m *Match) getPlayerAndOpponentEntries(playerID util.UUIDAsBlob) (MatchEntry, MatchEntry, error) {
+	if len(m.Entries) != 2 {
+		return MatchEntry{}, MatchEntry{}, fmt.Errorf("invalid Match %s: not exactly 2 MatchEntry", m.ID)
+	}
+
+	if m.Entries[0].PlayerID == playerID {
+		return m.Entries[0], m.Entries[1], nil
+	} else if m.Entries[1].PlayerID == playerID {
+		return m.Entries[1], m.Entries[0], nil
+	}
+
+	return MatchEntry{}, MatchEntry{}, fmt.Errorf("could not find MatchEntry for player %s in Match %d", playerID, m.ID)
 }

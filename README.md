@@ -7,6 +7,7 @@ $ # Install Go: https://golang.org/dl/
 $ make
 $ ./migrate -database sqlite3://kaepora.db -path resources/migrations up
 $ ./kaepora fixtures
+$ # Place ZOOTDEC.z64 and ARCHIVE.bin in the `resources/oot-randomizer` directory.
 $ KAEPORA_DISCORD_TOKEN=$YOUR_BOT_TOKEN \
   KAEPORA_ADMIN_USER=$YOUR_DISCORD_USER_ID \
   ./kaepora serve
