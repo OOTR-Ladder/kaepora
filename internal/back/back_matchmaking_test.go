@@ -32,8 +32,10 @@ func TestMatchMaking(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// She drops after being able to cancel: forfeit and loss
-	if err := haveZeldaForfeit(back); err != nil {
+	// Drops after being able to cancel: forfeit and loss
+	// There was a random player kicked out of the race already so we can't
+	// hardcode a name to forfeit.
+	if err := haveSomeoneForfeit(back, sessions); err != nil {
 		t.Error(err)
 	}
 }
@@ -56,15 +58,16 @@ func haveRauruCancel(back *Back) error {
 	return nil
 }
 
-// TODO: this tests should fail 1/7 runs, take a random player rather than Zoldo
-func haveZeldaForfeit(back *Back) error {
+func haveSomeoneForfeit(back *Back, sessions []MatchSession) error {
+	playerID := util.UUIDAsBlob(sessions[0].GetPlayerIDs()[0])
 	var player Player
 	if err := back.transaction(func(tx *sqlx.Tx) (err error) {
-		player, err = getPlayerByName(tx, "Zelda")
+		player, err = getPlayerByID(tx, playerID)
 		return err
 	}); err != nil {
 		return fmt.Errorf("can get player: %s", err)
 	}
+
 	if _, err := back.CancelActiveMatchSession(player); err == nil {
 		return errors.New("expected an error when cancelling after MatchSessionCancellableUntilOffset")
 	}
