@@ -37,21 +37,23 @@ func (bot *Bot) sendCountdown(notif back.Notification) error {
 		)
 	case back.MatchSessionStatusJoinable:
 		fmt.Fprintf(w,
-			"The race for league `%s` can now be joined!\nThe race starts in %s.",
+			"The race for league `%s` can now be joined! It race starts at %s (in %s).",
 			league.ShortCode,
+			session.StartDate.Time(),
 			time.Until(session.StartDate.Time()).Truncate(time.Second),
 		)
 	case back.MatchSessionStatusPreparing:
 		fmt.Fprintf(w,
 			"The race for league `%s` is closed, you can no longer join. "+
 				"Seeds will soon be sent to the contestants.\n"+
-				"The race starts in %s.",
+				"The race starts at %s (in %s). Watch this channel for the official go.",
 			league.ShortCode,
+			session.StartDate.Time(),
 			time.Until(session.StartDate.Time()).Truncate(time.Second),
 		)
 	case back.MatchSessionStatusInProgress:
 		fmt.Fprintf(w,
-			"The race for league `%s` **starts now**.\nGood luck and have fun!",
+			"The race for league `%s` **starts now**. Good luck and have fun!",
 			league.ShortCode,
 		)
 	}
