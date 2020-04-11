@@ -50,6 +50,10 @@ func (m *Match) end() {
 	m.EndedAt = util.NewNullTimeAsTimestamp(time.Now())
 }
 
+func (m *Match) hasEnded() bool {
+	return m.EndedAt.Valid
+}
+
 func (m *Match) getPlayerAndOpponentEntries(playerID util.UUIDAsBlob) (MatchEntry, MatchEntry, error) {
 	if len(m.Entries) != 2 {
 		return MatchEntry{}, MatchEntry{}, fmt.Errorf("invalid Match %s: not exactly 2 MatchEntry", m.ID)

@@ -1,6 +1,7 @@
 package back
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -24,7 +25,7 @@ func TestMatchMaking(t *testing.T) {
 	go func(c <-chan Notification) {
 		for {
 			notif := <-c
-			log.Printf("got notification: %s", notif.String())
+			log.Printf("test: got notification: %s", notif.String())
 		}
 	}(back.GetNotificationsChan())
 
@@ -68,7 +69,8 @@ func haveRauruCancel(back *Back) error {
 }
 
 func haveSomeoneForfeit(back *Back, sessions []MatchSession) error {
-	playerID := util.UUIDAsBlob(sessions[0].GetPlayerIDs()[0])
+	index := randomIndex(len(sessions[0].GetPlayerIDs()))
+	playerID := util.UUIDAsBlob(sessions[0].GetPlayerIDs()[index])
 	var player Player
 	if err := back.transaction(func(tx *sqlx.Tx) (err error) {
 		player, err = getPlayerByID(tx, playerID)
@@ -76,6 +78,8 @@ func haveSomeoneForfeit(back *Back, sessions []MatchSession) error {
 	}); err != nil {
 		return fmt.Errorf("can get player: %s", err)
 	}
+
+	log.Printf("test: forfeiting %s", player.Name)
 
 	if _, err := back.CancelActiveMatchSession(player); err == nil {
 		return errors.New("expected an error when cancelling after MatchSessionCancellableUntilOffset")
@@ -85,8 +89,30 @@ func haveSomeoneForfeit(back *Back, sessions []MatchSession) error {
 	if err != nil {
 		return fmt.Errorf("can't forfeit: %s", err)
 	}
-	if match.EndedAt.Valid {
+	if match.hasEnded() {
 		return errors.New("match should not have ended")
+	}
+
+	var opponent Player
+	if err := back.transaction(func(tx *sqlx.Tx) (err error) {
+		_, against, err := match.getPlayerAndOpponentEntries(player.ID)
+		if err != nil {
+			return fmt.Errorf("cannot get MatchEntry: %s", err)
+		}
+
+		opponent, err = getPlayerByID(tx, against.PlayerID)
+		return err
+	}); err != nil {
+		return fmt.Errorf("cannot get opponent: %s", err)
+	}
+
+	match, err = back.CompleteActiveMatch(opponent)
+	if err != nil {
+		return err
+	}
+
+	if !match.hasEnded() {
+		return errors.New("the match should have ended")
 	}
 
 	return nil
@@ -285,15 +311,18 @@ func fixtures(tx *sqlx.Tx) error {
 		return err
 	}
 
-	for _, v := range leagues {
-		v.AnnounceDiscordChannelID = "DEADBEEF"
+	for k, v := range leagues {
+		v.ID[0] = byte(k)
+		v.AnnounceDiscordChannelID = fmt.Sprintf("league#%d", k)
 		if err := v.insert(tx); err != nil {
 			return err
 		}
 	}
 
-	for _, v := range playerNames {
+	for k, v := range playerNames {
 		player := NewPlayer(v)
+		player.ID[0] = byte(k)
+		player.DiscordID = sql.NullString{Valid: true, String: fmt.Sprintf("player#%d", k)}
 		if err := player.insert(tx); err != nil {
 			return err
 		}

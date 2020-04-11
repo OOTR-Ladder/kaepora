@@ -45,7 +45,7 @@ func (b *Back) CancelActiveMatchSession(player Player) (MatchSession, error) {
 }
 
 func (b *Back) ForfeitActiveMatch(player Player) (Match, error) {
-	var match Match
+	var ret Match
 	if err := b.transaction(func(tx *sqlx.Tx) error {
 		match, self, against, err := getActiveMatchAndEntriesForPlayer(tx, player)
 		if err != nil {
@@ -54,22 +54,52 @@ func (b *Back) ForfeitActiveMatch(player Player) (Match, error) {
 
 		self.forfeit(&against, &match)
 
-		e := []error{
+		if err := util.ConcatErrors([]error{
 			self.update(tx),
 			against.update(tx),
 			match.update(tx),
+			b.maybeSendMatchEndNotifications(tx, match, player, against.PlayerID),
+		}); err != nil {
+			return err
 		}
 
-		return util.ConcatErrors(e)
+		ret = match
+		return nil
 	}); err != nil {
 		return Match{}, err
 	}
 
-	return match, nil
+	return ret, nil
+}
+
+func (b *Back) maybeSendMatchEndNotifications(
+	tx *sqlx.Tx,
+	match Match,
+	player Player,
+	opponentID util.UUIDAsBlob,
+) error {
+	if !match.hasEnded() {
+		return nil
+	}
+
+	opponent, err := getPlayerByID(tx, opponentID)
+	if err != nil {
+		return err
+	}
+
+	if err := b.sendMatchEndNotification(tx, match, player); err != nil {
+		return err
+	}
+
+	if err := b.sendMatchEndNotification(tx, match, opponent); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (b *Back) CompleteActiveMatch(player Player) (Match, error) {
-	var match Match
+	var ret Match
 	if err := b.transaction(func(tx *sqlx.Tx) error {
 		match, self, against, err := getActiveMatchAndEntriesForPlayer(tx, player)
 		if err != nil {
@@ -78,18 +108,22 @@ func (b *Back) CompleteActiveMatch(player Player) (Match, error) {
 
 		self.complete(&against, &match)
 
-		e := []error{
+		if err := util.ConcatErrors([]error{
 			self.update(tx),
 			against.update(tx),
 			match.update(tx),
+			b.maybeSendMatchEndNotifications(tx, match, player, against.PlayerID),
+		}); err != nil {
+			return err
 		}
 
-		return util.ConcatErrors(e)
+		ret = match
+		return nil
 	}); err != nil {
 		return Match{}, err
 	}
 
-	return match, nil
+	return ret, nil
 }
 
 func (b *Back) JoinCurrentMatchSession(
@@ -178,11 +212,18 @@ func (b *Back) doMatchMaking(sessions []MatchSession) error {
 				return err
 			}
 
-			// TODO generate & send seeds
+			if err := b.generateAndSendSeeds(tx, sessions[k]); err != nil {
+				return err
+			}
 		}
 
 		return nil
 	})
+}
+
+func (b *Back) generateAndSendSeeds(tx *sqlx.Tx, session MatchSession) error {
+	// TODO
+	return nil
 }
 
 type byRating []Player
@@ -205,7 +246,7 @@ type pair struct {
 
 // I'm going to do things the sqlite way and JOIN nothing here, don't be afraid.
 func (b *Back) matchMakeSession(tx *sqlx.Tx, session MatchSession) error {
-	session, err := ensureSessionIsValidForMatchMaking(tx, session)
+	session, err := b.ensureSessionIsValidForMatchMaking(tx, session)
 	if err != nil {
 		return err
 	}
@@ -303,7 +344,7 @@ func getSessionPlayersSortedByRating(tx *sqlx.Tx, session MatchSession) ([]Playe
 	return players, nil
 }
 
-func ensureSessionIsValidForMatchMaking(tx *sqlx.Tx, session MatchSession) (MatchSession, error) {
+func (b *Back) ensureSessionIsValidForMatchMaking(tx *sqlx.Tx, session MatchSession) (MatchSession, error) {
 	players := session.GetPlayerIDs()
 	// No one wants to play =(
 	if len(players) <= 1 {
@@ -318,6 +359,13 @@ func ensureSessionIsValidForMatchMaking(tx *sqlx.Tx, session MatchSession) (Matc
 		toRemove := players[randomIndex(len(players))]
 		log.Printf("info: removed odd player %s from session %s", toRemove, session.ID.UUID())
 		session.RemovePlayerID(toRemove)
+		player, err := getPlayerByID(tx, util.UUIDAsBlob(toRemove))
+		if err != nil {
+			return MatchSession{}, fmt.Errorf("unable to fetch odd player: %w", err)
+		}
+		if err := b.sendOddKickNotification(player); err != nil {
+			return MatchSession{}, fmt.Errorf("unable to send kick notification: %w", err)
+		}
 	}
 
 	session.Status = MatchSessionStatusInProgress

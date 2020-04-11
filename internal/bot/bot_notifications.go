@@ -10,6 +10,8 @@ func (bot *Bot) sendNotification(notif back.Notification) error {
 	switch notif.Type {
 	case back.NotificationTypeSessionCountdown:
 		return bot.sendCountdown(notif)
+	case back.NotificationTypeMatchEnd:
+		return bot.sendMatchEndNotification(notif)
 	default:
 		return fmt.Errorf("got unknown notification type: %d", notif.Type)
 	}
@@ -52,6 +54,47 @@ func (bot *Bot) sendCountdown(notif back.Notification) error {
 			"The race for league `%s` **starts now**.\nGood luck and have fun!",
 			league.ShortCode,
 		)
+	}
+
+	return nil
+}
+
+func (bot *Bot) sendMatchEndNotification(notif back.Notification) error {
+	w, err := bot.getWriterForNotification(notif)
+	if err != nil {
+		return err
+	}
+	defer w.Flush()
+
+	opponent := notif.Payload["Opponent"].(back.Player)
+	selfEntry := notif.Payload["PlayerMatchEntry"].(back.MatchEntry)
+	opponentEntry := notif.Payload["OpponentMatchEntry"].(back.MatchEntry)
+
+	fmt.Fprintf(w, "Your race against %s has ended.\n", opponent.Name)
+
+	start, end := selfEntry.StartedAt.Time.Time(), selfEntry.EndedAt.Time.Time()
+	delta := end.Sub(start).Truncate(time.Second)
+	if selfEntry.Status == back.MatchEntryStatusForfeit {
+		fmt.Fprintf(w, "You forfeited your race after %s.\n", delta)
+	} else if selfEntry.Status == back.MatchEntryStatusFinished {
+		fmt.Fprintf(w, "You completed your race in %s.\n", delta)
+	}
+
+	start, end = selfEntry.StartedAt.Time.Time(), selfEntry.EndedAt.Time.Time()
+	delta = end.Sub(start).Truncate(time.Second)
+	if opponentEntry.Status == back.MatchEntryStatusForfeit {
+		fmt.Fprintf(w, "%s forfeited after %s.\n", opponent.Name, delta)
+	} else if opponentEntry.Status == back.MatchEntryStatusFinished {
+		fmt.Fprintf(w, "%s completed his/her race in %s.\n", opponent.Name, delta)
+	}
+
+	switch selfEntry.Outcome {
+	case back.MatchEntryOutcomeWin:
+		fmt.Fprint(w, "**You won!**")
+	case back.MatchEntryOutcomeDraw:
+		fmt.Fprint(w, "**The race is a draw.**")
+	case back.MatchEntryOutcomeLoss:
+		fmt.Fprintf(w, "**%s wins.**", opponent.Name)
 	}
 
 	return nil
