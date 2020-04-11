@@ -1,6 +1,9 @@
 package back
 
 import (
+	"database/sql"
+	"errors"
+	"fmt"
 	"kaepora/internal/util"
 	"time"
 
@@ -57,6 +60,22 @@ func getPlayerByDiscordID(tx *sqlx.Tx, discordID string) (Player, error) {
 	}
 
 	return ret, nil
+}
+
+func (b *Back) SetLeagueAnnounceChannel(shortcode, channelID string) error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		league, err := getLeagueByShortCode(tx, shortcode)
+		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				return util.ErrPublic(fmt.Sprintf("invalid shortcode '%s'", shortcode))
+			}
+
+			return err
+		}
+
+		league.AnnounceDiscordChannelID = channelID
+		return league.update(tx)
+	})
 }
 
 // TODO remove the need for this

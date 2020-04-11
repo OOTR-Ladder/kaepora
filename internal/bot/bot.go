@@ -26,7 +26,8 @@ type Bot struct {
 	dg          *discordgo.Session
 	adminUserID string
 
-	handlers map[string]commandHandler
+	handlers      map[string]commandHandler
+	notifications <-chan back.Notification
 }
 
 func New(back *back.Back, token string) (*Bot, error) {
@@ -36,11 +37,12 @@ func New(back *back.Back, token string) (*Bot, error) {
 	}
 
 	bot := &Bot{
-		back:        back,
-		adminUserID: os.Getenv("KAEPORA_ADMIN_USER"),
-		token:       token,
-		dg:          dg,
-		startedAt:   time.Now(),
+		back:          back,
+		adminUserID:   os.Getenv("KAEPORA_ADMIN_USER"),
+		token:         token,
+		dg:            dg,
+		startedAt:     time.Now(),
+		notifications: back.GetNotificationsChan(),
 	}
 
 	dg.AddHandler(bot.handleMessage)
@@ -69,7 +71,17 @@ func (bot *Bot) Serve(wg *sync.WaitGroup, done <-chan struct{}) {
 		log.Panic(err)
 	}
 
-	<-done
+loop:
+	for {
+		select {
+		case notif := <-bot.notifications:
+			if err := bot.sendNotification(notif); err != nil {
+				log.Printf("unable to send notification: %s", err)
+			}
+		case <-done:
+			break loop
+		}
+	}
 
 	if err := bot.dg.Close(); err != nil {
 		log.Printf("error: could not close Discord bot: %s", err)
@@ -90,7 +102,7 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 		m.Content,
 	)
 
-	out, err := newUserChannelWriter(s, m.Author)
+	out, err := newUserChannelWriter(s, m.Author.ID)
 	if err != nil {
 		log.Printf("error: could not create channel writer: %s", err)
 	}
@@ -215,10 +227,11 @@ If you are caught cheating, using an alt, or breaking a league's rules **you wil
 	fmt.Fprintf(w, `
 **Admin-only commands**:
 %[1]s
-!dev error     error out
-!dev panic     panic and abort
-!dev uptime    display for how long the server has been running
-!dev url       display the link to use when adding the bot to a new server
+!dev error                  # error out
+!dev panic                  # panic and abort
+!dev setannounce SHORTCODE  # configure a league to post its announcements in the channel the command was sent in
+!dev uptime                 # display for how long the server has been running
+!dev url                    # display the link to use when adding the bot to a new server
 %[1]s`,
 		"```",
 	)

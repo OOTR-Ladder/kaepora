@@ -10,7 +10,8 @@ import (
 )
 
 type Back struct {
-	db *sqlx.DB
+	db            *sqlx.DB
+	notifications chan Notification
 }
 
 func New(sqlDriver string, sqlDSN string) (*Back, error) {
@@ -27,8 +28,13 @@ func New(sqlDriver string, sqlDSN string) (*Back, error) {
 	}
 
 	return &Back{
-		db: db,
+		db:            db,
+		notifications: make(chan Notification, 32),
 	}, nil
+}
+
+func (b *Back) GetNotificationsChan() <-chan Notification {
+	return b.notifications
 }
 
 func (b *Back) Run(wg *sync.WaitGroup, done <-chan struct{}) {
@@ -79,12 +85,12 @@ func (b *Back) LoadFixtures() error {
 	leagues[1].Schedule.SetAll([]string{"21:00 Europe/Paris"})
 
 	return b.transaction(func(tx *sqlx.Tx) error {
-		if err := game.Insert(tx); err != nil {
+		if err := game.insert(tx); err != nil {
 			return err
 		}
 
 		for _, v := range leagues {
-			if err := v.Insert(tx); err != nil {
+			if err := v.insert(tx); err != nil {
 				return err
 			}
 		}

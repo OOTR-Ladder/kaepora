@@ -54,9 +54,11 @@ func (b *Back) createNextScheduledMatchSessions() error {
 				return err
 			}
 
-			log.Printf("info: creating MatchSession for League %s at %s", league.ShortCode, next)
 			sess := NewMatchSession(league.ID, next)
-			if err := sess.Insert(tx); err != nil {
+			if err := sess.insert(tx); err != nil {
+				return err
+			}
+			if err := b.sendSessionCountdownNotification(tx, sess); err != nil {
 				return err
 			}
 		}
@@ -71,23 +73,29 @@ func (b *Back) makeMatchSessionsJoinable() error {
 	return b.transaction(func(tx *sqlx.Tx) error {
 		min := time.Now().Add(-MatchSessionPreparationOffset)
 		max := time.Now().Add(-MatchSessionJoinableAfterOffset)
-		res, err := tx.Exec(`
-            UPDATE MatchSession SET Status = ?
+		var sessions []MatchSession
+		if err := tx.Select(&sessions, `
+            SELECT * FROM MatchSession
             WHERE DATETIME(StartDate) > DATETIME(?)
               AND DATETIME(StartDate) <= DATETIME(?)
               AND Status = ?
         `,
-			MatchSessionStatusJoinable,
 			util.TimeAsDateTimeTZ(min),
 			util.TimeAsDateTimeTZ(max),
 			MatchSessionStatusWaiting,
-		)
-		if err != nil {
+		); err != nil {
 			return err
 		}
 
-		if cnt, err := res.RowsAffected(); cnt > 0 && err == nil {
-			log.Printf("info: marked %d MatchSession as joinable", cnt)
+		for k := range sessions {
+			sessions[k].Status = MatchSessionStatusJoinable
+			if err := sessions[k].update(tx); err != nil {
+				return err
+			}
+
+			if err := b.sendSessionCountdownNotification(tx, sessions[k]); err != nil {
+				return err
+			}
 		}
 
 		return nil
@@ -118,7 +126,13 @@ func (b *Back) makeMatchSessionsPreparing() ([]MatchSession, error) {
 
 		for k := range sessions {
 			sessions[k].Status = MatchSessionStatusPreparing
-			sessions[k].update(tx)
+			if err := sessions[k].update(tx); err != nil {
+				return err
+			}
+
+			if err := b.sendSessionCountdownNotification(tx, sessions[k]); err != nil {
+				return err
+			}
 		}
 
 		return nil

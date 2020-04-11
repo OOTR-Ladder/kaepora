@@ -20,6 +20,8 @@ CREATE TABLE "League" (
     -- resulting MatchSession.
     "Schedule" TEXT      NOT NULL,
 
+    "AnnounceDiscordChannelID" TEXT NULL,
+
     PRIMARY KEY ("ID"),
     FOREIGN KEY(GameID) REFERENCES Game(ID) ON UPDATE CASCADE ON DELETE RESTRICT
 );

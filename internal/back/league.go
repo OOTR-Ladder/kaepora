@@ -16,6 +16,8 @@ type League struct {
 	GameID    util.UUIDAsBlob
 	Settings  string
 	Schedule  Schedule
+
+	AnnounceDiscordChannelID string
 }
 
 func NewLeague(name string, shortCode string, gameID util.UUIDAsBlob, settings string) League {
@@ -30,7 +32,7 @@ func NewLeague(name string, shortCode string, gameID util.UUIDAsBlob, settings s
 	}
 }
 
-func (l *League) Insert(tx *sqlx.Tx) error {
+func (l *League) insert(tx *sqlx.Tx) error {
 	query, args, err := squirrel.Insert("League").SetMap(squirrel.Eq{
 		"ID":        l.ID,
 		"CreatedAt": l.CreatedAt,
@@ -39,7 +41,30 @@ func (l *League) Insert(tx *sqlx.Tx) error {
 		"ShortCode": l.ShortCode,
 		"Settings":  l.Settings,
 		"Schedule":  l.Schedule,
+
+		"AnnounceDiscordChannelID": l.AnnounceDiscordChannelID,
 	}).ToSql()
+	if err != nil {
+		return err
+	}
+
+	if _, err := tx.Exec(query, args...); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (l *League) update(tx *sqlx.Tx) error {
+	query, args, err := squirrel.Update("League").SetMap(squirrel.Eq{
+		"GameID":    l.GameID,
+		"Name":      l.Name,
+		"ShortCode": l.ShortCode,
+		"Settings":  l.Settings,
+		"Schedule":  l.Schedule,
+
+		"AnnounceDiscordChannelID": l.AnnounceDiscordChannelID,
+	}).Where("League.ID = ?", l.ID).ToSql()
 	if err != nil {
 		return err
 	}

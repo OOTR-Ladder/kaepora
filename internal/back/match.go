@@ -50,6 +50,10 @@ func (m *Match) end() {
 	m.EndedAt = util.NewNullTimeAsTimestamp(time.Now())
 }
 
+func (m *Match) hasEnded() bool {
+	return m.EndedAt.Valid
+}
+
 func (m *Match) getPlayerAndOpponentEntries(playerID util.UUIDAsBlob) (MatchEntry, MatchEntry, error) {
 	if len(m.Entries) != 2 {
 		return MatchEntry{}, MatchEntry{}, fmt.Errorf("invalid Match %s: not exactly 2 MatchEntry", m.ID)
@@ -64,7 +68,7 @@ func (m *Match) getPlayerAndOpponentEntries(playerID util.UUIDAsBlob) (MatchEntr
 	return MatchEntry{}, MatchEntry{}, fmt.Errorf("could not find MatchEntry for player %s in Match %d", playerID, m.ID)
 }
 
-func (m *Match) Insert(tx *sqlx.Tx) error {
+func (m *Match) insert(tx *sqlx.Tx) error {
 	query, args, err := squirrel.Insert("Match").SetMap(squirrel.Eq{
 		"ID":             m.ID,
 		"LeagueID":       m.LeagueID,

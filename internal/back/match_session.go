@@ -1,8 +1,8 @@
 package back
 
 import (
-	"encoding/json"
 	"kaepora/internal/util"
+	"sort"
 	"time"
 
 	"github.com/Masterminds/squirrel"
@@ -33,37 +33,11 @@ type MatchSession struct {
 	CreatedAt util.TimeAsTimestamp
 	StartDate util.TimeAsDateTimeTZ
 	Status    MatchSessionStatus
-	PlayerIDs []byte // JSON array of human-readable UUID strings
+	PlayerIDs util.UUIDArrayAsJSON
 }
 
 func (s *MatchSession) GetPlayerIDs() []uuid.UUID {
-	if len(s.PlayerIDs) == 0 {
-		return nil
-	}
-
-	var strs []string
-	if err := json.Unmarshal(s.PlayerIDs, &strs); err != nil {
-		panic(err)
-	}
-
-	var e []error
-	uuids := make([]uuid.UUID, 0, len(strs))
-
-	for _, v := range strs {
-		uuid, err := uuid.Parse(v)
-		if err != nil {
-			e = append(e, err)
-			continue
-		}
-
-		uuids = append(uuids, uuid)
-	}
-
-	if err := util.ConcatErrors(e); err != nil {
-		panic(err)
-	}
-
-	return uuids
+	return s.PlayerIDs.Slice()
 }
 
 func (s *MatchSession) HasPlayerID(needle uuid.UUID) bool {
@@ -83,7 +57,7 @@ func NewMatchSession(leagueID util.UUIDAsBlob, startDate time.Time) MatchSession
 		CreatedAt: util.TimeAsTimestamp(time.Now()),
 		StartDate: util.TimeAsDateTimeTZ(startDate),
 		Status:    MatchSessionStatusWaiting,
-		PlayerIDs: []byte("[]"),
+		PlayerIDs: nil,
 	}
 }
 
@@ -172,7 +146,7 @@ func getNextJoinableMatchSessionForLeague(tx *sqlx.Tx, leagueID util.UUIDAsBlob)
 	return ret, nil
 }
 
-func (s *MatchSession) Insert(tx *sqlx.Tx) error {
+func (s *MatchSession) insert(tx *sqlx.Tx) error {
 	query, args, err := squirrel.Insert("MatchSession").SetMap(squirrel.Eq{
 		"ID":        s.ID,
 		"CreatedAt": s.CreatedAt,
@@ -192,43 +166,31 @@ func (s *MatchSession) Insert(tx *sqlx.Tx) error {
 	return nil
 }
 
-func (s *MatchSession) AddPlayerID(collectionToAdd ...uuid.UUID) {
-	uuids := s.GetPlayerIDs()
+// AddPlayerID registers a player for the session, entries are sorted and deduplicated.
+func (s *MatchSession) AddPlayerID(uuids ...uuid.UUID) {
+	s.PlayerIDs = append(s.PlayerIDs, uuids...)
+	sort.Sort(util.SortByUUID(s.PlayerIDs))
 
-	for _, toAdd := range collectionToAdd {
-		for k := range uuids {
-			if uuids[k] == toAdd {
-				return
-			}
-		}
-
-		uuids = append(uuids, toAdd)
-	}
-
-	s.PlayerIDs = encodePlayerIDs(uuids)
-}
-
-func (s *MatchSession) RemovePlayerID(toRemove uuid.UUID) {
-	current := s.GetPlayerIDs()
-	uuids := make([]uuid.UUID, 0, len(current))
-
-	for k := range current {
-		if current[k] == toRemove {
+	j := 0
+	for i := 1; i < len(s.PlayerIDs); i++ {
+		if s.PlayerIDs[j] == s.PlayerIDs[i] {
 			continue
 		}
-		uuids = append(uuids, current[k])
-	}
+		j++
 
-	s.PlayerIDs = encodePlayerIDs(uuids)
+		s.PlayerIDs[j] = s.PlayerIDs[i]
+	}
+	s.PlayerIDs = s.PlayerIDs[:j+1]
 }
 
-func encodePlayerIDs(ids []uuid.UUID) []byte {
-	ret, err := json.Marshal(ids)
-	if err != nil {
-		panic(err)
+func (s *MatchSession) RemovePlayerID(uuid uuid.UUID) {
+	for k := range s.PlayerIDs {
+		if s.PlayerIDs[k] == uuid {
+			s.PlayerIDs[k] = s.PlayerIDs[len(s.PlayerIDs)-1]
+			s.PlayerIDs = s.PlayerIDs[:len(s.PlayerIDs)-1]
+			return
+		}
 	}
-
-	return ret
 }
 
 func (s *MatchSession) CanCancel() error {

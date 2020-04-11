@@ -16,8 +16,8 @@ type channelWriter struct {
 	buf       bytes.Buffer
 }
 
-func newUserChannelWriter(dg *discordgo.Session, user *discordgo.User) (*channelWriter, error) {
-	channel, err := dg.UserChannelCreate(user.ID)
+func newUserChannelWriter(dg *discordgo.Session, userID string) (*channelWriter, error) {
+	channel, err := dg.UserChannelCreate(userID)
 	if err != nil {
 		return nil, fmt.Errorf("unable to create user channel: %w", err)
 	}

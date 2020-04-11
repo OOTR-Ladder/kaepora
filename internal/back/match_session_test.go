@@ -13,13 +13,11 @@ import (
 func TestMatchSessionUUIDs(t *testing.T) {
 	sess := back.NewMatchSession(util.NewUUIDAsBlob(), time.Now())
 
-	u1 := uuid.New()
-	u2 := uuid.New()
-	u3 := uuid.New()
-	u4 := uuid.New()
+	u1, u2, u3, u4 := uuid.New(), uuid.New(), uuid.New(), uuid.New()
+	u1[0], u2[0], u3[0], u4[0] = 4, 3, 2, 1
 
-	sess.AddPlayerID(u1, u2, u3, u4)
-	expected := []uuid.UUID{u1, u2, u3, u4}
+	sess.AddPlayerID(u1, u2, u3, u4, u3)
+	expected := []uuid.UUID{u4, u3, u2, u1}
 	actual := sess.GetPlayerIDs()
 
 	if !reflect.DeepEqual(actual, expected) {

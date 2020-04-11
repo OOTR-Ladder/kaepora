@@ -1,10 +1,12 @@
 package back
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"kaepora/internal/util"
+	"log"
 	"os"
 	"testing"
 	"time"
@@ -19,6 +21,14 @@ import (
 func TestMatchMaking(t *testing.T) {
 	back := createFixturedTestBack(t)
 
+	// Consume notifications to avoid filling and blocking the chan
+	go func(c <-chan Notification) {
+		for {
+			notif := <-c
+			log.Printf("test: got notification: %s", notif.String())
+		}
+	}(back.GetNotificationsChan())
+
 	session, err := createSessionAndJoin(back)
 	if err != nil {
 		t.Fatal(err)
@@ -32,8 +42,10 @@ func TestMatchMaking(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// She drops after being able to cancel: forfeit and loss
-	if err := haveZeldaForfeit(back); err != nil {
+	// Drops after being able to cancel: forfeit and loss
+	// There was a random player kicked out of the race already so we can't
+	// hardcode a name to forfeit.
+	if err := haveSomeoneForfeit(back, sessions); err != nil {
 		t.Error(err)
 	}
 }
@@ -56,15 +68,19 @@ func haveRauruCancel(back *Back) error {
 	return nil
 }
 
-// TODO: this tests should fail 1/7 runs, take a random player rather than Zoldo
-func haveZeldaForfeit(back *Back) error {
+func haveSomeoneForfeit(back *Back, sessions []MatchSession) error {
+	index := randomIndex(len(sessions[0].GetPlayerIDs()))
+	playerID := util.UUIDAsBlob(sessions[0].GetPlayerIDs()[index])
 	var player Player
 	if err := back.transaction(func(tx *sqlx.Tx) (err error) {
-		player, err = getPlayerByName(tx, "Zelda")
+		player, err = getPlayerByID(tx, playerID)
 		return err
 	}); err != nil {
 		return fmt.Errorf("can get player: %s", err)
 	}
+
+	log.Printf("test: forfeiting %s", player.Name)
+
 	if _, err := back.CancelActiveMatchSession(player); err == nil {
 		return errors.New("expected an error when cancelling after MatchSessionCancellableUntilOffset")
 	}
@@ -73,8 +89,30 @@ func haveZeldaForfeit(back *Back) error {
 	if err != nil {
 		return fmt.Errorf("can't forfeit: %s", err)
 	}
-	if match.EndedAt.Valid {
+	if match.hasEnded() {
 		return errors.New("match should not have ended")
+	}
+
+	var opponent Player
+	if err := back.transaction(func(tx *sqlx.Tx) (err error) {
+		_, against, err := match.getPlayerAndOpponentEntries(player.ID)
+		if err != nil {
+			return fmt.Errorf("cannot get MatchEntry: %s", err)
+		}
+
+		opponent, err = getPlayerByID(tx, against.PlayerID)
+		return err
+	}); err != nil {
+		return fmt.Errorf("cannot get opponent: %s", err)
+	}
+
+	match, err = back.CompleteActiveMatch(opponent)
+	if err != nil {
+		return err
+	}
+
+	if !match.hasEnded() {
+		return errors.New("the match should have ended")
 	}
 
 	return nil
@@ -193,7 +231,7 @@ func createJoinableSession(back *Back) (MatchSession, League, error) {
 
 		// TODO: use the schedule to create the session
 		session = NewMatchSession(league.ID, time.Now().Add(-MatchSessionJoinableAfterOffset))
-		if err := session.Insert(tx); err != nil {
+		if err := session.insert(tx); err != nil {
 			return fmt.Errorf("failed to insert MatchSession: %w", err)
 		}
 
@@ -269,19 +307,23 @@ func fixtures(tx *sqlx.Tx) error {
 		"Our Lord and Savior ZFG",
 	}
 
-	if err := game.Insert(tx); err != nil {
+	if err := game.insert(tx); err != nil {
 		return err
 	}
 
-	for _, v := range leagues {
-		if err := v.Insert(tx); err != nil {
+	for k, v := range leagues {
+		v.ID[0] = byte(k)
+		v.AnnounceDiscordChannelID = fmt.Sprintf("league#%d", k)
+		if err := v.insert(tx); err != nil {
 			return err
 		}
 	}
 
-	for _, v := range playerNames {
+	for k, v := range playerNames {
 		player := NewPlayer(v)
-		if err := player.Insert(tx); err != nil {
+		player.ID[0] = byte(k)
+		player.DiscordID = sql.NullString{Valid: true, String: fmt.Sprintf("player#%d", k)}
+		if err := player.insert(tx); err != nil {
 			return err
 		}
 	}

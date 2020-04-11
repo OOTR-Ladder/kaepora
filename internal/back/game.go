@@ -24,7 +24,7 @@ func NewGame(name string, generator string) Game {
 	}
 }
 
-func (g *Game) Insert(tx *sqlx.Tx) error {
+func (g *Game) insert(tx *sqlx.Tx) error {
 	query, args, err := squirrel.Insert("Game").SetMap(squirrel.Eq{
 		"ID":        g.ID,
 		"CreatedAt": g.CreatedAt,
