@@ -8,6 +8,7 @@ import (
 	"kaepora/internal/util"
 	"log"
 	"os"
+	"reflect"
 	"testing"
 	"time"
 
@@ -21,11 +22,19 @@ import (
 func TestMatchMaking(t *testing.T) {
 	back := createFixturedTestBack(t)
 
+	notifs := make(map[NotificationType]int)
+
 	// Consume notifications to avoid filling and blocking the chan
 	go func(c <-chan Notification) {
 		for {
 			notif := <-c
-			log.Printf("test: got notification: %s", notif.String())
+			if notif.Type == NotificationTypeMatchSessionCountdown {
+				session := notif.Payload["MatchSession"].(MatchSession)
+				log.Printf("test: got notification: %s (status: %d)", notif.String(), session.Status)
+			} else {
+				log.Printf("test: got notification: %s", notif.String())
+			}
+			notifs[notif.Type]++
 		}
 	}(back.GetNotificationsChan())
 
@@ -45,8 +54,30 @@ func TestMatchMaking(t *testing.T) {
 	// Drops after being able to cancel: forfeit and loss
 	// There was a random player kicked out of the race already so we can't
 	// hardcode a name to forfeit.
-	if err := haveSomeoneForfeit(back, sessions); err != nil {
+	if err := haveSomeoneForfeit(back, sessions[0]); err != nil {
 		t.Error(err)
+	}
+
+	if err := fakeSessionStart(back, sessions[0].ID); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := back.startMatchSessions(); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := makeEveryoneComplete(back); err != nil {
+		t.Error(err)
+	}
+
+	expected := map[NotificationType]int{
+		NotificationTypeMatchSessionCountdown: 3, // /* TODO created when using schedule */, joinable, preparing, starting.
+		NotificationTypeMatchSessionOddKick:   1, // that one unlucky runner
+		// TODO NotificationTypeMatchSeed:        6, // 1 per joined player
+		NotificationTypeMatchEnd: 6, // 1 per joined player
+	}
+	if !reflect.DeepEqual(expected, notifs) {
+		t.Errorf("notifications count does not match\nexpected: %#v\nactual: %#v", expected, notifs)
 	}
 }
 
@@ -68,15 +99,71 @@ func haveRauruCancel(back *Back) error {
 	return nil
 }
 
-func haveSomeoneForfeit(back *Back, sessions []MatchSession) error {
-	index := randomIndex(len(sessions[0].GetPlayerIDs()))
-	playerID := util.UUIDAsBlob(sessions[0].GetPlayerIDs()[index])
+func fakeSessionStart(back *Back, sessionID util.UUIDAsBlob) error {
+	return back.transaction(func(tx *sqlx.Tx) (err error) {
+		session, err := getMatchSessionByID(tx, sessionID)
+		if err != nil {
+			return fmt.Errorf("unable to get session: %s", err)
+		}
+
+		if session.Status != MatchSessionStatusPreparing {
+			return fmt.Errorf("session %s should be preparing", sessionID)
+		}
+
+		session.StartDate = util.TimeAsDateTimeTZ(time.Now())
+		if err := session.update(tx); err != nil {
+			return fmt.Errorf("unable to update session: %s", err)
+		}
+
+		return nil
+	})
+}
+
+func makeEveryoneComplete(back *Back) error {
+	var players []Player
+	if err := back.transaction(func(tx *sqlx.Tx) (err error) {
+		var ids []util.UUIDAsBlob
+		query := `SELECT PlayerID FROM MatchEntry WHERE Status = ?`
+		if err := tx.Select(&ids, query, MatchEntryStatusInProgress); err != nil {
+			return fmt.Errorf("unable to fetch player ids from MatchEntry: %s", err)
+		}
+		if len(ids) == 0 {
+			return errors.New("no ids found")
+		}
+
+		for _, id := range ids {
+			player, err := getPlayerByID(tx, id)
+			if err != nil {
+				return fmt.Errorf("unable to fetch player: %s", err)
+			}
+			players = append(players, player)
+		}
+
+		return nil
+	}); err != nil {
+		return err
+	}
+
+	for _, player := range players {
+		log.Printf("test: completing %s", player.Name)
+
+		if _, err := back.CompleteActiveMatch(player); err != nil {
+			return fmt.Errorf("unable to complete match: %s", err)
+		}
+	}
+
+	return nil
+}
+
+func haveSomeoneForfeit(back *Back, session MatchSession) error {
+	index := randomIndex(len(session.GetPlayerIDs()))
+	playerID := util.UUIDAsBlob(session.GetPlayerIDs()[index])
 	var player Player
 	if err := back.transaction(func(tx *sqlx.Tx) (err error) {
 		player, err = getPlayerByID(tx, playerID)
 		return err
 	}); err != nil {
-		return fmt.Errorf("can get player: %s", err)
+		return fmt.Errorf("cannot get player: %s", err)
 	}
 
 	log.Printf("test: forfeiting %s", player.Name)
@@ -107,12 +194,12 @@ func haveSomeoneForfeit(back *Back, sessions []MatchSession) error {
 	}
 
 	match, err = back.CompleteActiveMatch(opponent)
-	if err != nil {
-		return err
+	if err == nil {
+		return errors.New("match has not started, opponent should not have been able to complete")
 	}
 
-	if !match.hasEnded() {
-		return errors.New("the match should have ended")
+	if match.hasEnded() {
+		return errors.New("the match should not have ended")
 	}
 
 	return nil
@@ -322,7 +409,7 @@ func fixtures(tx *sqlx.Tx) error {
 	for k, v := range playerNames {
 		player := NewPlayer(v)
 		player.ID[0] = byte(k)
-		player.DiscordID = sql.NullString{Valid: true, String: fmt.Sprintf("player#%d", k)}
+		player.DiscordID = sql.NullString{Valid: true, String: fmt.Sprintf("player#%d %s", k, v)}
 		if err := player.insert(tx); err != nil {
 			return err
 		}

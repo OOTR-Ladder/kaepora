@@ -8,16 +8,18 @@ import (
 
 func (bot *Bot) sendNotification(notif back.Notification) error {
 	switch notif.Type {
-	case back.NotificationTypeSessionCountdown:
-		return bot.sendCountdown(notif)
+	case back.NotificationTypeMatchSessionCountdown:
+		return bot.sendMatchSessionCountdown(notif)
 	case back.NotificationTypeMatchEnd:
 		return bot.sendMatchEndNotification(notif)
+	case back.NotificationTypeMatchSessionEmpty:
+		return bot.sendMatchSessionEmptyNotification(notif)
 	default:
 		return fmt.Errorf("got unknown notification type: %d", notif.Type)
 	}
 }
 
-func (bot *Bot) sendCountdown(notif back.Notification) error {
+func (bot *Bot) sendMatchSessionCountdown(notif back.Notification) error {
 	w, err := bot.getWriterForNotification(notif)
 	if err != nil {
 		return err
@@ -37,17 +39,20 @@ func (bot *Bot) sendCountdown(notif back.Notification) error {
 		)
 	case back.MatchSessionStatusJoinable:
 		fmt.Fprintf(w,
-			"The race for league `%s` can now be joined! It race starts at %s (in %s).",
+			"The race for league `%s` can now be joined! The race starts at %s (in %s).\n"+
+				"You can join using `!join %s`",
 			league.ShortCode,
 			session.StartDate.Time(),
 			time.Until(session.StartDate.Time()).Truncate(time.Second),
+			league.ShortCode,
 		)
 	case back.MatchSessionStatusPreparing:
 		fmt.Fprintf(w,
 			"The race for league `%s` is closed, you can no longer join. "+
-				"Seeds will soon be sent to the contestants.\n"+
+				"Seeds will soon be sent to the %d contestants.\n"+
 				"The race starts at %s (in %s). Watch this channel for the official go.",
 			league.ShortCode,
+			len(session.PlayerIDs),
 			session.StartDate.Time(),
 			time.Until(session.StartDate.Time()).Truncate(time.Second),
 		)
@@ -57,6 +62,24 @@ func (bot *Bot) sendCountdown(notif back.Notification) error {
 			league.ShortCode,
 		)
 	}
+
+	return nil
+}
+
+func (bot *Bot) sendMatchSessionEmptyNotification(notif back.Notification) error {
+	w, err := bot.getWriterForNotification(notif)
+	if err != nil {
+		return err
+	}
+	defer w.Flush()
+
+	league := notif.Payload["League"].(back.League)
+
+	fmt.Fprintf(w,
+		"The race for league `%s` is closed, you can no longer join.\n"+
+			"There was not enough players to start the race."+
+			league.ShortCode,
+	)
 
 	return nil
 }

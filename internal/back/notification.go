@@ -17,8 +17,9 @@ const (
 type NotificationType int
 
 const (
-	NotificationTypeSessionCountdown NotificationType = iota
-	NotificationTypeSessionOddKick
+	NotificationTypeMatchSessionCountdown NotificationType = iota
+	NotificationTypeMatchSessionEmpty
+	NotificationTypeMatchSessionOddKick
 	NotificationTypeMatchSeed
 	NotificationTypeMatchEnd
 )
@@ -35,24 +36,22 @@ func (n *Notification) String() string {
 	return fmt.Sprintf("notif type %d for recipient of type %d (%s)", n.Type, n.RecipientType, n.Recipient)
 }
 
-func (b *Back) sendOddKickNotification(player Player) error {
+func (b *Back) sendOddKickNotification(player Player) {
 	if !player.DiscordID.Valid {
 		log.Printf(
-			"ignored sendMatchEndNotification to Player '%s' without a DiscordID",
+			"ignored sendOddKickNotification to Player '%s' without a DiscordID",
 			player.ID,
 		)
-		return nil
+		return
 	}
 
 	notif := Notification{
 		RecipientType: NotificationRecipientTypeDiscordUser,
 		Recipient:     player.DiscordID.String,
-		Type:          NotificationTypeSessionOddKick,
+		Type:          NotificationTypeMatchSessionOddKick,
 		Payload:       nil,
 	}
 	b.notifications <- notif
-
-	return nil
 }
 
 func (b *Back) sendSessionCountdownNotification(tx *sqlx.Tx, session MatchSession) error {
@@ -72,7 +71,35 @@ func (b *Back) sendSessionCountdownNotification(tx *sqlx.Tx, session MatchSessio
 	notif := Notification{
 		RecipientType: NotificationRecipientTypeDiscordChannel,
 		Recipient:     league.AnnounceDiscordChannelID,
-		Type:          NotificationTypeSessionCountdown,
+		Type:          NotificationTypeMatchSessionCountdown,
+		Payload: map[string]interface{}{
+			"MatchSession": session,
+			"League":       league,
+		},
+	}
+	b.notifications <- notif
+
+	return nil
+}
+
+func (b *Back) sendMatchSessionEmptyNotification(tx *sqlx.Tx, session MatchSession) error {
+	league, err := getLeagueByID(tx, session.LeagueID)
+	if err != nil {
+		return err
+	}
+
+	if league.AnnounceDiscordChannelID == "" {
+		log.Printf(
+			"ignored sendMatchSessionEmptyNotification for league '%s' without a channel",
+			league.ShortCode,
+		)
+		return nil
+	}
+
+	notif := Notification{
+		RecipientType: NotificationRecipientTypeDiscordChannel,
+		Recipient:     league.AnnounceDiscordChannelID,
+		Type:          NotificationTypeMatchSessionEmpty,
 		Payload: map[string]interface{}{
 			"MatchSession": session,
 			"League":       league,
@@ -105,7 +132,7 @@ func (b *Back) sendMatchEndNotification(tx *sqlx.Tx, match Match, player Player)
 	notif := Notification{
 		RecipientType: NotificationRecipientTypeDiscordUser,
 		Recipient:     player.DiscordID.String,
-		Type:          NotificationTypeSessionCountdown,
+		Type:          NotificationTypeMatchEnd,
 		Payload: map[string]interface{}{
 			"Player":             player,
 			"Opponent":           opponent,

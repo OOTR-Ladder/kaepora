@@ -1,7 +1,9 @@
 package back
 
 import (
+	"errors"
 	"kaepora/internal/util"
+	"log"
 	"sort"
 	"time"
 
@@ -241,6 +243,53 @@ func (s *MatchSession) update(tx *sqlx.Tx) error {
 
 	if _, err := tx.Exec(query, args...); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (s *MatchSession) start(tx *sqlx.Tx) error {
+	if s.Status != MatchSessionStatusPreparing {
+		return errors.New("attempted to start a MatchSession that was not preparing")
+	}
+
+	log.Printf("debug: put session %s in MatchSessionStatusInProgress", s.ID)
+	s.Status = MatchSessionStatusInProgress
+	var matches []Match
+	if err := tx.Select(
+		&matches,
+		`SELECT * FROM Match WHERE MatchSessionID = ? AND StartedAt IS NULL`,
+		s.ID,
+	); err != nil {
+		return err
+	}
+
+	now := util.NewNullTimeAsTimestamp(time.Now())
+	for k := range matches {
+		matches[k].StartedAt = now
+		if err := tx.Select(
+			&matches[k].Entries,
+			`SELECT * FROM MatchEntry WHERE MatchEntry.MatchID = ?`,
+			matches[k].ID,
+		); err != nil {
+			return err
+		}
+
+		for l := range matches[k].Entries {
+			if matches[k].Entries[l].Status != MatchEntryStatusWaiting {
+				continue
+			}
+
+			matches[k].Entries[l].Status = MatchEntryStatusInProgress
+			matches[k].Entries[l].StartedAt = now
+			if err := matches[k].Entries[l].update(tx); err != nil {
+				return err
+			}
+		}
+
+		if err := matches[k].update(tx); err != nil {
+			return err
+		}
 	}
 
 	return nil

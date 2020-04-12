@@ -27,6 +27,10 @@ func (b *Back) runPeriodicTasks() error {
 		return err
 	}
 
+	if err := b.startMatchSessions(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -88,6 +92,7 @@ func (b *Back) makeMatchSessionsJoinable() error {
 		}
 
 		for k := range sessions {
+			log.Printf("debug: put session %s in MatchSessionStatusJoinable", sessions[k].ID)
 			sessions[k].Status = MatchSessionStatusJoinable
 			if err := sessions[k].update(tx); err != nil {
 				return err
@@ -107,24 +112,14 @@ func (b *Back) makeMatchSessionsJoinable() error {
 func (b *Back) makeMatchSessionsPreparing() ([]MatchSession, error) {
 	var sessions []MatchSession
 
-	if err := b.transaction(func(tx *sqlx.Tx) error {
-		min := time.Now()
-		max := time.Now().Add(-MatchSessionPreparationOffset)
-		err := tx.Select(&sessions, `
-            SELECT * FROM MatchSession
-            WHERE DATETIME(StartDate) > DATETIME(?)
-              AND DATETIME(StartDate) <= DATETIME(?)
-              AND Status = ?
-        `,
-			util.TimeAsDateTimeTZ(min),
-			util.TimeAsDateTimeTZ(max),
-			MatchSessionStatusJoinable,
-		)
+	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
+		sessions, err = getMatchSessionsToPrepare(tx)
 		if err != nil {
 			return err
 		}
 
 		for k := range sessions {
+			log.Printf("debug: put session %s in MatchSessionStatusPreparing", sessions[k].ID)
 			sessions[k].Status = MatchSessionStatusPreparing
 			if err := sessions[k].update(tx); err != nil {
 				return err
@@ -142,6 +137,72 @@ func (b *Back) makeMatchSessionsPreparing() ([]MatchSession, error) {
 
 	if cnt := len(sessions); cnt > 0 {
 		log.Printf("info: marked %d MatchSession as preparing", cnt)
+	}
+
+	return sessions, nil
+}
+
+func (b *Back) startMatchSessions() error {
+	if err := b.transaction(func(tx *sqlx.Tx) error {
+		sessions, err := getMatchSessionsToStart(tx)
+		if err != nil {
+			return err
+		}
+
+		for k := range sessions {
+			if err := sessions[k].start(tx); err != nil {
+				return err
+			}
+
+			if err := sessions[k].update(tx); err != nil {
+				return err
+			}
+
+			if err := b.sendSessionCountdownNotification(tx, sessions[k]); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func getMatchSessionsToStart(tx *sqlx.Tx) ([]MatchSession, error) {
+	query := `SELECT * FROM MatchSession
+    WHERE DATETIME(StartDate) <= DATETIME(?) AND Status = ?`
+	var sessions []MatchSession
+	if err := tx.Select(
+		&sessions, query,
+		util.TimeAsDateTimeTZ(time.Now()),
+		MatchSessionStatusPreparing,
+	); err != nil {
+		return nil, err
+	}
+
+	return sessions, nil
+}
+
+func getMatchSessionsToPrepare(tx *sqlx.Tx) ([]MatchSession, error) {
+	var sessions []MatchSession
+
+	min := time.Now()
+	max := time.Now().Add(-MatchSessionPreparationOffset)
+	err := tx.Select(&sessions, `
+            SELECT * FROM MatchSession
+            WHERE DATETIME(StartDate) > DATETIME(?)
+              AND DATETIME(StartDate) <= DATETIME(?)
+              AND Status = ?
+        `,
+		util.TimeAsDateTimeTZ(min),
+		util.TimeAsDateTimeTZ(max),
+		MatchSessionStatusJoinable,
+	)
+	if err != nil {
+		return nil, err
 	}
 
 	return sessions, nil
