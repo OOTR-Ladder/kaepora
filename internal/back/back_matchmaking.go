@@ -49,9 +49,12 @@ func (b *Back) matchMakeSession(tx *sqlx.Tx, session MatchSession) error {
 		return nil
 	}
 
-	session, err := b.ensureSessionIsValidForMatchMaking(tx, session)
+	session, ok, err := b.ensureSessionIsValidForMatchMaking(tx, session)
 	if err != nil {
 		return err
+	}
+	if !ok {
+		return nil
 	}
 
 	players, err := getSessionPlayersSortedByRating(tx, session)
@@ -141,17 +144,8 @@ func getSessionPlayersSortedByRating(tx *sqlx.Tx, session MatchSession) ([]Playe
 	return players, nil
 }
 
-func (b *Back) ensureSessionIsValidForMatchMaking(tx *sqlx.Tx, session MatchSession) (MatchSession, error) {
+func (b *Back) ensureSessionIsValidForMatchMaking(tx *sqlx.Tx, session MatchSession) (MatchSession, bool, error) {
 	players := session.GetPlayerIDs()
-	// No one wants to play =(
-	if len(players) <= 1 {
-		session.Status = MatchSessionStatusClosed
-		log.Printf("info: no players for session %s", session.ID.UUID())
-		if err := b.sendMatchSessionEmptyNotification(tx, session); err != nil {
-			return MatchSession{}, err
-		}
-		return session, session.update(tx)
-	}
 
 	// Ditch the one player we can't match with anyone.
 	if len(players)%2 == 1 {
@@ -160,16 +154,26 @@ func (b *Back) ensureSessionIsValidForMatchMaking(tx *sqlx.Tx, session MatchSess
 		session.RemovePlayerID(toRemove)
 		player, err := getPlayerByID(tx, util.UUIDAsBlob(toRemove))
 		if err != nil {
-			return MatchSession{}, fmt.Errorf("unable to fetch odd player: %w", err)
+			return MatchSession{}, false, fmt.Errorf("unable to fetch odd player: %w", err)
 		}
 		b.sendOddKickNotification(player)
 	}
 
-	if err := session.update(tx); err != nil {
-		return MatchSession{}, err
+	// No one wants to play =(
+	if len(players) <= 1 {
+		session.Status = MatchSessionStatusClosed
+		log.Printf("info: no players for session %s", session.ID.UUID())
+		if err := b.sendMatchSessionEmptyNotification(tx, session); err != nil {
+			return MatchSession{}, false, err
+		}
+		return session, false, session.update(tx)
 	}
 
-	return session, nil
+	if err := session.update(tx); err != nil {
+		return MatchSession{}, false, err
+	}
+
+	return session, true, nil
 }
 
 func randomIndex(length int) int {
