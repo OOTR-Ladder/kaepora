@@ -75,10 +75,10 @@ func (b *Back) transaction(cb transactionCallback) error {
 }
 
 func (b *Back) LoadFixtures() error {
-	game := NewGame("The Legend of Zelda: Ocarina of Time", "OoT-Randomizer:v5.2")
+	game := NewGame("The Legend of Zelda: Ocarina of Time", "oot-randomizer:5.2.12")
 	leagues := []League{
-		NewLeague("Standard", "std", game.ID, "AJWGAJARB2BCAAJWAAJBASAGJBHNTHA3EA2UTVAFAA"),
-		NewLeague("Random rules", "rand", game.ID, "A2WGAJARB2BCAAJWAAJBASAGJBHNTHA3EA2UTVAFAA"),
+		NewLeague("Standard", "std", game.ID, "s3.json"),
+		NewLeague("Random rules", "rand", game.ID, "s3.json"),
 	}
 
 	leagues[0].Schedule.SetAll([]string{"21:00 Europe/Paris"})

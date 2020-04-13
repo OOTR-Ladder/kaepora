@@ -8,3 +8,5 @@
 /kaepora.db-journal
 /coverage.cov
 /coverage.html
+*.z64
+*.bin

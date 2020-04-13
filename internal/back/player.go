@@ -20,6 +20,20 @@ type Player struct {
 	Rating PlayerRating `db:"-"`
 }
 
+type byRating []Player
+
+func (a byRating) Len() int {
+	return len(a)
+}
+
+func (a byRating) Less(i, j int) bool {
+	return a[i].Rating.GlickoRating().R() < a[j].Rating.GlickoRating().R()
+}
+
+func (a byRating) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
+}
+
 func NewPlayer(name string) Player {
 	return Player{
 		ID:        util.NewUUIDAsBlob(),
@@ -94,7 +108,7 @@ func (b *Back) UpdateDiscordPlayerName(discordID string, name string) error {
 	return b.transaction(func(tx *sqlx.Tx) error {
 		player, err := getPlayerByDiscordID(tx, discordID)
 		if err != nil {
-			return util.ErrPublic("you need to `!register` first")
+			return nil
 		}
 
 		if player.Name == name {

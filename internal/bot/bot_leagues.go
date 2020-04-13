@@ -32,8 +32,8 @@ func (bot *Bot) displayLeagues(out io.Writer) error {
 
 		table := tabwriter.NewWriter(out, 0, 0, 2, ' ', 0)
 
-		fmt.Fprintln(table, "shortcode\tname\tnext race\t\tsettings")
-		fmt.Fprintln(table, "\t\t\t\t")
+		fmt.Fprintln(table, "shortcode\tname\tnext race\t")
+		fmt.Fprintln(table, "\t\t\t")
 		now := time.Now()
 
 		for _, league := range leagues {
@@ -49,9 +49,9 @@ func (bot *Bot) displayLeagues(out io.Writer) error {
 			}
 
 			fmt.Fprintf(
-				table, "%s\t%s\t%s\t%s\t%.64s\n",
+				table, "%s\t%s\t%s\t%s\n",
 				league.ShortCode, league.Name,
-				nextStr, nextDeltaStr, league.Settings,
+				nextStr, nextDeltaStr,
 			)
 		}
 		table.Flush()

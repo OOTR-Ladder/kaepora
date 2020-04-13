@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"kaepora/internal/back"
-	"kaepora/internal/util"
 	"strings"
 	"time"
 
@@ -14,7 +13,7 @@ import (
 func (bot *Bot) cmdJoin(m *discordgo.Message, args []string, w io.Writer) error {
 	player, err := bot.back.GetPlayerByDiscordID(m.Author.ID)
 	if err != nil {
-		return util.ErrPublic("you need to `!register` first")
+		return err
 	}
 
 	shortcode := strings.Join(args, " ")
@@ -46,7 +45,7 @@ func (bot *Bot) cmdJoin(m *discordgo.Message, args []string, w io.Writer) error 
 func (bot *Bot) cmdCancel(m *discordgo.Message, _ []string, w io.Writer) error {
 	player, err := bot.back.GetPlayerByDiscordID(m.Author.ID)
 	if err != nil {
-		return util.ErrPublic("you need to `!register` first")
+		return err
 	}
 
 	if _, err := bot.back.CancelActiveMatchSession(player); err != nil {
@@ -62,7 +61,7 @@ This _will not_ count as a loss and won't affect your rankings.`)
 func (bot *Bot) cmdComplete(m *discordgo.Message, _ []string, w io.Writer) error {
 	player, err := bot.back.GetPlayerByDiscordID(m.Author.ID)
 	if err != nil {
-		return util.ErrPublic("you need to `!register` first")
+		return err
 	}
 
 	if _, err := bot.back.CompleteActiveMatch(player); err != nil {
@@ -77,7 +76,7 @@ func (bot *Bot) cmdComplete(m *discordgo.Message, _ []string, w io.Writer) error
 func (bot *Bot) cmdForfeit(m *discordgo.Message, _ []string, w io.Writer) error {
 	player, err := bot.back.GetPlayerByDiscordID(m.Author.ID)
 	if err != nil {
-		return util.ErrPublic("you need to `!register` first")
+		return err
 	}
 
 	if _, err := bot.back.ForfeitActiveMatch(player); err != nil {
