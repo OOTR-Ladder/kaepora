@@ -31,6 +31,10 @@ func (b *Back) runPeriodicTasks() error {
 		return err
 	}
 
+	if err := b.endMatchSessions(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -196,6 +200,68 @@ func getMatchSessionsToStart(tx *sqlx.Tx) ([]MatchSession, error) {
 	}
 
 	return sessions, nil
+}
+
+func getMatchSessionsToEnd(tx *sqlx.Tx) ([]MatchSession, error) {
+	query := `
+    SELECT MatchSession.* FROM MatchSession
+    WHERE
+        DATETIME(MatchSession.StartDate) < DATETIME(?)
+        AND MatchSession.Status = ?`
+	var sessions []MatchSession
+	if err := tx.Select(
+		&sessions, query,
+		util.TimeAsDateTimeTZ(time.Now()),
+		MatchSessionStatusInProgress,
+	); err != nil {
+		return nil, err
+	}
+
+	var ret []MatchSession
+
+loop:
+	for k := range sessions {
+		matches, err := getMatchesBySessionID(tx, sessions[k].ID)
+		if err != nil {
+			return nil, err
+		}
+
+		// Should not happen, but a session with no match cannot even be in progress so close it.
+		if len(matches) == 0 {
+			ret = append(ret, sessions[k])
+			continue
+		}
+
+		for j := range matches {
+			// HACK: A Match has no status but a date that is written only when
+			// closed, check match status with that date.
+			if !matches[j].EndedAt.Valid {
+				continue loop
+			}
+		}
+
+		ret = append(ret, sessions[k])
+	}
+
+	return ret, nil
+}
+
+func (b *Back) endMatchSessions() error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		sessions, err := getMatchSessionsToEnd(tx)
+		if err != nil {
+			return err
+		}
+
+		for k := range sessions {
+			sessions[k].Status = MatchSessionStatusClosed
+			if err := sessions[k].update(tx); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
 }
 
 func getMatchSessionsToPrepare(tx *sqlx.Tx) ([]MatchSession, error) {

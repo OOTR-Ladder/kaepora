@@ -19,6 +19,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+// nolint:funlen
 func TestMatchMaking(t *testing.T) {
 	back := createFixturedTestBack(t)
 
@@ -42,9 +43,15 @@ func TestMatchMaking(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	if err := checkSessionStatus(back, session.ID, MatchSessionStatusJoinable); err != nil {
+		t.Error(err)
+	}
 	sessions, err := prepareSession(back, session)
 	if err != nil {
 		t.Fatal(err)
+	}
+	if err := checkSessionStatus(back, session.ID, MatchSessionStatusPreparing); err != nil {
+		t.Error(err)
 	}
 
 	if err := back.doMatchMaking(sessions); err != nil {
@@ -66,8 +73,18 @@ func TestMatchMaking(t *testing.T) {
 	if err := back.startMatchSessions(); err != nil {
 		t.Fatal(err)
 	}
+	if err := checkSessionStatus(back, session.ID, MatchSessionStatusInProgress); err != nil {
+		t.Error(err)
+	}
 
 	if err := makeEveryoneComplete(back); err != nil {
+		t.Error(err)
+	}
+
+	if err := back.runPeriodicTasks(); err != nil {
+		t.Fatal(err)
+	}
+	if err := checkSessionStatus(back, session.ID, MatchSessionStatusClosed); err != nil {
 		t.Error(err)
 	}
 
@@ -80,6 +97,21 @@ func TestMatchMaking(t *testing.T) {
 	if !reflect.DeepEqual(expected, notifs) {
 		t.Errorf("notifications count does not match\nexpected: %#v\nactual: %#v", expected, notifs)
 	}
+}
+
+func checkSessionStatus(back *Back, sessionID util.UUIDAsBlob, status MatchSessionStatus) error {
+	return back.transaction(func(tx *sqlx.Tx) error {
+		session, err := getMatchSessionByID(tx, sessionID)
+		if err != nil {
+			return err
+		}
+
+		if session.Status != status {
+			return fmt.Errorf("MatchSession %s expected status %d got %d", sessionID, status, session.Status)
+		}
+
+		return nil
+	})
 }
 
 func haveRauruCancel(back *Back) error {
@@ -111,7 +143,8 @@ func fakeSessionStart(back *Back, sessionID util.UUIDAsBlob) error {
 			return fmt.Errorf("session %s should be preparing", sessionID)
 		}
 
-		session.StartDate = util.TimeAsDateTimeTZ(time.Now())
+		// Fake match start
+		session.StartDate = util.TimeAsDateTimeTZ(time.Now().Add(-time.Minute))
 		if err := session.update(tx); err != nil {
 			return fmt.Errorf("unable to update session: %s", err)
 		}
