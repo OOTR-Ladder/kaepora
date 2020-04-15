@@ -4,6 +4,7 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 )
@@ -48,10 +49,16 @@ func (s *Schedule) NextBetween(t time.Time, max time.Time) time.Time {
 	for _, v := range s.hoursForWeekday(t.Format("Mon")) {
 		parts := strings.SplitN(v, " ", 2)
 		if len(parts) < 2 {
+			log.Printf("error: ignored schedule, bad format: '%s'", v)
 			continue // HACK, silently ignore misconfiguration
 		}
 
-		location, _ := time.LoadLocation(parts[1])
+		location, err := time.LoadLocation(parts[1])
+		if err != nil {
+			log.Printf("error: ignored schedule, bad location: '%s'", parts[1])
+			continue // HACK, silently ignore misconfiguration
+		}
+
 		hour, _ := time.ParseInLocation("15:04", parts[0], location)
 		next := time.Date(t.Year(), t.Month(), t.Day(), hour.Hour(), hour.Minute(), 0, 0, location)
 

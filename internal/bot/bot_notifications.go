@@ -57,7 +57,7 @@ func (bot *Bot) sendMatchSessionCountdown(notif back.Notification) error {
 				"Seeds will soon be sent to the %d contestants.\n"+
 				"The race starts at %s (in %s). Watch this channel for the official go.",
 			league.ShortCode,
-			len(session.PlayerIDs),
+			len(session.PlayerIDs)-(len(session.PlayerIDs)%2),
 			session.StartDate.Time(),
 			time.Until(session.StartDate.Time()).Truncate(time.Second),
 		)
@@ -82,8 +82,8 @@ func (bot *Bot) sendMatchSessionEmptyNotification(notif back.Notification) error
 
 	fmt.Fprintf(w,
 		"The race for league `%s` is closed, you can no longer join.\n"+
-			"There was not enough players to start the race."+
-			league.ShortCode,
+			"There was not enough players to start the race.",
+		league.ShortCode,
 	)
 
 	return nil
@@ -110,7 +110,7 @@ func (bot *Bot) sendMatchEndNotification(notif back.Notification) error {
 		fmt.Fprintf(w, "You completed your race in %s.\n", delta)
 	}
 
-	start, end = selfEntry.StartedAt.Time.Time(), selfEntry.EndedAt.Time.Time()
+	start, end = opponentEntry.StartedAt.Time.Time(), opponentEntry.EndedAt.Time.Time()
 	delta = end.Sub(start).Truncate(time.Second)
 	if opponentEntry.Status == back.MatchEntryStatusForfeit {
 		fmt.Fprintf(w, "%s forfeited after %s.\n", opponent.Name, delta)

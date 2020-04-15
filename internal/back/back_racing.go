@@ -31,6 +31,9 @@ func (b *Back) JoinCurrentMatchSessionByShortcode(player Player, shortcode strin
 	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
 		league, err = getLeagueByShortCode(tx, shortcode)
 		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				return util.ErrPublic("could not find a league with this shortcode, try `!leagues`")
+			}
 			return err
 		}
 

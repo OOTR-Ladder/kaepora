@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 	"kaepora/internal/back"
-	"strings"
+	"kaepora/internal/util"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -16,7 +16,14 @@ func (bot *Bot) cmdJoin(m *discordgo.Message, args []string, w io.Writer) error 
 		return err
 	}
 
-	shortcode := strings.Join(args, " ")
+	shortcode := argsAsName(args)
+	if shortcode == "" {
+		return util.ErrPublic(
+			"you need to give the short name of a league so I can know where to add you, " +
+				"so see the leagues try `!leagues`",
+		)
+	}
+
 	session, league, err := bot.back.JoinCurrentMatchSessionByShortcode(player, shortcode)
 	if err != nil {
 		return err
@@ -68,7 +75,7 @@ func (bot *Bot) cmdComplete(m *discordgo.Message, _ []string, w io.Writer) error
 		return err
 	}
 
-	fmt.Fprint(w, `You have completed your race! Results are TBD though.`)
+	fmt.Fprint(w, `You have completed your race! You will the results as soon as your opponent ends his/her race.`)
 
 	return nil
 }

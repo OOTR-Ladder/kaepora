@@ -238,3 +238,7 @@ If you are caught cheating, using an alt, or breaking a league's rules **you wil
 
 	return nil
 }
+
+func argsAsName(args []string) string {
+	return strings.Trim(strings.Join(args, " "), "  \t\n")
+}

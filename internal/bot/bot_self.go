@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"kaepora/internal/util"
-	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -14,8 +13,7 @@ func (bot *Bot) cmdRename(m *discordgo.Message, args []string, out io.Writer) er
 		return util.ErrPublic("your forgot to tell me your desired name")
 	}
 
-	name := strings.Trim(strings.Join(args, " "), "  \t\n")
-	return bot.setDiscordPlayerName(m.Author.ID, name, out)
+	return bot.setDiscordPlayerName(m.Author.ID, argsAsName(args), out)
 }
 
 func (bot *Bot) setDiscordPlayerName(discordID string, name string, out io.Writer) error {
@@ -28,7 +26,7 @@ func (bot *Bot) setDiscordPlayerName(discordID string, name string, out io.Write
 }
 
 func (bot *Bot) cmdRegister(m *discordgo.Message, args []string, out io.Writer) error {
-	name := strings.Trim(strings.Join(args, " "), "  \t\n")
+	name := argsAsName(args)
 	if name == "" {
 		name = m.Author.Username
 	}

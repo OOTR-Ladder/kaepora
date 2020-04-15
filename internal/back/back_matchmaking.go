@@ -175,6 +175,10 @@ func (b *Back) matchMakeSession(tx *sqlx.Tx, session MatchSession) error {
 
 // pairPlayers randomly pair close players together.
 func pairPlayers(players []Player) []pair {
+	if len(players) < 2 {
+		return nil
+	}
+
 	// TODO: Heuristics, if both shared their last match: go one neighbor down/up
 	pairs := make([]pair, 0, len(players)/2)
 	for len(players) > 2 {
@@ -245,7 +249,7 @@ func (b *Back) ensureSessionIsValidForMatchMaking(tx *sqlx.Tx, session MatchSess
 	}
 
 	// No one wants to play =(
-	if len(players) <= 1 {
+	if len(players) < 2 {
 		session.Status = MatchSessionStatusClosed
 		log.Printf("info: no players for session %s", session.ID.UUID())
 		if err := b.sendMatchSessionEmptyNotification(tx, session); err != nil {
