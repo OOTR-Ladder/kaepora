@@ -45,7 +45,7 @@ func (bot *Bot) sendMatchSessionCountdown(notif back.Notification) error {
 	case back.MatchSessionStatusJoinable:
 		fmt.Fprintf(w,
 			"The race for league `%s` can now be joined! The race starts at %s (in %s).\n"+
-				"You can join using `!join %s`",
+				"You can join using `!join %s` @here",
 			league.ShortCode,
 			session.StartDate.Time(),
 			time.Until(session.StartDate.Time()).Truncate(time.Second),
@@ -55,7 +55,7 @@ func (bot *Bot) sendMatchSessionCountdown(notif back.Notification) error {
 		fmt.Fprintf(w,
 			"The race for league `%s` is closed, you can no longer join. "+
 				"Seeds will soon be sent to the %d contestants.\n"+
-				"The race starts at %s (in %s). Watch this channel for the official go.",
+				"The race starts at %s (in %s). Watch this channel for the official go. @here",
 			league.ShortCode,
 			len(session.PlayerIDs)-(len(session.PlayerIDs)%2),
 			session.StartDate.Time(),
@@ -63,7 +63,7 @@ func (bot *Bot) sendMatchSessionCountdown(notif back.Notification) error {
 		)
 	case back.MatchSessionStatusInProgress:
 		fmt.Fprintf(w,
-			"The race for league `%s` **starts now**. Good luck and have fun!",
+			"The race for league `%s` **starts now**. Good luck and have fun! @here",
 			league.ShortCode,
 		)
 	}
