@@ -78,11 +78,16 @@ func (b *Back) LoadFixtures() error {
 	game := NewGame("The Legend of Zelda: Ocarina of Time", "oot-randomizer:5.2.12")
 	leagues := []League{
 		NewLeague("Standard", "std", game.ID, "s3.json"),
-		NewLeague("Random rules", "rand", game.ID, "s3.json"),
 	}
 
-	leagues[0].Schedule.SetAll([]string{"21:00 Europe/Paris"})
-	leagues[1].Schedule.SetAll([]string{"21:00 Europe/Paris"})
+	// 20h PST is 05h CEST, Los Angeles was chosen because it observes DST
+	leagues[0].Schedule.SetAll(
+		[]string{"20:00 America/Los_Angeles", "14:00 Europe/Paris", "20:00 Europe/Paris"},
+	)
+	leagues[0].Schedule.Mon = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
+	leagues[0].Schedule.Wed = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
+	leagues[0].Schedule.Fri = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
+	leagues[0].Schedule.Sat = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
 
 	return b.transaction(func(tx *sqlx.Tx) error {
 		if err := game.insert(tx); err != nil {
