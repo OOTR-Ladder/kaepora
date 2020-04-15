@@ -31,7 +31,7 @@ func (b *Back) runPeriodicTasks() error {
 		return err
 	}
 
-	if err := b.endMatchSessions(); err != nil {
+	if err := b.endMatchSessionsAndUpdateRanks(); err != nil {
 		return err
 	}
 
@@ -202,7 +202,7 @@ func getMatchSessionsToStart(tx *sqlx.Tx) ([]MatchSession, error) {
 	return sessions, nil
 }
 
-func getMatchSessionsToEnd(tx *sqlx.Tx) ([]MatchSession, error) {
+func getMatchSessionsToEnd(tx *sqlx.Tx) ([]MatchSession, map[util.UUIDAsBlob][]Match, error) {
 	query := `
     SELECT MatchSession.* FROM MatchSession
     WHERE
@@ -214,16 +214,17 @@ func getMatchSessionsToEnd(tx *sqlx.Tx) ([]MatchSession, error) {
 		util.TimeAsDateTimeTZ(time.Now()),
 		MatchSessionStatusInProgress,
 	); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var ret []MatchSession
+	sessMatches := map[util.UUIDAsBlob][]Match{}
 
 loop:
 	for k := range sessions {
 		matches, err := getMatchesBySessionID(tx, sessions[k].ID)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		// Should not happen, but a session with no match cannot even be in progress so close it.
@@ -241,14 +242,15 @@ loop:
 		}
 
 		ret = append(ret, sessions[k])
+		sessMatches[sessions[k].ID] = matches
 	}
 
-	return ret, nil
+	return ret, sessMatches, nil
 }
 
-func (b *Back) endMatchSessions() error {
+func (b *Back) endMatchSessionsAndUpdateRanks() error {
 	return b.transaction(func(tx *sqlx.Tx) error {
-		sessions, err := getMatchSessionsToEnd(tx)
+		sessions, matches, err := getMatchSessionsToEnd(tx)
 		if err != nil {
 			return err
 		}
@@ -256,6 +258,10 @@ func (b *Back) endMatchSessions() error {
 		for k := range sessions {
 			sessions[k].Status = MatchSessionStatusClosed
 			if err := sessions[k].update(tx); err != nil {
+				return err
+			}
+
+			if err := b.updateRankingsForMatchSession(tx, sessions[k], matches[sessions[k].ID]); err != nil {
 				return err
 			}
 		}
