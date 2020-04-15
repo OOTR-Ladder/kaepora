@@ -236,6 +236,11 @@ func getSessionPlayersSortedByRating(tx *sqlx.Tx, session MatchSession) ([]Playe
 func (b *Back) ensureSessionIsValidForMatchMaking(tx *sqlx.Tx, session MatchSession) (MatchSession, bool, error) {
 	players := session.GetPlayerIDs()
 
+	// No players / closed session
+	if len(players) < 2 || session.Status != MatchSessionStatusPreparing {
+		return MatchSession{}, false, nil
+	}
+
 	// Ditch the one player we can't match with anyone.
 	if len(players)%2 == 1 {
 		toRemove := players[randomIndex(len(players))]
@@ -246,16 +251,6 @@ func (b *Back) ensureSessionIsValidForMatchMaking(tx *sqlx.Tx, session MatchSess
 			return MatchSession{}, false, fmt.Errorf("unable to fetch odd player: %w", err)
 		}
 		b.sendOddKickNotification(player)
-	}
-
-	// No one wants to play =(
-	if len(players) < 2 {
-		session.Status = MatchSessionStatusClosed
-		log.Printf("info: no players for session %s", session.ID.UUID())
-		if err := b.sendMatchSessionEmptyNotification(tx, session); err != nil {
-			return MatchSession{}, false, err
-		}
-		return session, false, session.update(tx)
 	}
 
 	if err := session.update(tx); err != nil {

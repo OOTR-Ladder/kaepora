@@ -119,6 +119,18 @@ func (b *Back) makeMatchSessionsPreparing() ([]MatchSession, error) {
 		}
 
 		for k := range sessions {
+			if len(sessions[k].GetPlayerIDs()) < 2 {
+				sessions[k].Status = MatchSessionStatusClosed
+				log.Printf("info: no players for session %s", sessions[k].ID.UUID())
+				if err := sessions[k].update(tx); err != nil {
+					return err
+				}
+				if err := b.sendMatchSessionEmptyNotification(tx, sessions[k]); err != nil {
+					return err
+				}
+				continue
+			}
+
 			log.Printf("debug: put session %s in MatchSessionStatusPreparing", sessions[k].ID)
 			sessions[k].Status = MatchSessionStatusPreparing
 			if err := sessions[k].update(tx); err != nil {

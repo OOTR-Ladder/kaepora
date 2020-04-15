@@ -111,7 +111,8 @@ func getNextMatchSessionForLeague(tx *sqlx.Tx, leagueID util.UUIDAsBlob) (MatchS
 	query := `
         SELECT * FROM MatchSession
         WHERE MatchSession.LeagueID = ? AND
-              DATETIME(MatchSession.StartDate) > DATETIME(?)
+              DATETIME(MatchSession.StartDate) > DATETIME(?) AND
+              Status IN(?, ?)
         ORDER BY MatchSession.StartDate ASC
         LIMIT 1`
 
@@ -119,6 +120,7 @@ func getNextMatchSessionForLeague(tx *sqlx.Tx, leagueID util.UUIDAsBlob) (MatchS
 		&ret, query,
 		leagueID,
 		util.TimeAsDateTimeTZ(time.Now()),
+		MatchSessionStatusWaiting, MatchSessionStatusJoinable,
 	); err != nil {
 		return MatchSession{}, err
 	}

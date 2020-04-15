@@ -53,7 +53,7 @@ func (bot *Bot) sendMatchSessionCountdown(notif back.Notification) error {
 		)
 	case back.MatchSessionStatusPreparing:
 		fmt.Fprintf(w,
-			"The race for league `%s` is closed, you can no longer join. "+
+			"The race for league `%s` has begun preparations, you can no longer join. "+
 				"Seeds will soon be sent to the %d contestants.\n"+
 				"The race starts at %s (in %s). Watch this channel for the official go. @here",
 			league.ShortCode,
