@@ -242,12 +242,15 @@ func (b *Back) ensureSessionIsValidForMatchMaking(tx *sqlx.Tx, session MatchSess
 	}
 
 	// Ditch the one player we can't match with anyone.
+	// The last player to join gets removed per community request.
+	// (They did not like the idea of joining early and be kicked randomly 45
+	// minutes later, can't fathom why.)
 	if len(players)%2 == 1 {
-		toRemove := players[randomIndex(len(players))]
-		log.Printf("info: removed odd player %s from session %s", toRemove, session.ID.UUID())
+		toRemove := players[len(players)-1]
 		session.RemovePlayerID(toRemove)
 		player, err := getPlayerByID(tx, util.UUIDAsBlob(toRemove))
 		if err != nil {
+			log.Printf("info: removed odd player %s (%s) from session %s", player.ID, player.Name, session.ID.UUID())
 			return MatchSession{}, false, fmt.Errorf("unable to fetch odd player: %w", err)
 		}
 		b.sendOddKickNotification(player)

@@ -61,9 +61,7 @@ func TestMatchMaking(t *testing.T) {
 	time.Sleep(50 * time.Millisecond) // HACK: wait for fake seed generation
 
 	// Drops after being able to cancel: forfeit and loss
-	// There was a random player kicked out of the race already so we can't
-	// hardcode a name to forfeit.
-	if err := haveSomeoneForfeit(back, sessions[0]); err != nil {
+	if err := haveZeldaForfeit(back); err != nil {
 		t.Error(err)
 	}
 
@@ -189,18 +187,14 @@ func makeEveryoneComplete(back *Back) error {
 	return nil
 }
 
-func haveSomeoneForfeit(back *Back, session MatchSession) error {
-	index := randomIndex(len(session.GetPlayerIDs()))
-	playerID := util.UUIDAsBlob(session.GetPlayerIDs()[index])
+func haveZeldaForfeit(back *Back) error {
 	var player Player
 	if err := back.transaction(func(tx *sqlx.Tx) (err error) {
-		player, err = getPlayerByID(tx, playerID)
+		player, err = getPlayerByName(tx, "Zelda")
 		return err
 	}); err != nil {
 		return fmt.Errorf("cannot get player: %s", err)
 	}
-
-	log.Printf("test: forfeiting %s", player.Name)
 
 	if _, err := back.CancelActiveMatchSession(player); err == nil {
 		return errors.New("expected an error when cancelling after MatchSessionCancellableUntilOffset")
@@ -310,7 +304,7 @@ func createSessionAndJoin(back *Back) (MatchSession, error) {
 		players := []Player{
 			getPlayer("Darunia"), getPlayer("Nabooru"), getPlayer("Rauru"),
 			getPlayer("Ruto"), getPlayer("Saria"), getPlayer("Zelda"),
-			getPlayer("Impa"),
+			getPlayer("Impa"), // last player, odd, will be kicked
 		}
 		for _, v := range players {
 			found, err := joinCurrentMatchSessionTx(tx, v, league)

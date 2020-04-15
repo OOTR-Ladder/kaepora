@@ -4,10 +4,10 @@
 /migrate
 
 # Runtime
-/kaepora.db
-/kaepora.db-journal
+*.bin
+*.db
+*.db-journal
+*.log
+*.z64
 /coverage.cov
 /coverage.html
-*.z64
-*.bin
-*.log

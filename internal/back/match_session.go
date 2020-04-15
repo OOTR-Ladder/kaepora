@@ -4,7 +4,6 @@ import (
 	"errors"
 	"kaepora/internal/util"
 	"log"
-	"sort"
 	"time"
 
 	"github.com/Masterminds/squirrel"
@@ -35,7 +34,7 @@ type MatchSession struct {
 	CreatedAt util.TimeAsTimestamp
 	StartDate util.TimeAsDateTimeTZ
 	Status    MatchSessionStatus
-	PlayerIDs util.UUIDArrayAsJSON
+	PlayerIDs util.UUIDArrayAsJSON // sorted by join date asc
 }
 
 func (s *MatchSession) GetPlayerIDs() []uuid.UUID {
@@ -170,31 +169,31 @@ func (s *MatchSession) insert(tx *sqlx.Tx) error {
 	return nil
 }
 
-// AddPlayerID registers a player for the session, entries are sorted and deduplicated.
+// AddPlayerID registers a player for the session, entries are deduplicated.
 func (s *MatchSession) AddPlayerID(uuids ...uuid.UUID) {
-	s.PlayerIDs = append(s.PlayerIDs, uuids...)
-	sort.Sort(util.SortByUUID(s.PlayerIDs))
-
-	j := 0
-	for i := 1; i < len(s.PlayerIDs); i++ {
-		if s.PlayerIDs[j] == s.PlayerIDs[i] {
-			continue
+loop:
+	for _, v := range uuids {
+		for _, w := range s.PlayerIDs { // it's ugly, but we can't sort.
+			if v == w {
+				continue loop
+			}
 		}
-		j++
 
-		s.PlayerIDs[j] = s.PlayerIDs[i]
+		s.PlayerIDs = append(s.PlayerIDs, v)
 	}
-	s.PlayerIDs = s.PlayerIDs[:j+1]
 }
 
-func (s *MatchSession) RemovePlayerID(uuid uuid.UUID) {
+func (s *MatchSession) RemovePlayerID(toRemove uuid.UUID) {
+	filtered := make([]uuid.UUID, 0, len(s.PlayerIDs)-1)
 	for k := range s.PlayerIDs {
-		if s.PlayerIDs[k] == uuid {
-			s.PlayerIDs[k] = s.PlayerIDs[len(s.PlayerIDs)-1]
-			s.PlayerIDs = s.PlayerIDs[:len(s.PlayerIDs)-1]
-			return
+		if s.PlayerIDs[k] == toRemove {
+			continue
 		}
+
+		filtered = append(filtered, s.PlayerIDs[k])
 	}
+
+	s.PlayerIDs = filtered
 }
 
 func (s *MatchSession) CanCancel() error {
