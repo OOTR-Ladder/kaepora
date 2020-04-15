@@ -1,6 +1,18 @@
 # Kaepora
 The _Ocarina of Time Randomizer_ leagues.
 
+Goals:
+  - Provide a 1vs1 ladder for OoT randomizer races.
+  - Provide multiple leagues to compete with different settings.
+  - Discord-first, but easy to port on other messaging platforms.
+
+Side-goals:
+  - Provide a framework for other randomized games to use for their ladder.
+  - Provide an OoT-specific randomizer settings randomizer (sic).
+
+Non-goals and out of scope:
+  - Providing a generic tournament bot.
+
 ## Build and run
 ```shell
 $ # Install Go: https://golang.org/dl/
