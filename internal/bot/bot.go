@@ -50,6 +50,8 @@ func New(back *back.Back, token string) (*Bot, error) {
 	bot.handlers = map[string]commandHandler{
 		"!dev":      bot.cmdDev,
 		"!help":     bot.cmdHelp,
+		"!no":       bot.cmdHelp,
+		"!yes":      bot.cmdAllRight,
 		"!leagues":  bot.cmdLeagues,
 		"!register": bot.cmdRegister,
 		"!rename":   bot.cmdRename,
@@ -180,6 +182,7 @@ func (bot *Bot) dispatch(m *discordgo.Message, w io.Writer) error {
 	return handler(m, args, w)
 }
 
+// nolint:funlen
 func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
 	truncate := func(v time.Duration) string {
 		ret := strings.TrimSuffix(v.Truncate(time.Second).String(), "0s")
@@ -191,6 +194,13 @@ func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
 	}
 	joinOffset := truncate(back.MatchSessionJoinableAfterOffset)
 	prepOffset := truncate(back.MatchSessionPreparationOffset)
+
+	fmt.Fprintf(w, "Hoo hoot! %s… Look up here!\n"+
+		"It appears that the time has finally come for you to start your adventure!\n"+
+		"You will encounter many hardships ahead… That is your fate.\n"+
+		"Don't feel discouraged, even during the toughest times!\n\n",
+		m.Author.Mention(),
+	)
 
 	// nolint:lll
 	fmt.Fprintf(w, `**Available commands**:
@@ -213,6 +223,8 @@ You can freely join a race and cancel without consequences between T%[2]s and T%
 When the race reaches its preparation phase at T%[3]s you can no longer cancel and must either complete or forfeit the race.
 You can't join a race that is in progress or has begun its preparation phase (T%[3]s).
 If you are caught cheating, using an alt, or breaking a league's rules **you will be banned**.
+
+Did you get all that?
 `,
 
 		"```",
@@ -241,4 +253,9 @@ If you are caught cheating, using an alt, or breaking a league's rules **you wil
 
 func argsAsName(args []string) string {
 	return strings.Trim(strings.Join(args, " "), "  \t\n")
+}
+
+func (bot *Bot) cmdAllRight(m *discordgo.Message, _ []string, w io.Writer) error {
+	fmt.Fprintf(w, "All right then, I'll see you around!\nHoot hoot hoot ho!")
+	return nil
 }
