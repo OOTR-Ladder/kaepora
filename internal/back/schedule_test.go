@@ -20,10 +20,7 @@ func TestScheduleNextBetween(t *testing.T) {
 	s.Tue = []string{"15:00 Europe/Paris", "15:00 Europe/Dublin"}
 	s.Fri = []string{"10:00 UTC"}
 
-	tests := []struct {
-		now      string
-		expected string
-	}{
+	testSchedule(t, s, []scheduleTestData{
 		{
 			now:      "2020-04-07 12:59:59+00:00",
 			expected: "2020-04-07 15:00:00+02:00",
@@ -44,7 +41,38 @@ func TestScheduleNextBetween(t *testing.T) {
 			now:      "2020-04-10 22:00:00-02:00",
 			expected: "2020-04-13 05:00:00+02:00",
 		},
-	}
+	})
+}
+
+func TestScheduleStd(t *testing.T) {
+	s := back.NewSchedule()
+	s.SetAll([]string{
+		"20:00 America/Los_Angeles", "14:00 Europe/Paris", "20:00 Europe/Paris",
+	})
+	s.Mon = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
+	s.Wed = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
+	s.Fri = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
+	s.Sat = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
+
+	testSchedule(t, s, []scheduleTestData{
+		{
+			now:      "2020-04-15 12:23:00+00:00",
+			expected: "2020-04-15 15:00:00+02:00",
+		},
+		{
+			now:      "2020-04-15 22:00:00+00:00",
+			expected: "2020-04-15 21:00:00-07:00",
+		},
+	})
+}
+
+type scheduleTestData struct {
+	now      string
+	expected string
+}
+
+func testSchedule(t *testing.T, s back.Schedule, tests []scheduleTestData) {
+	t.Helper()
 
 	format := "2006-01-02 15:04:05-07:00"
 	for _, v := range tests {

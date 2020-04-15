@@ -46,6 +46,7 @@ func (s *Schedule) NextBetween(t time.Time, max time.Time) time.Time {
 		return time.Time{}
 	}
 
+	min := max
 	for _, v := range s.hoursForWeekday(t.Format("Mon")) {
 		parts := strings.SplitN(v, " ", 2)
 		if len(parts) < 2 {
@@ -62,9 +63,15 @@ func (s *Schedule) NextBetween(t time.Time, max time.Time) time.Time {
 		hour, _ := time.ParseInLocation("15:04", parts[0], location)
 		next := time.Date(t.Year(), t.Month(), t.Day(), hour.Hour(), hour.Minute(), 0, 0, location)
 
-		if next.After(t) {
-			return next
+		if next.After(t) && next.Before(min) {
+			min = next
 		}
+	}
+
+	// As schedule data may not be ordered, we have to ensure we take the
+	// lowest date, not the first match.
+	if min != max {
+		return min
 	}
 
 	// Found nothing, roll over to next day at midnight until max is reached

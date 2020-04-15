@@ -81,9 +81,9 @@ func (b *Back) LoadFixtures() error {
 	}
 
 	// 20h PST is 05h CEST, Los Angeles was chosen because it observes DST
-	leagues[0].Schedule.SetAll(
-		[]string{"20:00 America/Los_Angeles", "14:00 Europe/Paris", "20:00 Europe/Paris"},
-	)
+	leagues[0].Schedule.SetAll([]string{
+		"20:00 America/Los_Angeles", "14:00 Europe/Paris", "20:00 Europe/Paris",
+	})
 	leagues[0].Schedule.Mon = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
 	leagues[0].Schedule.Wed = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
 	leagues[0].Schedule.Fri = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
