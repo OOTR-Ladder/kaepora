@@ -76,6 +76,8 @@ func (m *MatchEntry) forfeit(against *MatchEntry, match *Match) {
 	switch against.Status {
 	case MatchEntryStatusWaiting:
 	case MatchEntryStatusInProgress:
+		m.Outcome = MatchEntryOutcomeLoss
+		against.Outcome = MatchEntryOutcomeWin
 	case MatchEntryStatusFinished:
 		m.Outcome = MatchEntryOutcomeLoss
 		against.Outcome = MatchEntryOutcomeWin
@@ -96,6 +98,7 @@ func (m *MatchEntry) complete(against *MatchEntry, match *Match) {
 		panic("unreachable: can't complete with an opponent in MatchEntryStatusWaiting")
 	case MatchEntryStatusInProgress:
 		m.Outcome = MatchEntryOutcomeWin
+		against.Outcome = MatchEntryOutcomeLoss
 	case MatchEntryStatusForfeit:
 		m.Outcome = MatchEntryOutcomeWin
 		against.Outcome = MatchEntryOutcomeLoss
