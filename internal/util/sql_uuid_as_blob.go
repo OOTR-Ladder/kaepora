@@ -27,6 +27,10 @@ func (t UUIDAsBlob) String() string {
 	return t.UUID().String()
 }
 
+func (t UUIDAsBlob) IsZero() bool {
+	return [16]byte(t) == [16]byte{}
+}
+
 func (t *UUIDAsBlob) Scan(src interface{}) error {
 	slice, ok := src.([]byte)
 	if !ok {

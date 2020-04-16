@@ -38,3 +38,30 @@ func (bot *Bot) cmdRegister(m *discordgo.Message, args []string, out io.Writer) 
 	fmt.Fprintf(out, "You have been registered as `%s`, see you on the leaderboards.", name)
 	return nil
 }
+
+func (bot *Bot) cmdLeaderboards(m *discordgo.Message, args []string, w io.Writer) error {
+	shortcode := argsAsName(args)
+	top, around, err := bot.back.GetLeaderboardsForDiscordUser(m.Author.ID, shortcode)
+	if err != nil {
+		return err
+	}
+
+	if len(top) == 0 && len(around) == 0 {
+		fmt.Fprintf(w, "The leaderboard for league `%s` is empty, join the next race!", shortcode)
+		return nil
+	}
+
+	fmt.Fprintf(w, "Top players for league `%s`:\n", shortcode)
+	for i := range top {
+		fmt.Fprintf(w, "  - %d. %s\n", i+1, top[i].PlayerName)
+	}
+
+	if len(around) > 0 {
+		fmt.Fprint(w, "\nPlayers around you:\n")
+		for i := range around {
+			fmt.Fprintf(w, "  - %s", around[i].PlayerName)
+		}
+	}
+
+	return nil
+}

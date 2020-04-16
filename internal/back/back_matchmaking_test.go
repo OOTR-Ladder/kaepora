@@ -19,25 +19,39 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// nolint:funlen
 func TestMatchMaking(t *testing.T) {
 	back := createFixturedTestBack(t)
 
+	innerTestMatchMaking(t, back)
+	innerTestMatchMaking(t, back)
+	innerTestMatchMaking(t, back)
+	innerTestMatchMaking(t, back)
+	innerTestMatchMaking(t, back)
+	innerTestMatchMaking(t, back)
+}
+
+// nolint:funlen
+func innerTestMatchMaking(t *testing.T, back *Back) {
 	notifs := make(map[NotificationType]int)
 
 	// Consume notifications to avoid filling and blocking the chan
-	go func(c <-chan Notification) {
+	notifsDone := make(chan struct{})
+	go func(c <-chan Notification, done chan struct{}) {
 		for {
-			notif := <-c
-			if notif.Type == NotificationTypeMatchSessionCountdown {
-				session := notif.Payload["MatchSession"].(MatchSession)
-				log.Printf("test: got notification: %s (status: %d)", notif.String(), session.Status)
-			} else {
-				log.Printf("test: got notification: %s", notif.String())
+			select {
+			case notif := <-c:
+				if notif.Type == NotificationTypeMatchSessionCountdown {
+					session := notif.Payload["MatchSession"].(MatchSession)
+					log.Printf("test: got notification: %s (status: %d)", notif.String(), session.Status)
+				} else {
+					log.Printf("test: got notification: %s", notif.String())
+				}
+				notifs[notif.Type]++
+			case <-done:
+				return
 			}
-			notifs[notif.Type]++
 		}
-	}(back.GetNotificationsChan())
+	}(back.GetNotificationsChan(), notifsDone)
 
 	session, err := createSessionAndJoin(back)
 	if err != nil {
@@ -92,6 +106,7 @@ func TestMatchMaking(t *testing.T) {
 		NotificationTypeMatchSeed:             6, // 1 per joined player
 		NotificationTypeMatchEnd:              6, // 1 per joined player
 	}
+	close(notifsDone)
 	if !reflect.DeepEqual(expected, notifs) {
 		t.Errorf("notifications count does not match\nexpected: %#v\nactual: %#v", expected, notifs)
 	}
