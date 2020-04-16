@@ -4,12 +4,21 @@ import (
 	"database/sql"
 	"kaepora/internal/util"
 	"log"
+	"runtime/debug"
 	"time"
 
 	"github.com/jmoiron/sqlx"
 )
 
 func (b *Back) runPeriodicTasks() error {
+	defer func() {
+		r := recover()
+		if r != nil {
+			log.Print("panic: ", r)
+			log.Printf("%s", debug.Stack())
+		}
+	}()
+
 	if err := b.createNextScheduledMatchSessions(); err != nil {
 		return err
 	}
