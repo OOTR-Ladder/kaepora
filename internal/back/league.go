@@ -86,6 +86,10 @@ func getLeagues(tx *sqlx.Tx) ([]League, error) {
 }
 
 func getLeagueByShortCode(tx *sqlx.Tx, shortCode string) (League, error) {
+	if shortCode == "" {
+		return League{}, util.ErrPublic("you need to give me a league shortcode, see `!leagues` and `!help`")
+	}
+
 	var ret League
 	query := `SELECT * FROM League WHERE League.ShortCode = ? LIMIT 1`
 	if err := tx.Get(&ret, query, shortCode); err != nil {

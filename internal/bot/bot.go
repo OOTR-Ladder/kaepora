@@ -48,13 +48,14 @@ func New(back *back.Back, token string) (*Bot, error) {
 	dg.AddHandler(bot.handleMessage)
 
 	bot.handlers = map[string]commandHandler{
-		"!dev":      bot.cmdDev,
-		"!help":     bot.cmdHelp,
-		"!no":       bot.cmdHelp,
-		"!yes":      bot.cmdAllRight,
-		"!leagues":  bot.cmdLeagues,
-		"!register": bot.cmdRegister,
-		"!rename":   bot.cmdRename,
+		"!dev":          bot.cmdDev,
+		"!help":         bot.cmdHelp,
+		"!no":           bot.cmdHelp,
+		"!yes":          bot.cmdAllRight,
+		"!leagues":      bot.cmdLeagues,
+		"!leaderboards": bot.cmdLeaderboards,
+		"!register":     bot.cmdRegister,
+		"!rename":       bot.cmdRename,
 
 		"!cancel":   bot.cmdCancel,
 		"!complete": bot.cmdComplete,
@@ -120,7 +121,7 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 			out.Reset()
 			fmt.Fprintf(out, "Someting went very wrong, please tell <@%s>.", bot.adminUserID)
 			log.Print("panic: ", r)
-			log.Print(debug.Stack())
+			log.Printf("%s", debug.Stack())
 		}
 	}()
 
@@ -206,10 +207,12 @@ func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
 	fmt.Fprintf(w, `**Available commands**:
 %[1]s
 # Management
-!help              # display this help message
-!leagues           # list leagues
-!register [NAME]   # create your account and link it to your Discord account
-!rename NAME       # set your display name to NAME
+!help                   # display this help message
+!leaderboards SHORTCODE # show leaderboards for the given league
+!leagues                # list leagues
+!register               # create your account and link it to your Discord account
+!register NAME          # same as "!register" but use another name
+!rename NAME            # set your display name to NAME
 
 # Racing
 !cancel            # cancel joining the next race without penalty until T%[3]s
