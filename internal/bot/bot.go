@@ -48,14 +48,14 @@ func New(back *back.Back, token string) (*Bot, error) {
 	dg.AddHandler(bot.handleMessage)
 
 	bot.handlers = map[string]commandHandler{
-		"!dev":          bot.cmdDev,
-		"!help":         bot.cmdHelp,
-		"!no":           bot.cmdHelp,
-		"!yes":          bot.cmdAllRight,
-		"!leagues":      bot.cmdLeagues,
-		"!leaderboards": bot.cmdLeaderboards,
-		"!register":     bot.cmdRegister,
-		"!rename":       bot.cmdRename,
+		"!dev":         bot.cmdDev,
+		"!help":        bot.cmdHelp,
+		"!no":          bot.cmdHelp,
+		"!yes":         bot.cmdAllRight,
+		"!leagues":     bot.cmdLeagues,
+		"!leaderboard": bot.cmdLeaderboards,
+		"!register":    bot.cmdRegister,
+		"!rename":      bot.cmdRename,
 
 		"!cancel":   bot.cmdCancel,
 		"!complete": bot.cmdComplete,
@@ -208,7 +208,7 @@ func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
 %[1]s
 # Management
 !help                   # display this help message
-!leaderboards SHORTCODE # show leaderboards for the given league
+!leaderboard SHORTCODE  # show leaderboards for the given league
 !leagues                # list leagues
 !register               # create your account and link it to your Discord account
 !register NAME          # same as "!register" but use another name
