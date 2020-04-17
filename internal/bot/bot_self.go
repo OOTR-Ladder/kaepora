@@ -59,7 +59,7 @@ func (bot *Bot) cmdLeaderboards(m *discordgo.Message, args []string, w io.Writer
 	if len(around) > 0 {
 		fmt.Fprint(w, "\nPlayers around you:\n")
 		for i := range around {
-			fmt.Fprintf(w, "  - %s", around[i].PlayerName)
+			fmt.Fprintf(w, "  - %s\n", around[i].PlayerName)
 		}
 	}
 

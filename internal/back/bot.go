@@ -185,14 +185,14 @@ func getTopAroundPlayer(tx *sqlx.Tx, player Player, leagueID util.UUIDAsBlob) ([
             INNER JOIN Player ON (PlayerRating.PlayerID = Player.ID)
             WHERE
                 PlayerRating.LeagueID = ?
-                AND PlayerRating.Rating %[1]s ?
+                AND PlayerRating.Rating %[1]s ?  AND Player.ID != ?
             ORDER BY PlayerRating.Rating %[2]s
             LIMIT 5`,
 			op, dir,
 		)
 
 		var ret []LeaderboardEntry
-		if err := tx.Select(&ret, query, leagueID, rating); err != nil {
+		if err := tx.Select(&ret, query, leagueID, rating, player.ID); err != nil {
 			return nil, err
 		}
 
