@@ -1,0 +1,4 @@
+*.bin
+*.db
+*.z64
+/docker/OoT-Randomizer

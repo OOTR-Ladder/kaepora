@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+set -eux
+
+dir="/opt/kaepora"
+"$dir/migrate" \
+    -database "sqlite3://$dir/kaepora.db" \
+    -path "$dir/resources/migrations" up
+
+"$@"

@@ -3,7 +3,7 @@ VERSION ?= $(shell git describe --tags 2>/dev/null || echo "unknown")
 GOLANGCI=./golangci-lint
 BUILDFLAGS=-tags 'sqlite_json' -ldflags '-X main.Version=${VERSION}'
 
-all: $(EXEC) $(GOLANGCI) migrate
+all: $(EXEC) migrate
 
 $(EXEC):
 	go build $(BUILDFLAGS)
@@ -11,14 +11,19 @@ $(EXEC):
 migrate:
 	go build -tags "sqlite3 sqlite_json" github.com/golang-migrate/migrate/v4/cmd/migrate
 
-.PHONY: $(EXEC) vendor upgrade lint test coverage randomizer
+.PHONY: $(EXEC) vendor upgrade lint test coverage randomizer docker
 
+docker:
+	docker build . \
+		-f "docker/kaepora.dockerfile" \
+		-t "kaepora:${VERSION}" \
+		--build-arg "VERSION=${VERSION}"
 
 randomizer:
 	cp docker/.dockerignore docker/OoT-Randomizer/
 	docker build docker/OoT-Randomizer \
-		-f docker/OoT-Randomizer.dockerfile \
-		-t oot-randomizer:$(shell git -C docker/OoT-Randomizer describe --tags)
+		-f "docker/OoT-Randomizer.dockerfile" \
+		-t "oot-randomizer:$(shell git -C docker/OoT-Randomizer describe --tags)"
 	rm docker/OoT-Randomizer/.dockerignore
 
 coverage:
