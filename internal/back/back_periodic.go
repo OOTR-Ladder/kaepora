@@ -75,7 +75,7 @@ func (b *Back) createNextScheduledMatchSessions() error {
 			if err := sess.insert(tx); err != nil {
 				return err
 			}
-			if err := b.sendSessionCountdownNotification(tx, sess); err != nil {
+			if err := b.sendSessionStatusUpdateNotification(tx, sess); err != nil {
 				return err
 			}
 		}
@@ -111,7 +111,7 @@ func (b *Back) makeMatchSessionsJoinable() error {
 				return err
 			}
 
-			if err := b.sendSessionCountdownNotification(tx, sessions[k]); err != nil {
+			if err := b.sendSessionStatusUpdateNotification(tx, sessions[k]); err != nil {
 				return err
 			}
 		}
@@ -150,7 +150,7 @@ func (b *Back) makeMatchSessionsPreparing() ([]MatchSession, error) {
 				return err
 			}
 
-			if err := b.sendSessionCountdownNotification(tx, sessions[k]); err != nil {
+			if err := b.sendSessionStatusUpdateNotification(tx, sessions[k]); err != nil {
 				return err
 			}
 		}
@@ -168,6 +168,23 @@ func (b *Back) makeMatchSessionsPreparing() ([]MatchSession, error) {
 }
 
 func (b *Back) startMatchSessions() error {
+	var sessions []MatchSession
+	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
+		sessions, err = getMatchSessionsToStart(tx)
+		return err
+	}); err != nil {
+		return err
+	}
+
+	for k := range sessions {
+		go b.countdownAndStartMatchSession(sessions[k])
+	}
+
+	return nil
+}
+
+// for tests only, we don't want to wait 90s per test
+func (b *Back) instantlyStartMatchSessions() error {
 	if err := b.transaction(func(tx *sqlx.Tx) error {
 		sessions, err := getMatchSessionsToStart(tx)
 		if err != nil {
@@ -182,10 +199,6 @@ func (b *Back) startMatchSessions() error {
 			if err := sessions[k].update(tx); err != nil {
 				return err
 			}
-
-			if err := b.sendSessionCountdownNotification(tx, sessions[k]); err != nil {
-				return err
-			}
 		}
 
 		return nil
@@ -196,13 +209,70 @@ func (b *Back) startMatchSessions() error {
 	return nil
 }
 
+func (b *Back) countdownAndStartMatchSession(session MatchSession) {
+	if _, ok := b.countingDown[session.ID]; ok {
+		log.Printf("debug: not counting down session %s twice", session.ID)
+		return
+	}
+	log.Printf("info: starting countdown for session %s", session.ID)
+	b.countingDown[session.ID] = struct{}{}
+
+	countdowns := []time.Duration{ // order matters
+		time.Minute, 30 * time.Second, 10 * time.Second,
+		5 * time.Second, 4 * time.Second, 3 * time.Second,
+		2 * time.Second, 1 * time.Second,
+	}
+	min := countdowns[0] + 1
+
+	for {
+		delta := time.Until(session.StartDate.Time())
+		if delta <= 0 {
+			break
+		}
+
+		for _, v := range countdowns {
+			if v < min && v >= delta {
+				if err := b.transaction(func(tx *sqlx.Tx) error {
+					return b.sendSessionCountdownNotification(tx, session)
+				}); err != nil {
+					log.Printf("error: unable to send countdown notification: %s", err)
+				}
+
+				min = v
+				break
+			}
+		}
+
+		time.Sleep(100 * time.Millisecond)
+	}
+
+	if err := b.transaction(func(tx *sqlx.Tx) error {
+		if err := session.start(tx); err != nil {
+			return err
+		}
+
+		if err := session.update(tx); err != nil {
+			return err
+		}
+
+		if err := b.sendSessionStatusUpdateNotification(tx, session); err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("error: unable to start MatchSession %s", err)
+	}
+}
+
 func getMatchSessionsToStart(tx *sqlx.Tx) ([]MatchSession, error) {
 	query := `SELECT * FROM MatchSession
-    WHERE DATETIME(StartDate) <= DATETIME(?) AND Status = ?`
+    WHERE DATETIME(StartDate) > DATETIME(?) AND Status = ?`
 	var sessions []MatchSession
 	if err := tx.Select(
 		&sessions, query,
-		util.TimeAsDateTimeTZ(time.Now()),
+		// ensure we can start notifying at exactly T-60s by using 1.5× the update rate
+		util.TimeAsDateTimeTZ(time.Now().Add(-90*time.Second)),
 		MatchSessionStatusPreparing,
 	); err != nil {
 		return nil, err

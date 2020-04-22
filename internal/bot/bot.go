@@ -57,10 +57,10 @@ func New(back *back.Back, token string) (*Bot, error) {
 		"!register":    bot.cmdRegister,
 		"!rename":      bot.cmdRename,
 
-		"!cancel":   bot.cmdCancel,
-		"!complete": bot.cmdComplete,
-		"!forfeit":  bot.cmdForfeit,
-		"!join":     bot.cmdJoin,
+		"!cancel":  bot.cmdCancel,
+		"!done":    bot.cmdComplete,
+		"!forfeit": bot.cmdForfeit,
+		"!join":    bot.cmdJoin,
 	}
 
 	return bot, nil
@@ -216,7 +216,7 @@ func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
 
 # Racing
 !cancel            # cancel joining the next race without penalty until T%[3]s
-!complete          # stop your race timer and register your final time
+!done              # stop your race timer and register your final time
 !forfeit           # forfeit (and thus lose) the current race
 !join SHORTCODE    # join the next race of the given league (see !leagues)
 %[1]s
@@ -242,11 +242,12 @@ Did you get all that?
 	fmt.Fprintf(w, `
 **Admin-only commands**:
 %[1]s
-!dev error                  # error out
-!dev panic                  # panic and abort
-!dev setannounce SHORTCODE  # configure a league to post its announcements in the channel the command was sent in
-!dev uptime                 # display for how long the server has been running
-!dev url                    # display the link to use when adding the bot to a new server
+!dev createsession SHORTCODE # create a new debug race starting immediately
+!dev error                   # error out
+!dev panic                   # panic and abort
+!dev setannounce SHORTCODE   # configure a league to post its announcements in the channel the command was sent in
+!dev uptime                  # display for how long the server has been running
+!dev url                     # display the link to use when adding the bot to a new server
 %[1]s`,
 		"```",
 	)
