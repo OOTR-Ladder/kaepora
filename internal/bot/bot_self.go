@@ -51,16 +51,18 @@ func (bot *Bot) cmdLeaderboards(m *discordgo.Message, args []string, w io.Writer
 		return nil
 	}
 
-	fmt.Fprintf(w, "Top players for league `%s`:\n", shortcode)
+	fmt.Fprintf(w, "Top players for league `%s`:\n```\n", shortcode)
 	for i := range top {
-		fmt.Fprintf(w, "  - %d. %s\n", i+1, top[i].PlayerName)
+		fmt.Fprintf(w, " %2.d. %s\n", i+1, top[i].PlayerName)
 	}
+	fmt.Fprint(w, "```\n")
 
 	if len(around) > 0 {
-		fmt.Fprint(w, "\nPlayers around you:\n")
+		fmt.Fprint(w, "Players around you:\n```\n")
 		for i := range around {
 			fmt.Fprintf(w, "  - %s\n", around[i].PlayerName)
 		}
+		fmt.Fprint(w, "```")
 	}
 
 	return nil

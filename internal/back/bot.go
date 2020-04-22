@@ -101,7 +101,7 @@ type LeaderboardEntry struct {
 }
 
 func (b *Back) GetLeaderboardsForDiscordUser(discordID, shortcode string) (
-	[]LeaderboardEntry, // top10
+	[]LeaderboardEntry, // top20
 	[]LeaderboardEntry, // top around player, might be nil
 	error,
 ) {
@@ -127,7 +127,7 @@ func (b *Back) GetLeaderboardsForDiscordUser(discordID, shortcode string) (
 			return err
 		}
 
-		top, err = getTop10(tx, league.ID)
+		top, err = getTop20(tx, league.ID)
 		if err != nil {
 			return err
 		}
@@ -147,14 +147,14 @@ func (b *Back) GetLeaderboardsForDiscordUser(discordID, shortcode string) (
 	return top, around, nil
 }
 
-func getTop10(tx *sqlx.Tx, leagueID util.UUIDAsBlob) ([]LeaderboardEntry, error) {
+func getTop20(tx *sqlx.Tx, leagueID util.UUIDAsBlob) ([]LeaderboardEntry, error) {
 	query := `
     SELECT Player.Name AS PlayerName, PlayerRating.Rating AS Rating
     FROM PlayerRating
     INNER JOIN Player ON(PlayerRating.PlayerID = Player.ID)
     WHERE PlayerRating.LeagueID = ?
     ORDER BY PlayerRating.Rating DESC
-    LIMIT 10`
+    LIMIT 20`
 
 	var ret []LeaderboardEntry
 	if err := tx.Select(&ret, query, leagueID); err != nil {
