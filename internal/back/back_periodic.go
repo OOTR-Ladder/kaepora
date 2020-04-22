@@ -343,6 +343,10 @@ func (b *Back) endMatchSessionsAndUpdateRanks() error {
 			if err := b.updateRankingsForMatchSession(tx, sessions[k], matches[sessions[k].ID]); err != nil {
 				return err
 			}
+
+			if err := b.sendSessionStatusUpdateNotification(tx, sessions[k]); err != nil {
+				return err
+			}
 		}
 
 		return nil

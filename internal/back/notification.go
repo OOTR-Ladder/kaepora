@@ -270,6 +270,11 @@ func (b *Back) sendSessionStatusUpdateNotification(tx *sqlx.Tx, session MatchSes
 			"The race for league `%s` **starts now**. Good luck and have fun! @here",
 			league.ShortCode,
 		)
+	case MatchSessionStatusClosed:
+		notif.Printf(
+			"All players have finished their last `%s` race, rankings have been updated.",
+			league.ShortCode,
+		)
 	}
 
 	b.notifications <- notif
