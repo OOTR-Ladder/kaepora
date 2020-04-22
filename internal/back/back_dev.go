@@ -67,16 +67,48 @@ func (b *Back) CreateDevMatchSession(leagueShortCode string) error {
 			if err != nil {
 				return err
 			}
-			if _, err := joinCurrentMatchSessionTx(tx, player, league); err != nil {
+			if session, err = joinCurrentMatchSessionTx(tx, player, league); err != nil {
 				return err
 			}
 		}
 
-		// Start countdown, skipping seed generation
+		// Matchmake and start countdown, skipping seed generation
 		session.Status = MatchSessionStatusPreparing
-		session.StartDate = util.TimeAsDateTimeTZ(time.Now().Add(45 * time.Second))
+		session.StartDate = util.TimeAsDateTimeTZ(time.Now().Add(15 * time.Second))
+		if err := b.matchMakeSession(tx, session); err != nil {
+			return err
+		}
 		return session.update(tx)
 	})
+}
+
+func (b *Back) CloseDevMatchSession() error {
+	players := make([]Player, 0, len(debugPlayerIDs))
+	if err := b.transaction(func(tx *sqlx.Tx) error {
+		for _, v := range debugPlayerIDs {
+			player, err := getPlayerByID(tx, v)
+			if err != nil {
+				return err
+			}
+			players = append(players, player)
+		}
+
+		return nil
+	}); err != nil {
+		return err
+	}
+
+	for k := range players {
+		if k == len(players)-1 { // skip last player who has no active match
+			continue
+		}
+
+		if _, err := b.CompleteActiveMatch(players[k]); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 var debugPlayerIDs = []util.UUIDAsBlob{ // nolint:gochecknoglobals

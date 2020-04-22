@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"text/tabwriter"
 	"time"
 
 	"github.com/jmoiron/sqlx"
@@ -53,6 +54,10 @@ func (n *Notification) Print(args ...interface{}) (int, error) {
 
 func (n *Notification) Read(p []byte) (int, error) {
 	return n.body.Read(p)
+}
+
+func (n *Notification) Write(p []byte) (int, error) {
+	return n.body.Write(p)
 }
 
 func NotificationTypeName(typ NotificationType) string {
@@ -143,12 +148,13 @@ func (b *Back) sendMatchSessionEmptyNotification(tx *sqlx.Tx, session MatchSessi
 	return nil
 }
 
-func (b *Back) sendMatchEndNotification(tx *sqlx.Tx, match Match, player Player) error {
-	selfEntry, opponentEntry, err := match.getPlayerAndOpponentEntries(player.ID)
-	if err != nil {
-		return err
-	}
-
+func (b *Back) sendMatchEndNotification(
+	tx *sqlx.Tx,
+	match Match,
+	selfEntry MatchEntry,
+	opponentEntry MatchEntry,
+	player Player,
+) error {
 	opponent, err := getPlayerByID(tx, opponentEntry.PlayerID)
 	if err != nil {
 		return err
@@ -160,10 +166,10 @@ func (b *Back) sendMatchEndNotification(tx *sqlx.Tx, match Match, player Player)
 		Type:          NotificationTypeMatchEnd,
 	}
 
-	notif.Printf("Your race against %s has ended.\n", opponent.Name)
+	notif.Printf("%s, your race against %s has ended.\n", player.Name, opponent.Name)
 
 	start, end := selfEntry.StartedAt.Time.Time(), selfEntry.EndedAt.Time.Time()
-	delta := end.Sub(start).Truncate(time.Second)
+	delta := end.Sub(start).Round(time.Second)
 	if selfEntry.Status == MatchEntryStatusForfeit {
 		notif.Printf("You forfeited your race after %s.\n", delta)
 	} else if selfEntry.Status == MatchEntryStatusFinished {
@@ -171,7 +177,7 @@ func (b *Back) sendMatchEndNotification(tx *sqlx.Tx, match Match, player Player)
 	}
 
 	start, end = opponentEntry.StartedAt.Time.Time(), opponentEntry.EndedAt.Time.Time()
-	delta = end.Sub(start).Truncate(time.Second)
+	delta = end.Sub(start).Round(time.Second)
 	if opponentEntry.Status == MatchEntryStatusForfeit {
 		notif.Printf("%s forfeited after %s.\n", opponent.Name, delta)
 	} else if opponentEntry.Status == MatchEntryStatusFinished {
@@ -216,7 +222,7 @@ func (b *Back) sendMatchSeedNotification(
 		notif.Printf("Here is your seed in _Patch_ format. "+
 			"You can use https://ootrandomizer.com/generator to patch your ROM.\n"+
 			"Your race starts in %s, **do not explore the seed before the match starts**.",
-			time.Until(session.StartDate.Time()).Truncate(time.Second),
+			time.Until(session.StartDate.Time()).Round(time.Second),
 		)
 
 		b.notifications <- notif
@@ -244,7 +250,7 @@ func (b *Back) sendSessionStatusUpdateNotification(tx *sqlx.Tx, session MatchSes
 			"The next race for league `%s` has been scheduled for %s (in %s)",
 			league.ShortCode,
 			session.StartDate.Time(),
-			time.Until(session.StartDate.Time()).Truncate(time.Second),
+			time.Until(session.StartDate.Time()).Round(time.Second),
 		)
 	case MatchSessionStatusJoinable:
 		notif.Printf(
@@ -252,7 +258,7 @@ func (b *Back) sendSessionStatusUpdateNotification(tx *sqlx.Tx, session MatchSes
 				"You can join using `!join %s`.",
 			league.ShortCode,
 			session.StartDate.Time(),
-			time.Until(session.StartDate.Time()).Truncate(time.Second),
+			time.Until(session.StartDate.Time()).Round(time.Second),
 			league.ShortCode,
 		)
 	case MatchSessionStatusPreparing:
@@ -263,11 +269,16 @@ func (b *Back) sendSessionStatusUpdateNotification(tx *sqlx.Tx, session MatchSes
 			league.ShortCode,
 			len(session.PlayerIDs)-(len(session.PlayerIDs)%2),
 			session.StartDate.Time(),
-			time.Until(session.StartDate.Time()).Truncate(time.Second),
+			time.Until(session.StartDate.Time()).Round(time.Second),
 		)
 	case MatchSessionStatusInProgress:
 		notif.Printf(
 			"The race for league `%s` **starts now**. Good luck and have fun! @here",
+			league.ShortCode,
+		)
+	case MatchSessionStatusClosed:
+		notif.Printf(
+			"All players have finished their last `%s` race, rankings have been updated.",
 			league.ShortCode,
 		)
 	}
@@ -299,6 +310,62 @@ func (b *Back) sendSessionCountdownNotification(tx *sqlx.Tx, session MatchSessio
 		notif.Printf(" @here")
 	default:
 	}
+
+	b.notifications <- notif
+	return nil
+}
+
+func (b *Back) sendSessionRecapNotification(
+	tx *sqlx.Tx,
+	session MatchSession,
+	matches []Match,
+) error {
+	league, err := getLeagueByID(tx, session.LeagueID)
+	if err != nil {
+		return err
+	}
+
+	notif := Notification{
+		RecipientType: NotificationRecipientTypeDiscordChannel,
+		Recipient:     league.AnnounceDiscordChannelID,
+		Type:          NotificationTypeMatchSessionStatusUpdate,
+	}
+
+	notif.Printf("Results for latest `%s` race:\n```\n", league.ShortCode)
+	table := tabwriter.NewWriter(&notif, 0, 0, 2, ' ', 0)
+	fmt.Fprintln(table, "Player 1\t\tvs\tPlayer 2\t\tSeed")
+
+	details := func(entry MatchEntry) (wrap string, name string, duration string) {
+		if entry.Outcome == MatchEntryOutcomeWin {
+			wrap = "*"
+		}
+
+		player, _ := getPlayerByID(tx, entry.PlayerID)
+		name = player.Name
+
+		if entry.Status == MatchEntryStatusForfeit {
+			duration = "forfeit"
+			return
+		}
+
+		delta := entry.EndedAt.Time.Time().Sub(entry.StartedAt.Time.Time()).Round(time.Second)
+		duration = delta.String()
+
+		return
+	}
+
+	for _, match := range matches {
+		wrap0, name0, duration0 := details(match.Entries[0])
+		wrap1, name1, duration1 := details(match.Entries[1])
+
+		fmt.Fprint(table,
+			wrap0, name0, wrap0, "\t", duration0, "\t\t",
+			wrap1, name1, wrap1, "\t", duration1, "\t", match.Seed, "\n",
+		)
+	}
+
+	table.Flush()
+	notif.Print("```\n")
 
 	b.notifications <- notif
 	return nil

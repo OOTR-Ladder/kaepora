@@ -4,14 +4,18 @@ import (
 	"fmt"
 	"io"
 	"kaepora/internal/back"
+	"log"
 )
 
 func (bot *Bot) sendNotification(notif back.Notification) error {
 	w, err := bot.getWriterForNotification(notif)
-	if err != nil || w == nil {
+	if err != nil {
 		return err
 	}
-	defer w.Flush()
+	if w == nil {
+		log.Printf("info: not sent: %s", notif.String())
+		return nil
+	}
 
 	if len(notif.Files) > 0 {
 		for k := range notif.Files {
@@ -23,7 +27,7 @@ func (bot *Bot) sendNotification(notif back.Notification) error {
 		return fmt.Errorf("error: unable to copy notification body buffer: %w", err)
 	}
 
-	return nil
+	return w.Flush()
 }
 
 // getWriterForNotification returns a writer to the recipient in the given

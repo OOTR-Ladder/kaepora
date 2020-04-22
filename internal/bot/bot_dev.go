@@ -51,9 +51,11 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 		return bot.back.SendDevSeed(m.Author.ID, args[1], args[2])
 	case "createsession": // SHORTCODE
 		if len(args) != 2 {
-			return util.ErrPublic("expected 2 arguments: SHORTCODE")
+			return util.ErrPublic("expected 1 argument: SHORTCODE")
 		}
 		return bot.back.CreateDevMatchSession(args[1])
+	case "closesession": // SHORTCODE
+		return bot.back.CloseDevMatchSession()
 	default:
 		return util.ErrPublic("invalid command")
 	}
