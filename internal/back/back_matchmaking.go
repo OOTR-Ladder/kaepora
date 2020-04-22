@@ -83,7 +83,7 @@ func (b *Back) generateAndSendMatchSeed(
 		return err
 	}
 
-	b.sendMatchSeedNotification(match, session, patch, p1, p2)
+	b.sendMatchSeedNotification(session, patch, p1, p2)
 
 	return nil
 }
@@ -119,7 +119,7 @@ func (b *Back) SendDevSeed(
 			return err
 		}
 
-		b.sendMatchSeedNotification(Match{}, MatchSession{}, patch, player, Player{})
+		b.sendMatchSeedNotification(MatchSession{}, patch, player, Player{})
 
 		return nil
 	})

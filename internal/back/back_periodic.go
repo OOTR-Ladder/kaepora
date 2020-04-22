@@ -75,7 +75,7 @@ func (b *Back) createNextScheduledMatchSessions() error {
 			if err := sess.insert(tx); err != nil {
 				return err
 			}
-			if err := b.sendSessionCountdownNotification(tx, sess); err != nil {
+			if err := b.sendSessionStatusUpdateNotification(tx, sess); err != nil {
 				return err
 			}
 		}
@@ -111,7 +111,7 @@ func (b *Back) makeMatchSessionsJoinable() error {
 				return err
 			}
 
-			if err := b.sendSessionCountdownNotification(tx, sessions[k]); err != nil {
+			if err := b.sendSessionStatusUpdateNotification(tx, sessions[k]); err != nil {
 				return err
 			}
 		}
@@ -150,7 +150,7 @@ func (b *Back) makeMatchSessionsPreparing() ([]MatchSession, error) {
 				return err
 			}
 
-			if err := b.sendSessionCountdownNotification(tx, sessions[k]); err != nil {
+			if err := b.sendSessionStatusUpdateNotification(tx, sessions[k]); err != nil {
 				return err
 			}
 		}
@@ -183,7 +183,7 @@ func (b *Back) startMatchSessions() error {
 				return err
 			}
 
-			if err := b.sendSessionCountdownNotification(tx, sessions[k]); err != nil {
+			if err := b.sendSessionStatusUpdateNotification(tx, sessions[k]); err != nil {
 				return err
 			}
 		}

@@ -40,12 +40,7 @@ func innerTestMatchMaking(t *testing.T, back *Back) {
 		for {
 			select {
 			case notif := <-c:
-				if notif.Type == NotificationTypeMatchSessionCountdown {
-					session := notif.Payload["MatchSession"].(MatchSession)
-					log.Printf("test: got notification: %s (status: %d)", notif.String(), session.Status)
-				} else {
-					log.Printf("test: got notification: %s", notif.String())
-				}
+				log.Printf("test: got notification: %s", notif.String())
 				notifs[notif.Type]++
 			case <-done:
 				return
@@ -101,10 +96,10 @@ func innerTestMatchMaking(t *testing.T, back *Back) {
 	}
 
 	expected := map[NotificationType]int{
-		NotificationTypeMatchSessionCountdown: 3, // /* TODO created when using schedule */, joinable, preparing, starting.
-		NotificationTypeMatchSessionOddKick:   1, // that one unlucky runner
-		NotificationTypeMatchSeed:             6, // 1 per joined player
-		NotificationTypeMatchEnd:              6, // 1 per joined player
+		NotificationTypeMatchSessionStatusUpdate: 2, // /* TODO "created" when using schedule */, joinable, preparing.
+		NotificationTypeMatchSessionOddKick:      1, // that one unlucky runner
+		NotificationTypeMatchSeed:                6, // 1 per joined player
+		NotificationTypeMatchEnd:                 6, // 1 per joined player
 	}
 	close(notifsDone)
 	if !reflect.DeepEqual(expected, notifs) {
