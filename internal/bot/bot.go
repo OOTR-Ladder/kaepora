@@ -242,11 +242,12 @@ Did you get all that?
 	fmt.Fprintf(w, `
 **Admin-only commands**:
 %[1]s
-!dev error                  # error out
-!dev panic                  # panic and abort
-!dev setannounce SHORTCODE  # configure a league to post its announcements in the channel the command was sent in
-!dev uptime                 # display for how long the server has been running
-!dev url                    # display the link to use when adding the bot to a new server
+!dev createsession SHORTCODE # create a new debug race starting immediately
+!dev error                   # error out
+!dev panic                   # panic and abort
+!dev setannounce SHORTCODE   # configure a league to post its announcements in the channel the command was sent in
+!dev uptime                  # display for how long the server has been running
+!dev url                     # display the link to use when adding the bot to a new server
 %[1]s`,
 		"```",
 	)

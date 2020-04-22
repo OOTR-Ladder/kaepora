@@ -77,7 +77,7 @@ func innerTestMatchMaking(t *testing.T, back *Back) {
 	if err := fakeSessionStart(back, sessions[0].ID); err != nil {
 		t.Fatal(err)
 	}
-	if err := back.startMatchSessions(); err != nil {
+	if err := back.instantlyStartMatchSessions(); err != nil {
 		t.Fatal(err)
 	}
 	if err := checkSessionStatus(back, session.ID, MatchSessionStatusInProgress); err != nil {

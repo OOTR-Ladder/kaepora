@@ -88,43 +88,6 @@ func (b *Back) generateAndSendMatchSeed(
 	return nil
 }
 
-func (b *Back) SendDevSeed(
-	discordID string,
-	leagueShortCode string,
-	seed string,
-) error {
-	return b.transaction(func(tx *sqlx.Tx) error {
-		league, err := getLeagueByShortCode(tx, leagueShortCode)
-		if err != nil {
-			return fmt.Errorf("could not find League: %w", err)
-		}
-
-		game, err := getGameByID(tx, league.GameID)
-		if err != nil {
-			return fmt.Errorf("could not find Game: %w", err)
-		}
-
-		player, err := getPlayerByDiscordID(tx, discordID)
-		if err != nil {
-			return err
-		}
-
-		gen, err := generator.NewGenerator(game.Generator)
-		if err != nil {
-			return err
-		}
-
-		patch, err := gen.Generate(league.Settings, seed)
-		if err != nil {
-			return err
-		}
-
-		b.sendMatchSeedNotification(MatchSession{}, patch, player, Player{})
-
-		return nil
-	})
-}
-
 type pair struct {
 	p1, p2 Player
 }

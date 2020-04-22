@@ -1,0 +1,136 @@
+package back
+
+import (
+	"fmt"
+	"kaepora/internal/generator"
+	"kaepora/internal/util"
+	"time"
+
+	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
+)
+
+func (b *Back) SendDevSeed(
+	discordID string,
+	leagueShortCode string,
+	seed string,
+) error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		league, err := getLeagueByShortCode(tx, leagueShortCode)
+		if err != nil {
+			return fmt.Errorf("could not find League: %w", err)
+		}
+
+		game, err := getGameByID(tx, league.GameID)
+		if err != nil {
+			return fmt.Errorf("could not find Game: %w", err)
+		}
+
+		player, err := getPlayerByDiscordID(tx, discordID)
+		if err != nil {
+			return err
+		}
+
+		gen, err := generator.NewGenerator(game.Generator)
+		if err != nil {
+			return err
+		}
+
+		patch, err := gen.Generate(league.Settings, seed)
+		if err != nil {
+			return err
+		}
+
+		b.sendMatchSeedNotification(MatchSession{}, patch, player, Player{})
+
+		return nil
+	})
+}
+
+func (b *Back) CreateDevMatchSession(leagueShortCode string) error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		league, err := getLeagueByShortCode(tx, leagueShortCode)
+		if err != nil {
+			return fmt.Errorf("could not find League: %w", err)
+		}
+
+		// Create joinable
+		session := NewMatchSession(league.ID, time.Now().Add(-MatchSessionJoinableAfterOffset))
+		session.Status = MatchSessionStatusJoinable
+		if err := session.insert(tx); err != nil {
+			return err
+		}
+
+		// Add players
+		for _, playerID := range debugPlayerIDs {
+			player, err := getPlayerByID(tx, playerID)
+			if err != nil {
+				return err
+			}
+			if _, err := joinCurrentMatchSessionTx(tx, player, league); err != nil {
+				return err
+			}
+		}
+
+		// Start countdown, skipping seed generation
+		session.Status = MatchSessionStatusPreparing
+		session.StartDate = util.TimeAsDateTimeTZ(time.Now().Add(45 * time.Second))
+		return session.update(tx)
+	})
+}
+
+var debugPlayerIDs = []util.UUIDAsBlob{ // nolint:gochecknoglobals
+	util.UUIDAsBlob(uuid.MustParse("00000000-0000-0000-0000-000000000000")),
+	util.UUIDAsBlob(uuid.MustParse("00000000-1111-0000-0000-000000000000")),
+	util.UUIDAsBlob(uuid.MustParse("00000000-2222-0000-0000-000000000000")),
+	util.UUIDAsBlob(uuid.MustParse("00000000-3333-0000-0000-000000000000")),
+	util.UUIDAsBlob(uuid.MustParse("00000000-4444-0000-0000-000000000000")),
+	util.UUIDAsBlob(uuid.MustParse("00000000-5555-0000-0000-000000000000")),
+	util.UUIDAsBlob(uuid.MustParse("00000000-6666-0000-0000-000000000000")),
+}
+
+// sames indices as debugPlayerIDs
+var debugPlayerNames = []string{ // nolint:gochecknoglobals
+	"Darunia", "Nabooru", "Rauru",
+	"Ruto", "Saria", "Zelda",
+	"Impa",
+}
+
+func (b *Back) LoadFixtures() error {
+	game := NewGame("The Legend of Zelda: Ocarina of Time", "oot-randomizer:5.2.12")
+	leagues := []League{
+		NewLeague("Standard", "std", game.ID, "s3.json"),
+		NewLeague("Debug", "debug", game.ID, "s3.json"),
+	}
+
+	// 20h PST is 05h CEST, Los Angeles was chosen because it observes DST
+	leagues[0].Schedule.SetAll([]string{
+		"20:00 America/Los_Angeles", "14:00 Europe/Paris", "20:00 Europe/Paris",
+	})
+	leagues[0].Schedule.Mon = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
+	leagues[0].Schedule.Wed = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
+	leagues[0].Schedule.Fri = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
+	leagues[0].Schedule.Sat = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
+
+	return b.transaction(func(tx *sqlx.Tx) error {
+		if err := game.insert(tx); err != nil {
+			return err
+		}
+
+		for _, v := range leagues {
+			if err := v.insert(tx); err != nil {
+				return err
+			}
+		}
+
+		for k, v := range debugPlayerNames {
+			player := NewPlayer(v)
+			player.ID = debugPlayerIDs[k]
+			if err := player.insert(tx); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
+}

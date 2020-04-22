@@ -8,7 +8,7 @@ import (
 
 func (bot *Bot) sendNotification(notif back.Notification) error {
 	w, err := bot.getWriterForNotification(notif)
-	if err != nil {
+	if err != nil || w == nil {
 		return err
 	}
 	defer w.Flush()
@@ -26,6 +26,9 @@ func (bot *Bot) sendNotification(notif back.Notification) error {
 	return nil
 }
 
+// getWriterForNotification returns a writer to the recipient in the given
+// notification, the returned writer might be null with no error if the
+// recipient is empty, meaning we should just ignore it.
 func (bot *Bot) getWriterForNotification(notif back.Notification) (*channelWriter, error) {
 	switch notif.RecipientType {
 	case back.NotificationRecipientTypeDiscordUser:

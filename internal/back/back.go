@@ -2,6 +2,7 @@ package back
 
 import (
 	"fmt"
+	"kaepora/internal/util"
 	"log"
 	"sync"
 	"time"
@@ -12,6 +13,11 @@ import (
 type Back struct {
 	db            *sqlx.DB
 	notifications chan Notification
+
+	// It is possible to fetch the same session twice to count it down, this
+	// cache avoid starting the same session twice.  This is only used in
+	// countdownAndStartMatchSession which is _not_ run concurrently.
+	countingDown map[util.UUIDAsBlob]struct{}
 }
 
 func New(sqlDriver string, sqlDSN string) (*Back, error) {
@@ -30,6 +36,7 @@ func New(sqlDriver string, sqlDSN string) (*Back, error) {
 	return &Back{
 		db:            db,
 		notifications: make(chan Notification, 32),
+		countingDown:  map[util.UUIDAsBlob]struct{}{},
 	}, nil
 }
 
@@ -72,34 +79,4 @@ func (b *Back) transaction(cb transactionCallback) error {
 	}
 
 	return tx.Commit()
-}
-
-func (b *Back) LoadFixtures() error {
-	game := NewGame("The Legend of Zelda: Ocarina of Time", "oot-randomizer:5.2.12")
-	leagues := []League{
-		NewLeague("Standard", "std", game.ID, "s3.json"),
-	}
-
-	// 20h PST is 05h CEST, Los Angeles was chosen because it observes DST
-	leagues[0].Schedule.SetAll([]string{
-		"20:00 America/Los_Angeles", "14:00 Europe/Paris", "20:00 Europe/Paris",
-	})
-	leagues[0].Schedule.Mon = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
-	leagues[0].Schedule.Wed = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
-	leagues[0].Schedule.Fri = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
-	leagues[0].Schedule.Sat = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
-
-	return b.transaction(func(tx *sqlx.Tx) error {
-		if err := game.insert(tx); err != nil {
-			return err
-		}
-
-		for _, v := range leagues {
-			if err := v.insert(tx); err != nil {
-				return err
-			}
-		}
-
-		return nil
-	})
 }

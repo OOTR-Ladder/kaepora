@@ -266,9 +266,38 @@ func (b *Back) sendSessionStatusUpdateNotification(tx *sqlx.Tx, session MatchSes
 			time.Until(session.StartDate.Time()).Truncate(time.Second),
 		)
 	case MatchSessionStatusInProgress:
-		// A special countdown handles this to ensure the notification is sent
-		// at exactly the scheduled time.
-		return nil
+		notif.Printf(
+			"The race for league `%s` **starts now**. Good luck and have fun! @here",
+			league.ShortCode,
+		)
+	}
+
+	b.notifications <- notif
+	return nil
+}
+
+func (b *Back) sendSessionCountdownNotification(tx *sqlx.Tx, session MatchSession) error {
+	league, err := getLeagueByID(tx, session.LeagueID)
+	if err != nil {
+		return err
+	}
+
+	notif := Notification{
+		RecipientType: NotificationRecipientTypeDiscordChannel,
+		Recipient:     league.AnnounceDiscordChannelID,
+		Type:          NotificationTypeMatchSessionStatusUpdate,
+	}
+
+	delta := time.Until(session.StartDate.Time()).Round(time.Second)
+	notif.Printf(
+		"The next race for league `%s` starts in %s.",
+		league.ShortCode, delta,
+	)
+
+	switch delta {
+	case time.Minute, 30 * time.Second, 5 * time.Second:
+		notif.Printf(" @here")
+	default:
 	}
 
 	b.notifications <- notif
