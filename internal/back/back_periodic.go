@@ -328,8 +328,11 @@ loop:
 }
 
 func (b *Back) endMatchSessionsAndUpdateRanks() error {
-	return b.transaction(func(tx *sqlx.Tx) error {
-		sessions, matches, err := getMatchSessionsToEnd(tx)
+	var sessions []MatchSession
+	var matches map[util.UUIDAsBlob][]Match
+
+	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
+		sessions, matches, err = getMatchSessionsToEnd(tx)
 		if err != nil {
 			return err
 		}
@@ -345,6 +348,19 @@ func (b *Back) endMatchSessionsAndUpdateRanks() error {
 			}
 
 			if err := b.sendSessionStatusUpdateNotification(tx, sessions[k]); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	}); err != nil {
+		return err
+	}
+
+	// In a separate transaction to avoid delaying ranking updates and working with stale data.
+	return b.transaction(func(tx *sqlx.Tx) error {
+		for k := range sessions {
+			if err := b.sendSessionRecapNotification(tx, sessions[k], matches[sessions[k].ID]); err != nil {
 				return err
 			}
 		}

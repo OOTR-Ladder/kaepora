@@ -203,6 +203,7 @@ func (b *Back) ensureSessionIsValidForMatchMaking(tx *sqlx.Tx, session MatchSess
 
 	// No players / closed session
 	if len(players) < 2 || session.Status != MatchSessionStatusPreparing {
+		log.Printf("debug: not enough players or closed session %s", session.ID)
 		return MatchSession{}, false, nil
 	}
 
