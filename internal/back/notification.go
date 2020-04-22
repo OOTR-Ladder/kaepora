@@ -24,6 +24,7 @@ const (
 	NotificationTypeMatchSessionStatusUpdate NotificationType = iota
 	NotificationTypeMatchSessionCountdown
 	NotificationTypeMatchSessionEmpty
+	NotificationTypeMatchSessionRecap
 	NotificationTypeMatchSessionOddKick
 	NotificationTypeMatchSeed
 	NotificationTypeMatchEnd
@@ -328,7 +329,7 @@ func (b *Back) sendSessionRecapNotification(
 	notif := Notification{
 		RecipientType: NotificationRecipientTypeDiscordChannel,
 		Recipient:     league.AnnounceDiscordChannelID,
-		Type:          NotificationTypeMatchSessionStatusUpdate,
+		Type:          NotificationTypeMatchSessionRecap,
 	}
 
 	notif.Printf("Results for latest `%s` race:\n```\n", league.ShortCode)

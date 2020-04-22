@@ -98,6 +98,7 @@ func innerTestMatchMaking(t *testing.T, back *Back) {
 	expected := map[NotificationType]int{
 		NotificationTypeMatchSessionStatusUpdate: 3, // /* TODO "created" when using schedule */, joinable, preparing, closed.
 		NotificationTypeMatchSessionOddKick:      1, // that one unlucky runner
+		NotificationTypeMatchSessionRecap:        1, // 1 in announnce channel
 		NotificationTypeMatchSeed:                6, // 1 per joined player
 		NotificationTypeMatchEnd:                 6, // 1 per joined player
 	}
