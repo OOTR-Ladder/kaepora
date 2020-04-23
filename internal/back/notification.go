@@ -238,11 +238,17 @@ func (b *Back) sendMatchSeedNotification(
 			}},
 		}
 
-		notif.Printf("Here is your seed in _Patch_ format. "+
-			"You can use https://ootrandomizer.com/generator to patch your ROM.\n"+
-			"Your race starts in %s, **do not explore the seed before the match starts**.",
-			time.Until(session.StartDate.Time()).Round(time.Second),
+		notif.Print(
+			"Here is your seed in _Patch_ format. " +
+				"You can use https://ootrandomizer.com/generator to patch your ROM.\n",
 		)
+
+		if !session.StartDate.Time().IsZero() {
+			notif.Printf(
+				"Your race starts in %s, **do not explore the seed before the match starts**.",
+				time.Until(session.StartDate.Time()).Round(time.Second),
+			)
+		}
 
 		b.notifications <- notif
 	}

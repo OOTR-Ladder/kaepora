@@ -245,6 +245,7 @@ Did you get all that?
 !dev createsession SHORTCODE # create a new debug race starting immediately
 !dev error                   # error out
 !dev panic                   # panic and abort
+!dev seed SHORTCODE [SEED]   # generate a seed valid for the given league
 !dev setannounce SHORTCODE   # configure a league to post its announcements in the channel the command was sent in
 !dev uptime                  # display for how long the server has been running
 !dev url                     # display the link to use when adding the bot to a new server
