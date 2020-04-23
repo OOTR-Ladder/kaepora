@@ -23,8 +23,11 @@ randomizer:
 	cp docker/.dockerignore docker/OoT-Randomizer/
 	docker build docker/OoT-Randomizer \
 		-f "docker/OoT-Randomizer.dockerfile" \
-		-t "oot-randomizer:$(shell git -C docker/OoT-Randomizer describe --tags)"
+		-t "lp042/oot-randomizer:$(shell git -C docker/OoT-Randomizer describe --tags)"
 	rm docker/OoT-Randomizer/.dockerignore
+
+push-randomizer: randomizer
+	docker push "lp042/oot-randomizer:$(shell git -C docker/OoT-Randomizer describe --tags)"
 
 coverage:
 	go test -covermode=count -coverprofile=coverage.cov --timeout=10s ./...

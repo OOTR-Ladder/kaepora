@@ -78,7 +78,7 @@ func (r *OOTRandomizer) run(outDir, settings, seed string) error {
 		"-v", base + "/ZOOTDEC.z64:/opt/oot-randomizer/ZOOTDEC.z64:ro",
 		"-v", filepath.Join(base, settings) + ":/opt/oot-randomizer/settings.json:ro",
 		"-v", outDir + ":/opt/oot-randomizer/Output",
-		"oot-randomizer:" + r.version,
+		"lp042/oot-randomizer:" + r.version,
 		"--seed", seed,
 		"--settings", "settings.json",
 	}
