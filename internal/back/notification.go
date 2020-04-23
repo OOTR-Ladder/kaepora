@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"strings"
 	"text/tabwriter"
 	"time"
 
@@ -28,6 +29,7 @@ const (
 	NotificationTypeMatchSessionOddKick
 	NotificationTypeMatchSeed
 	NotificationTypeMatchEnd
+	NotificationTypeSpoilerLog
 )
 
 type NotificationFile struct {
@@ -80,6 +82,8 @@ func NotificationTypeName(typ NotificationType) string {
 		return "MatchSeed"
 	case NotificationTypeMatchEnd:
 		return "MatchEnd"
+	case NotificationTypeSpoilerLog:
+		return "SpoilerLog"
 	default:
 		return "invalid"
 	}
@@ -234,11 +238,17 @@ func (b *Back) sendMatchSeedNotification(
 			}},
 		}
 
-		notif.Printf("Here is your seed in _Patch_ format. "+
-			"You can use https://ootrandomizer.com/generator to patch your ROM.\n"+
-			"Your race starts in %s, **do not explore the seed before the match starts**.",
-			time.Until(session.StartDate.Time()).Round(time.Second),
+		notif.Print(
+			"Here is your seed in _Patch_ format. " +
+				"You can use https://ootrandomizer.com/generator to patch your ROM.\n",
 		)
+
+		if !session.StartDate.Time().IsZero() {
+			notif.Printf(
+				"Your race starts in %s, **do not explore the seed before the match starts**.",
+				time.Until(session.StartDate.Time()).Round(time.Second),
+			)
+		}
 
 		b.notifications <- notif
 	}
@@ -363,7 +373,7 @@ func (b *Back) sendSessionRecapNotification(
 
 	unknown := 0
 	for _, match := range matches {
-		if !match.Entries[0].HasEnded() && !match.Entries[1].HasEnded() {
+		if !match.Entries[0].hasEnded() && !match.Entries[1].hasEnded() {
 			unknown++
 			continue
 		}
@@ -410,4 +420,25 @@ func entryDetails(tx *sqlx.Tx, entry MatchEntry) (wrap string, name string, dura
 	}
 
 	return
+}
+
+func (b *Back) sendSpoilerLogNotification(player Player, seed, spoilerLog string) {
+	notif := Notification{
+		RecipientType: NotificationRecipientTypeDiscordUser,
+		Recipient:     player.DiscordID.String,
+		Type:          NotificationTypeSpoilerLog,
+	}
+
+	if spoilerLog == "" {
+		notif.Printf("There is no spoiler log available for seed `%s`.", seed)
+	} else {
+		notif.Files = []NotificationFile{{
+			Name:        fmt.Sprintf("%s.spoilers.json", seed),
+			ContentType: "application/json",
+			Reader:      strings.NewReader(spoilerLog),
+		}}
+		notif.Printf("Here is the spoiler log for seed `%s`.", seed)
+	}
+
+	b.notifications <- notif
 }

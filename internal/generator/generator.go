@@ -6,7 +6,7 @@ import (
 )
 
 type Generator interface {
-	Generate(settings, seed string) ([]byte, error)
+	Generate(settings, seed string) (patch []byte, spoilerLog string, err error)
 }
 
 func NewGenerator(id string) (Generator, error) {
@@ -38,6 +38,8 @@ func NewTest() *Test {
 	return &Test{}
 }
 
-func (*Test) Generate(settings, seed string) ([]byte, error) {
-	return []byte("generated binary for seed: " + seed), nil
+func (*Test) Generate(settings, seed string) ([]byte, string, error) {
+	return []byte("generated binary for seed: " + seed),
+		"generated spoiler log for seed: " + seed,
+		nil
 }

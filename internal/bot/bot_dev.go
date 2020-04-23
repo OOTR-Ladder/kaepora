@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/google/uuid"
 )
 
 func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error {
@@ -44,11 +45,16 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 		channel := newChannelWriter(bot.dg, m.ChannelID)
 		defer channel.Flush()
 		fmt.Fprintf(channel, "Announcements for league `%s` now will now happen in this channel.", shortcode)
-	case "seed": // SHORTCODE SEED
-		if len(args) != 3 {
-			return util.ErrPublic("expected 2 arguments: SHORTCODE SEED")
+	case "seed": // SHORTCODE
+		if len(args) < 2 || len(args) > 3 {
+			return util.ErrPublic("expected 2 arguments: SHORTCODE [SEED]")
 		}
-		return bot.back.SendDevSeed(m.Author.ID, args[1], args[2])
+
+		seed := uuid.New().String()
+		if len(args) == 3 {
+			seed = args[2]
+		}
+		return bot.back.SendDevSeed(m.Author.ID, args[1], seed)
 	case "createsession": // SHORTCODE
 		if len(args) != 2 {
 			return util.ErrPublic("expected 1 argument: SHORTCODE")

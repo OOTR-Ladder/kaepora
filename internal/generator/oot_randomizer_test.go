@@ -16,7 +16,7 @@ func TestOOTRandomizer(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	patch, err := g.Generate("s3.json", "DEADBEEF")
+	patch, spoilerLog, err := g.Generate("s3.json", "DEADBEEF")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -24,6 +24,10 @@ func TestOOTRandomizer(t *testing.T) {
 	// Patches are not reproducible so we are limited to length checks.
 	if len(patch) == 0 {
 		t.Fatal("got an empty patch")
+	}
+
+	if len(spoilerLog) == 0 {
+		t.Fatal("got an empty spoiler log")
 	}
 
 	if len(patch) < 250*1024 {

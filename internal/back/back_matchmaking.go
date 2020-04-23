@@ -78,8 +78,13 @@ func (b *Back) generateAndSendMatchSeed(
 		return err
 	}
 
-	patch, err := gen.Generate(match.Settings, match.Seed)
+	patch, spoilerLog, err := gen.Generate(match.Settings, match.Seed)
 	if err != nil {
+		return err
+	}
+
+	match.SpoilerLog = spoilerLog
+	if err := b.transaction(match.update); err != nil {
 		return err
 	}
 

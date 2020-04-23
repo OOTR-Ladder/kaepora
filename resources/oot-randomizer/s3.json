@@ -1,7 +1,7 @@
 {
     "distribution_file": "",
     "count": 1,
-    "create_spoiler": false,
+    "create_spoiler": true,
     "create_cosmetics_log": false,
     "compress_rom": "Patch",
     "world_count": 1,

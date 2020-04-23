@@ -1,6 +1,7 @@
 package back
 
 import (
+	"database/sql"
 	"fmt"
 	"kaepora/internal/generator"
 	"kaepora/internal/util"
@@ -26,22 +27,19 @@ func (b *Back) SendDevSeed(
 			return fmt.Errorf("could not find Game: %w", err)
 		}
 
-		player, err := getPlayerByDiscordID(tx, discordID)
-		if err != nil {
-			return err
-		}
-
 		gen, err := generator.NewGenerator(game.Generator)
 		if err != nil {
 			return err
 		}
 
-		patch, err := gen.Generate(league.Settings, seed)
+		patch, spoilerLog, err := gen.Generate(league.Settings, seed)
 		if err != nil {
 			return err
 		}
 
+		player := Player{DiscordID: sql.NullString{Valid: true, String: discordID}}
 		b.sendMatchSeedNotification(MatchSession{}, patch, player, Player{})
+		b.sendSpoilerLogNotification(player, seed, spoilerLog)
 
 		return nil
 	})

@@ -21,20 +21,34 @@ func NewOOTRandomizer(version string) *OOTRandomizer {
 	}
 }
 
-func (r *OOTRandomizer) Generate(settings, seed string) ([]byte, error) {
+func (r *OOTRandomizer) Generate(settings, seed string) ([]byte, string, error) {
 	outDir, err := ioutil.TempDir("", "oot-randomizer-output-")
 	if err != nil {
-		return nil, fmt.Errorf("unable to create output directory: %s", err)
+		return nil, "", fmt.Errorf("unable to create output directory: %s", err)
 	}
 	defer os.RemoveAll(outDir)
 
 	if err := r.run(outDir, settings, seed); err != nil {
-		return nil, fmt.Errorf("unable to generate seed: %s", err)
+		return nil, "", fmt.Errorf("unable to generate seed: %s", err)
 	}
 
-	names, err := filepath.Glob(filepath.Join(outDir, "*.zpf"))
+	zpf, err := readFirstGlob(filepath.Join(outDir, "*.zpf"))
+	if err != nil {
+		return nil, "", err
+	}
+
+	spoilerLog, err := readFirstGlob(filepath.Join(outDir, "*_Spoiler.json"))
+	if err != nil {
+		return nil, "", err
+	}
+
+	return zpf, string(spoilerLog), nil
+}
+
+func readFirstGlob(pattern string) ([]byte, error) {
+	names, err := filepath.Glob(pattern)
 	if err != nil || len(names) != 1 {
-		return nil, fmt.Errorf("could not find ZPF: %w", err)
+		return nil, fmt.Errorf("could not find file with glob `%s`: %w", pattern, err)
 	}
 
 	out, err := ioutil.ReadFile(names[0])

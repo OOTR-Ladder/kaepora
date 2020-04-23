@@ -95,3 +95,12 @@ If your opponent completes the race you will receive a loss, if your opponent al
 
 	return nil
 }
+
+func (bot *Bot) cmdSpoilers(m *discordgo.Message, args []string, _ io.Writer) error {
+	player, err := bot.back.GetPlayerByDiscordID(m.Author.ID)
+	if err != nil {
+		return err
+	}
+
+	return bot.back.SendSeedSpoilerLog(player, argsAsName(args))
+}
