@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"strings"
 	"text/tabwriter"
 	"time"
 
@@ -28,6 +29,7 @@ const (
 	NotificationTypeMatchSessionOddKick
 	NotificationTypeMatchSeed
 	NotificationTypeMatchEnd
+	NotificationTypeSpoilerLog
 )
 
 type NotificationFile struct {
@@ -80,6 +82,8 @@ func NotificationTypeName(typ NotificationType) string {
 		return "MatchSeed"
 	case NotificationTypeMatchEnd:
 		return "MatchEnd"
+	case NotificationTypeSpoilerLog:
+		return "SpoilerLog"
 	default:
 		return "invalid"
 	}
@@ -410,4 +414,25 @@ func entryDetails(tx *sqlx.Tx, entry MatchEntry) (wrap string, name string, dura
 	}
 
 	return
+}
+
+func (b *Back) sendSpoilerLogNotification(player Player, seed, spoilerLog string) {
+	notif := Notification{
+		RecipientType: NotificationRecipientTypeDiscordUser,
+		Recipient:     player.DiscordID.String,
+		Type:          NotificationTypeSpoilerLog,
+	}
+
+	if spoilerLog == "" {
+		notif.Printf("There is no spoiler log available for seed `%s`.", seed)
+	} else {
+		notif.Files = []NotificationFile{{
+			Name:        fmt.Sprintf("%s.spoilers.json", seed),
+			ContentType: "application/json",
+			Reader:      strings.NewReader(spoilerLog),
+		}}
+		notif.Printf("Here is the spoiler log for seed `%s`.", seed)
+	}
+
+	b.notifications <- notif
 }

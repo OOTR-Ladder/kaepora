@@ -36,12 +36,13 @@ func (b *Back) SendDevSeed(
 			return err
 		}
 
-		patch, err := gen.Generate(league.Settings, seed)
+		patch, spoilerLog, err := gen.Generate(league.Settings, seed)
 		if err != nil {
 			return err
 		}
 
 		b.sendMatchSeedNotification(MatchSession{}, patch, player, Player{})
+		b.sendSpoilerLogNotification(player, seed, spoilerLog)
 
 		return nil
 	})

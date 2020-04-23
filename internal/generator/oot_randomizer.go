@@ -21,28 +21,28 @@ func NewOOTRandomizer(version string) *OOTRandomizer {
 	}
 }
 
-func (r *OOTRandomizer) Generate(settings, seed string) ([]byte, error) {
+func (r *OOTRandomizer) Generate(settings, seed string) ([]byte, string, error) {
 	outDir, err := ioutil.TempDir("", "oot-randomizer-output-")
 	if err != nil {
-		return nil, fmt.Errorf("unable to create output directory: %s", err)
+		return nil, "", fmt.Errorf("unable to create output directory: %s", err)
 	}
 	defer os.RemoveAll(outDir)
 
 	if err := r.run(outDir, settings, seed); err != nil {
-		return nil, fmt.Errorf("unable to generate seed: %s", err)
+		return nil, "", fmt.Errorf("unable to generate seed: %s", err)
 	}
 
 	names, err := filepath.Glob(filepath.Join(outDir, "*.zpf"))
 	if err != nil || len(names) != 1 {
-		return nil, fmt.Errorf("could not find ZPF: %w", err)
+		return nil, "", fmt.Errorf("could not find ZPF: %w", err)
 	}
 
 	out, err := ioutil.ReadFile(names[0])
 	if err != nil {
-		return nil, fmt.Errorf("unable to read seed back: %w", err)
+		return nil, "", fmt.Errorf("unable to read seed back: %w", err)
 	}
 
-	return out, nil
+	return out, "", nil // TODO spoiler log
 }
 
 func (r *OOTRandomizer) run(outDir, settings, seed string) error {
