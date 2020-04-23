@@ -116,7 +116,30 @@ func (b *Back) CompleteActiveMatch(player Player) (Match, error) {
 		return Match{}, err
 	}
 
+	if err := b.sendPrivateRecapForSessionID(ret.MatchSessionID, player); err != nil {
+		return Match{}, err
+	}
+
 	return ret, nil
+}
+
+func (b *Back) sendPrivateRecapForSessionID(sessionID util.UUIDAsBlob, player Player) error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		session, err := getMatchSessionByID(tx, sessionID)
+		if err != nil {
+			return err
+		}
+
+		matches, err := getMatchesBySessionID(tx, sessionID)
+		if err != nil {
+			return err
+		}
+
+		return b.sendSessionRecapNotification(
+			tx, session, matches,
+			privateRecap, player.DiscordID.String,
+		)
+	})
 }
 
 func (b *Back) CancelActiveMatchSession(player Player) (MatchSession, error) {
@@ -174,6 +197,10 @@ func (b *Back) ForfeitActiveMatch(player Player) (Match, error) {
 		return Match{}, err
 	}
 
+	if err := b.sendPrivateRecapForSessionID(ret.MatchSessionID, player); err != nil {
+		return Match{}, err
+	}
+
 	return ret, nil
 }
 
@@ -193,11 +220,11 @@ func (b *Back) maybeSendMatchEndNotifications(
 		return err
 	}
 
-	if err := b.sendMatchEndNotification(tx, match, selfEntry, againstEntry, player); err != nil {
+	if err := b.sendMatchEndNotification(tx, selfEntry, againstEntry, player); err != nil {
 		return err
 	}
 
-	if err := b.sendMatchEndNotification(tx, match, againstEntry, selfEntry, opponent); err != nil {
+	if err := b.sendMatchEndNotification(tx, againstEntry, selfEntry, opponent); err != nil {
 		return err
 	}
 

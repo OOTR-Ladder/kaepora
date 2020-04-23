@@ -45,6 +45,11 @@ type Notification struct {
 	body bytes.Buffer
 }
 
+func (n *Notification) SetDiscordUserRecipient(userID string) {
+	n.Recipient = userID
+	n.RecipientType = NotificationRecipientTypeDiscordUser
+}
+
 func (n *Notification) Printf(str string, args ...interface{}) (int, error) {
 	return fmt.Fprintf(&n.body, str, args...)
 }
@@ -69,6 +74,8 @@ func NotificationTypeName(typ NotificationType) string {
 		return "MatchSessionEmpty"
 	case NotificationTypeMatchSessionOddKick:
 		return "MatchSessionOddKick"
+	case NotificationTypeMatchSessionRecap:
+		return "MatchSessionRecap"
 	case NotificationTypeMatchSeed:
 		return "MatchSeed"
 	case NotificationTypeMatchEnd:
@@ -151,7 +158,6 @@ func (b *Back) sendMatchSessionEmptyNotification(tx *sqlx.Tx, session MatchSessi
 
 func (b *Back) sendMatchEndNotification(
 	tx *sqlx.Tx,
-	match Match,
 	selfEntry MatchEntry,
 	opponentEntry MatchEntry,
 	player Player,
@@ -170,19 +176,27 @@ func (b *Back) sendMatchEndNotification(
 	notif.Printf("%s, your race against %s has ended.\n", player.Name, opponent.Name)
 
 	start, end := selfEntry.StartedAt.Time.Time(), selfEntry.EndedAt.Time.Time()
-	delta := end.Sub(start).Round(time.Second)
-	if selfEntry.Status == MatchEntryStatusForfeit {
-		notif.Printf("You forfeited your race after %s.\n", delta)
-	} else if selfEntry.Status == MatchEntryStatusFinished {
-		notif.Printf("You completed your race in %s.\n", delta)
+	if !start.IsZero() {
+		delta := end.Sub(start).Round(time.Second)
+		if selfEntry.Status == MatchEntryStatusForfeit {
+			notif.Printf("You forfeited your race after %s.\n", delta)
+		} else if selfEntry.Status == MatchEntryStatusFinished {
+			notif.Printf("You completed your race in %s.\n", delta)
+		}
+	} else if selfEntry.Status == MatchEntryStatusForfeit {
+		notif.Print("You forfeited before the race started.\n")
 	}
 
 	start, end = opponentEntry.StartedAt.Time.Time(), opponentEntry.EndedAt.Time.Time()
-	delta = end.Sub(start).Round(time.Second)
-	if opponentEntry.Status == MatchEntryStatusForfeit {
-		notif.Printf("%s forfeited after %s.\n", opponent.Name, delta)
-	} else if opponentEntry.Status == MatchEntryStatusFinished {
-		notif.Printf("%s completed his/her race in %s.\n", opponent.Name, delta)
+	if !start.IsZero() {
+		delta := end.Sub(start).Round(time.Second)
+		if opponentEntry.Status == MatchEntryStatusForfeit {
+			notif.Printf("%s forfeited after %s.\n", opponent.Name, delta)
+		} else if opponentEntry.Status == MatchEntryStatusFinished {
+			notif.Printf("%s completed his/her race in %s.\n", opponent.Name, delta)
+		}
+	} else if opponentEntry.Status == MatchEntryStatusForfeit {
+		notif.Printf("%s forfeited before the race started.\n", opponent.Name)
 	}
 
 	switch selfEntry.Outcome {
@@ -316,10 +330,15 @@ func (b *Back) sendSessionCountdownNotification(tx *sqlx.Tx, session MatchSessio
 	return nil
 }
 
+const privateRecap = true
+const publicRecap = false
+
 func (b *Back) sendSessionRecapNotification(
 	tx *sqlx.Tx,
 	session MatchSession,
 	matches []Match,
+	private bool, // private recap, don't send to announce channel
+	toDiscordUserID string, // can be empty: will send to announce channel
 ) error {
 	league, err := getLeagueByID(tx, session.LeagueID)
 	if err != nil {
@@ -332,34 +351,27 @@ func (b *Back) sendSessionRecapNotification(
 		Type:          NotificationTypeMatchSessionRecap,
 	}
 
+	// Don't rely on user ID not being "" because that could leak race recaps
+	// in announce channel if the user has no discord ID for some reason.
+	if private {
+		notif.SetDiscordUserRecipient(toDiscordUserID)
+	}
+
 	notif.Printf("Results for latest `%s` race:\n```\n", league.ShortCode)
 	table := tabwriter.NewWriter(&notif, 0, 0, 2, ' ', 0)
 	fmt.Fprintln(table, "Player 1\t\tvs\tPlayer 2\t\tSeed")
 
-	details := func(entry MatchEntry) (wrap string, name string, duration string) {
-		if entry.Outcome == MatchEntryOutcomeWin {
-			wrap = "*"
-		}
-
-		player, _ := getPlayerByID(tx, entry.PlayerID)
-		name = player.Name
-
-		if entry.Status == MatchEntryStatusForfeit {
-			duration = "forfeit"
-			return
-		}
-
-		delta := entry.EndedAt.Time.Time().Sub(entry.StartedAt.Time.Time()).Round(time.Second)
-		duration = delta.String()
-
-		return
-	}
-
+	unknown := 0
 	for _, match := range matches {
-		wrap0, name0, duration0 := details(match.Entries[0])
-		wrap1, name1, duration1 := details(match.Entries[1])
+		if !match.Entries[0].HasEnded() && !match.Entries[1].HasEnded() {
+			unknown++
+			continue
+		}
 
-		fmt.Fprint(table,
+		wrap0, name0, duration0 := entryDetails(tx, match.Entries[0])
+		wrap1, name1, duration1 := entryDetails(tx, match.Entries[1])
+		fmt.Fprint(
+			table,
 			wrap0, name0, wrap0, "\t", duration0, "\t\t",
 			wrap1, name1, wrap1, "\t", duration1, "\t", match.Seed, "\n",
 		)
@@ -368,6 +380,34 @@ func (b *Back) sendSessionRecapNotification(
 	table.Flush()
 	notif.Print("```\n")
 
+	if unknown > 0 {
+		notif.Printf("There are still %d race(s) in progress.", unknown)
+	}
+
 	b.notifications <- notif
 	return nil
+}
+
+// entryDetails is a formatting helper for sendSessionRecapNotification
+func entryDetails(tx *sqlx.Tx, entry MatchEntry) (wrap string, name string, duration string) {
+	if entry.Outcome == MatchEntryOutcomeWin {
+		wrap = "*"
+	}
+
+	player, _ := getPlayerByID(tx, entry.PlayerID)
+	name = player.Name
+
+	switch entry.Status {
+	case MatchEntryStatusWaiting:
+		duration = "not started"
+	case MatchEntryStatusInProgress:
+		duration = "in progress"
+	case MatchEntryStatusForfeit:
+		duration = "forfeit"
+	case MatchEntryStatusFinished:
+		delta := entry.EndedAt.Time.Time().Sub(entry.StartedAt.Time.Time()).Round(time.Second)
+		duration = delta.String()
+	}
+
+	return
 }

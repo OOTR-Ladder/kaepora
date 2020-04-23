@@ -360,7 +360,10 @@ func (b *Back) endMatchSessionsAndUpdateRanks() error {
 	// In a separate transaction to avoid delaying ranking updates and working with stale data.
 	return b.transaction(func(tx *sqlx.Tx) error {
 		for k := range sessions {
-			if err := b.sendSessionRecapNotification(tx, sessions[k], matches[sessions[k].ID]); err != nil {
+			if err := b.sendSessionRecapNotification(
+				tx, sessions[k], matches[sessions[k].ID],
+				publicRecap, "",
+			); err != nil {
 				return err
 			}
 		}

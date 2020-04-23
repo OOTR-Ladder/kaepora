@@ -19,6 +19,11 @@ type MatchEntry struct {
 	Comment   string
 }
 
+func (m MatchEntry) HasEnded() bool {
+	return m.Status == MatchEntryStatusFinished ||
+		m.Status == MatchEntryStatusForfeit
+}
+
 type MatchEntryStatus int
 
 const ( // this is stored in DB, don't change values

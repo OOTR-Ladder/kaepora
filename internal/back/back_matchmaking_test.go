@@ -95,16 +95,18 @@ func innerTestMatchMaking(t *testing.T, back *Back) {
 		t.Error(err)
 	}
 
+	time.Sleep(50 * time.Millisecond) // HACK: wait for async recap notif
+
 	expected := map[NotificationType]int{
 		NotificationTypeMatchSessionStatusUpdate: 3, // /* TODO "created" when using schedule */, joinable, preparing, closed.
 		NotificationTypeMatchSessionOddKick:      1, // that one unlucky runner
-		NotificationTypeMatchSessionRecap:        1, // 1 in announnce channel
+		NotificationTypeMatchSessionRecap:        7, // 1 in announce channel + 1 per joined player
 		NotificationTypeMatchSeed:                6, // 1 per joined player
 		NotificationTypeMatchEnd:                 6, // 1 per joined player
 	}
 	close(notifsDone)
 	if !reflect.DeepEqual(expected, notifs) {
-		t.Errorf("notifications count does not match\nexpected: %#v\nactual: %#v", expected, notifs)
+		t.Errorf("notifications count does not match\nexpected: %#v\nactual  : %#v", expected, notifs)
 	}
 }
 
@@ -211,6 +213,7 @@ func haveZeldaForfeit(back *Back) error {
 		return errors.New("expected an error when cancelling after MatchSessionCancellableUntilOffset")
 	}
 
+	log.Printf("test: forfeiting %s", player.Name)
 	match, err := back.ForfeitActiveMatch(player)
 	if err != nil {
 		return fmt.Errorf("can't forfeit: %s", err)
