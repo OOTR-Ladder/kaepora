@@ -19,7 +19,7 @@ type MatchEntry struct {
 	Comment   string
 }
 
-func (m MatchEntry) HasEnded() bool {
+func (m MatchEntry) hasEnded() bool {
 	return m.Status == MatchEntryStatusFinished ||
 		m.Status == MatchEntryStatusForfeit
 }

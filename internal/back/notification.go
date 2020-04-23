@@ -373,7 +373,7 @@ func (b *Back) sendSessionRecapNotification(
 
 	unknown := 0
 	for _, match := range matches {
-		if !match.Entries[0].HasEnded() && !match.Entries[1].HasEnded() {
+		if !match.Entries[0].hasEnded() && !match.Entries[1].hasEnded() {
 			unknown++
 			continue
 		}

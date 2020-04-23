@@ -109,9 +109,31 @@ func getMatchByPlayerAndSession(tx *sqlx.Tx, player Player, session MatchSession
 		return Match{}, fmt.Errorf("could not fetch match: %w", err)
 	}
 
-	query = `SELECT * FROM MatchEntry WHERE MatchEntry.MatchID = ?`
+	if err := injectEntries(tx, &match); err != nil {
+		return Match{}, err
+	}
+
+	return match, nil
+}
+
+func injectEntries(tx *sqlx.Tx, match *Match) error {
+	query := `SELECT * FROM MatchEntry WHERE MatchEntry.MatchID = ?`
 	if err := tx.Select(&match.Entries, query, match.ID); err != nil {
-		return Match{}, fmt.Errorf("could not fetch entries: %w", err)
+		return fmt.Errorf("could not fetch entries: %w", err)
+	}
+
+	return nil
+}
+
+func getMatchBySeed(tx *sqlx.Tx, seed string) (Match, error) {
+	var match Match
+	query := `SELECT Match.* FROM Match WHERE Match.Seed = ?  LIMIT 1`
+	if err := tx.Get(&match, query, seed); err != nil {
+		return Match{}, fmt.Errorf("could not fetch match: %w", err)
+	}
+
+	if err := injectEntries(tx, &match); err != nil {
+		return Match{}, err
 	}
 
 	return match, nil
@@ -125,9 +147,8 @@ func getMatchesBySessionID(tx *sqlx.Tx, sessionID util.UUIDAsBlob) ([]Match, err
 	}
 
 	for k := range matches {
-		query = `SELECT * FROM MatchEntry WHERE MatchEntry.MatchID = ?`
-		if err := tx.Select(&matches[k].Entries, query, matches[k].ID); err != nil {
-			return nil, fmt.Errorf("could not fetch entries: %w", err)
+		if err := injectEntries(tx, &matches[k]); err != nil {
+			return nil, err
 		}
 	}
 

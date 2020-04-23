@@ -226,3 +226,25 @@ func getTopAroundPlayer(tx *sqlx.Tx, player Player, leagueID util.UUIDAsBlob) ([
 
 	return ret, nil
 }
+
+func (b *Back) SendSeedSpoilerLog(player Player, seed string) error {
+	var match Match
+	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
+		match, err = getMatchBySeed(tx, seed)
+		if err != nil {
+			return err
+		}
+
+		if !match.hasEnded() {
+			return util.ErrPublic(fmt.Sprintf("The race for seed %s is still in progress.", seed))
+		}
+
+		return nil
+	}); err != nil {
+		return err
+	}
+
+	b.sendSpoilerLogNotification(player, seed, match.SpoilerLog)
+
+	return nil
+}
