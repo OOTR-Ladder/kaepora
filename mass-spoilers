@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+set -eux
+
+# ~2 hours on my AMD Ryzen 5 2600X
+seq 10000 | /usr/bin/parallel -n0 ./kaepora spoilers

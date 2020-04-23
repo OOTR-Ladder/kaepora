@@ -3,14 +3,18 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"kaepora/internal/back"
 	"kaepora/internal/bot"
+	"kaepora/internal/generator"
 	"log"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"sync"
 	"syscall"
 
+	"github.com/google/uuid"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -27,6 +31,11 @@ func main() {
 		return
 	case "help":
 		fmt.Fprint(os.Stdout, help())
+		return
+	case "spoilers":
+		if err := generateSpoilerLogs(); err != nil {
+			log.Fatal(err)
+		}
 		return
 	}
 
@@ -88,6 +97,36 @@ func serve(b *back.Back) error {
 	log.Print("info: waiting for complete shutdown")
 	wg.Wait()
 	log.Print("info: shutdown complete")
+
+	return nil
+}
+
+func generateSpoilerLogs() error {
+	generator, err := generator.NewGenerator("oot-randomizer:5.2.12")
+	if err != nil {
+		return err
+	}
+
+	seed := uuid.New().String()
+	_, spoiler, err := generator.Generate("s3.json", seed)
+	if err != nil {
+		return err
+	}
+
+	dir := filepath.Join("spoilers", seed[0:2], seed[2:4])
+	if err := os.MkdirAll(dir, 0o775); err != nil {
+		return err
+	}
+
+	f, err := os.OpenFile(filepath.Join(dir, seed+".json"), os.O_RDWR|os.O_CREATE, 0o664)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if _, err := io.WriteString(f, spoiler); err != nil {
+		return err
+	}
 
 	return nil
 }
