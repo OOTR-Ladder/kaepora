@@ -32,17 +32,31 @@ func (r *OOTRandomizer) Generate(settings, seed string) ([]byte, string, error) 
 		return nil, "", fmt.Errorf("unable to generate seed: %s", err)
 	}
 
-	names, err := filepath.Glob(filepath.Join(outDir, "*.zpf"))
+	zpf, err := readFirstGlob(filepath.Join(outDir, "*.zpf"))
+	if err != nil {
+		return nil, "", err
+	}
+
+	spoilerLog, err := readFirstGlob(filepath.Join(outDir, "*_Spoiler.json"))
+	if err != nil {
+		return nil, "", err
+	}
+
+	return zpf, string(spoilerLog), nil
+}
+
+func readFirstGlob(pattern string) ([]byte, error) {
+	names, err := filepath.Glob(pattern)
 	if err != nil || len(names) != 1 {
-		return nil, "", fmt.Errorf("could not find ZPF: %w", err)
+		return nil, fmt.Errorf("could not find file with glob `%s`: %w", pattern, err)
 	}
 
 	out, err := ioutil.ReadFile(names[0])
 	if err != nil {
-		return nil, "", fmt.Errorf("unable to read seed back: %w", err)
+		return nil, fmt.Errorf("unable to read seed back: %w", err)
 	}
 
-	return out, "", nil // TODO spoiler log
+	return out, nil
 }
 
 func (r *OOTRandomizer) run(outDir, settings, seed string) error {
