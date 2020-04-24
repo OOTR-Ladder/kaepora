@@ -18,6 +18,9 @@ type Back struct {
 	// cache avoid starting the same session twice.  This is only used in
 	// countdownAndStartMatchSession which is _not_ run concurrently.
 	countingDown map[util.UUIDAsBlob]struct{}
+
+	// Used atomically to limit concurrent generators, absolutely hacky.
+	generators int64
 }
 
 func New(sqlDriver string, sqlDSN string) (*Back, error) {

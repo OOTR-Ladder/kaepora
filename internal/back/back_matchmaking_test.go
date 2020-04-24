@@ -9,6 +9,8 @@ import (
 	"log"
 	"os"
 	"reflect"
+	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -22,9 +24,6 @@ import (
 func TestMatchMaking(t *testing.T) {
 	back := createFixturedTestBack(t)
 
-	innerTestMatchMaking(t, back)
-	innerTestMatchMaking(t, back)
-	innerTestMatchMaking(t, back)
 	innerTestMatchMaking(t, back)
 	innerTestMatchMaking(t, back)
 	innerTestMatchMaking(t, back)
@@ -458,4 +457,95 @@ func fixtures(tx *sqlx.Tx) error {
 	}
 
 	return nil
+}
+
+func TestRandomInt(t *testing.T) {
+	ranges := [][]int{
+		{-10, 10},
+		{0, 10},
+		{-1, 1},
+		{-20, -10},
+		{0, 1},
+		{0, 0},
+	}
+
+	for _, r := range ranges {
+		min, max := r[0], r[1]
+		distrib := make(map[int]int, max-min)
+
+		for i := 0; i < 1000; i++ {
+			v := randomInt(min, max)
+			distrib[v]++
+			if v < min {
+				t.Fatalf("%d < min", v)
+			}
+			if v > max {
+				t.Fatalf("%d > max", v)
+			}
+		}
+
+		for i := min; i <= max; i++ {
+			if distrib[i] <= 0 {
+				t.Errorf("it is _highly_ improbable not to have %d as a random value", i)
+			}
+		}
+	}
+}
+
+func TestRandomIndex(t *testing.T) {
+	a := make([]struct{}, 10)
+	min := 0
+	max := len(a) - 1
+	distrib := make(map[int]int, max-min)
+
+	for i := 0; i < 1000; i++ {
+		v := randomIndex(len(a))
+		distrib[v]++
+		if v < min {
+			t.Fatalf("%d < min", v)
+		}
+		if v > max {
+			t.Fatalf("%d > max", v)
+		}
+	}
+
+	for i := min; i <= max; i++ {
+		if distrib[i] <= 0 {
+			t.Errorf("it is _highly_ improbable not to have %d as a random value", i)
+		}
+	}
+}
+
+func TestPairPlayers(t *testing.T) {
+	players := make([]Player, 256)
+	for k := range players {
+		players[k] = NewPlayer("player#" + strconv.Itoa(k))
+		players[k].ID = util.UUIDAsBlob{}
+		players[k].ID[0] = byte(k)
+	}
+	if len(players) == 0 {
+		t.Fatal("empty players")
+	}
+
+	pairs := pairPlayers(players)
+	if len(pairs) == 0 {
+		t.Fatal("empty pairs")
+	}
+	if len(pairs) != len(players)/2 {
+		t.Errorf("expected %d pairs, got %d", len(players)/2, len(pairs))
+	}
+
+	distrib := make(map[int]int)
+	for _, v := range pairs {
+		delta := int(v.p1.ID[0]) - int(v.p2.ID[0])
+		if delta < 0 {
+			delta = -delta
+		}
+		distrib[delta]++
+	}
+
+	fmt.Println("index distance distribution:")
+	for dist := 1; dist <= 32; dist++ {
+		fmt.Printf("%-3d %s\n", dist, strings.Repeat("*", distrib[dist]))
+	}
 }

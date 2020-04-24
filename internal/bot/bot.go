@@ -231,28 +231,9 @@ If you are caught cheating, using an alt, or breaking a league's rules **you wil
 
 Did you get all that?
 `,
-
 		"```",
 		joinOffset,
 		prepOffset,
-	)
-
-	if m.Author.ID != bot.adminUserID {
-		return nil
-	}
-
-	fmt.Fprintf(w, `
-**Admin-only commands**:
-%[1]s
-!dev createsession SHORTCODE # create a new debug race starting immediately
-!dev error                   # error out
-!dev panic                   # panic and abort
-!dev seed SHORTCODE [SEED]   # generate a seed valid for the given league
-!dev setannounce SHORTCODE   # configure a league to post its announcements in the channel the command was sent in
-!dev uptime                  # display for how long the server has been running
-!dev url                     # display the link to use when adding the bot to a new server
-%[1]s`,
-		"```",
 	)
 
 	return nil

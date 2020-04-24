@@ -267,12 +267,12 @@ func (b *Back) countdownAndStartMatchSession(session MatchSession) {
 
 func getMatchSessionsToStart(tx *sqlx.Tx) ([]MatchSession, error) {
 	query := `SELECT * FROM MatchSession
-    WHERE DATETIME(StartDate) > DATETIME(?) AND Status = ?`
+    WHERE DATETIME(StartDate) <= DATETIME(?) AND Status = ?`
 	var sessions []MatchSession
 	if err := tx.Select(
 		&sessions, query,
 		// ensure we can start notifying at exactly T-60s by using 1.5× the update rate
-		util.TimeAsDateTimeTZ(time.Now().Add(-90*time.Second)),
+		util.TimeAsDateTimeTZ(time.Now().Add(90*time.Second)),
 		MatchSessionStatusPreparing,
 	); err != nil {
 		return nil, err
