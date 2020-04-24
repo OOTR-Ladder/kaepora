@@ -459,3 +459,60 @@ func fixtures(tx *sqlx.Tx) error {
 
 	return nil
 }
+
+func TestRandomInt(t *testing.T) {
+	ranges := [][]int{
+		{-10, 10},
+		{0, 10},
+		{-1, 1},
+		{-20, -10},
+		{0, 1},
+		{0, 0},
+	}
+
+	for _, r := range ranges {
+		min, max := r[0], r[1]
+		distrib := make(map[int]int, max-min)
+
+		for i := 0; i < 1000; i++ {
+			v := randomInt(min, max)
+			distrib[v]++
+			if v < min {
+				t.Fatalf("%d < min", v)
+			}
+			if v > max {
+				t.Fatalf("%d > max", v)
+			}
+		}
+
+		for i := min; i <= max; i++ {
+			if distrib[i] <= 0 {
+				t.Errorf("it is _highly_ improbable not to have %d as a random value", i)
+			}
+		}
+	}
+}
+
+func TestRandomIndex(t *testing.T) {
+	a := make([]struct{}, 10)
+	min := 0
+	max := len(a) - 1
+	distrib := make(map[int]int, max-min)
+
+	for i := 0; i < 1000; i++ {
+		v := randomIndex(len(a))
+		distrib[v]++
+		if v < min {
+			t.Fatalf("%d < min", v)
+		}
+		if v > max {
+			t.Fatalf("%d > max", v)
+		}
+	}
+
+	for i := min; i <= max; i++ {
+		if distrib[i] <= 0 {
+			t.Errorf("it is _highly_ improbable not to have %d as a random value", i)
+		}
+	}
+}

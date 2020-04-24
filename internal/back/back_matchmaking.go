@@ -235,6 +235,10 @@ func (b *Back) ensureSessionIsValidForMatchMaking(tx *sqlx.Tx, session MatchSess
 }
 
 func randomIndex(length int) int {
+	if length == 0 {
+		panic("calling randomIndex with a length of zero")
+	}
+
 	return randomInt(0, length-1)
 }
 
@@ -243,13 +247,13 @@ func randomInt(iMin, iMax int) int {
 		panic("iMin > iMax")
 	}
 
-	max := big.NewInt(int64(iMax - iMin))
+	max := big.NewInt(int64(iMax - iMin + 1))
 	offset, err := rand.Int(rand.Reader, max)
 	if err != nil {
 		panic(err)
 	}
 
-	return int(offset.Int64() - int64(iMin))
+	return int(offset.Int64() + int64(iMin))
 }
 
 func getActiveMatchAndEntriesForPlayer(tx *sqlx.Tx, player Player) (
