@@ -93,11 +93,11 @@ func (b *Back) generateAndSendMatchSeed(
 	}
 
 	atomic.AddInt64(&b.generators, 1)
+	defer atomic.AddInt64(&b.generators, -1)
 	patch, spoilerLog, err := gen.Generate(match.Settings, match.Seed)
 	if err != nil {
 		return err
 	}
-	atomic.AddInt64(&b.generators, -1)
 
 	match.SpoilerLog = spoilerLog
 	if err := b.transaction(match.update); err != nil {
