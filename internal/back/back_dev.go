@@ -38,7 +38,7 @@ func (b *Back) SendDevSeed(
 		}
 
 		player := Player{DiscordID: sql.NullString{Valid: true, String: discordID}}
-		b.sendMatchSeedNotification(MatchSession{}, patch, player, Player{})
+		b.sendMatchSeedNotification(MatchSession{}, patch, hashFromSpoilerLog(spoilerLog), player, Player{})
 		b.sendSpoilerLogNotification(player, seed, spoilerLog)
 
 		return nil

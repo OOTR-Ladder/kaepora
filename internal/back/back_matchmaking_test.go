@@ -102,6 +102,7 @@ func innerTestMatchMaking(t *testing.T, back *Back) {
 		NotificationTypeMatchSessionRecap:        7, // 1 in announce channel + 1 per joined player
 		NotificationTypeMatchSeed:                6, // 1 per joined player
 		NotificationTypeMatchEnd:                 6, // 1 per joined player
+		NotificationTypeSpoilerLog:               6, // 1 per joined player
 	}
 	close(notifsDone)
 	if !reflect.DeepEqual(expected, notifs) {

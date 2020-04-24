@@ -119,6 +119,7 @@ func (b *Back) CompleteActiveMatch(player Player) (Match, error) {
 	if err := b.sendPrivateRecapForSessionID(ret.MatchSessionID, player); err != nil {
 		return Match{}, err
 	}
+	b.sendSpoilerLogNotification(player, ret.Seed, ret.SpoilerLog)
 
 	return ret, nil
 }
@@ -200,6 +201,7 @@ func (b *Back) ForfeitActiveMatch(player Player) (Match, error) {
 	if err := b.sendPrivateRecapForSessionID(ret.MatchSessionID, player); err != nil {
 		return Match{}, err
 	}
+	b.sendSpoilerLogNotification(player, ret.Seed, ret.SpoilerLog)
 
 	return ret, nil
 }

@@ -3,6 +3,7 @@ package back
 import (
 	"crypto/rand"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"kaepora/internal/generator"
 	"kaepora/internal/util"
@@ -10,6 +11,7 @@ import (
 	"math/big"
 	"runtime"
 	"sort"
+	"strings"
 	"sync/atomic"
 	"time"
 
@@ -102,9 +104,22 @@ func (b *Back) generateAndSendMatchSeed(
 		return err
 	}
 
-	b.sendMatchSeedNotification(session, patch, p1, p2)
+	b.sendMatchSeedNotification(session, patch, hashFromSpoilerLog(spoilerLog), p1, p2)
 
 	return nil
+}
+
+func hashFromSpoilerLog(spoilerLog string) string {
+	spoil := struct {
+		Hash []string `json:"file_hash"`
+	}{}
+
+	if err := json.Unmarshal([]byte(spoilerLog), &spoil); err != nil {
+		log.Println("error: unable to extract hash from spoiler log")
+		return ""
+	}
+
+	return strings.Join(spoil.Hash, ", ")
 }
 
 type pair struct {

@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -39,7 +40,12 @@ func NewTest() *Test {
 }
 
 func (*Test) Generate(settings, seed string) ([]byte, string, error) {
-	return []byte("generated binary for seed: " + seed),
-		"generated spoiler log for seed: " + seed,
-		nil
+	spoilerStruct := struct {
+		Hash []string `json:"file_hash"`
+	}{
+		Hash: []string{"hash", "for", "seed", seed},
+	}
+
+	spoilerLog, err := json.Marshal(spoilerStruct)
+	return []byte("generated binary for seed: " + seed), string(spoilerLog), err
 }

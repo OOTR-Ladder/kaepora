@@ -219,6 +219,7 @@ func (b *Back) sendMatchEndNotification(
 func (b *Back) sendMatchSeedNotification(
 	session MatchSession,
 	patch []byte,
+	hash string,
 	p1, p2 Player,
 ) {
 	name := fmt.Sprintf(
@@ -242,6 +243,10 @@ func (b *Back) sendMatchSeedNotification(
 			"Here is your seed in _Patch_ format. " +
 				"You can use https://ootrandomizer.com/generator to patch your ROM.\n",
 		)
+
+		if hash != "" {
+			notif.Print("Your seed hash is: **", hash, "**\n")
+		}
 
 		if !session.StartDate.Time().IsZero() {
 			notif.Printf(
