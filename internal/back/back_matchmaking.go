@@ -143,41 +143,43 @@ func (b *Back) matchMakeSession(tx *sqlx.Tx, session MatchSession) error {
 	return nil
 }
 
-// pairPlayers randomly pair close players together.
+func clamp(v, min, max int) int {
+	if v > max {
+		return max
+	}
+
+	if v < min {
+		return min
+	}
+
+	return v
+}
+
+// pairPlayers randomly pairs close players together.
 func pairPlayers(players []Player) []pair {
 	if len(players) < 2 {
 		return nil
 	}
+	if len(players)%2 != 0 {
+		panic("fed an odd number of players to pairPlayers")
+	}
 
 	// TODO: Heuristics, if both shared their last match: go one neighbor down/up
 	pairs := make([]pair, 0, len(players)/2)
-	for len(players) > 2 {
+	for len(players) > 0 {
 		i1 := randomIndex(len(players))
 		p := pair{p1: players[i1]}
 		players = players[:i1+copy(players[i1:], players[i1+1:])]
 
-		minIndex := i1 - 5
-		if minIndex < 0 {
-			minIndex = 0
-		}
-		maxIndex := i1 + 5
-		if maxIndex > len(players)-1 {
-			maxIndex = len(players) - 1
-		}
-		if minIndex == maxIndex {
-			panic("unreachable")
-		}
+		minIndex := clamp(i1-5, 0, len(players)-1)
+		maxIndex := clamp(i1+5, 0, len(players)-1)
 
-		var i2 int
-		for i2 == 0 {
-			i2 = randomInt(minIndex, maxIndex)
-		}
+		i2 := randomInt(minIndex, maxIndex)
 		p.p2 = players[i2]
 		players = players[:i2+copy(players[i2:], players[i2+1:])]
 
 		pairs = append(pairs, p)
 	}
-	pairs = append(pairs, pair{players[0], players[1]})
 
 	return pairs
 }
