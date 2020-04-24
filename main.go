@@ -70,6 +70,7 @@ COMMANDS
     fixtures    create default data for quick testing during development
     help        display this help
     serve       start the Discord bot
+    spoilers    generate a spoiler log in $cwd/spoilers
     version     display the current version
 `,
 		os.Args[0],

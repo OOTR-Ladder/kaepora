@@ -1,4 +1,4 @@
-package generator_test
+package oot_test
 
 import (
 	"kaepora/internal/generator"
@@ -7,7 +7,7 @@ import (
 )
 
 func TestOOTRandomizer(t *testing.T) {
-	if err := os.Chdir("../.."); err != nil { // generator is CWD dependant
+	if err := os.Chdir("../../.."); err != nil { // generator is CWD dependant
 		t.Fatal(err)
 	}
 

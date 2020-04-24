@@ -3,6 +3,7 @@ package generator
 import (
 	"encoding/json"
 	"fmt"
+	"kaepora/internal/generator/oot"
 	"strings"
 )
 
@@ -13,7 +14,7 @@ type Generator interface {
 func NewGenerator(id string) (Generator, error) {
 	switch name, version := parseID(id); name {
 	case "oot-randomizer":
-		return NewOOTRandomizer(version), nil
+		return oot.NewRandomizer(version), nil
 	case "test":
 		return NewTest(), nil
 	default:

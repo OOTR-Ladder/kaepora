@@ -1,4 +1,4 @@
-package generator
+package oot
 
 import (
 	"bytes"
@@ -11,24 +11,24 @@ import (
 	"path/filepath"
 )
 
-type OOTRandomizer struct {
+type Randomizer struct {
 	version string
 }
 
-func NewOOTRandomizer(version string) *OOTRandomizer {
-	return &OOTRandomizer{
+func NewRandomizer(version string) *Randomizer {
+	return &Randomizer{
 		version: version,
 	}
 }
 
-func (r *OOTRandomizer) Generate(settings, seed string) ([]byte, string, error) {
+func (g *Randomizer) Generate(settings, seed string) ([]byte, string, error) {
 	outDir, err := ioutil.TempDir("", "oot-randomizer-output-")
 	if err != nil {
 		return nil, "", fmt.Errorf("unable to create output directory: %s", err)
 	}
 	defer os.RemoveAll(outDir)
 
-	if err := r.run(outDir, settings, seed); err != nil {
+	if err := g.run(outDir, settings, seed); err != nil {
 		return nil, "", fmt.Errorf("unable to generate seed: %s", err)
 	}
 
@@ -59,7 +59,7 @@ func readFirstGlob(pattern string) ([]byte, error) {
 	return out, nil
 }
 
-func (r *OOTRandomizer) run(outDir, settings, seed string) error {
+func (g *Randomizer) run(outDir, settings, seed string) error {
 	wd, err := os.Getwd()
 	if err != nil {
 		return err
@@ -78,7 +78,7 @@ func (r *OOTRandomizer) run(outDir, settings, seed string) error {
 		"-v", base + "/ZOOTDEC.z64:/opt/oot-randomizer/ZOOTDEC.z64:ro",
 		"-v", filepath.Join(base, settings) + ":/opt/oot-randomizer/settings.json:ro",
 		"-v", outDir + ":/opt/oot-randomizer/Output",
-		"lp042/oot-randomizer:" + r.version,
+		"lp042/oot-randomizer:" + g.version,
 		"--seed", seed,
 		"--settings", "settings.json",
 	}
