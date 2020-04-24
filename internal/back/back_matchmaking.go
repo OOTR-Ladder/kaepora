@@ -8,7 +8,9 @@ import (
 	"kaepora/internal/util"
 	"log"
 	"math/big"
+	"runtime"
 	"sort"
+	"sync/atomic"
 	"time"
 
 	"github.com/google/uuid"
@@ -78,10 +80,22 @@ func (b *Back) generateAndSendMatchSeed(
 		return err
 	}
 
+	start := time.Now()
+	cpus := int64(runtime.NumCPU())
+	for atomic.LoadInt64(&b.generators) > cpus {
+		time.Sleep(150 * time.Millisecond)
+	}
+	delta := time.Since(start)
+	if delta > 100*time.Millisecond {
+		log.Printf("debug: waited %s before generating seed", delta)
+	}
+
+	atomic.AddInt64(&b.generators, 1)
 	patch, spoilerLog, err := gen.Generate(match.Settings, match.Seed)
 	if err != nil {
 		return err
 	}
+	atomic.AddInt64(&b.generators, -1)
 
 	match.SpoilerLog = spoilerLog
 	if err := b.transaction(match.update); err != nil {

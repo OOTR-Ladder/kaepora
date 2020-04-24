@@ -27,9 +27,6 @@ func TestMatchMaking(t *testing.T) {
 	innerTestMatchMaking(t, back)
 	innerTestMatchMaking(t, back)
 	innerTestMatchMaking(t, back)
-	innerTestMatchMaking(t, back)
-	innerTestMatchMaking(t, back)
-	innerTestMatchMaking(t, back)
 }
 
 // nolint:funlen
