@@ -15,6 +15,8 @@ func NewGenerator(id string) (Generator, error) {
 	switch name, version := parseID(id); name {
 	case "oot-randomizer":
 		return oot.NewRandomizer(version), nil
+	case "oot-settings-randomizer":
+		return oot.NewSettingsRandomizer(version), nil
 	case "test":
 		return NewTest(), nil
 	default:
