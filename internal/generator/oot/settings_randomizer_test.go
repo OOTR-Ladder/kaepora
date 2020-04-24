@@ -2,13 +2,21 @@ package oot_test
 
 import (
 	"kaepora/internal/generator"
+	"os"
 	"testing"
 )
 
-func TestOOTRandomizer(t *testing.T) {
+func TestMain(m *testing.M) {
+	if err := os.Chdir("../../.."); err != nil { // generators are CWD dependant
+		panic(err)
+	}
+	os.Exit(m.Run())
+}
+
+func TestOOTSettingsRandomizer(t *testing.T) {
 	t.Parallel()
 
-	g, err := generator.NewGenerator("oot-randomizer:5.2.12")
+	g, err := generator.NewGenerator("oot-settings-randomizer:5.2.12")
 	if err != nil {
 		t.Fatal(err)
 	}
