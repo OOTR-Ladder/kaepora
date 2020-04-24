@@ -126,6 +126,10 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 		}
 	}()
 
+	if err := bot.maybeCleanupMessage(s, m.ChannelID, m.Message.ID); err != nil {
+		log.Printf("error: unable to cleanup message: %s", err)
+	}
+
 	if err := bot.dispatch(m.Message, out); err != nil {
 		out.Reset()
 		fmt.Fprintln(out, "There was an error processing your command.")
@@ -137,10 +141,6 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 		}
 
 		log.Printf("error: failed to process command: %s", err)
-	}
-
-	if err := bot.maybeCleanupMessage(s, m.ChannelID, m.Message.ID); err != nil {
-		log.Printf("error: unable to cleanup message: %s", err)
 	}
 }
 
