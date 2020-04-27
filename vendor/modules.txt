@@ -106,6 +106,9 @@ github.com/denisenkom/go-mssqldb/internal/querytext
 # github.com/edsrzf/mmap-go v1.0.0
 ## explicit
 github.com/edsrzf/mmap-go
+# github.com/evanphx/json-patch v4.5.0+incompatible
+## explicit
+github.com/evanphx/json-patch
 # github.com/fatih/color v1.9.0
 ## explicit
 github.com/fatih/color
