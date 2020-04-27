@@ -13,6 +13,7 @@ require (
 	github.com/cockroachdb/cockroach-go v0.0.0-20200312223839-f565e4789405 // indirect
 	github.com/denisenkom/go-mssqldb v0.0.0-20200206145737-bbfc9a55622e // indirect
 	github.com/edsrzf/mmap-go v1.0.0 // indirect
+	github.com/evanphx/json-patch v4.5.0+incompatible
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-critic/go-critic v0.4.3 // indirect

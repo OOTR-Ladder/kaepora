@@ -1,0 +1,476 @@
+{
+    "all_reachable": [
+        {
+            "Value": true,
+            "Cost": 1,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 1,
+            "Weight": 1
+        }
+    ],
+    "bombchus_in_logic": [
+        {
+            "Value": true,
+            "Cost": 1,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 1,
+            "Weight": 1
+        }
+    ],
+    "bridge": [
+        {
+            "Value": "medallions",
+            "Cost": 1,
+            "Weight": 1
+        },
+        {
+            "Value": "dungeons",
+            "Cost": 5,
+            "Weight": 0
+        },
+        {
+            "Value": "open",
+            "Cost": 1,
+            "Weight": 1
+        },
+        {
+            "Value": "stones",
+            "Cost": 5,
+            "Weight": 0
+        },
+        {
+            "Value": "tokens",
+            "Cost": 5,
+            "Weight": 0
+        },
+        {
+            "Value": "vanilla",
+            "Cost": 5,
+            "Weight": 0
+        }
+    ],
+    "correct_chest_sizes": [
+        {
+            "Value": true,
+            "Cost": -2,
+            "Weight": 0.3
+        },
+        {
+            "Value": false,
+            "Cost": 1,
+            "Weight": 1
+        }
+    ],
+    "damage_multiplier": [
+        {
+            "Value": "normal",
+            "Cost": 0,
+            "Weight": 1
+        },
+        {
+            "Value": "double",
+            "Cost": 3,
+            "Weight": 1
+        },
+        {
+            "Value": "quadruple",
+            "Cost": 5,
+            "Weight": 0.75
+        },
+        {
+            "Value": "ohko",
+            "Cost": 10,
+            "Weight": 0
+        },
+        {
+            "Value": "half",
+            "Cost": -5,
+            "Weight": 0.5
+        }
+    ],
+    "entrance_shuffle": [
+        {
+            "Value": "off",
+            "Cost": 0,
+            "Weight": 1
+        },
+        {
+            "Value": "dungeons",
+            "Cost": 3,
+            "Weight": 0.3
+        },
+        {
+            "Value": "simple-indoors",
+            "Cost": 10,
+            "Weight": 0
+        },
+        {
+            "Value": "all-indoors",
+            "Cost": 20,
+            "Weight": 0
+        },
+        {
+            "Value": "all",
+            "Cost": 30,
+            "Weight": 0
+        }
+    ],
+    "hints": [
+        {
+            "Value": "always",
+            "Cost": 0,
+            "Weight": 1
+        },
+        {
+            "Value": "none",
+            "Cost": 5,
+            "Weight": 0.25
+        },
+        {
+            "Value": "mask",
+            "Cost": 7,
+            "Weight": 0
+        },
+        {
+            "Value": "agony",
+            "Cost": 3,
+            "Weight": 1
+        }
+    ],
+    "item_pool_value": [
+        {
+            "Value": "balanced",
+            "Cost": 0,
+            "Weight": 1
+        },
+        {
+            "Value": "plentiful",
+            "Cost": 3,
+            "Weight": 0.25
+        },
+        {
+            "Value": "scarce",
+            "Cost": 5,
+            "Weight": 0.25
+        },
+        {
+            "Value": "minimal",
+            "Cost": 7,
+            "Weight": 0.125
+        }
+    ],
+    "mq_dungeons_random": [
+        {
+            "Value": true,
+            "Cost": 5,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 1,
+            "Weight": 1
+        }
+    ],
+    "one_item_per_dungeon": [
+        {
+            "Value": true,
+            "Cost": 5,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 1,
+            "Weight": 1
+        }
+    ],
+    "open_door_of_time": [
+        {
+            "Value": true,
+            "Cost": 1,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 2,
+            "Weight": 1
+        }
+    ],
+    "open_forest": [
+        {
+            "Value": "open",
+            "Cost": 1,
+            "Weight": 1
+        },
+        {
+            "Value": "closed_deku",
+            "Cost": 2,
+            "Weight": 1
+        },
+        {
+            "Value": "closed",
+            "Cost": 2,
+            "Weight": 0
+        }
+    ],
+    "shopsanity": [
+        {
+            "Value": "off",
+            "Cost": 0,
+            "Weight": 1
+        },
+        {
+            "Value": "0",
+            "Cost": 5,
+            "Weight": 0
+        },
+        {
+            "Value": "1",
+            "Cost": 5,
+            "Weight": 0
+        },
+        {
+            "Value": "2",
+            "Cost": 5,
+            "Weight": 0
+        },
+        {
+            "Value": "3",
+            "Cost": 5,
+            "Weight": 0
+        },
+        {
+            "Value": "4",
+            "Cost": 5,
+            "Weight": 0
+        },
+        {
+            "Value": "random",
+            "Cost": 5,
+            "Weight": 1
+        }
+    ],
+    "shuffle_beans": [
+        {
+            "Value": true,
+            "Cost": 5,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 1,
+            "Weight": 1
+        }
+    ],
+    "shuffle_bosskeys": [
+        {
+            "Value": "vanilla",
+            "Cost": 0,
+            "Weight": 1
+        },
+        {
+            "Value": "remove",
+            "Cost": -2,
+            "Weight": 0.5
+        },
+        {
+            "Value": "dungeon",
+            "Cost": 3,
+            "Weight": 1
+        },
+        {
+            "Value": "keysanity",
+            "Cost": 15,
+            "Weight": 1
+        }
+    ],
+    "shuffle_cows": [
+        {
+            "Value": true,
+            "Cost": 5,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 1,
+            "Weight": 1
+        }
+    ],
+    "shuffle_ganon_bosskey": [
+        {
+            "Value": "remove",
+            "Cost": 1,
+            "Weight": 1
+        },
+        {
+            "Value": "lacs_medallions",
+            "Cost": 1,
+            "Weight": 2
+        }
+    ],
+    "shuffle_gerudo_card": [
+        {
+            "Value": true,
+            "Cost": 5,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 1,
+            "Weight": 1
+        }
+    ],
+    "shuffle_medigoron_carpet_salesman": [
+        {
+            "Value": true,
+            "Cost": 3,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 1,
+            "Weight": 1
+        }
+    ],
+    "shuffle_ocarinas": [
+        {
+            "Value": true,
+            "Cost": 5,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 1,
+            "Weight": 1
+        }
+    ],
+    "shuffle_scrubs": [
+        {
+            "Value": "off",
+            "Cost": 0,
+            "Weight": 1
+        },
+        {
+            "Value": "low",
+            "Cost": 3,
+            "Weight": 1
+        },
+        {
+            "Value": "regular",
+            "Cost": 5,
+            "Weight": 0
+        },
+        {
+            "Value": "random",
+            "Cost": 7,
+            "Weight": 0
+        }
+    ],
+    "shuffle_smallkeys": [
+        {
+            "Value": "vanilla",
+            "Cost": 0,
+            "Weight": 1
+        },
+        {
+            "Value": "remove",
+            "Cost": -5,
+            "Weight": 0.5
+        },
+        {
+            "Value": "dungeon",
+            "Cost": 3,
+            "Weight": 1
+        },
+        {
+            "Value": "keysanity",
+            "Cost": 15,
+            "Weight": 1
+        }
+    ],
+    "shuffle_song_items": [
+        {
+            "Value": true,
+            "Cost": 5,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 1,
+            "Weight": 1
+        }
+    ],
+    "shuffle_weird_egg": [
+        {
+            "Value": true,
+            "Cost": 3,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 1,
+            "Weight": 1
+        }
+    ],
+    "starting_age": [
+        {
+            "Value": "child",
+            "Cost": 0,
+            "Weight": 1
+        },
+        {
+            "Value": "adult",
+            "Cost": 3,
+            "Weight": 1
+        },
+        {
+            "Value": "random",
+            "Cost": 2,
+            "Weight": 0
+        }
+    ],
+    "tokensanity": [
+        {
+            "Value": "off",
+            "Cost": 0,
+            "Weight": 1
+        },
+        {
+            "Value": "dungeons",
+            "Cost": 3,
+            "Weight": 1
+        },
+        {
+            "Value": "overworld",
+            "Cost": 10,
+            "Weight": 0
+        },
+        {
+            "Value": "all",
+            "Cost": 15,
+            "Weight": 0
+        }
+    ],
+    "zora_fountain": [
+        {
+            "Value": "closed",
+            "Cost": 1,
+            "Weight": 1
+        },
+        {
+            "Value": "adult",
+            "Cost": 1,
+            "Weight": 1
+        },
+        {
+            "Value": "open",
+            "Cost": 1,
+            "Weight": 1
+        }
+    ]
+}

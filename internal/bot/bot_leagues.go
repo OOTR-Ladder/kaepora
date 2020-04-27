@@ -46,6 +46,8 @@ func (bot *Bot) displayLeagues(out io.Writer) error {
 				nextStr = next.Format("2006-01-02 15:04 MST")
 				delta := next.Sub(now).Truncate(time.Minute)
 				nextDeltaStr = "(in " + strings.TrimSuffix(delta.String(), "0s") + ")"
+			} else {
+				nextStr = "no race planned"
 			}
 
 			fmt.Fprintf(

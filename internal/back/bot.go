@@ -38,10 +38,14 @@ func (b *Back) GetGamesLeaguesAndTheirNextSessionStartDate() (
 
 		for _, league := range leagues {
 			session, err := getNextMatchSessionForLeague(tx, league.ID)
-			if err != nil {
+			switch {
+			case err == nil:
+				times[league.ID] = session.StartDate.Time()
+			case errors.Is(err, sql.ErrNoRows):
+				// NOP
+			default:
 				return err
 			}
-			times[league.ID] = session.StartDate.Time()
 		}
 
 		return nil
