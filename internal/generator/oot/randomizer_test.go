@@ -1,15 +1,12 @@
-package generator_test
+package oot_test
 
 import (
 	"kaepora/internal/generator"
-	"os"
 	"testing"
 )
 
 func TestOOTRandomizer(t *testing.T) {
-	if err := os.Chdir("../.."); err != nil { // generator is CWD dependant
-		t.Fatal(err)
-	}
+	t.Parallel()
 
 	g, err := generator.NewGenerator("oot-randomizer:5.2.12")
 	if err != nil {

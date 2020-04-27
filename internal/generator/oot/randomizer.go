@@ -1,4 +1,4 @@
-package generator
+package oot
 
 import (
 	"bytes"
@@ -11,38 +11,35 @@ import (
 	"path/filepath"
 )
 
-type OOTRandomizer struct {
+type Randomizer struct {
 	version string
 }
 
-func NewOOTRandomizer(version string) *OOTRandomizer {
-	return &OOTRandomizer{
+func NewRandomizer(version string) *Randomizer {
+	return &Randomizer{
 		version: version,
 	}
 }
 
-func (r *OOTRandomizer) Generate(settings, seed string) ([]byte, string, error) {
+func (g *Randomizer) Generate(settingsName, seed string) ([]byte, string, error) {
 	outDir, err := ioutil.TempDir("", "oot-randomizer-output-")
 	if err != nil {
 		return nil, "", fmt.Errorf("unable to create output directory: %s", err)
 	}
 	defer os.RemoveAll(outDir)
 
-	if err := r.run(outDir, settings, seed); err != nil {
+	base, err := getBaseDir()
+	if err != nil {
+		return nil, "", err
+	}
+	settingsPath := filepath.Join(base, settingsName)
+
+	zpf, spoilerLog, err := g.run(outDir, settingsPath, seed)
+	if err != nil {
 		return nil, "", fmt.Errorf("unable to generate seed: %s", err)
 	}
 
-	zpf, err := readFirstGlob(filepath.Join(outDir, "*.zpf"))
-	if err != nil {
-		return nil, "", err
-	}
-
-	spoilerLog, err := readFirstGlob(filepath.Join(outDir, "*_Spoiler.json"))
-	if err != nil {
-		return nil, "", err
-	}
-
-	return zpf, string(spoilerLog), nil
+	return zpf, spoilerLog, nil
 }
 
 func readFirstGlob(pattern string) ([]byte, error) {
@@ -59,16 +56,24 @@ func readFirstGlob(pattern string) ([]byte, error) {
 	return out, nil
 }
 
-func (r *OOTRandomizer) run(outDir, settings, seed string) error {
+func getBaseDir() (string, error) {
 	wd, err := os.Getwd()
 	if err != nil {
-		return err
+		return "", err
 	}
-	base := filepath.Join(wd, "resources/oot-randomizer")
+
+	return filepath.Join(wd, "resources/oot-randomizer"), nil
+}
+
+func (g *Randomizer) run(outDir, settings, seed string) ([]byte, string, error) {
+	base, err := getBaseDir()
+	if err != nil {
+		return nil, "", err
+	}
 
 	user, err := user.Current()
 	if err != nil {
-		return err
+		return nil, "", err
 	}
 
 	args := []string{
@@ -76,9 +81,9 @@ func (r *OOTRandomizer) run(outDir, settings, seed string) error {
 		"-u", fmt.Sprintf("%s:%s", user.Uid, user.Gid),
 		"-v", base + "/ARCHIVE.bin:/opt/oot-randomizer/ARCHIVE.bin:ro",
 		"-v", base + "/ZOOTDEC.z64:/opt/oot-randomizer/ZOOTDEC.z64:ro",
-		"-v", filepath.Join(base, settings) + ":/opt/oot-randomizer/settings.json:ro",
+		"-v", settings + ":/opt/oot-randomizer/settings.json:ro",
 		"-v", outDir + ":/opt/oot-randomizer/Output",
-		"lp042/oot-randomizer:" + r.version,
+		"lp042/oot-randomizer:" + g.version,
 		"--seed", seed,
 		"--settings", "settings.json",
 	}
@@ -95,8 +100,18 @@ func (r *OOTRandomizer) run(outDir, settings, seed string) error {
 	if err := cmd.Run(); err != nil {
 		log.Printf("stdout: %s", stdout.String())
 		log.Printf("stderr: %s", stderr.String())
-		return err
+		return nil, "", err
 	}
 
-	return nil
+	zpf, err := readFirstGlob(filepath.Join(outDir, "*.zpf"))
+	if err != nil {
+		return nil, "", err
+	}
+
+	spoilerLog, err := readFirstGlob(filepath.Join(outDir, "*_Spoiler.json"))
+	if err != nil {
+		return nil, "", err
+	}
+
+	return zpf, string(spoilerLog), nil
 }
