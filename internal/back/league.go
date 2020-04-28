@@ -1,6 +1,7 @@
 package back
 
 import (
+	"database/sql"
 	"kaepora/internal/util"
 	"time"
 
@@ -14,17 +15,19 @@ type League struct {
 	Name      string
 	ShortCode string
 	GameID    util.UUIDAsBlob
+	Generator string
 	Settings  string
 	Schedule  Schedule
 
-	AnnounceDiscordChannelID string
+	AnnounceDiscordChannelID sql.NullString
 }
 
-func NewLeague(name string, shortCode string, gameID util.UUIDAsBlob, settings string) League {
+func NewLeague(name string, shortCode string, gameID util.UUIDAsBlob, generator, settings string) League {
 	return League{
 		ID:        util.NewUUIDAsBlob(),
 		CreatedAt: util.TimeAsTimestamp(time.Now()),
 		GameID:    gameID,
+		Generator: generator,
 		Name:      name,
 		ShortCode: shortCode,
 		Settings:  settings,
@@ -37,6 +40,7 @@ func (l *League) insert(tx *sqlx.Tx) error {
 		"ID":        l.ID,
 		"CreatedAt": l.CreatedAt,
 		"GameID":    l.GameID,
+		"Generator": l.Generator,
 		"Name":      l.Name,
 		"ShortCode": l.ShortCode,
 		"Settings":  l.Settings,
@@ -58,6 +62,7 @@ func (l *League) insert(tx *sqlx.Tx) error {
 func (l *League) update(tx *sqlx.Tx) error {
 	query, args, err := squirrel.Update("League").SetMap(squirrel.Eq{
 		"GameID":    l.GameID,
+		"Generator": l.Generator,
 		"Name":      l.Name,
 		"ShortCode": l.ShortCode,
 		"Settings":  l.Settings,

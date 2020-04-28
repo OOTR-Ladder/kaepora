@@ -10,9 +10,7 @@ CREATE TABLE "backup_Match" (
   "Generator" text NOT NULL,
   "Settings" text NOT NULL,
   "Seed" text NOT NULL,
-  PRIMARY KEY ("ID"),
-  FOREIGN KEY ("MatchSessionID") REFERENCES "MatchSession" ("ID") ON DELETE RESTRICT ON UPDATE CASCADE,
-  FOREIGN KEY ("LeagueID") REFERENCES "League" ("ID") ON DELETE RESTRICT ON UPDATE CASCADE
+  PRIMARY KEY ("ID")
 );
 INSERT INTO "backup_Match" ("ID", "LeagueID", "MatchSessionID", "CreatedAt", "StartedAt", "EndedAt", "Generator", "Settings", "Seed") SELECT "ID", "LeagueID", "MatchSessionID", "CreatedAt", "StartedAt", "EndedAt", "Generator", "Settings", "Seed" FROM "Match";
 DROP TABLE "Match";

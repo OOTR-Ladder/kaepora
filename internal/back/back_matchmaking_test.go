@@ -426,10 +426,10 @@ func createFixturedTestBack(t *testing.T) *Back {
 }
 
 func fixtures(tx *sqlx.Tx) error {
-	game := NewGame("The Test Game", "test:v0")
+	game := NewGame("The Test Game")
 	leagues := []League{
-		NewLeague("The A League", "testa", game.ID, "s3.json"),
-		NewLeague("The B League", "testb", game.ID, "s3.json"),
+		NewLeague("The A League", "testa", game.ID, "test:v0", "s3.json"),
+		NewLeague("The B League", "testb", game.ID, "test:v0", "s3.json"),
 	}
 	playerNames := []string{
 		"Darunia", "Nabooru", "Rauru", "Ruto", "Saria", "Zelda", "Impa",
@@ -442,7 +442,7 @@ func fixtures(tx *sqlx.Tx) error {
 
 	for k, v := range leagues {
 		v.ID[0] = byte(k)
-		v.AnnounceDiscordChannelID = fmt.Sprintf("league#%d", k)
+		v.AnnounceDiscordChannelID = util.NullString(fmt.Sprintf("league#%d", k))
 		if err := v.insert(tx); err != nil {
 			return err
 		}

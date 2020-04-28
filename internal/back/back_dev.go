@@ -22,12 +22,7 @@ func (b *Back) SendDevSeed(
 			return fmt.Errorf("could not find League: %w", err)
 		}
 
-		game, err := getGameByID(tx, league.GameID)
-		if err != nil {
-			return fmt.Errorf("could not find Game: %w", err)
-		}
-
-		gen, err := generator.NewGenerator(game.Generator)
+		gen, err := generator.NewGenerator(league.Generator)
 		if err != nil {
 			return err
 		}
@@ -127,10 +122,11 @@ var debugPlayerNames = []string{ // nolint:gochecknoglobals
 }
 
 func (b *Back) LoadFixtures() error {
-	game := NewGame("The Legend of Zelda: Ocarina of Time", "oot-randomizer:5.2.12")
+	game := NewGame("The Legend of Zelda: Ocarina of Time")
 	leagues := []League{
-		NewLeague("Standard", "std", game.ID, "s3.json"),
-		NewLeague("Debug", "debug", game.ID, "s3.json"),
+		NewLeague("Standard", "std", game.ID, "oot-randomizer:5.2.12", "s3.json"),
+		NewLeague("Debug", "debug", game.ID, "oot-randomizer:5.2.12", "s3.json"),
+		NewLeague("Random", "random", game.ID, "oot-settings-randomizer:5.2.12", "s3.json"),
 	}
 
 	// 20h PST is 05h CEST, Los Angeles was chosen because it observes DST

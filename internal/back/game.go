@@ -12,15 +12,13 @@ type Game struct {
 	ID        util.UUIDAsBlob
 	CreatedAt util.TimeAsTimestamp
 	Name      string
-	Generator string
 }
 
-func NewGame(name string, generator string) Game {
+func NewGame(name string) Game {
 	return Game{
 		ID:        util.NewUUIDAsBlob(),
 		CreatedAt: util.TimeAsTimestamp(time.Now()),
 		Name:      name,
-		Generator: generator,
 	}
 }
 
@@ -29,7 +27,6 @@ func (g *Game) insert(tx *sqlx.Tx) error {
 		"ID":        g.ID,
 		"CreatedAt": g.CreatedAt,
 		"Name":      g.Name,
-		"Generator": g.Generator,
 	}).ToSql()
 	if err != nil {
 		return err
