@@ -329,17 +329,11 @@ func (b *Back) sendSessionCountdownNotification(tx *sqlx.Tx, session MatchSessio
 		Type:          NotificationTypeMatchSessionStatusUpdate,
 	}
 
-	delta := time.Until(session.StartDate.Time()).Round(time.Second)
 	notif.Printf(
 		"The next race for league `%s` starts in %s.",
-		league.ShortCode, delta,
+		league.ShortCode,
+		time.Until(session.StartDate.Time()).Round(time.Second),
 	)
-
-	switch delta {
-	case time.Minute, 30 * time.Second, 5 * time.Second:
-		notif.Printf(" @here")
-	default:
-	}
 
 	b.notifications <- notif
 	return nil
