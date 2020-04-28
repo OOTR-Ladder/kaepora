@@ -100,6 +100,7 @@ func innerTestMatchMaking(t *testing.T, back *Back) {
 		NotificationTypeMatchSessionStatusUpdate: 3, // /* TODO "created" when using schedule */, joinable, preparing, closed.
 		NotificationTypeMatchSessionOddKick:      1, // that one unlucky runner
 		NotificationTypeMatchSessionRecap:        7, // 1 in announce channel + 1 per joined player
+		NotificationTypeLeagueLeaderboardUpdate:  1, // one public
 		NotificationTypeMatchSeed:                6, // 1 per joined player
 		NotificationTypeMatchEnd:                 6, // 1 per joined player
 		NotificationTypeSpoilerLog:               6, // 1 per joined player

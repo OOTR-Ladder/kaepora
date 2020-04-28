@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"kaepora/internal/util"
 	"strings"
 	"text/tabwriter"
 	"time"
@@ -23,13 +24,14 @@ type NotificationType int
 
 const (
 	NotificationTypeMatchSessionStatusUpdate NotificationType = iota
+	NotificationTypeMatchEnd
+	NotificationTypeMatchSeed
 	NotificationTypeMatchSessionCountdown
 	NotificationTypeMatchSessionEmpty
-	NotificationTypeMatchSessionRecap
 	NotificationTypeMatchSessionOddKick
-	NotificationTypeMatchSeed
-	NotificationTypeMatchEnd
+	NotificationTypeMatchSessionRecap
 	NotificationTypeSpoilerLog
+	NotificationTypeLeagueLeaderboardUpdate
 )
 
 type NotificationFile struct {
@@ -334,6 +336,36 @@ func (b *Back) sendSessionCountdownNotification(tx *sqlx.Tx, session MatchSessio
 		league.ShortCode,
 		time.Until(session.StartDate.Time()).Round(time.Second),
 	)
+
+	b.notifications <- notif
+	return nil
+}
+
+func (b *Back) sendLeaderboardUpdateNotification(
+	tx *sqlx.Tx,
+	leagueID util.UUIDAsBlob,
+) error {
+	league, err := getLeagueByID(tx, leagueID)
+	if err != nil {
+		return err
+	}
+
+	notif := Notification{
+		RecipientType: NotificationRecipientTypeDiscordChannel,
+		Recipient:     league.AnnounceDiscordChannelID.String,
+		Type:          NotificationTypeLeagueLeaderboardUpdate,
+	}
+
+	top, err := getTop20(tx, league.ID)
+	if err != nil {
+		return err
+	}
+
+	notif.Printf("Top players for league `%s`:\n```\n", league.ShortCode)
+	for i := range top {
+		notif.Printf(" %2.d. %s\n", i+1, top[i].PlayerName)
+	}
+	notif.Print("```\n")
 
 	b.notifications <- notif
 	return nil
