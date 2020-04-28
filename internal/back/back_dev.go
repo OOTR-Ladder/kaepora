@@ -110,13 +110,13 @@ func (b *Back) CloseDevMatchSession() error {
 }
 
 var debugPlayerIDs = []util.UUIDAsBlob{ // nolint:gochecknoglobals
-	util.UUIDAsBlob(uuid.MustParse("00000000-0000-0000-0000-000000000000")),
 	util.UUIDAsBlob(uuid.MustParse("00000000-1111-0000-0000-000000000000")),
 	util.UUIDAsBlob(uuid.MustParse("00000000-2222-0000-0000-000000000000")),
 	util.UUIDAsBlob(uuid.MustParse("00000000-3333-0000-0000-000000000000")),
 	util.UUIDAsBlob(uuid.MustParse("00000000-4444-0000-0000-000000000000")),
 	util.UUIDAsBlob(uuid.MustParse("00000000-5555-0000-0000-000000000000")),
 	util.UUIDAsBlob(uuid.MustParse("00000000-6666-0000-0000-000000000000")),
+	util.UUIDAsBlob(uuid.MustParse("00000000-7777-0000-0000-000000000000")),
 }
 
 // sames indices as debugPlayerIDs
@@ -134,13 +134,11 @@ func (b *Back) LoadFixtures() error {
 	}
 
 	// 20h PST is 05h CEST, Los Angeles was chosen because it observes DST
-	leagues[0].Schedule.SetAll([]string{
-		"20:00 America/Los_Angeles", "14:00 Europe/Paris", "20:00 Europe/Paris",
-	})
-	leagues[0].Schedule.Mon = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
-	leagues[0].Schedule.Wed = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
-	leagues[0].Schedule.Fri = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
-	leagues[0].Schedule.Sat = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
+	leagues[0].Schedule.SetAll([]string{"14:00 Europe/Paris", "20:00 Europe/Paris"})
+	leagues[0].Schedule.Mon = []string{"15:00 Europe/Paris", "21:00 Europe/Paris"}
+	leagues[0].Schedule.Wed = []string{"15:00 Europe/Paris", "21:00 Europe/Paris"}
+	leagues[0].Schedule.Fri = []string{"15:00 Europe/Paris", "21:00 Europe/Paris"}
+	leagues[0].Schedule.Sat = []string{"15:00 Europe/Paris", "21:00 Europe/Paris"}
 
 	return b.transaction(func(tx *sqlx.Tx) error {
 		if err := game.insert(tx); err != nil {
