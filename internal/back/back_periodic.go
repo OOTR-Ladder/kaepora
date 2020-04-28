@@ -366,6 +366,10 @@ func (b *Back) endMatchSessionsAndUpdateRanks() error {
 			); err != nil {
 				return err
 			}
+
+			if err := b.sendLeaderboardUpdateNotification(tx, sessions[k].LeagueID); err != nil {
+				return err
+			}
 		}
 
 		return nil
