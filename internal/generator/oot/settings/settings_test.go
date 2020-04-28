@@ -2,6 +2,7 @@ package settings
 
 import (
 	"os"
+	"reflect"
 	"testing"
 )
 
@@ -19,12 +20,26 @@ func TestShuffle(t *testing.T) {
 		t.Fatal("empty settings")
 	}
 
-	shuf := s.Shuffle("seed", 20)
-	if len(shuf) == 0 {
+	shuf1 := s.Shuffle("seed", 20)
+	if len(shuf1) == 0 {
 		t.Error("empty shuffled settings")
 	}
-
-	if len(shuf) == len(s) {
+	if len(shuf1) == len(s) {
 		t.Error("too many settings")
+	}
+
+	shuf2 := s.Shuffle("seed", 20)
+	if !reflect.DeepEqual(shuf1, shuf2) {
+		t.Error("same seed produced different settings")
+	}
+
+	shuf3 := s.Shuffle("Seed", 20)
+	if reflect.DeepEqual(shuf2, shuf3) {
+		t.Error("different seed produced same settings")
+	}
+
+	shuf4 := s.Shuffle("Seed", 40)
+	if reflect.DeepEqual(shuf3, shuf4) {
+		t.Error("diffent weights produced same settings")
 	}
 }
