@@ -48,20 +48,22 @@ func New(back *back.Back, token string) (*Bot, error) {
 	dg.AddHandler(bot.handleMessage)
 
 	bot.handlers = map[string]commandHandler{
-		"!dev":         bot.cmdDev,
-		"!help":        bot.cmdHelp,
-		"!no":          bot.cmdHelp,
-		"!yes":         bot.cmdAllRight,
-		"!leagues":     bot.cmdLeagues,
-		"!leaderboard": bot.cmdLeaderboards,
-		"!register":    bot.cmdRegister,
-		"!rename":      bot.cmdRename,
-		"!spoilers":    bot.cmdSpoilers,
+		"!dev":          bot.cmdDev,
+		"!help":         bot.cmdHelp,
+		"!no":           bot.cmdHelp,
+		"!yes":          bot.cmdAllRight,
+		"!leagues":      bot.cmdLeagues,
+		"!leaderboard":  bot.cmdLeaderboards,
+		"!leaderboards": bot.cmdLeaderboards,
+		"!register":     bot.cmdRegister,
+		"!rename":       bot.cmdRename,
+		"!spoilers":     bot.cmdSpoilers,
 
-		"!cancel":  bot.cmdCancel,
-		"!done":    bot.cmdComplete,
-		"!forfeit": bot.cmdForfeit,
-		"!join":    bot.cmdJoin,
+		"!cancel":   bot.cmdCancel,
+		"!done":     bot.cmdComplete,
+		"!complete": bot.cmdComplete,
+		"!forfeit":  bot.cmdForfeit,
+		"!join":     bot.cmdJoin,
 	}
 
 	return bot, nil
