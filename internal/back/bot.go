@@ -82,7 +82,7 @@ func (b *Back) SetLeagueAnnounceChannel(shortcode, channelID string) error {
 			return err
 		}
 
-		league.AnnounceDiscordChannelID = channelID
+		league.AnnounceDiscordChannelID = util.NullString(channelID)
 		return league.update(tx)
 	})
 }

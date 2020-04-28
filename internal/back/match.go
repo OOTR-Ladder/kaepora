@@ -31,17 +31,13 @@ func NewMatch(tx *sqlx.Tx, session MatchSession, seed string) (Match, error) {
 	if err != nil {
 		return Match{}, err
 	}
-	game, err := getGameByID(tx, league.GameID)
-	if err != nil {
-		return Match{}, err
-	}
 
 	return Match{
 		ID:             util.NewUUIDAsBlob(),
 		CreatedAt:      util.TimeAsTimestamp(time.Now()),
 		LeagueID:       session.LeagueID,
 		MatchSessionID: session.ID,
-		Generator:      game.Generator,
+		Generator:      league.Generator,
 		Settings:       league.Settings,
 		Seed:           seed,
 	}, nil

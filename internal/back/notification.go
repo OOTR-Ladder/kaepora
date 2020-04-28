@@ -146,7 +146,7 @@ func (b *Back) sendMatchSessionEmptyNotification(tx *sqlx.Tx, session MatchSessi
 
 	notif := Notification{
 		RecipientType: NotificationRecipientTypeDiscordChannel,
-		Recipient:     league.AnnounceDiscordChannelID,
+		Recipient:     league.AnnounceDiscordChannelID.String,
 		Type:          NotificationTypeMatchSessionEmpty,
 	}
 
@@ -270,7 +270,7 @@ func (b *Back) sendSessionStatusUpdateNotification(tx *sqlx.Tx, session MatchSes
 
 	notif := Notification{
 		RecipientType: NotificationRecipientTypeDiscordChannel,
-		Recipient:     league.AnnounceDiscordChannelID,
+		Recipient:     league.AnnounceDiscordChannelID.String,
 		Type:          NotificationTypeMatchSessionStatusUpdate,
 	}
 
@@ -325,7 +325,7 @@ func (b *Back) sendSessionCountdownNotification(tx *sqlx.Tx, session MatchSessio
 
 	notif := Notification{
 		RecipientType: NotificationRecipientTypeDiscordChannel,
-		Recipient:     league.AnnounceDiscordChannelID,
+		Recipient:     league.AnnounceDiscordChannelID.String,
 		Type:          NotificationTypeMatchSessionStatusUpdate,
 	}
 
@@ -356,7 +356,7 @@ func (b *Back) sendSessionRecapNotification(
 
 	notif := Notification{
 		RecipientType: NotificationRecipientTypeDiscordChannel,
-		Recipient:     league.AnnounceDiscordChannelID,
+		Recipient:     league.AnnounceDiscordChannelID.String,
 		Type:          NotificationTypeMatchSessionRecap,
 	}
 
