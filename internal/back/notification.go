@@ -377,6 +377,11 @@ func (b *Back) sendSessionRecapNotification(
 			continue
 		}
 
+		if !private && (!match.Entries[0].hasEnded() || !match.Entries[1].hasEnded()) {
+			unknown++
+			continue
+		}
+
 		wrap0, name0, duration0 := entryDetails(tx, match.Entries[0])
 		wrap1, name1, duration1 := entryDetails(tx, match.Entries[1])
 		fmt.Fprint(
