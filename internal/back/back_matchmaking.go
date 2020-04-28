@@ -195,13 +195,15 @@ func pairPlayers(players []Player) []pair {
 
 	// TODO: Heuristics, if both shared their last match: go one neighbor down/up
 	pairs := make([]pair, 0, len(players)/2)
+	maxDelta := 3
+
 	for len(players) > 0 {
 		i1 := randomIndex(len(players))
 		p := pair{p1: players[i1]}
 		players = players[:i1+copy(players[i1:], players[i1+1:])]
 
-		minIndex := clamp(i1-5, 0, len(players)-1)
-		maxIndex := clamp(i1+5, 0, len(players)-1)
+		minIndex := clamp(i1-maxDelta, 0, len(players)-1)
+		maxIndex := clamp(i1+maxDelta, 0, len(players)-1)
 
 		i2 := randomInt(minIndex, maxIndex)
 		p.p2 = players[i2]
