@@ -412,7 +412,13 @@ func entryDetails(tx *sqlx.Tx, entry MatchEntry) (wrap string, name string, dura
 	case MatchEntryStatusInProgress:
 		duration = "in progress"
 	case MatchEntryStatusForfeit:
-		duration = "forfeit"
+		if entry.StartedAt.Time.Time().IsZero() {
+			duration = "forfeit (before start)"
+			break
+		}
+
+		delta := entry.EndedAt.Time.Time().Sub(entry.StartedAt.Time.Time()).Round(time.Second)
+		duration = "forfeit (" + delta.String() + ")"
 	case MatchEntryStatusFinished:
 		delta := entry.EndedAt.Time.Time().Sub(entry.StartedAt.Time.Time()).Round(time.Second)
 		duration = delta.String()
