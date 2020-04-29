@@ -64,6 +64,8 @@ func New(back *back.Back, token string) (*Bot, error) {
 		"!complete": bot.cmdComplete,
 		"!forfeit":  bot.cmdForfeit,
 		"!join":     bot.cmdJoin,
+
+		"!rando": bot.cmdDevRandomSettings, // DEBUG
 	}
 
 	return bot, nil
