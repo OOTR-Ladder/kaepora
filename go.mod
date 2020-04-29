@@ -16,6 +16,7 @@ require (
 	github.com/evanphx/json-patch v4.5.0+incompatible
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
+	github.com/go-chi/chi v4.1.1+incompatible
 	github.com/go-critic/go-critic v0.4.3 // indirect
 	github.com/gocql/gocql v0.0.0-20200410100145-b454769479c6 // indirect
 	github.com/golang-migrate/migrate/v4 v4.10.0

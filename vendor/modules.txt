@@ -115,6 +115,10 @@ github.com/fatih/color
 # github.com/fsnotify/fsnotify v1.4.9
 ## explicit
 github.com/fsnotify/fsnotify
+# github.com/go-chi/chi v4.1.1+incompatible
+## explicit
+github.com/go-chi/chi
+github.com/go-chi/chi/middleware
 # github.com/go-critic/go-critic v0.4.3
 ## explicit
 github.com/go-critic/go-critic/checkers
