@@ -2,6 +2,7 @@ package util
 
 import (
 	"database/sql/driver"
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"time"
@@ -37,6 +38,10 @@ func (t *TimeAsTimestamp) Scan(src interface{}) error {
 	return nil
 }
 
+func (t TimeAsTimestamp) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.Time().Unix())
+}
+
 type NullTimeAsTimestamp struct {
 	Time  TimeAsTimestamp
 	Valid bool // Valid is true if TimeAsTimestamp is not NULL
@@ -68,4 +73,12 @@ func (ns NullTimeAsTimestamp) Value() (driver.Value, error) {
 	}
 
 	return ns.Time.Value()
+}
+
+func (ns NullTimeAsTimestamp) MarshalJSON() ([]byte, error) {
+	if !ns.Valid {
+		return json.Marshal(nil)
+	}
+
+	return json.Marshal(ns.Time.Time().Unix())
 }

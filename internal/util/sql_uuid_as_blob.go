@@ -2,6 +2,7 @@ package util
 
 import (
 	"database/sql/driver"
+	"encoding/json"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -45,6 +46,10 @@ func (t *UUIDAsBlob) Scan(src interface{}) error {
 	return nil
 }
 
+func (t UUIDAsBlob) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.UUID())
+}
+
 type NullUUIDAsBlob struct {
 	UUID  UUIDAsBlob
 	Valid bool // Valid is true if UUIDAsBlob is not NULL
@@ -69,4 +74,12 @@ func (ns NullUUIDAsBlob) Value() (driver.Value, error) {
 	}
 
 	return ns.UUID, nil
+}
+
+func (ns NullUUIDAsBlob) MarshalJSON() ([]byte, error) {
+	if !ns.Valid {
+		return json.Marshal(nil)
+	}
+
+	return json.Marshal(ns.UUID.UUID())
 }

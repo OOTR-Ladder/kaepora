@@ -1,12 +1,12 @@
 package back
 
 import (
-	"database/sql"
 	"kaepora/internal/util"
 	"time"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
+	"gopkg.in/guregu/null.v4"
 )
 
 type League struct {
@@ -19,7 +19,7 @@ type League struct {
 	Settings  string
 	Schedule  Schedule
 
-	AnnounceDiscordChannelID sql.NullString
+	AnnounceDiscordChannelID null.String
 }
 
 func NewLeague(name string, shortCode string, gameID util.UUIDAsBlob, generator, settings string) League {

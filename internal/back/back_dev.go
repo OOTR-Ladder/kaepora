@@ -1,7 +1,6 @@
 package back
 
 import (
-	"database/sql"
 	"fmt"
 	"kaepora/internal/generator"
 	"kaepora/internal/util"
@@ -9,6 +8,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"gopkg.in/guregu/null.v4"
 )
 
 func (b *Back) SendDevSeed(
@@ -32,7 +32,7 @@ func (b *Back) SendDevSeed(
 			return err
 		}
 
-		player := Player{DiscordID: sql.NullString{Valid: true, String: discordID}}
+		player := Player{DiscordID: null.NewString(discordID, true)}
 		b.sendMatchSeedNotification(MatchSession{}, patch, hashFromSpoilerLog(spoilerLog), player, Player{})
 		b.sendSpoilerLogNotification(player, seed, spoilerLog)
 

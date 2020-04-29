@@ -11,7 +11,7 @@ $(EXEC):
 migrate:
 	go build -tags "sqlite3 sqlite_json" github.com/golang-migrate/migrate/v4/cmd/migrate
 
-.PHONY: $(EXEC) vendor upgrade lint test coverage randomizer docker
+.PHONY: $(EXEC) vendor upgrade lint test coverage randomizer docker run
 
 docker:
 	docker build . \
@@ -37,6 +37,9 @@ coverage:
 
 test:
 	go test --timeout=10s ./...
+
+run:
+	gin --immediate --bin "$(EXEC)" --buildArgs "${BUILDFLAGS}" -- serve
 
 vendor:
 	go get -v
