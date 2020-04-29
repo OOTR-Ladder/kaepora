@@ -115,14 +115,6 @@ func (b *Back) GetLeaderboardsForDiscordUser(discordID, shortcode string) (
 	)
 
 	if err := b.transaction(func(tx *sqlx.Tx) error {
-		player, err := getPlayerByDiscordID(tx, discordID)
-		if err != nil {
-			if !errors.Is(err, sql.ErrNoRows) {
-				return err
-			}
-			player.ID = util.UUIDAsBlob{} // zero value as canary
-		}
-
 		league, err := getLeagueByShortCode(tx, shortcode)
 		if err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
@@ -136,6 +128,10 @@ func (b *Back) GetLeaderboardsForDiscordUser(discordID, shortcode string) (
 			return err
 		}
 
+		player, err := getPlayerByDiscordID(tx, discordID)
+		if err != nil {
+			player.ID = util.UUIDAsBlob{} // zero value as canary
+		}
 		if !player.ID.IsZero() {
 			around, err = getTopAroundPlayer(tx, player, league.ID)
 			if err != nil {
