@@ -38,7 +38,7 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 	case "panic":
 		panic("an admin asked me to panic")
 	case "uptime":
-		fmt.Fprintf(out, "The bot has been online for %s", time.Since(bot.startedAt))
+		fmt.Fprintf(out, "The bot has been online for %s", time.Since(bot.startedAt).Round(time.Second))
 	case "error":
 		return util.ErrPublic("here's your error")
 	case "url":
