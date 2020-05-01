@@ -55,6 +55,7 @@ require (
 	google.golang.org/api v0.21.0 // indirect
 	google.golang.org/genproto v0.0.0-20200410110633-0848e9f44c36 // indirect
 	google.golang.org/grpc v1.28.1 // indirect
+	gopkg.in/guregu/null.v4 v4.0.0
 	gopkg.in/ini.v1 v1.55.0 // indirect
 	modernc.org/ql v1.0.1 // indirect
 	mvdan.cc/unparam v0.0.0-20200314162735-0ac8026f7d06 // indirect
