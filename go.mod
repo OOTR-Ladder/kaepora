@@ -32,6 +32,7 @@ require (
 	github.com/jirfag/go-printf-func-name v0.0.0-20200119135958-7558a9eaa5af // indirect
 	github.com/jmoiron/sqlx v1.2.1-0.20190826204134-d7d95172beb5
 	github.com/klauspost/compress v1.10.4 // indirect
+	github.com/leonelquinteros/gotext v1.4.0
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/mitchellh/mapstructure v1.2.2 // indirect
@@ -51,6 +52,7 @@ require (
 	go.mongodb.org/mongo-driver v1.3.2 // indirect
 	golang.org/x/crypto v0.0.0-20200406173513-056763e48d71 // indirect
 	golang.org/x/sys v0.0.0-20200409092240-59c9f1ba88fa // indirect
+	golang.org/x/text v0.3.2
 	golang.org/x/tools v0.0.0-20200410132612-ae9902aceb98 // indirect
 	google.golang.org/api v0.21.0 // indirect
 	google.golang.org/genproto v0.0.0-20200410110633-0848e9f44c36 // indirect
