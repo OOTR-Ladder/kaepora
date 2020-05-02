@@ -12,7 +12,10 @@ func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) ([
 		}
 
 		return tx.Select(&ret, `
-            SELECT Player.Name AS PlayerName, PlayerRating.Rating AS Rating
+            SELECT
+                Player.Name AS PlayerName,
+                PlayerRating.Rating AS Rating,
+                PlayerRating.Deviation AS Deviation
             FROM PlayerRating
             INNER JOIN Player ON(PlayerRating.PlayerID = Player.ID)
             WHERE PlayerRating.LeagueID = ? AND PlayerRating.Deviation < ?

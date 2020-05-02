@@ -88,7 +88,10 @@ func serve(b *back.Back) error {
 		return err
 	}
 
-	server := web.NewServer(b, os.Getenv("KAEPORA_WEB_TOKEN_KEY"))
+	server, err := web.NewServer(b, os.Getenv("KAEPORA_WEB_TOKEN_KEY"))
+	if err != nil {
+		return err
+	}
 
 	var wg sync.WaitGroup
 	go b.Run(&wg, done)

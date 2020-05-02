@@ -1,0 +1,58 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Kaepora\n"
+"Language: fr\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: resources/web/templates/includes/base.html:9
+msgid "The Legend of Zelda: Ocarina of Time Randomizer racing leagues."
+msgstr "Compétitions de Randomizer sur The Legend of Zelda: Ocarina of Time."
+
+#: resources/web/templates/layouts/index.html:4
+msgid "OoTR Randomizer Ladder"
+msgstr ""
+
+#: resources/web/templates/layouts/index.html:9
+msgid "Welcome to the _Ocarina of Time Randomizer_ ladder."
+msgstr "Bienvenue sur les ligues _ladder_ pour _Ocarina of Time_."
+
+#: resources/web/templates/layouts/index.html:13
+msgid "Join the Discord server"
+msgstr "Rejoignez le serveur Discord"
+
+#: resources/web/templates/layouts/index.html:14
+msgid "Read the documentation"
+msgstr "Lisez la documentation"
+
+#: resources/web/templates/layouts/index.html:15
+msgid "Read the rules"
+msgstr "Lisez les règles"
+
+#: resources/web/templates/layouts/index.html:20
+msgid "Next scheduled races"
+msgstr "Prochaines courses"
+
+#: resources/web/templates/layouts/index.html:26
+msgid "League"
+msgstr "Ligue"
+
+#: resources/web/templates/layouts/index.html:27
+msgid "Race start"
+msgstr "Départ"
+
+#: resources/web/templates/layouts/index.html:34
+msgid "(in %s)"
+msgstr "(dans %s)"
+
+#: resources/web/templates/layouts/index.html:40
+msgid "There is no scheduled race right now."
+msgstr "Il n'y a pas de course programmée pour l'instant."
+
+#: resources/web/templates/layouts/index.html:47
+msgid "Leaderboard"
+msgstr "Classement"
+
+#: resources/web/templates/layouts/index.html:48
+msgid "Standard league"
+msgstr "Ligue standard"

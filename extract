@@ -1,0 +1,35 @@
+#!/usr/bin/env php
+<?php
+
+exit(main());
+
+function main():int {
+    exec(
+        "find resources -type f -name '*.html' -print0 | xargs -0 grep -EHn 't(md|f)? \\$?.Locale \"'",
+        $calls,
+    );
+
+    foreach ($calls as $v) {
+        list($path, $line, $raw) = explode(':', $v, 3);
+        $id = parse($raw);
+        if ($id === null) {
+            fprintf(STDERR, "Unable to parse $path:$line: $v\n");
+            continue;
+        }
+
+        echo "#: $path:$line\n";
+        echo "msgid $id\n";
+        echo "msgstr \"\"\n\n";
+    }
+
+    return 0;
+}
+
+function parse(string $str): ?string {
+    preg_match('`\{\{\s*t(md|f)?\s+\$?\.Locale\s+"([^"]*)".*\}\}`', $str, $matches);
+    if (count($matches) < 3) {
+        return null;
+    }
+
+    return json_encode($matches[2]);
+}
