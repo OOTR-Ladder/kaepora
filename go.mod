@@ -39,6 +39,7 @@ require (
 	github.com/nakagami/firebirdsql v0.0.0-20200406064823-1a78d260c2bc // indirect
 	github.com/pelletier/go-toml v1.7.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0 // indirect
+	github.com/russross/blackfriday/v2 v2.0.1
 	github.com/securego/gosec v0.0.0-20200401082031-e946c8c39989 // indirect
 	github.com/shopspring/decimal v0.0.0-20200227202807-02e2044944cc // indirect
 	github.com/sirupsen/logrus v1.5.0 // indirect
