@@ -356,7 +356,7 @@ func (b *Back) sendLeaderboardUpdateNotification(
 		Type:          NotificationTypeLeagueLeaderboardUpdate,
 	}
 
-	top, err := getTop20(tx, league.ID)
+	top, err := getTop20(tx, league.ID, DeviationThreshold)
 	if err != nil {
 		return err
 	}

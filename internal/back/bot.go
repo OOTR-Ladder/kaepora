@@ -124,7 +124,7 @@ func (b *Back) GetLeaderboardsForDiscordUser(discordID, shortcode string) (
 			return err
 		}
 
-		top, err = getTop20(tx, league.ID)
+		top, err = getTop20(tx, league.ID, DeviationThreshold)
 		if err != nil {
 			return err
 		}
@@ -148,7 +148,7 @@ func (b *Back) GetLeaderboardsForDiscordUser(discordID, shortcode string) (
 	return top, around, nil
 }
 
-func getTop20(tx *sqlx.Tx, leagueID util.UUIDAsBlob) ([]LeaderboardEntry, error) {
+func getTop20(tx *sqlx.Tx, leagueID util.UUIDAsBlob, maxDeviation int) ([]LeaderboardEntry, error) {
 	query := `
     SELECT
         Player.Name AS PlayerName,
@@ -156,12 +156,12 @@ func getTop20(tx *sqlx.Tx, leagueID util.UUIDAsBlob) ([]LeaderboardEntry, error)
         PlayerRating.Deviation AS Deviation
     FROM PlayerRating
     INNER JOIN Player ON(PlayerRating.PlayerID = Player.ID)
-    WHERE PlayerRating.LeagueID = ?
+    WHERE PlayerRating.LeagueID = ? AND PlayerRating.Deviation < ?
     ORDER BY PlayerRating.Rating DESC
     LIMIT 20`
 
 	var ret []LeaderboardEntry
-	if err := tx.Select(&ret, query, leagueID); err != nil {
+	if err := tx.Select(&ret, query, leagueID, maxDeviation); err != nil {
 		return nil, err
 	}
 

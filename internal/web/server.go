@@ -238,9 +238,7 @@ func (s *Server) getNextRaces() (map[string]time.Time, error) {
 func (s *Server) getStdTop20() ([]back.LeaderboardEntry, error) {
 	leaderboard, err := s.back.GetLeaderboardForShortcode(
 		"std",
-		// TODO seems like an OK cutoff right now, but will need to be change
-		// later I've seen a RD of 50 being the average for active players.
-		220,
+		back.DeviationThreshold,
 	)
 	if err != nil {
 		return nil, err

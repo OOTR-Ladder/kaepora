@@ -10,6 +10,10 @@ import (
 	glicko "github.com/zelenin/go-glicko2"
 )
 
+// TODO seems like an OK cutoff right now, but will need to be change
+// later I've seen a RD of 50 being the average for active players.
+const DeviationThreshold = 220
+
 type PlayerRating struct {
 	PlayerID  util.UUIDAsBlob
 	LeagueID  util.UUIDAsBlob
