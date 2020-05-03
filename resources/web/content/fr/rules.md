@@ -3,7 +3,7 @@
    vous parlez à d'autre humains.**
 2. Vous devez diffuser vos matches, si vous avez à prouver que vous n'avez pas
    triché, votre seul recours sera de fournir la VàD.
-3. Touche forme de triche sera punie par un bannissement définitif, incluant
+3. Toute forme de triche sera punie par un bannissement définitif, incluant
    (liste non exhaustive) :
     1. Toute tentative de deviner ou de regarder le _stream_ de votre adversaire.
     2. Explorer la _seed_ avant le début officiel d'un match.
