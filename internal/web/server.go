@@ -27,9 +27,13 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 	r.Use(middleware.Logger)
 	r.Use(langDetect)
 
-	r.Handle("/_/*", http.StripPrefix("/_/", http.FileServer(http.Dir(
+	fs := http.StripPrefix("/_/", http.FileServer(http.Dir(
 		filepath.Join(baseDir, "static"),
-	))))
+	)))
+	r.HandleFunc("/_/*", func(w http.ResponseWriter, r *http.Request) {
+		s.cache(w, "public", 1*time.Hour)
+		fs.ServeHTTP(w, r)
+	})
 
 	r.Get("/rules", s.markdownContent(baseDir, "rules.md"))
 	r.Get("/documentation", s.markdownContent(baseDir, "documentation.md"))
