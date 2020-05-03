@@ -102,6 +102,7 @@ func (b *Back) GetPlayerByDiscordID(discordID string) (player Player, _ error) {
 type LeaderboardEntry struct {
 	PlayerName string
 	Rating     float64
+	Deviation  float64
 }
 
 func (b *Back) GetLeaderboardsForDiscordUser(discordID, shortcode string) (
@@ -149,7 +150,10 @@ func (b *Back) GetLeaderboardsForDiscordUser(discordID, shortcode string) (
 
 func getTop20(tx *sqlx.Tx, leagueID util.UUIDAsBlob) ([]LeaderboardEntry, error) {
 	query := `
-    SELECT Player.Name AS PlayerName, PlayerRating.Rating AS Rating
+    SELECT
+        Player.Name AS PlayerName,
+        PlayerRating.Rating AS Rating,
+        PlayerRating.Deviation AS Deviation
     FROM PlayerRating
     INNER JOIN Player ON(PlayerRating.PlayerID = Player.ID)
     WHERE PlayerRating.LeagueID = ?
@@ -164,6 +168,7 @@ func getTop20(tx *sqlx.Tx, leagueID util.UUIDAsBlob) ([]LeaderboardEntry, error)
 	return ret, nil
 }
 
+// nolint:funclen
 func getTopAroundPlayer(tx *sqlx.Tx, player Player, leagueID util.UUIDAsBlob) ([]LeaderboardEntry, error) {
 	rating, err := getPlayerRating(tx, player.ID, leagueID)
 	if err != nil {
@@ -180,7 +185,10 @@ func getTopAroundPlayer(tx *sqlx.Tx, player Player, leagueID util.UUIDAsBlob) ([
 
 		// nolint:gosec
 		query := fmt.Sprintf(`
-            SELECT Player.Name AS PlayerName, PlayerRating.Rating AS Rating
+            SELECT
+                Player.Name AS PlayerName,
+                PlayerRating.Rating AS Rating,
+                PlayerRating.Deviation AS Deviation
             FROM PlayerRating
             INNER JOIN Player ON (PlayerRating.PlayerID = Player.ID)
             WHERE

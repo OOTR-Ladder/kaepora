@@ -1,0 +1,20 @@
+{{- define "base" -}}
+<!DOCTYPE html>
+<html lang="{{.Locale}}">
+<head>
+    <meta charset="UTF-8">
+    <title>OoT Randomizer Ladder</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property=og:description content="{{t .Locale "The Legend of Zelda: Ocarina of Time Randomizer racing leagues."}}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ootrladder.com/" />
+
+    <link rel="stylesheet" href="{{assetURL "bulma.min.css"}}" integrity="{{assetIntegrity "bulma.min.css"}}" />
+    <link rel="stylesheet" href="{{assetURL "main.css"}}" integrity="{{assetIntegrity "main.css"}}" />
+</head>
+<body>
+    {{- template "content" . -}}
+</body>
+</html>
+{{- end -}}

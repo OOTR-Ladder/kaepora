@@ -8,6 +8,8 @@
 *.db
 *.db-journal
 *.log
+*.mo
+*.po~
 *.z64
 /coverage.cov
 /coverage.html

@@ -7,6 +7,7 @@ import (
 	"kaepora/internal/back"
 	"kaepora/internal/bot"
 	"kaepora/internal/generator"
+	"kaepora/internal/web"
 	"log"
 	"os"
 	"os/signal"
@@ -87,9 +88,15 @@ func serve(b *back.Back) error {
 		return err
 	}
 
+	server, err := web.NewServer(b, os.Getenv("KAEPORA_WEB_TOKEN_KEY"))
+	if err != nil {
+		return err
+	}
+
 	var wg sync.WaitGroup
 	go b.Run(&wg, done)
 	go bot.Serve(&wg, done)
+	go server.Serve(&wg, done)
 
 	sig := <-signaled
 	log.Printf("warning: received signal %d", sig)

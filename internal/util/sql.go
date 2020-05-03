@@ -1,14 +1,11 @@
 package util
 
 import (
-	"database/sql"
+	"gopkg.in/guregu/null.v4"
 )
 
 // NullString is a shorthand to create a valid sql.NullString or an invalid one
 // if the given string is empty.
-func NullString(v string) sql.NullString {
-	return sql.NullString{
-		String: v,
-		Valid:  v != "",
-	}
+func NullString(v string) null.String {
+	return null.NewString(v, v != "")
 }

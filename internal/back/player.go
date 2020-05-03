@@ -1,7 +1,6 @@
 package back
 
 import (
-	"database/sql"
 	"fmt"
 	"kaepora/internal/util"
 	"time"
@@ -9,13 +8,14 @@ import (
 	"github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
 	glicko "github.com/zelenin/go-glicko2"
+	"gopkg.in/guregu/null.v4"
 )
 
 type Player struct {
 	ID        util.UUIDAsBlob
 	CreatedAt util.TimeAsTimestamp
 	Name      string
-	DiscordID sql.NullString
+	DiscordID null.String
 
 	Rating PlayerRating `db:"-"`
 }

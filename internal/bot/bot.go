@@ -94,6 +94,7 @@ loop:
 	if err := bot.dg.Close(); err != nil {
 		log.Printf("error: could not close Discord bot: %s", err)
 	}
+	log.Println("info: Discord bot closed")
 }
 
 func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) {

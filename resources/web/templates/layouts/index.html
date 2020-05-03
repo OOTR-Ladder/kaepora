@@ -1,0 +1,59 @@
+{{define "content"}}
+<div class="container">
+
+<h1 class="title">{{t .Locale "OoTR Randomizer Ladder"}}</h1>
+
+<div class="tile is-ancestor">
+    <div class="tile is-parent is-vertical">
+        <div class="tile is-child">
+            {{tmd .Locale "Welcome to the _Ocarina of Time Randomizer_ ladder."}}
+            <div class="hero">
+                <div class="hero-body">
+                    <ul class="level">
+                        <li class="level-item"><a class="button is-primary" href="https://discord.gg/TvTnwVJ">{{t .Locale "Join the Discord server"}}</a></li>
+                        <li class="level-item"><a class="button is-info" href="/documentation">{{t .Locale "Read the documentation"}}</a></li>
+                        <li class="level-item"><a class="button is-info" href="/rules">{{t .Locale "Read the rules"}}</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2 class="title">{{t .Locale "Next scheduled races"}}</h2>
+
+            {{if .Payload.NextRaces}}
+            <table class="table is-fullwidth">
+                <thead>
+                    <tr>
+                        <td>{{t .Locale "League"}}</td>
+                        <td>{{t .Locale "Race start"}}</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range $k, $v := .Payload.NextRaces}}
+                    <tr>
+                        <td>{{$k}}</td>
+                        <td>{{$v}} {{tf $.Locale "(in %s)" (until $v "m")}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+            {{else}}
+            <p>{{t .Locale "There is no scheduled race right now."}}</p>
+            {{end}}
+        </div>
+    </div>
+
+    <div class="tile is-4 is-parent">
+        <div class="tile is-child box">
+            <h2 class="title">{{t .Locale "Leaderboard"}}</h2>
+            <h3 class="subtitle">{{t .Locale "Standard league"}}</h3>
+            <ol class="league_leaderboard">
+                {{range $v := .Payload.Top20}}
+                <li><span title="{{$v | ranking}}">{{$v.PlayerName}}</span></li>
+                {{end}}
+            </ol>
+        </div>
+    </div>
+</div>
+
+</div>
+{{end}}

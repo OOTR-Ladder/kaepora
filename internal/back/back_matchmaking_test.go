@@ -1,7 +1,6 @@
 package back
 
 import (
-	"database/sql"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -19,6 +18,7 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
+	"gopkg.in/guregu/null.v4"
 )
 
 func TestMatchMaking(t *testing.T) {
@@ -452,7 +452,7 @@ func fixtures(tx *sqlx.Tx) error {
 	for k, v := range playerNames {
 		player := NewPlayer(v)
 		player.ID[0] = byte(k)
-		player.DiscordID = sql.NullString{Valid: true, String: fmt.Sprintf("player#%d %s", k, v)}
+		player.DiscordID = null.NewString(fmt.Sprintf("player#%d %s", k, v), true)
 		if err := player.insert(tx); err != nil {
 			return err
 		}
