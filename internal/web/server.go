@@ -21,6 +21,10 @@ import (
 )
 
 func (s *Server) setupRouter(baseDir string) *chi.Mux {
+	middleware.DefaultLogger = middleware.RequestLogger(&middleware.DefaultLogFormatter{
+		Logger: log.New(os.Stdout, "web: ", 0),
+	})
+
 	r := chi.NewRouter()
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)

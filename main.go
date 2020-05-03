@@ -23,7 +23,7 @@ import (
 var Version = "unknown" // nolint:gochecknoglobals
 
 func main() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	log.SetFlags(0) // we syslog in prod so we don't care about time here
 	flag.Parse()
 
 	switch flag.Arg(0) { // commands not requiring a back
