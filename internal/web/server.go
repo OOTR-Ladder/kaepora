@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"kaepora/internal/back"
 	"log"
 	"net/http"
@@ -15,6 +16,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/leonelquinteros/gotext"
+	"github.com/russross/blackfriday/v2"
 	"golang.org/x/text/language"
 )
 
@@ -28,6 +30,9 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 	r.Handle("/_/*", http.StripPrefix("/_/", http.FileServer(http.Dir(
 		filepath.Join(baseDir, "static"),
 	))))
+
+	r.Get("/rules", s.markdownContent(baseDir, "rules.md"))
+	r.Get("/documentation", s.markdownContent(baseDir, "documentation.md"))
 	r.Get("/", s.index)
 
 	return r
@@ -158,6 +163,29 @@ func (s *Server) error(w http.ResponseWriter, err error, code int) {
 
 func (s *Server) cache(w http.ResponseWriter, scope string, d time.Duration) {
 	w.Header().Set("Cache-Control", fmt.Sprintf("%s,max-age=%d", scope, d/time.Second))
+}
+
+func (s *Server) markdownContent(baseDir, name string) http.HandlerFunc {
+	pathFmt := filepath.Join(baseDir, "content", "%s", name)
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		locale := r.Context().Value(ctxKeyLocale).(string)
+		if len(locale) != 2 || (locale[0] == '.' || locale[0] == '/') {
+			s.error(w, fmt.Errorf("got a dangerous locale: %s", locale), http.StatusBadRequest)
+			return
+		}
+
+		md, err := ioutil.ReadFile(fmt.Sprintf(pathFmt, locale))
+		if err != nil {
+			s.error(w, err, http.StatusInternalServerError)
+			return
+		}
+
+		parsed := template.HTML(blackfriday.Run(md)) // nolint:gosec
+
+		s.cache(w, "public", 1*time.Hour)
+		s.response(w, r, http.StatusOK, "markdown.html", parsed)
+	}
 }
 
 func (s *Server) index(w http.ResponseWriter, r *http.Request) {
