@@ -75,6 +75,7 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 				class = "is-success is-light"
 			case back.MatchSessionStatusInProgress:
 				str = s.locales[locale].Get("in progress")
+				class = "is-primary"
 			case back.MatchSessionStatusClosed:
 				str = s.locales[locale].Get("closed")
 			default:
