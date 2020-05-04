@@ -30,7 +30,7 @@ msgid "Read the rules"
 msgstr ""
 
 #: resources/web/templates/layouts/index.html:20
-msgid "Next scheduled races"
+msgid "Recent and scheduled races"
 msgstr ""
 
 #: resources/web/templates/layouts/index.html:26
@@ -41,18 +41,26 @@ msgstr ""
 msgid "Race start"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:34
+#: resources/web/templates/layouts/index.html:28
+msgid "Status"
+msgstr ""
+
+#: resources/web/templates/layouts/index.html:29
+msgid "Players"
+msgstr ""
+
+#: resources/web/templates/layouts/index.html:39
 msgid "(in %s)"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:40
-msgid "There is no scheduled race right now."
+#: resources/web/templates/layouts/index.html:51
+msgid "There is no recent or scheduled race right now."
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:47
+#: resources/web/templates/layouts/index.html:58
 msgid "Leaderboard"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:48
+#: resources/web/templates/layouts/index.html:59
 msgid "Standard league"
 msgstr ""

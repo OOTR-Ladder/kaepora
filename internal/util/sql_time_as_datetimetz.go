@@ -17,6 +17,10 @@ func (t TimeAsDateTimeTZ) Time() time.Time {
 	return time.Time(t)
 }
 
+func (t TimeAsDateTimeTZ) String() string {
+	return t.Time().String()
+}
+
 func (t *TimeAsDateTimeTZ) Scan(src interface{}) error {
 	var str string
 	switch src := src.(type) {

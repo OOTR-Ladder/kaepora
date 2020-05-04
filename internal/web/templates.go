@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"io"
 	"kaepora/internal/back"
+	"kaepora/internal/util"
 	"os"
 	"path/filepath"
 	"strings"
@@ -52,10 +53,35 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 			return fmt.Sprintf(s.locales[locale].Get(str), args...)
 		},
 
+		"future": tplFuture,
+
 		"tmd": func(locale, str string) template.HTML {
 			return template.HTML(blackfriday.Run( // nolint:gosec
 				[]byte(s.locales[locale].Get(str)),
 			))
+		},
+
+		"matchSessionStatusTag": func(locale string, status back.MatchSessionStatus) template.HTML {
+			var str, class string
+			switch status {
+			case back.MatchSessionStatusWaiting:
+				str = s.locales[locale].Get("planned")
+				class = "is-primary is-light"
+			case back.MatchSessionStatusJoinable:
+				str = s.locales[locale].Get("joinable")
+				class = "is-success"
+			case back.MatchSessionStatusPreparing:
+				str = s.locales[locale].Get("preparing")
+				class = "is-success is-light"
+			case back.MatchSessionStatusInProgress:
+				str = s.locales[locale].Get("in progress")
+			case back.MatchSessionStatusClosed:
+				str = s.locales[locale].Get("closed")
+			default:
+				return ""
+			}
+
+			return template.HTML(fmt.Sprintf(`<span class="tag %s">%s</span>`, class, str)) // nolint:gosec
 		},
 
 		"ranking":        tplRanking,
@@ -69,7 +95,17 @@ func tplRanking(v back.LeaderboardEntry) string {
 	return fmt.Sprintf("%d±%d", int(v.Rating), int(2.0*v.Deviation))
 }
 
-func tplUntil(t time.Time, trunc string) string {
+func tplUntil(iface interface{}, trunc string) string {
+	var t time.Time
+	switch iface := iface.(type) {
+	case time.Time:
+		t = iface
+	case util.TimeAsDateTimeTZ:
+		t = iface.Time()
+	default:
+		panic(fmt.Errorf("unexpected type %T", iface))
+	}
+
 	delta := time.Until(t)
 
 	switch trunc {
@@ -81,6 +117,20 @@ func tplUntil(t time.Time, trunc string) string {
 	case "s":
 		return delta.Truncate(time.Second).String()
 	}
+}
+
+func tplFuture(iface interface{}) bool {
+	var t time.Time
+	switch iface := iface.(type) {
+	case time.Time:
+		t = iface
+	case util.TimeAsDateTimeTZ:
+		t = iface.Time()
+	default:
+		panic(fmt.Errorf("unexpected type %T", iface))
+	}
+
+	return t.After(time.Now())
 }
 
 func tplAssetURL(name string) string {

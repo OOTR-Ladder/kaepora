@@ -17,27 +17,38 @@
                 </div>
             </div>
 
-            <h2 class="title">{{t .Locale "Next scheduled races"}}</h2>
+            <h2 class="title">{{t .Locale "Recent and scheduled races"}}</h2>
 
-            {{if .Payload.NextRaces}}
+            {{if .Payload.MatchSessions}}
             <table class="table is-fullwidth">
                 <thead>
                     <tr>
                         <td>{{t .Locale "League"}}</td>
                         <td>{{t .Locale "Race start"}}</td>
+                        <td>{{t .Locale "Status"}}</td>
+                        <td>{{t .Locale "Players"}}</td>
                     </tr>
                 </thead>
                 <tbody>
-                    {{range $k, $v := .Payload.NextRaces}}
+                    {{range $k, $v := .Payload.MatchSessions}}
                     <tr>
-                        <td>{{$k}}</td>
-                        <td>{{$v}} {{tf $.Locale "(in %s)" (until $v "m")}}</td>
+                        <td>{{(index $.Payload.Leagues $v.LeagueID).Name}}</td>
+                        <td>
+                            {{$v.StartDate}}
+                            {{if future $v.StartDate}}
+                                {{tf $.Locale "(in %s)" (until $v.StartDate "m")}}
+                            {{end}}
+                        </td>
+                        <td>{{matchSessionStatusTag $.Locale $v.Status}}</td>
+                        <td>
+                            {{if eq (len $v.PlayerIDs) 0}}-{{else}}{{len $v.PlayerIDs}}{{end}}
+                        </td>
                     </tr>
                     {{end}}
                 </tbody>
             </table>
             {{else}}
-            <p>{{t .Locale "There is no scheduled race right now."}}</p>
+            <p>{{t .Locale "There is no recent or scheduled race right now."}}</p>
             {{end}}
         </div>
     </div>

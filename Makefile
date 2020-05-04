@@ -39,7 +39,7 @@ test:
 	go test --timeout=10s ./...
 
 run:
-	gin --all --bin "$(EXEC)" --buildArgs "${BUILDFLAGS}" -- serve
+	gin --bin "$(EXEC)" --buildArgs "${BUILDFLAGS}" -- serve
 
 extract:
 	./extract > out.po

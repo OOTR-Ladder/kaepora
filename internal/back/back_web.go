@@ -1,6 +1,11 @@
 package back
 
-import "github.com/jmoiron/sqlx"
+import (
+	"kaepora/internal/util"
+	"time"
+
+	"github.com/jmoiron/sqlx"
+)
 
 func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) ([]LeaderboardEntry, error) {
 	var ret []LeaderboardEntry
@@ -26,4 +31,47 @@ func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) ([
 	}
 
 	return ret, nil
+}
+
+func (b *Back) GetMatchSessionsAroundNow() ([]MatchSession, map[util.UUIDAsBlob]League, error) {
+	var (
+		sessions []MatchSession
+		leagues  map[util.UUIDAsBlob]League
+	)
+
+	now := time.Now()
+
+	if err := b.transaction(func(tx *sqlx.Tx) error {
+		query := `SELECT * FROM MatchSession
+        WHERE DATETIME(StartDate) >= DATETIME(?) AND
+              DATETIME(StartDate) <= DATETIME(?)
+        ORDER BY StartDate ASC`
+		if err := tx.Select(&sessions, query, now.Add(-24*time.Hour), now.Add(24*time.Hour)); err != nil {
+			return err
+		}
+		ids := make([]util.UUIDAsBlob, 0, len(sessions))
+		for k := range sessions {
+			ids = append(ids, sessions[k].LeagueID)
+		}
+
+		query, args, err := sqlx.In(`SELECT * FROM League WHERE ID IN (?)`, ids)
+		if err != nil {
+			return err
+		}
+		query = tx.Rebind(query)
+		sLeagues := make([]League, 0, len(ids))
+		leagues = make(map[util.UUIDAsBlob]League, len(ids))
+		if err := tx.Select(&sLeagues, query, args...); err != nil {
+			return err
+		}
+		for _, v := range sLeagues {
+			leagues[v.ID] = v
+		}
+
+		return nil
+	}); err != nil {
+		return nil, nil, err
+	}
+
+	return sessions, leagues, nil
 }

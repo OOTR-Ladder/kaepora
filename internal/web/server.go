@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"io/ioutil"
 	"kaepora/internal/back"
+	"kaepora/internal/util"
 	"log"
 	"net/http"
 	"os"
@@ -203,7 +204,7 @@ func (s *Server) index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	nextRaces, err := s.getNextRaces()
+	sessions, leagues, err := s.back.GetMatchSessionsAroundNow()
 	if err != nil {
 		s.error(w, err, http.StatusInternalServerError)
 		return
@@ -211,32 +212,14 @@ func (s *Server) index(w http.ResponseWriter, r *http.Request) {
 
 	s.cache(w, "public", 1*time.Minute)
 	s.response(w, r, http.StatusOK, "index.html", struct {
-		Top20     []back.LeaderboardEntry
-		NextRaces map[string]time.Time
+		Top20         []back.LeaderboardEntry
+		MatchSessions []back.MatchSession
+		Leagues       map[util.UUIDAsBlob]back.League
 	}{
 		top20,
-		nextRaces,
+		sessions,
+		leagues,
 	})
-}
-
-func (s *Server) getNextRaces() (map[string]time.Time, error) {
-	ret := map[string]time.Time{}
-	_, leagues, times, err := s.back.GetGamesLeaguesAndTheirNextSessionStartDate()
-	if err != nil {
-		return nil, err
-	}
-
-	// Ugly and quadratic, we have like, one league. So I don't care.
-	for k, v := range times {
-		for j := range leagues {
-			if leagues[j].ID == k {
-				ret[leagues[j].Name] = v
-				break
-			}
-		}
-	}
-
-	return ret, nil
 }
 
 func (s *Server) getStdTop20() ([]back.LeaderboardEntry, error) {
