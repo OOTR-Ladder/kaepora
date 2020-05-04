@@ -5,6 +5,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+#: internal/web/templates.go:68
+msgid "planned"
+msgstr "planifiée"
+
+#: internal/web/templates.go:71
+msgid "joinable"
+msgstr "joinable"
+
+#: internal/web/templates.go:74
+msgid "preparing"
+msgstr "en préparation"
+
+#: internal/web/templates.go:77
+msgid "in progress"
+msgstr "en cours"
+
+#: internal/web/templates.go:79
+msgid "closed"
+msgstr "fermée"
+
 #: resources/web/templates/includes/base.html:9
 msgid "The Legend of Zelda: Ocarina of Time Randomizer racing leagues."
 msgstr "Compétitions de Randomizer sur The Legend of Zelda: Ocarina of Time."
@@ -64,18 +84,3 @@ msgstr "Classement"
 #: resources/web/templates/layouts/index.html:59
 msgid "Standard league"
 msgstr "Ligue standard"
-
-msgid "closed"
-msgstr "fermée"
-
-msgid "joinable"
-msgstr "joinable"
-
-msgid "in progress"
-msgstr "en cours"
-
-msgid "preparing"
-msgstr "en préparation"
-
-msgid "planned"
-msgstr "planifiée"

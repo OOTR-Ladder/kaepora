@@ -4,14 +4,25 @@
 exit(main());
 
 function main():int {
+    output('find_template', 'parse_template');
+    output('find_call', 'parse_call');
+
+    return 0;
+}
+
+function find_template(): array {
     exec(
         "find resources -type f -name '*.html' -print0 | xargs -0 grep -EHn 't(md|f)? \\$?.Locale \"'",
         $calls,
     );
 
-    foreach ($calls as $v) {
+    return $calls;
+}
+
+function output(callable $finder, callable $parser) {
+    foreach ($finder() as $v) {
         list($path, $line, $raw) = explode(':', $v, 3);
-        $id = parse($raw);
+        $id = $parser($raw);
         if ($id === null) {
             fprintf(STDERR, "Unable to parse $path:$line: $v\n");
             continue;
@@ -25,11 +36,29 @@ function main():int {
     return 0;
 }
 
-function parse(string $str): ?string {
+function parse_template(string $str): ?string {
     preg_match('`\{\{\s*t(md|f)?\s+\$?\.Locale\s+"([^"]*)".*\}\}`', $str, $matches);
     if (count($matches) < 3) {
         return null;
     }
 
     return json_encode($matches[2]);
+}
+
+function find_call(): array {
+    exec("find internal -type f -name '*.go' -print0 | " .
+        "xargs -0 grep -EHn 's\.locales\[locale\]\.Get\(\"(.+)\"\)'",
+        $calls,
+    );
+
+    return $calls;
+}
+
+function parse_call(string $str): ?string {
+    preg_match('`s\.locales\[locale\]\.Get\("(.+)"\)`', $str, $matches);
+    if (count($matches) < 2) {
+        return null;
+    }
+
+    return json_encode($matches[1]);
 }

@@ -5,6 +5,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: internal/web/templates.go:68
+msgid "planned"
+msgstr ""
+
+#: internal/web/templates.go:71
+msgid "joinable"
+msgstr ""
+
+#: internal/web/templates.go:74
+msgid "preparing"
+msgstr ""
+
+#: internal/web/templates.go:77
+msgid "in progress"
+msgstr ""
+
+#: internal/web/templates.go:79
+msgid "closed"
+msgstr ""
+
 #: resources/web/templates/includes/base.html:9
 msgid "The Legend of Zelda: Ocarina of Time Randomizer racing leagues."
 msgstr ""
