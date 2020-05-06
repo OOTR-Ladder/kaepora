@@ -102,5 +102,9 @@ func (bot *Bot) cmdSpoilers(m *discordgo.Message, args []string, _ io.Writer) er
 		return err
 	}
 
-	return bot.back.SendSeedSpoilerLog(player, argsAsName(args))
+	return bot.back.SendSeedSpoilerLog(
+		player,
+		argsAsName(args),
+		bot.isAdmin(m.Author.ID),
+	)
 }

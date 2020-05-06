@@ -235,7 +235,7 @@ func getTopAroundPlayer(tx *sqlx.Tx, player Player, leagueID util.UUIDAsBlob) ([
 	return ret, nil
 }
 
-func (b *Back) SendSeedSpoilerLog(player Player, seed string) error {
+func (b *Back) SendSeedSpoilerLog(player Player, seed string, isAdmin bool) error {
 	var match Match
 	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
 		match, err = getMatchBySeed(tx, seed)
@@ -243,7 +243,7 @@ func (b *Back) SendSeedSpoilerLog(player Player, seed string) error {
 			return err
 		}
 
-		if !match.hasEnded() {
+		if !isAdmin && !match.hasEnded() {
 			return util.ErrPublic(fmt.Sprintf("The race for seed %s is still in progress.", seed))
 		}
 
