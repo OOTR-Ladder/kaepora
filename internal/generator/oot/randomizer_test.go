@@ -1,3 +1,5 @@
+//+build docker
+
 package oot_test
 
 import (

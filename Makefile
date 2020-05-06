@@ -30,13 +30,13 @@ push-randomizer: randomizer
 	docker push "lp042/oot-randomizer:$(shell git -C docker/OoT-Randomizer describe --tags)"
 
 coverage:
-	go test -covermode=count -coverprofile=coverage.cov --timeout=10s ./...
+	go test -tags docker -covermode=count -coverprofile=coverage.cov --timeout=10s ./...
 	go tool cover -html=coverage.cov -o coverage.html
 	rm coverage.cov
 	sensible-browser coverage.html
 
 test:
-	go test --timeout=10s ./...
+	go test -tags docker --timeout=10s ./...
 
 run:
 	gin --bin "$(EXEC)" --buildArgs "${BUILDFLAGS}" -- serve
