@@ -76,22 +76,19 @@ func (g *Randomizer) run(outDir, settings, seed string) ([]byte, string, error) 
 		return nil, "", err
 	}
 
-	args := []string{
-		"docker", "run", "--rm",
-		"-u", fmt.Sprintf("%s:%s", user.Uid, user.Gid),
-		"-v", base + "/ARCHIVE.bin:/opt/oot-randomizer/ARCHIVE.bin:ro",
-		"-v", base + "/ZOOTDEC.z64:/opt/oot-randomizer/ZOOTDEC.z64:ro",
-		"-v", settings + ":/opt/oot-randomizer/settings.json:ro",
-		"-v", outDir + ":/opt/oot-randomizer/Output",
-		"lp042/oot-randomizer:" + g.version,
-		"--seed", seed,
-		"--settings", "settings.json",
-	}
-	log.Printf("debug: %v", args)
-
 	// There's no user input, unless the DB has been taken over.
 	// nolint: gosec
-	cmd := exec.Command(args[0], args[1:]...)
+	cmd := exec.Command(
+		"docker", "run", "--rm",
+		"-u", fmt.Sprintf("%s:%s", user.Uid, user.Gid),
+		"-v", base+"/ARCHIVE.bin:/opt/oot-randomizer/ARCHIVE.bin:ro",
+		"-v", base+"/ZOOTDEC.z64:/opt/oot-randomizer/ZOOTDEC.z64:ro",
+		"-v", settings+":/opt/oot-randomizer/settings.json:ro",
+		"-v", outDir+":/opt/oot-randomizer/Output",
+		"lp042/oot-randomizer:"+g.version,
+		"--seed", seed,
+		"--settings", "settings.json",
+	)
 
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
