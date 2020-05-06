@@ -9,6 +9,7 @@ import (
 	"kaepora/internal/util"
 	"log"
 	"math/big"
+	mrand "math/rand"
 	"runtime"
 	"sort"
 	"strings"
@@ -88,16 +89,17 @@ func (b *Back) generateAndSendMatchSeed(
 		cpus = 1
 	}
 
+	atomic.AddInt64(&b.generators, 1)
+	defer atomic.AddInt64(&b.generators, -1)
+
 	for atomic.LoadInt64(&b.generators) > cpus {
-		time.Sleep(150 * time.Millisecond)
+		time.Sleep(time.Duration(mrand.Intn(200)) * time.Millisecond)
 	}
 	delta := time.Since(start)
 	if delta > 100*time.Millisecond {
 		log.Printf("debug: waited %s before generating seed", delta)
 	}
 
-	atomic.AddInt64(&b.generators, 1)
-	defer atomic.AddInt64(&b.generators, -1)
 	patch, spoilerLog, err := gen.Generate(match.Settings, match.Seed)
 	if err != nil {
 		return err
