@@ -1,6 +1,5 @@
-[![Build Status](https://travis-ci.org/OOTR-Ladder/kaepora.svg?branch=master)](https://travis-ci.org/OOTR-Ladder/kaepora)
+# Kaepora [![Build Status](https://travis-ci.org/OOTR-Ladder/kaepora.svg?branch=master)](https://travis-ci.org/OOTR-Ladder/kaepora) [![go report](https://goreportcard.com/badge/github.com/OOTR-Ladder/kaepora)](https://goreportcard.com/report/github.com/OOTR-Ladder/kaepora)
 
-# Kaepora
 The _Ocarina of Time Randomizer_ leagues.
 
 Goals:
