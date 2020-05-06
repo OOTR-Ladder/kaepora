@@ -83,7 +83,11 @@ func (b *Back) generateAndSendMatchSeed(
 	}
 
 	start := time.Now()
-	cpus := int64(runtime.NumCPU())
+	cpus := int64(runtime.NumCPU()) - 1
+	if cpus < 1 {
+		cpus = 1
+	}
+
 	for atomic.LoadInt64(&b.generators) > cpus {
 		time.Sleep(150 * time.Millisecond)
 	}
