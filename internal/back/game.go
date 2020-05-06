@@ -47,13 +47,3 @@ func getGames(tx *sqlx.Tx) ([]Game, error) {
 
 	return ret, nil
 }
-
-func getGameByID(tx *sqlx.Tx, id util.UUIDAsBlob) (Game, error) {
-	var ret Game
-	query := `SELECT * FROM Game WHERE Game.ID = ? LIMIT 1`
-	if err := tx.Get(&ret, query, id); err != nil {
-		return Game{}, err
-	}
-
-	return ret, nil
-}

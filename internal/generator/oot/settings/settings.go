@@ -29,7 +29,7 @@ func Load(path string) (Settings, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
+	defer f.Close() // nolint:gosec
 
 	dec := json.NewDecoder(f)
 	if err := dec.Decode(&ret); err != nil {

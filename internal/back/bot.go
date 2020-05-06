@@ -168,7 +168,7 @@ func getTop20(tx *sqlx.Tx, leagueID util.UUIDAsBlob, maxDeviation int) ([]Leader
 	return ret, nil
 }
 
-// nolint:funclen
+// nolint:funlen
 func getTopAroundPlayer(tx *sqlx.Tx, player Player, leagueID util.UUIDAsBlob) ([]LeaderboardEntry, error) {
 	rating, err := getPlayerRating(tx, player.ID, leagueID)
 	if err != nil {

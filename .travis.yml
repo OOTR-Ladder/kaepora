@@ -7,4 +7,7 @@ git:
 go:
   - 1.14.x
 
-script: go test ./...
+script: >-
+  make &&
+  make lint &&
+  go test -v ./...

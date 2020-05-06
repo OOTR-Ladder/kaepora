@@ -130,11 +130,11 @@ func generateSpoilerLogs() error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
 
 	if _, err := io.WriteString(f, spoiler); err != nil {
+		f.Close()
 		return err
 	}
 
-	return nil
+	return f.Close()
 }

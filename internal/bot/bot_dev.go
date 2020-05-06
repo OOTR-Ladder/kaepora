@@ -36,7 +36,7 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 		return nil
 	}
 
-	switch args[0] { // nolint:gocritic, TODO
+	switch args[0] {
 	case "panic":
 		panic("an admin asked me to panic")
 	case "uptime":
