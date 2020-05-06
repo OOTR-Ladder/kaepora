@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/OOTR-Ladder/kaepora.svg?branch=master)](https://travis-ci.org/OOTR-Ladder/kaepora)
+
 # Kaepora
 The _Ocarina of Time Randomizer_ leagues.
 
