@@ -1,11 +1,11 @@
 # Kaepora [![Build Status](https://travis-ci.org/OOTR-Ladder/kaepora.svg?branch=master)](https://travis-ci.org/OOTR-Ladder/kaepora) [![go report](https://goreportcard.com/badge/github.com/OOTR-Ladder/kaepora)](https://goreportcard.com/report/github.com/OOTR-Ladder/kaepora)
 
-The _Ocarina of Time Randomizer_ leagues.
+[The _Ocarina of Time Randomizer_ leagues](https://ootrladder.com).
 
 Goals:
   - Provide a 1vs1 ladder for OoT randomizer races.
   - Provide multiple leagues to compete with different settings.
-  - Discord-first, but easy to port on other messaging platforms.
+  - Web-first, Discord-second, easy to port on other messaging platforms.
 
 Side-goals:
   - Provide a framework for other randomized games to use for their ladder.
