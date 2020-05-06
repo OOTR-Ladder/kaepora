@@ -65,12 +65,8 @@ func (b *Back) CreateDevMatchSession(leagueShortCode string) error {
 			}
 		}
 
-		// Matchmake and start countdown, skipping seed generation
-		session.Status = MatchSessionStatusPreparing
-		session.StartDate = util.TimeAsDateTimeTZ(time.Now().Add(15 * time.Second))
-		if err := b.matchMakeSession(tx, session); err != nil {
-			return err
-		}
+		// Reach preparing
+		session.StartDate = util.TimeAsDateTimeTZ(time.Now().Add(-MatchSessionPreparationOffset))
 		return session.update(tx)
 	})
 }

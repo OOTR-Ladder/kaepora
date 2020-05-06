@@ -9,11 +9,10 @@ import (
 	"kaepora/internal/util"
 	"log"
 	"math/big"
-	mrand "math/rand"
 	"runtime"
 	"sort"
 	"strings"
-	"sync/atomic"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -46,31 +45,70 @@ func (b *Back) generateAndSendSeeds(tx *sqlx.Tx, session MatchSession) error {
 	if err != nil {
 		return err
 	}
-	log.Printf("debug: got %d matches to generate seeds for", len(matches))
 
-	var e []error
-
+	players := make(map[util.UUIDAsBlob]Player, len(matches)*2)
 	for k := range matches {
-		p1, err := getPlayerByID(tx, matches[k].Entries[0].PlayerID)
-		if err != nil {
-			e = append(e, err)
-			continue
-		}
-		p2, err := getPlayerByID(tx, matches[k].Entries[1].PlayerID)
-		if err != nil {
-			e = append(e, err)
-			continue
-		}
-
-		go func(match Match) {
-			log.Printf("debug: generating seed %s for match %s", match.Seed, match.ID)
-			if err := b.generateAndSendMatchSeed(match, session, p1, p2); err != nil {
-				log.Printf("unable to generate and send seed: %s", err)
+		for i := 0; i <= 1; i++ {
+			p, err := getPlayerByID(tx, matches[k].Entries[i].PlayerID)
+			if err != nil {
+				return err
 			}
-		}(matches[k])
+			players[p.ID] = p
+		}
 	}
 
-	return util.ConcatErrors(e)
+	// Run in a routine to release the transaction early and write the entries.
+	go b.doParallelSeedGeneration(session, matches, players)
+
+	return nil
+}
+
+func (b *Back) doParallelSeedGeneration(
+	session MatchSession,
+	matches []Match,
+	players map[util.UUIDAsBlob]Player,
+) {
+	type pl struct {
+		match   Match
+		session MatchSession
+		p1, p2  Player
+	}
+
+	start := time.Now()
+	worker := func(ch <-chan pl, wg *sync.WaitGroup) {
+		defer wg.Done()
+		for v := range ch {
+			curSeedStart := time.Now()
+			log.Printf("debug: generating seed %s for match %s", v.match.Seed, v.match.ID)
+			if err := b.generateAndSendMatchSeed(v.match, v.session, v.p1, v.p2); err != nil {
+				log.Printf("unable to generate and send seed: %s", err)
+			}
+			log.Printf("info: generated seed %s in %s (%s)", v.match.Seed, time.Since(curSeedStart), time.Since(start))
+		}
+	}
+
+	cpus := runtime.NumCPU()
+	pool := make(chan pl, cpus)
+	log.Printf("debug: limiting seedgen to %d at a time", cpus)
+
+	var wg sync.WaitGroup
+	for i := 0; i < cpus; i++ {
+		wg.Add(1)
+		go worker(pool, &wg)
+	}
+
+	for k := range matches {
+		pool <- pl{
+			match:   matches[k],
+			session: session,
+			p1:      players[matches[k].Entries[0].PlayerID],
+			p2:      players[matches[k].Entries[1].PlayerID],
+		}
+	}
+	close(pool)
+
+	wg.Wait()
+	log.Printf("info: generated %d seeds in %s", len(matches), time.Since(start))
 }
 
 func (b *Back) generateAndSendMatchSeed(
@@ -81,23 +119,6 @@ func (b *Back) generateAndSendMatchSeed(
 	gen, err := generator.NewGenerator(match.Generator)
 	if err != nil {
 		return err
-	}
-
-	start := time.Now()
-	cpus := int64(runtime.NumCPU()) - 1
-	if cpus < 1 {
-		cpus = 1
-	}
-
-	atomic.AddInt64(&b.generators, 1)
-	defer atomic.AddInt64(&b.generators, -1)
-
-	for atomic.LoadInt64(&b.generators) > cpus {
-		time.Sleep(time.Duration(mrand.Intn(200)) * time.Millisecond)
-	}
-	delta := time.Since(start)
-	if delta > 100*time.Millisecond {
-		log.Printf("debug: waited %s before generating seed", delta)
 	}
 
 	patch, spoilerLog, err := gen.Generate(match.Settings, match.Seed)
