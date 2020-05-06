@@ -1,0 +1,10 @@
+---
+language: go
+
+git:
+  submodules: false
+
+go:
+  - 1.14.x
+
+script: go test ./...

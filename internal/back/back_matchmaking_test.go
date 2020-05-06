@@ -66,7 +66,7 @@ func innerTestMatchMaking(t *testing.T, back *Back) {
 		t.Fatal(err)
 	}
 
-	time.Sleep(50 * time.Millisecond) // HACK: wait for fake seed generation
+	time.Sleep(200 * time.Millisecond) // HACK: wait for fake seed generation
 
 	// Drops after being able to cancel: forfeit and loss
 	if err := haveZeldaForfeit(back); err != nil {
