@@ -3,7 +3,7 @@ package bot
 import (
 	"fmt"
 	"io"
-	"kaepora/internal/util"
+	"kaepora/internal/back"
 	"strings"
 	"text/tabwriter"
 	"time"
@@ -11,13 +11,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func (bot *Bot) cmdLeagues(_ *discordgo.Message, args []string, out io.Writer) error {
-	switch len(args) {
-	case 0:
-		return bot.displayLeagues(out)
-	default:
-		return util.ErrPublic("bad arguments count")
-	}
+func (bot *Bot) cmdLeagues(_ *discordgo.Message, _ []string, out io.Writer) error {
+	return bot.displayLeagues(out)
 }
 
 func (bot *Bot) displayLeagues(out io.Writer) error {
@@ -62,4 +57,14 @@ func (bot *Bot) displayLeagues(out io.Writer) error {
 	}
 
 	return nil
+}
+
+func (bot *Bot) cmdRecap(m *discordgo.Message, args []string, out io.Writer) error {
+	shortcode := argsAsName(args)
+	scope := back.RecapScopePublic
+	if bot.isAdmin(m.Author.ID) {
+		scope = back.RecapScopeAdmin
+	}
+
+	return bot.back.SendRecaps(m.Author.ID, shortcode, scope)
 }

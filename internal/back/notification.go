@@ -371,15 +371,20 @@ func (b *Back) sendLeaderboardUpdateNotification(
 	return nil
 }
 
-const privateRecap = true
-const publicRecap = false
+type RecapScope int
+
+const (
+	RecapScopePublic RecapScope = iota // only show completed races
+	RecapScopeRunner                   // also show races with one finisher
+	RecapScopeAdmin                    // show everything
+)
 
 func (b *Back) sendSessionRecapNotification(
 	tx *sqlx.Tx,
 	session MatchSession,
 	matches []Match,
-	private bool, // private recap, don't send to announce channel
-	toDiscordUserID string, // can be empty: will send to announce channel
+	scope RecapScope, // private recap, don't send to announce channel
+	toDiscordUserID *string, // can be nil for public recaps: will send to announce channel
 ) error {
 	league, err := getLeagueByID(tx, session.LeagueID)
 	if err != nil {
@@ -391,27 +396,26 @@ func (b *Back) sendSessionRecapNotification(
 		Recipient:     league.AnnounceDiscordChannelID.String,
 		Type:          NotificationTypeMatchSessionRecap,
 	}
-
-	// Don't rely on user ID not being "" because that could leak race recaps
-	// in announce channel if the user has no discord ID for some reason.
-	if private {
-		notif.SetDiscordUserRecipient(toDiscordUserID)
+	if toDiscordUserID != nil {
+		notif.SetDiscordUserRecipient(*toDiscordUserID)
 	}
 
-	notif.Printf("Results for latest `%s` race:\n```\n", league.ShortCode)
+	notif.Printf("Results for `%s` race started at %s:\n```\n", league.ShortCode, session.StartDate)
 	table := tabwriter.NewWriter(&notif, 0, 0, 2, ' ', 0)
 	fmt.Fprintln(table, "Player 1\t\tvs\tPlayer 2\t\tSeed")
 
 	unknown := 0
 	for _, match := range matches {
-		if !match.Entries[0].hasEnded() && !match.Entries[1].hasEnded() {
-			unknown++
-			continue
-		}
+		if scope != RecapScopeAdmin {
+			if !match.Entries[0].hasEnded() && !match.Entries[1].hasEnded() {
+				unknown++
+				continue
+			}
 
-		if !private && (!match.Entries[0].hasEnded() || !match.Entries[1].hasEnded()) {
-			unknown++
-			continue
+			if scope == RecapScopePublic && (!match.Entries[0].hasEnded() || !match.Entries[1].hasEnded()) {
+				unknown++
+				continue
+			}
 		}
 
 		wrap0, name0, duration0 := entryDetails(tx, match.Entries[0])
@@ -427,7 +431,8 @@ func (b *Back) sendSessionRecapNotification(
 	notif.Print("```\n")
 
 	if unknown > 0 {
-		notif.Printf("There are still %d race(s) in progress.", unknown)
+		notif.Printf("There are still %d race(s) in progress.\n", unknown)
+		notif.Printf("You can get an up to date recap with `!recap %s`.", league.ShortCode)
 	}
 
 	b.notifications <- notif

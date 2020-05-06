@@ -58,6 +58,7 @@ func New(back *back.Back, token string) (*Bot, error) {
 		"!register":     bot.cmdRegister,
 		"!rename":       bot.cmdRename,
 		"!spoilers":     bot.cmdSpoilers,
+		"!recap":        bot.cmdRecap,
 
 		"!cancel":   bot.cmdCancel,
 		"!done":     bot.cmdComplete,
@@ -69,6 +70,14 @@ func New(back *back.Back, token string) (*Bot, error) {
 	}
 
 	return bot, nil
+}
+
+func (bot *Bot) isAdmin(discordID string) bool {
+	if bot.adminUserID == "" {
+		return false
+	}
+
+	return discordID == bot.adminUserID
 }
 
 func (bot *Bot) Serve(wg *sync.WaitGroup, done <-chan struct{}) {
@@ -216,6 +225,7 @@ func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
 !help                   # display this help message
 !leaderboard SHORTCODE  # show leaderboards for the given league
 !leagues                # list leagues
+!recap SHORTCODE        # show the 1v1 results for the current session
 !register               # create your account and link it to your Discord account
 !register NAME          # same as "!register" but use another name
 !rename NAME            # set your display name to NAME

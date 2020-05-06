@@ -138,7 +138,7 @@ func (b *Back) sendPrivateRecapForSessionID(sessionID util.UUIDAsBlob, player Pl
 
 		return b.sendSessionRecapNotification(
 			tx, session, matches,
-			privateRecap, player.DiscordID.String,
+			RecapScopeRunner, &player.DiscordID.String,
 		)
 	})
 }

@@ -295,3 +295,25 @@ func (s *MatchSession) start(tx *sqlx.Tx) error {
 
 	return nil
 }
+
+func getActiveSessionsForLeagueID(tx *sqlx.Tx, leagueID util.UUIDAsBlob) ([]MatchSession, error) {
+	query, args, err := sqlx.In(`
+        SELECT * FROM MatchSession
+        WHERE MatchSession.LeagueID = ? AND MatchSession.Status IN(?)
+        ORDER BY MatchSession.StartDate DESC`,
+		leagueID,
+		MatchSessionStatusInProgress,
+		MatchSessionStatusPreparing,
+	)
+	if err != nil {
+		return nil, err
+	}
+	query = tx.Rebind(query)
+
+	var ret []MatchSession
+	if err := tx.Select(&ret, query, args...); err != nil {
+		return nil, err
+	}
+
+	return ret, nil
+}

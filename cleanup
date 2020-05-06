@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# To avoid spamming players when working on a real DB.
+
+sqlite3 kaepora.db <<EOF
+UPDATE Player SET DiscordID = NULL;
+UPDATE League SET AnnounceDiscordChannelID = NULL;
+EOF

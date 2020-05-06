@@ -362,7 +362,7 @@ func (b *Back) endMatchSessionsAndUpdateRanks() error {
 		for k := range sessions {
 			if err := b.sendSessionRecapNotification(
 				tx, sessions[k], matches[sessions[k].ID],
-				publicRecap, "",
+				RecapScopePublic, nil,
 			); err != nil {
 				return err
 			}

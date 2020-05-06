@@ -256,3 +256,29 @@ func (b *Back) SendSeedSpoilerLog(player Player, seed string) error {
 
 	return nil
 }
+
+func (b *Back) SendRecaps(toUserID string, shortcode string, scope RecapScope) error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		league, err := getLeagueByShortCode(tx, shortcode)
+		if err != nil {
+			return err
+		}
+
+		sessions, err := getActiveSessionsForLeagueID(tx, league.ID)
+		if err != nil {
+			return err
+		}
+
+		for k := range sessions {
+			matches, err := getMatchesBySessionID(tx, sessions[k].ID)
+			if err != nil {
+				return err
+			}
+			if err := b.sendSessionRecapNotification(tx, sessions[k], matches, scope, &toUserID); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
+}
