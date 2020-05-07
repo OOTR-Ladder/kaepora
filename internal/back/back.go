@@ -1,3 +1,4 @@
+// package back contains all the business logic.
 package back
 
 import (
@@ -10,8 +11,12 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// Back holds the global state of the application and all the business logic.
+// It is the back-end of the web and bot front-ends.
 type Back struct {
-	db            *sqlx.DB
+	db *sqlx.DB
+
+	// notifications receives content from the Back and MUST be consumed externally.
 	notifications chan Notification
 
 	// It is possible to fetch the same session twice to count it down, this
@@ -40,10 +45,13 @@ func New(sqlDriver string, sqlDSN string) (*Back, error) {
 	}, nil
 }
 
+// GetNotificationsChan returns the channel on which the Back sends the textual
+// notifications destined to either a specific player or a whole channel.
 func (b *Back) GetNotificationsChan() <-chan Notification {
 	return b.notifications
 }
 
+// Run performs all the matchmaking business until the done channel is closed.
 func (b *Back) Run(wg *sync.WaitGroup, done <-chan struct{}) {
 	wg.Add(1)
 	defer wg.Done()
@@ -64,6 +72,9 @@ func (b *Back) Run(wg *sync.WaitGroup, done <-chan struct{}) {
 
 type transactionCallback func(*sqlx.Tx) error
 
+// transaction runs the given callback in a SQL transaction and either COMMIT
+// if the returned error is nil, or ROLLBACK if the error is non-nil.
+// All interactions with the DB should go through this function.
 func (b *Back) transaction(cb transactionCallback) error {
 	tx, err := b.db.Beginx()
 	if err != nil {

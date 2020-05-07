@@ -32,6 +32,8 @@ func (b *Back) runPeriodicTasks() error {
 		return err
 	}
 
+	// This is done in a different transaction than makeMatchSessionsPreparing
+	// to ensure no one can join when we matchmake/generate the seeds.
 	if err := b.doMatchMaking(sessions); err != nil {
 		return err
 	}

@@ -9,6 +9,8 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// A Match is a single 1v1 belonging to a MatchSession, it has its own unique
+// seed so each 1v1 is unique.
 type Match struct {
 	ID             util.UUIDAsBlob
 	LeagueID       util.UUIDAsBlob
@@ -16,10 +18,12 @@ type Match struct {
 
 	CreatedAt util.TimeAsTimestamp
 	StartedAt util.NullTimeAsTimestamp
-	EndedAt   util.NullTimeAsTimestamp
+	EndedAt   util.NullTimeAsTimestamp // when the two players completed their side of the race.
 
-	Generator  string
-	Settings   string
+	Generator string
+	Settings  string
+	// Seed is the actual random generator initial seed, not to be confused
+	// with the misnomer "seed" that designates the generated ROM/patch
 	Seed       string
 	SpoilerLog string
 

@@ -71,12 +71,14 @@ func langDetect(next http.Handler) http.Handler {
 	})
 }
 
+// Server contains the state required to serve the OOTRLadder website over HTTP.
 type Server struct {
 	http    *http.Server
 	back    *back.Back
-	tpl     map[string]*template.Template
-	locales map[string]*gotext.Locale
+	tpl     map[string]*template.Template // Indexed by file name (eg. "index.html")
+	locales map[string]*gotext.Locale     // Indexed by lowercase ISO 639-2 (eg. "fr")
 
+	// Secret key for HMAC token verification
 	tokenKey string
 }
 
@@ -112,6 +114,7 @@ func NewServer(back *back.Back, tokenKey string) (*Server, error) {
 	return s, nil
 }
 
+// getResourcesDir returns the absolute path to the web server static resources.
 func getResourcesDir() (string, error) {
 	wd, err := os.Getwd()
 	if err != nil {
@@ -121,6 +124,7 @@ func getResourcesDir() (string, error) {
 	return filepath.Join(wd, "resources/web"), nil
 }
 
+// Serve starts the HTTP and blocks until the done channel is closed.
 func (s *Server) Serve(wg *sync.WaitGroup, done <-chan struct{}) {
 	log.Println("info: starting HTTP server")
 	wg.Add(1)
@@ -142,7 +146,14 @@ func (s *Server) Serve(wg *sync.WaitGroup, done <-chan struct{}) {
 	}
 }
 
-func (s *Server) response(w http.ResponseWriter, r *http.Request, code int, template string, payload interface{}) {
+// response renders the given template with the given payload available in ".Payload".
+func (s *Server) response(
+	w http.ResponseWriter,
+	r *http.Request,
+	code int, // HTTP return code to write
+	template string,
+	payload interface{},
+) {
 	tpl, ok := s.tpl[template]
 	if !ok {
 		s.error(w, fmt.Errorf("template not found: %s", template), http.StatusInternalServerError)
@@ -166,7 +177,7 @@ func (s *Server) response(w http.ResponseWriter, r *http.Request, code int, temp
 }
 
 func (s *Server) error(w http.ResponseWriter, err error, code int) {
-	log.Printf("error: %s", err)
+	log.Printf("error: HTTP %d: %s", code, err)
 	w.WriteHeader(code)
 }
 
@@ -174,6 +185,8 @@ func (s *Server) cache(w http.ResponseWriter, scope string, d time.Duration) {
 	w.Header().Set("Cache-Control", fmt.Sprintf("%s,max-age=%d", scope, d/time.Second))
 }
 
+// markdownContent serves the given markdown file out of the
+// "<baseDir>/content/<locale>" directory as HTML.
 func (s *Server) markdownContent(baseDir, name string) http.HandlerFunc {
 	pathFmt := filepath.Join(baseDir, "content", "%s", name)
 
@@ -197,6 +210,7 @@ func (s *Server) markdownContent(baseDir, name string) http.HandlerFunc {
 	}
 }
 
+// index serves the homepage with a quick recap of the std league.
 func (s *Server) index(w http.ResponseWriter, r *http.Request) {
 	top20, err := s.getStdTop20()
 	if err != nil {
@@ -222,6 +236,7 @@ func (s *Server) index(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// getStdTop20 returns the Top 20 leaderboard for the standard league.
 func (s *Server) getStdTop20() ([]back.LeaderboardEntry, error) {
 	leaderboard, err := s.back.GetLeaderboardForShortcode(
 		"std",

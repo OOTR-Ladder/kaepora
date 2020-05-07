@@ -1,3 +1,6 @@
+// package bot handles the Discord bot that talks to the back.Back.
+// If a bot for another messaging platform is added, it should live in a
+// separate module and this one should be renamed.
 package bot
 
 import (
@@ -18,6 +21,7 @@ import (
 
 type commandHandler func(m *discordgo.Message, args []string, w io.Writer) error
 
+// Bot is a Discord bot that acts as a CLI front-end for the Back.
 type Bot struct {
 	back *back.Back
 
@@ -72,6 +76,8 @@ func New(back *back.Back, token string) (*Bot, error) {
 	return bot, nil
 }
 
+// isAdmin returns true if the given Discord user ID is a Kaepora admin,
+// meaning he has access to extra data and dangerous commands.
 func (bot *Bot) isAdmin(discordID string) bool {
 	if bot.adminUserID == "" {
 		return false
@@ -80,6 +86,7 @@ func (bot *Bot) isAdmin(discordID string) bool {
 	return discordID == bot.adminUserID
 }
 
+// Serve runs the Discord bot until the done channel is closed.
 func (bot *Bot) Serve(wg *sync.WaitGroup, done <-chan struct{}) {
 	log.Println("info: starting Discord bot")
 	wg.Add(1)
@@ -106,6 +113,7 @@ loop:
 	log.Println("info: Discord bot closed")
 }
 
+// handleMessage treats incoming messages as CLI commands and runs the corresponding back code.
 func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Ignore webooks, self, bots, non-commands.
 	if m.Author == nil || m.Author.ID == s.State.User.ID ||
@@ -158,7 +166,24 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 	}
 }
 
-func (bot *Bot) maybeCleanupMessage(s *discordgo.Session, channelID string, messageID string) error {
+// dispatch is the handleMessage internals without the Discord-specific stuff.
+func (bot *Bot) dispatch(m *discordgo.Message, w io.Writer) error {
+	command, args := parseCommand(m.Content)
+	handler, ok := bot.handlers[command]
+	if !ok {
+		return util.ErrPublic(fmt.Sprintf("invalid command: %v", m.Content))
+	}
+
+	return handler(m, args, w)
+}
+
+// maybeCleanupMessage removes the original message the user sent to us if it
+// was written in a public channel. If it was in a PM, nothing happens.
+func (bot *Bot) maybeCleanupMessage(
+	s *discordgo.Session,
+	channelID string,
+	messageID string,
+) error {
 	channel, err := s.Channel(channelID)
 	if err != nil {
 		return err
@@ -175,6 +200,8 @@ func (bot *Bot) maybeCleanupMessage(s *discordgo.Session, channelID string, mess
 	return nil
 }
 
+// parseCommand splits a raw string as sent to the bot into a command name and
+// its space-separated arguments.
 func parseCommand(cmd string) (string, []string) {
 	parts := strings.Split(cmd, " ")
 
@@ -188,29 +215,8 @@ func parseCommand(cmd string) (string, []string) {
 	}
 }
 
-func (bot *Bot) dispatch(m *discordgo.Message, w io.Writer) error {
-	command, args := parseCommand(m.Content)
-	handler, ok := bot.handlers[command]
-	if !ok {
-		return util.ErrPublic(fmt.Sprintf("invalid command: %v", m.Content))
-	}
-
-	return handler(m, args, w)
-}
-
 // nolint:funlen
 func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
-	truncate := func(v time.Duration) string {
-		ret := strings.TrimSuffix(v.Truncate(time.Second).String(), "0s")
-		if strings.HasSuffix(ret, "h0m") {
-			return strings.TrimSuffix(ret, "0m")
-		}
-
-		return ret
-	}
-	joinOffset := truncate(back.MatchSessionJoinableAfterOffset)
-	prepOffset := truncate(back.MatchSessionPreparationOffset)
-
 	fmt.Fprintf(w, "Hoo hoot! %s… Look up here!\n"+
 		"It appears that the time has finally come for you to start your adventure!\n"+
 		"You will encounter many hardships ahead… That is your fate.\n"+
@@ -247,8 +253,8 @@ If you are caught cheating, using an alt, or breaking a league's rules **you wil
 Did you get all that?
 `,
 		"```",
-		joinOffset,
-		prepOffset,
+		util.TruncateDuration(back.MatchSessionJoinableAfterOffset),
+		util.TruncateDuration(back.MatchSessionPreparationOffset),
 	)
 
 	return nil

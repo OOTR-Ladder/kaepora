@@ -11,6 +11,7 @@ import (
 	"gopkg.in/guregu/null.v4"
 )
 
+// A Player is a competitor that can be registered to MatchSession and have Match and MatchEntry.
 type Player struct {
 	ID        util.UUIDAsBlob
 	CreatedAt util.TimeAsTimestamp

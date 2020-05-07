@@ -28,6 +28,7 @@ const (
 	MatchSessionStatusClosed     MatchSessionStatus = 4 // everyone finished
 )
 
+// A MatchSession is a set of matches that all start at the same time.
 type MatchSession struct {
 	ID        util.UUIDAsBlob
 	LeagueID  util.UUIDAsBlob
@@ -37,10 +38,13 @@ type MatchSession struct {
 	PlayerIDs util.UUIDArrayAsJSON // sorted by join date asc
 }
 
+// GetPlayerIDs returns the list of players who joined the session and should
+// be matchmaked.
 func (s *MatchSession) GetPlayerIDs() []uuid.UUID {
 	return s.PlayerIDs.Slice()
 }
 
+// HasPlayerID retusn true if the given player ID has registered to be in the session.
 func (s *MatchSession) HasPlayerID(needle uuid.UUID) bool {
 	for _, v := range s.GetPlayerIDs() {
 		if v == needle {
@@ -82,7 +86,6 @@ func getMatchSessionByID(tx *sqlx.Tx, id util.UUIDAsBlob) (MatchSession, error) 
 	return ret, nil
 }
 
-// nolint:interfacer
 func getPlayerActiveSession(tx *sqlx.Tx, playerID uuid.UUID) (MatchSession, error) {
 	var ret MatchSession
 	query := `

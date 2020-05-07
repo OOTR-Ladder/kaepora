@@ -22,8 +22,6 @@ import (
 
 // doMatchMaking creates all Match and MatchEntry on Matches that reached the
 // preparing state, and dispatches seeds to the players.
-// This is done in a different transaction than makeMatchSessionsPreparing to
-// ensure no one can join when we matchmake/generate the seeds.
 func (b *Back) doMatchMaking(sessions []MatchSession) error {
 	return b.transaction(func(tx *sqlx.Tx) error {
 		for k := range sessions {
@@ -40,6 +38,7 @@ func (b *Back) doMatchMaking(sessions []MatchSession) error {
 	})
 }
 
+// generateAndSendSeeds creates the seeds for all matches in a given session.
 func (b *Back) generateAndSendSeeds(tx *sqlx.Tx, session MatchSession) error {
 	matches, err := getMatchesBySessionID(tx, session.ID)
 	if err != nil {
@@ -63,6 +62,9 @@ func (b *Back) generateAndSendSeeds(tx *sqlx.Tx, session MatchSession) error {
 	return nil
 }
 
+// doParallelSeedGeneration generates the seeds for the given matches of the
+// given MatchSession in parallel using one worker per available CPU core.
+// players must be a prefetched Player.ID->Player map for the given matches.
 func (b *Back) doParallelSeedGeneration(
 	session MatchSession,
 	matches []Match,
@@ -111,6 +113,8 @@ func (b *Back) doParallelSeedGeneration(
 	log.Printf("info: generated %d seeds in %s", len(matches), time.Since(start))
 }
 
+// generateAndSendMatchSeed synchronously generates the seed and then sends the
+// binary patch to the players via a notification.
 func (b *Back) generateAndSendMatchSeed(
 	match Match,
 	session MatchSession,
@@ -136,6 +140,9 @@ func (b *Back) generateAndSendMatchSeed(
 	return nil
 }
 
+// hashFromSpoilerLog extracts the "seed hash" from a OoT-Randomizer spoiler log.
+// A seed hash is a short list of items that ±uniquely identifies a generated
+// patch and can be verified in-game.
 func hashFromSpoilerLog(spoilerLog string) string {
 	spoil := struct {
 		Hash []string `json:"file_hash"`
@@ -153,7 +160,8 @@ type pair struct {
 	p1, p2 Player
 }
 
-// I'm going to do things the sqlite way and JOIN nothing here, don't be afraid.
+// matchMakeSession takes a session, pairs registered players, and creates the
+// resulting matches. The actual MM algorithm is in the pairPlayers function.
 func (b *Back) matchMakeSession(tx *sqlx.Tx, session MatchSession) error {
 	if session.Status != MatchSessionStatusPreparing {
 		log.Printf("warning: attempted to matchmake session %s at status %d", session.ID, session.Status)
@@ -212,6 +220,9 @@ func clamp(v, min, max int) int {
 }
 
 // pairPlayers randomly pairs close players together.
+// It takes list of players sorted by their tank and matches two players close
+// enough in the list until there is no player left.
+// TODO: Heuristics, if both shared their last match: go one neighbor down/up
 func pairPlayers(players []Player) []pair {
 	if len(players) < 2 {
 		return nil
@@ -220,7 +231,6 @@ func pairPlayers(players []Player) []pair {
 		panic("fed an odd number of players to pairPlayers")
 	}
 
-	// TODO: Heuristics, if both shared their last match: go one neighbor down/up
 	pairs := make([]pair, 0, len(players)/2)
 	maxDelta := 3
 
@@ -263,6 +273,9 @@ func getSessionPlayersSortedByRating(tx *sqlx.Tx, session MatchSession) ([]Playe
 	return players, nil
 }
 
+// ensureSessionIsValidForMatchMaking ensures a MatchSession is in the required
+// state for MM to occur and returns true if the MM can proceed.
+// If there is an odd number of players, the last to join will be kicked.
 func (b *Back) ensureSessionIsValidForMatchMaking(tx *sqlx.Tx, session MatchSession) (MatchSession, bool, error) {
 	players := session.GetPlayerIDs()
 
@@ -316,6 +329,9 @@ func randomInt(iMin, iMax int) int {
 	return int(offset.Int64() + int64(iMin))
 }
 
+// getActiveMatchAndEntriesForPlayer returns the Match and the two
+// corresponding MatchEntry for the Match the given player is currently running
+// (ie. session is neither closed nor waiting).
 func getActiveMatchAndEntriesForPlayer(tx *sqlx.Tx, player Player) (
 	match Match, self MatchEntry, opponent MatchEntry, _ error,
 ) {
@@ -349,6 +365,8 @@ func getActiveMatchAndEntriesForPlayer(tx *sqlx.Tx, player Player) (
 // The matches slice is an implementation detail and contains all matches of
 // the session, since the caller already has the list we don't want to fetch
 // them again.
+// TODO: Fro my understanding of Glicko-2 This should be done over multiple
+// sessions and not only the session that just ended.
 func (b *Back) updateRankingsForMatchSession(tx *sqlx.Tx, session MatchSession, matches []Match) error {
 	if session.Status != MatchSessionStatusClosed {
 		return fmt.Errorf("can't update rankings for non-closed session %s", session.ID)

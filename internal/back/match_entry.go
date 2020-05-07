@@ -8,15 +8,19 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// A MatchEntry is the "1" part in a Match "1v1", it is the results of a single
+// player, every Match has two MatchEntry.
 type MatchEntry struct {
-	MatchID   util.UUIDAsBlob
-	PlayerID  util.UUIDAsBlob
+	MatchID  util.UUIDAsBlob
+	PlayerID util.UUIDAsBlob
+
 	CreatedAt util.TimeAsTimestamp
 	StartedAt util.NullTimeAsTimestamp
 	EndedAt   util.NullTimeAsTimestamp
-	Status    MatchEntryStatus
-	Outcome   MatchEntryOutcome
-	Comment   string
+
+	Status  MatchEntryStatus
+	Outcome MatchEntryOutcome
+	Comment string
 }
 
 func (m MatchEntry) hasEnded() bool {
