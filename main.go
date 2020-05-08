@@ -37,6 +37,11 @@ func main() {
 			log.Fatal(err)
 		}
 		return
+	case "dev:migrate-spoiler-logs":
+		if err := migrateSpoilerLogs(); err != nil {
+			log.Fatal(err)
+		}
+		return
 	}
 
 	back, err := back.New("sqlite3", "./kaepora.db")
