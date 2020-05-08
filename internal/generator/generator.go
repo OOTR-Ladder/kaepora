@@ -8,7 +8,7 @@ import (
 )
 
 type Generator interface {
-	Generate(settings, seed string) (patch []byte, spoilerLog string, err error)
+	Generate(settings, seed string) (patch []byte, spoilerLog []byte, err error)
 }
 
 func NewGenerator(id string) (Generator, error) {
@@ -42,7 +42,7 @@ func NewTest() *Test {
 	return &Test{}
 }
 
-func (*Test) Generate(settings, seed string) ([]byte, string, error) {
+func (*Test) Generate(settings, seed string) ([]byte, []byte, error) {
 	spoilerStruct := struct {
 		Hash []string `json:"file_hash"`
 	}{
@@ -50,5 +50,5 @@ func (*Test) Generate(settings, seed string) ([]byte, string, error) {
 	}
 
 	spoilerLog, err := json.Marshal(spoilerStruct)
-	return []byte("generated binary for seed: " + seed), string(spoilerLog), err
+	return []byte("generated binary for seed: " + seed), spoilerLog, err
 }

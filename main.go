@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io"
 	"kaepora/internal/back"
 	"kaepora/internal/bot"
 	"kaepora/internal/generator"
@@ -35,6 +34,11 @@ func main() {
 		return
 	case "spoilers":
 		if err := generateSpoilerLogs(); err != nil {
+			log.Fatal(err)
+		}
+		return
+	case "dev:migrate-spoiler-logs":
+		if err := migrateSpoilerLogs(); err != nil {
 			log.Fatal(err)
 		}
 		return
@@ -131,7 +135,7 @@ func generateSpoilerLogs() error {
 		return err
 	}
 
-	if _, err := io.WriteString(f, spoiler); err != nil {
+	if _, err := f.Write(spoiler); err != nil {
 		f.Close()
 		return err
 	}

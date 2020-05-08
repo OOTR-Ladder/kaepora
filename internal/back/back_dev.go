@@ -31,10 +31,14 @@ func (b *Back) SendDevSeed(
 		if err != nil {
 			return err
 		}
+		zlibLog, err := util.NewZLIBBlob(spoilerLog)
+		if err != nil {
+			return err
+		}
 
 		player := Player{DiscordID: null.NewString(discordID, true)}
 		b.sendMatchSeedNotification(MatchSession{}, patch, hashFromSpoilerLog(spoilerLog), player, Player{})
-		b.sendSpoilerLogNotification(player, seed, spoilerLog)
+		b.sendSpoilerLogNotification(player, seed, zlibLog)
 
 		return nil
 	})

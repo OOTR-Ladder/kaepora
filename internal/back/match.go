@@ -25,7 +25,7 @@ type Match struct {
 	// Seed is the actual random generator initial seed, not to be confused
 	// with the misnomer "seed" that designates the generated ROM/patch
 	Seed       string
-	SpoilerLog string
+	SpoilerLog util.ZLIBBlob
 
 	Entries []MatchEntry `db:"-"`
 }
@@ -44,6 +44,7 @@ func NewMatch(tx *sqlx.Tx, session MatchSession, seed string) (Match, error) {
 		Generator:      league.Generator,
 		Settings:       league.Settings,
 		Seed:           seed,
+		SpoilerLog:     util.ZLIBBlob([]byte{}), // NOT NULL
 	}, nil
 }
 
