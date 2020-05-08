@@ -130,7 +130,12 @@ func (b *Back) generateAndSendMatchSeed(
 		return err
 	}
 
-	match.SpoilerLog = spoilerLog
+	zlibLog, err := util.NewZLIBBlob(spoilerLog)
+	if err != nil {
+		return err
+	}
+
+	match.SpoilerLog = zlibLog
 	if err := b.transaction(match.update); err != nil {
 		return err
 	}
@@ -143,12 +148,12 @@ func (b *Back) generateAndSendMatchSeed(
 // hashFromSpoilerLog extracts the "seed hash" from a OoT-Randomizer spoiler log.
 // A seed hash is a short list of items that ±uniquely identifies a generated
 // patch and can be verified in-game.
-func hashFromSpoilerLog(spoilerLog string) string {
+func hashFromSpoilerLog(spoilerLog []byte) string {
 	spoil := struct {
 		Hash []string `json:"file_hash"`
 	}{}
 
-	if err := json.Unmarshal([]byte(spoilerLog), &spoil); err != nil {
+	if err := json.Unmarshal(spoilerLog, &spoil); err != nil {
 		log.Println("error: unable to extract hash from spoiler log")
 		return ""
 	}

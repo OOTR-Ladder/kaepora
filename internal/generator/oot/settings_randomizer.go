@@ -61,16 +61,16 @@ func getShuffledSettingsPath(seed string, cost int, baseSettingsName string) (st
 	return settingsPath, nil
 }
 
-func (r *SettingsRandomizer) Generate(baseSettingsName, seed string) ([]byte, string, error) {
+func (r *SettingsRandomizer) Generate(baseSettingsName, seed string) ([]byte, []byte, error) {
 	settingsPath, err := getShuffledSettingsPath(seed, 20, baseSettingsName)
 	defer os.Remove(settingsPath)
 	if err != nil {
-		return nil, "", fmt.Errorf("unable to get shuffled settings: %w", err)
+		return nil, nil, fmt.Errorf("unable to get shuffled settings: %w", err)
 	}
 
 	outDir, err := ioutil.TempDir("", "oot-settings-randomizer-output-")
 	if err != nil {
-		return nil, "", fmt.Errorf("unable to create output directory: %s", err)
+		return nil, nil, fmt.Errorf("unable to create output directory: %s", err)
 	}
 	defer os.RemoveAll(outDir)
 

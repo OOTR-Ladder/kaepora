@@ -21,22 +21,22 @@ func NewRandomizer(version string) *Randomizer {
 	}
 }
 
-func (g *Randomizer) Generate(settingsName, seed string) ([]byte, string, error) {
+func (g *Randomizer) Generate(settingsName, seed string) ([]byte, []byte, error) {
 	outDir, err := ioutil.TempDir("", "oot-randomizer-output-")
 	if err != nil {
-		return nil, "", fmt.Errorf("unable to create output directory: %s", err)
+		return nil, nil, fmt.Errorf("unable to create output directory: %s", err)
 	}
 	defer os.RemoveAll(outDir)
 
 	base, err := getBaseDir()
 	if err != nil {
-		return nil, "", err
+		return nil, nil, err
 	}
 	settingsPath := filepath.Join(base, settingsName)
 
 	zpf, spoilerLog, err := g.run(outDir, settingsPath, seed)
 	if err != nil {
-		return nil, "", fmt.Errorf("unable to generate seed: %s", err)
+		return nil, nil, fmt.Errorf("unable to generate seed: %s", err)
 	}
 
 	return zpf, spoilerLog, nil
@@ -65,15 +65,15 @@ func getBaseDir() (string, error) {
 	return filepath.Join(wd, "resources/oot-randomizer"), nil
 }
 
-func (g *Randomizer) run(outDir, settings, seed string) ([]byte, string, error) {
+func (g *Randomizer) run(outDir, settings, seed string) ([]byte, []byte, error) {
 	base, err := getBaseDir()
 	if err != nil {
-		return nil, "", err
+		return nil, nil, err
 	}
 
 	user, err := user.Current()
 	if err != nil {
-		return nil, "", err
+		return nil, nil, err
 	}
 
 	// There's no user input, unless the DB has been taken over.
@@ -97,18 +97,18 @@ func (g *Randomizer) run(outDir, settings, seed string) ([]byte, string, error) 
 	if err := cmd.Run(); err != nil {
 		log.Printf("stdout: %s", stdout.String())
 		log.Printf("stderr: %s", stderr.String())
-		return nil, "", err
+		return nil, nil, err
 	}
 
 	zpf, err := readFirstGlob(filepath.Join(outDir, "*.zpf"))
 	if err != nil {
-		return nil, "", err
+		return nil, nil, err
 	}
 
 	spoilerLog, err := readFirstGlob(filepath.Join(outDir, "*_Spoiler.json"))
 	if err != nil {
-		return nil, "", err
+		return nil, nil, err
 	}
 
-	return zpf, string(spoilerLog), nil
+	return zpf, spoilerLog, nil
 }

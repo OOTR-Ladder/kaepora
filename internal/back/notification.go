@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"kaepora/internal/util"
-	"strings"
 	"text/tabwriter"
 	"time"
 
@@ -469,20 +468,20 @@ func entryDetails(tx *sqlx.Tx, entry MatchEntry) (wrap string, name string, dura
 	return
 }
 
-func (b *Back) sendSpoilerLogNotification(player Player, seed, spoilerLog string) {
+func (b *Back) sendSpoilerLogNotification(player Player, seed string, spoilerLog util.ZLIBBlob) {
 	notif := Notification{
 		RecipientType: NotificationRecipientTypeDiscordUser,
 		Recipient:     player.DiscordID.String,
 		Type:          NotificationTypeSpoilerLog,
 	}
 
-	if spoilerLog == "" {
+	if len(spoilerLog) == 0 {
 		notif.Printf("There is no spoiler log available for seed `%s`.", seed)
 	} else {
 		notif.Files = []NotificationFile{{
 			Name:        fmt.Sprintf("%s.spoilers.json", seed),
 			ContentType: "application/json",
-			Reader:      strings.NewReader(spoilerLog),
+			Reader:      spoilerLog.Uncompressed(),
 		}}
 		notif.Printf("Here is the spoiler log for seed `%s`.", seed)
 	}
