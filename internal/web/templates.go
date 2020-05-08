@@ -8,6 +8,7 @@ import (
 	"io"
 	"kaepora/internal/back"
 	"kaepora/internal/util"
+	"math"
 	"os"
 	"path/filepath"
 	"strings"
@@ -93,7 +94,13 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 }
 
 func tplRanking(v back.LeaderboardEntry) string {
-	return fmt.Sprintf("%d±%d", int(v.Rating), int(2.0*v.Deviation))
+	// Per Glicko-2, the rating is the interval R±2×RD where we expect the
+	// actual skill level to be with 95% confidence.
+	// This is rounded down to 50 increments for clarity.
+	d := 2.0 * v.Deviation
+	min := int(math.Round((v.Rating-d)/50.0) * 50.0)
+	max := int(math.Round((v.Rating+d)/50.0) * 50.0)
+	return fmt.Sprintf("%d-%d", min, max)
 }
 
 func tplUntil(iface interface{}, trunc string) string {
