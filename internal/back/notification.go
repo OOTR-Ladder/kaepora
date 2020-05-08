@@ -280,7 +280,7 @@ func (b *Back) sendSessionStatusUpdateNotification(tx *sqlx.Tx, session MatchSes
 		notif.Printf(
 			"The next race for league `%s` has been scheduled for %s (in %s)",
 			league.ShortCode,
-			session.StartDate.Time(),
+			util.Datetime(session.StartDate),
 			time.Until(session.StartDate.Time()).Round(time.Second),
 		)
 	case MatchSessionStatusJoinable:
@@ -288,7 +288,7 @@ func (b *Back) sendSessionStatusUpdateNotification(tx *sqlx.Tx, session MatchSes
 			"The race for league `%s` can now be joined! The race starts at %s (in %s).\n"+
 				"You can join using `!join %s`.",
 			league.ShortCode,
-			session.StartDate.Time(),
+			util.Datetime(session.StartDate),
 			time.Until(session.StartDate.Time()).Round(time.Second),
 			league.ShortCode,
 		)
@@ -299,7 +299,7 @@ func (b *Back) sendSessionStatusUpdateNotification(tx *sqlx.Tx, session MatchSes
 				"The race starts at %s (in %s). Watch this channel for the official go.",
 			league.ShortCode,
 			len(session.PlayerIDs)-(len(session.PlayerIDs)%2),
-			session.StartDate.Time(),
+			util.Datetime(session.StartDate),
 			time.Until(session.StartDate.Time()).Round(time.Second),
 		)
 	case MatchSessionStatusInProgress:

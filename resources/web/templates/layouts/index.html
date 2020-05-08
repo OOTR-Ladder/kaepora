@@ -33,7 +33,7 @@
                     <tr>
                         <td>{{(index $.Payload.Leagues $v.LeagueID).Name}}</td>
                         <td>
-                            {{$v.StartDate}}
+                            {{$v.StartDate | datetime}}
                             {{if future $v.StartDate}}
                                 {{tf $.Locale "(in %s)" (until $v.StartDate "m")}}
                             {{end}}

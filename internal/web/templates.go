@@ -54,8 +54,6 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 			return fmt.Sprintf(s.locales[locale].Get(str), args...)
 		},
 
-		"future": tplFuture,
-
 		"tmd": func(locale, str string) template.HTML {
 			return template.HTML(blackfriday.Run( // nolint:gosec
 				[]byte(s.locales[locale].Get(str)),
@@ -88,6 +86,8 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 
 		"ranking":        tplRanking,
 		"until":          tplUntil,
+		"future":         tplFuture,
+		"datetime":       util.Datetime,
 		"assetURL":       tplAssetURL,
 		"assetIntegrity": tplAssetIntegrity(baseDir),
 	}
