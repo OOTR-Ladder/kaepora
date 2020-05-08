@@ -40,6 +40,7 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 		fs.ServeHTTP(w, r)
 	})
 
+	r.Get("/favicon.ico", s.favicon(fs))
 	r.Get("/rules", s.markdownContent(baseDir, "rules.md"))
 	r.Get("/documentation", s.markdownContent(baseDir, "documentation.md"))
 	r.Get("/", s.index)
@@ -181,8 +182,17 @@ func (s *Server) error(w http.ResponseWriter, err error, code int) {
 	w.WriteHeader(code)
 }
 
-func (s *Server) cache(w http.ResponseWriter, scope string, d time.Duration) {
+func (s *Server) cache(w http.ResponseWriter, scope string, d time.Duration) { // nolint:unparam
 	w.Header().Set("Cache-Control", fmt.Sprintf("%s,max-age=%d", scope, d/time.Second))
+}
+
+func (s *Server) favicon(fs http.Handler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		r.URL.Path = "/_/favicon.ico"
+
+		s.cache(w, "public", 365*24*time.Hour)
+		fs.ServeHTTP(w, r)
+	}
 }
 
 // markdownContent serves the given markdown file out of the
