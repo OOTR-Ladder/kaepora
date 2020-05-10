@@ -3,7 +3,9 @@ package back
 
 import (
 	"fmt"
+	"kaepora/internal/generator/factory"
 	"kaepora/internal/util"
+	"kaepora/pkg/ootrapi"
 	"log"
 	"sync"
 	"time"
@@ -14,7 +16,8 @@ import (
 // Back holds the global state of the application and all the business logic.
 // It is the back-end of the web and bot front-ends.
 type Back struct {
-	db *sqlx.DB
+	db               *sqlx.DB
+	generatorFactory factory.Factory
 
 	// notifications receives content from the Back and MUST be consumed externally.
 	notifications chan Notification
@@ -25,7 +28,7 @@ type Back struct {
 	countingDown map[util.UUIDAsBlob]struct{}
 }
 
-func New(sqlDriver string, sqlDSN string) (*Back, error) {
+func New(sqlDriver, sqlDSN, ootrAPIKey string) (*Back, error) {
 	// Why even bother converting names? A single greppable string across all
 	// your source code is better than any odd conversion scheme you could ever
 	// come up with.
@@ -39,9 +42,10 @@ func New(sqlDriver string, sqlDSN string) (*Back, error) {
 	}
 
 	return &Back{
-		db:            db,
-		notifications: make(chan Notification, 32),
-		countingDown:  map[util.UUIDAsBlob]struct{}{},
+		db:               db,
+		notifications:    make(chan Notification, 32),
+		countingDown:     map[util.UUIDAsBlob]struct{}{},
+		generatorFactory: factory.New(ootrapi.New(ootrAPIKey)),
 	}, nil
 }
 

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"kaepora/internal/back"
 	"kaepora/internal/bot"
-	"kaepora/internal/generator"
+	"kaepora/internal/generator/factory"
 	"kaepora/internal/web"
 	"log"
 	"os"
@@ -39,7 +39,10 @@ func main() {
 		return
 	}
 
-	back, err := back.New("sqlite3", "./kaepora.db")
+	back, err := back.New(
+		"sqlite3", "./kaepora.db",
+		os.Getenv("KAEPORA_OOTR_API_KEY"),
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -109,13 +112,14 @@ func serve(b *back.Back) error {
 }
 
 func generateSpoilerLogs() error {
-	generator, err := generator.NewGenerator("oot-randomizer:5.2.12")
+	factory := factory.New(nil)
+	g, err := factory.NewGenerator("oot-randomizer:5.2.12")
 	if err != nil {
 		return err
 	}
 
 	seed := uuid.New().String()
-	_, spoiler, err := generator.Generate("s3.json", seed)
+	out, err := g.Generate("s3.json", seed)
 	if err != nil {
 		return err
 	}
@@ -130,7 +134,7 @@ func generateSpoilerLogs() error {
 		return err
 	}
 
-	if _, err := f.Write(spoiler); err != nil {
+	if _, err := f.Write(out.SpoilerLog); err != nil {
 		f.Close()
 		return err
 	}

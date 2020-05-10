@@ -48,11 +48,6 @@ func NewMatch(tx *sqlx.Tx, session MatchSession, seed string) (Match, error) {
 		Generator:      league.Generator,
 		Settings:       league.Settings,
 		Seed:           seed,
-
-		// Those are NOT NULL and require at least an empty slice
-		SpoilerLog:     util.ZLIBBlob([]byte{}),
-		GeneratorState: []byte{},
-		SeedPatch:      []byte{},
 	}, nil
 }
 
@@ -65,6 +60,8 @@ func (m *Match) hasEnded() bool {
 }
 
 func (m *Match) insert(tx *sqlx.Tx) error {
+	m.ensureNotNULL()
+
 	query, args, err := squirrel.Insert("Match").SetMap(squirrel.Eq{
 		"ID":             m.ID,
 		"LeagueID":       m.LeagueID,
@@ -92,6 +89,8 @@ func (m *Match) insert(tx *sqlx.Tx) error {
 }
 
 func (m *Match) update(tx *sqlx.Tx) error {
+	m.ensureNotNULL()
+
 	query, args, err := squirrel.Update("Match").SetMap(squirrel.Eq{
 		"StartedAt": m.StartedAt,
 		"EndedAt":   m.EndedAt,
@@ -109,6 +108,18 @@ func (m *Match) update(tx *sqlx.Tx) error {
 	}
 
 	return nil
+}
+
+func (m *Match) ensureNotNULL() {
+	if m.SeedPatch == nil {
+		m.SeedPatch = []byte{}
+	}
+	if m.SpoilerLog == nil {
+		m.SpoilerLog = []byte{}
+	}
+	if m.GeneratorState == nil {
+		m.GeneratorState = []byte{}
+	}
 }
 
 func getMatchByPlayerAndSession(tx *sqlx.Tx, player Player, session MatchSession) (Match, error) {

@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"kaepora/internal/generator"
 	"kaepora/internal/util"
 	"log"
 	"math/big"
@@ -120,27 +119,33 @@ func (b *Back) generateAndSendMatchSeed(
 	session MatchSession,
 	p1, p2 Player,
 ) error {
-	gen, err := generator.NewGenerator(match.Generator)
+	gen, err := b.generatorFactory.NewGenerator(match.Generator)
 	if err != nil {
 		return err
 	}
 
-	patch, spoilerLog, err := gen.Generate(match.Settings, match.Seed)
+	out, err := gen.Generate(match.Settings, match.Seed)
 	if err != nil {
 		return err
 	}
 
-	zlibLog, err := util.NewZLIBBlob(spoilerLog)
+	match.SpoilerLog, err = util.NewZLIBBlob(out.SpoilerLog)
 	if err != nil {
 		return err
 	}
 
-	match.SpoilerLog = zlibLog
+	match.SeedPatch = out.SeedPatch
+	match.GeneratorState = out.State
+
 	if err := b.transaction(match.update); err != nil {
 		return err
 	}
 
-	b.sendMatchSeedNotification(session, patch, hashFromSpoilerLog(spoilerLog), p1, p2)
+	b.sendMatchSeedNotification(
+		session,
+		out.SeedPatch, hashFromSpoilerLog(out.SpoilerLog),
+		p1, p2,
+	)
 
 	return nil
 }

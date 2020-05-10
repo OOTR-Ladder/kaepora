@@ -2,7 +2,6 @@ package back
 
 import (
 	"fmt"
-	"kaepora/internal/generator"
 	"kaepora/internal/util"
 	"time"
 
@@ -22,22 +21,27 @@ func (b *Back) SendDevSeed(
 			return fmt.Errorf("could not find League: %w", err)
 		}
 
-		gen, err := generator.NewGenerator(league.Generator)
+		gen, err := b.generatorFactory.NewGenerator(league.Generator)
 		if err != nil {
 			return err
 		}
 
-		patch, spoilerLog, err := gen.Generate(league.Settings, seed)
+		out, err := gen.Generate(league.Settings, seed)
 		if err != nil {
 			return err
 		}
-		zlibLog, err := util.NewZLIBBlob(spoilerLog)
+
+		zlibLog, err := util.NewZLIBBlob(out.SpoilerLog)
 		if err != nil {
 			return err
 		}
 
 		player := Player{DiscordID: null.NewString(discordID, true)}
-		b.sendMatchSeedNotification(MatchSession{}, patch, hashFromSpoilerLog(spoilerLog), player, Player{})
+		b.sendMatchSeedNotification(
+			MatchSession{},
+			out.SeedPatch, hashFromSpoilerLog(out.SpoilerLog),
+			player, Player{},
+		)
 		b.sendSpoilerLogNotification(player, seed, zlibLog)
 
 		return nil
