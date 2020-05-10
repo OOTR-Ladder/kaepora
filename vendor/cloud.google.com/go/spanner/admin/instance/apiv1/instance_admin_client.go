@@ -38,6 +38,8 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
+var newInstanceAdminClientHook clientHook
+
 // InstanceAdminCallOptions contains the retry settings for each method of InstanceAdminClient.
 type InstanceAdminCallOptions struct {
 	ListInstanceConfigs []gax.CallOption
@@ -189,7 +191,17 @@ type InstanceAdminClient struct {
 // instance resources, fewer resources are available for other
 // databases in that instance, and their performance may suffer.
 func NewInstanceAdminClient(ctx context.Context, opts ...option.ClientOption) (*InstanceAdminClient, error) {
-	connPool, err := gtransport.DialPool(ctx, append(defaultInstanceAdminClientOptions(), opts...)...)
+	clientOpts := defaultInstanceAdminClientOptions()
+
+	if newInstanceAdminClientHook != nil {
+		hookOpts, err := newInstanceAdminClientHook(ctx, clientHookParams{})
+		if err != nil {
+			return nil, err
+		}
+		clientOpts = append(clientOpts, hookOpts...)
+	}
+
+	connPool, err := gtransport.DialPool(ctx, append(clientOpts, opts...)...)
 	if err != nil {
 		return nil, err
 	}
@@ -387,10 +399,10 @@ func (c *InstanceAdminClient) GetInstance(ctx context.Context, req *instancepb.G
 // The returned [long-running operation][google.longrunning.Operation] will
 // have a name of the format <instance_name>/operations/<operation_id> and
 // can be used to track creation of the instance.  The
-// [metadata][google.longrunning.Operation.metadata] field type is
-// [CreateInstanceMetadata][google.spanner.admin.instance.v1.CreateInstanceMetadata].
-// The [response][google.longrunning.Operation.response] field type is
-// [Instance][google.spanner.admin.instance.v1.Instance], if successful.
+// metadata field type is
+// CreateInstanceMetadata.
+// The response field type is
+// Instance, if successful.
 func (c *InstanceAdminClient) CreateInstance(ctx context.Context, req *instancepb.CreateInstanceRequest, opts ...gax.CallOption) (*CreateInstanceOperation, error) {
 	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
 	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
@@ -423,7 +435,7 @@ func (c *InstanceAdminClient) CreateInstance(ctx context.Context, req *instancep
 // Until completion of the returned operation:
 //
 //   Cancelling the operation sets its metadata’s
-//   [cancel_time][google.spanner.admin.instance.v1.UpdateInstanceMetadata.cancel_time], and begins
+//   cancel_time, and begins
 //   restoring resources to their pre-request values. The operation
 //   is guaranteed to succeed at undoing all resource changes,
 //   after which point it terminates with a CANCELLED status.
@@ -446,10 +458,10 @@ func (c *InstanceAdminClient) CreateInstance(ctx context.Context, req *instancep
 // The returned [long-running operation][google.longrunning.Operation] will
 // have a name of the format <instance_name>/operations/<operation_id> and
 // can be used to track the instance modification.  The
-// [metadata][google.longrunning.Operation.metadata] field type is
-// [UpdateInstanceMetadata][google.spanner.admin.instance.v1.UpdateInstanceMetadata].
-// The [response][google.longrunning.Operation.response] field type is
-// [Instance][google.spanner.admin.instance.v1.Instance], if successful.
+// metadata field type is
+// UpdateInstanceMetadata.
+// The response field type is
+// Instance, if successful.
 //
 // Authorization requires spanner.instances.update permission on
 // resource [name][google.spanner.admin.instance.v1.Instance.name (at http://google.spanner.admin.instance.v1.Instance.name)].
@@ -498,7 +510,7 @@ func (c *InstanceAdminClient) DeleteInstance(ctx context.Context, req *instancep
 // existing policy.
 //
 // Authorization requires spanner.instances.setIamPolicy on
-// [resource][google.iam.v1.SetIamPolicyRequest.resource].
+// resource.
 func (c *InstanceAdminClient) SetIamPolicy(ctx context.Context, req *iampb.SetIamPolicyRequest, opts ...gax.CallOption) (*iampb.Policy, error) {
 	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "resource", url.QueryEscape(req.GetResource())))
 	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
@@ -519,7 +531,7 @@ func (c *InstanceAdminClient) SetIamPolicy(ctx context.Context, req *iampb.SetIa
 // policy if an instance exists but does not have a policy set.
 //
 // Authorization requires spanner.instances.getIamPolicy on
-// [resource][google.iam.v1.GetIamPolicyRequest.resource].
+// resource.
 func (c *InstanceAdminClient) GetIamPolicy(ctx context.Context, req *iampb.GetIamPolicyRequest, opts ...gax.CallOption) (*iampb.Policy, error) {
 	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "resource", url.QueryEscape(req.GetResource())))
 	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
