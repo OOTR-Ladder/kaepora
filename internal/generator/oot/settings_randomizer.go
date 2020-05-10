@@ -62,7 +62,7 @@ func getShuffledSettingsPath(seed string, cost int, baseSettingsName string) (st
 }
 
 func (r *SettingsRandomizer) Generate(baseSettingsName, seed string) ([]byte, []byte, error) {
-	settingsPath, err := getShuffledSettingsPath(seed, 20, baseSettingsName)
+	settingsPath, err := getShuffledSettingsPath(seed, 15, baseSettingsName)
 	defer os.Remove(settingsPath)
 	if err != nil {
 		return nil, nil, fmt.Errorf("unable to get shuffled settings: %w", err)

@@ -2,68 +2,68 @@
     "all_reachable": [
         {
             "Value": true,
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         },
         {
             "Value": false,
             "Cost": 1,
-            "Weight": 1
+            "Weight": 0.5
         }
     ],
     "bombchus_in_logic": [
         {
             "Value": true,
-            "Cost": 1,
-            "Weight": 1
+            "Cost": 3,
+            "Weight": 0.3
         },
         {
             "Value": false,
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         }
     ],
     "bridge": [
         {
             "Value": "medallions",
-            "Cost": 1,
+            "Cost": 4,
             "Weight": 1
         },
         {
             "Value": "dungeons",
-            "Cost": 5,
-            "Weight": 0
+            "Cost": 7,
+            "Weight": 1
         },
         {
             "Value": "open",
             "Cost": 1,
-            "Weight": 1
+            "Weight": 0.5
         },
         {
             "Value": "stones",
-            "Cost": 5,
-            "Weight": 0
+            "Cost": 3,
+            "Weight": 1
         },
         {
             "Value": "tokens",
-            "Cost": 5,
+            "Cost": 6,
             "Weight": 0
         },
         {
             "Value": "vanilla",
-            "Cost": 5,
-            "Weight": 0
+            "Cost": 3,
+            "Weight": 1
         }
     ],
     "correct_chest_sizes": [
         {
             "Value": true,
-            "Cost": -2,
+            "Cost": 1,
             "Weight": 0.3
         },
         {
             "Value": false,
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         }
     ],
@@ -76,12 +76,12 @@
         {
             "Value": "double",
             "Cost": 3,
-            "Weight": 1
+            "Weight": 0.75
         },
         {
             "Value": "quadruple",
-            "Cost": 5,
-            "Weight": 0.75
+            "Cost": 6,
+            "Weight": 0.5
         },
         {
             "Value": "ohko",
@@ -90,7 +90,7 @@
         },
         {
             "Value": "half",
-            "Cost": -5,
+            "Cost": 0,
             "Weight": 0.5
         }
     ],
@@ -102,13 +102,13 @@
         },
         {
             "Value": "dungeons",
-            "Cost": 3,
-            "Weight": 0.3
+            "Cost": 8,
+            "Weight": 0.6
         },
         {
             "Value": "simple-indoors",
-            "Cost": 10,
-            "Weight": 0
+            "Cost": 12,
+            "Weight": 0.25
         },
         {
             "Value": "all-indoors",
@@ -129,7 +129,7 @@
         },
         {
             "Value": "none",
-            "Cost": 5,
+            "Cost": 13,
             "Weight": 0.25
         },
         {
@@ -139,8 +139,8 @@
         },
         {
             "Value": "agony",
-            "Cost": 3,
-            "Weight": 1
+            "Cost": 5,
+            "Weight": 0.25
         }
     ],
     "item_pool_value": [
@@ -151,48 +151,48 @@
         },
         {
             "Value": "plentiful",
-            "Cost": 3,
+            "Cost": -3,
             "Weight": 0.25
         },
         {
             "Value": "scarce",
-            "Cost": 5,
-            "Weight": 0.25
+            "Cost": 4,
+            "Weight": 0.5
         },
         {
             "Value": "minimal",
             "Cost": 7,
-            "Weight": 0.125
+            "Weight": 0.25
         }
     ],
     "mq_dungeons_random": [
         {
             "Value": true,
             "Cost": 5,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": false,
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         }
     ],
     "one_item_per_dungeon": [
         {
             "Value": true,
-            "Cost": 5,
-            "Weight": 1
+            "Cost": 3,
+            "Weight": 0.5
         },
         {
             "Value": false,
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         }
     ],
     "open_door_of_time": [
         {
             "Value": true,
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         },
         {
@@ -204,18 +204,18 @@
     "open_forest": [
         {
             "Value": "open",
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         },
         {
             "Value": "closed_deku",
-            "Cost": 2,
+            "Cost": 3,
             "Weight": 1
         },
         {
             "Value": "closed",
             "Cost": 2,
-            "Weight": 0
+            "Weight": 0.5
         }
     ],
     "shopsanity": [
@@ -258,12 +258,12 @@
     "shuffle_beans": [
         {
             "Value": true,
-            "Cost": 5,
+            "Cost": 2,
             "Weight": 1
         },
         {
             "Value": false,
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         }
     ],
@@ -280,48 +280,48 @@
         },
         {
             "Value": "dungeon",
-            "Cost": 3,
+            "Cost": 0,
             "Weight": 1
         },
         {
             "Value": "keysanity",
-            "Cost": 15,
-            "Weight": 1
+            "Cost": 10,
+            "Weight": 0.5
         }
     ],
     "shuffle_cows": [
         {
             "Value": true,
-            "Cost": 5,
-            "Weight": 1
+            "Cost": 4,
+            "Weight": 0.75
         },
         {
             "Value": false,
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         }
     ],
     "shuffle_ganon_bosskey": [
         {
             "Value": "remove",
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         },
         {
             "Value": "lacs_medallions",
             "Cost": 1,
-            "Weight": 2
+            "Weight": 0.5
         }
     ],
     "shuffle_gerudo_card": [
         {
             "Value": true,
-            "Cost": 5,
+            "Cost": 3,
             "Weight": 1
         },
         {
             "Value": false,
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         }
     ],
@@ -333,7 +333,7 @@
         },
         {
             "Value": false,
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         }
     ],
@@ -345,7 +345,7 @@
         },
         {
             "Value": false,
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         }
     ],
@@ -357,7 +357,7 @@
         },
         {
             "Value": "low",
-            "Cost": 3,
+            "Cost": 5,
             "Weight": 1
         },
         {
@@ -374,17 +374,17 @@
     "shuffle_smallkeys": [
         {
             "Value": "vanilla",
-            "Cost": 0,
-            "Weight": 1
+            "Cost": 2,
+            "Weight": 0.5
         },
         {
             "Value": "remove",
-            "Cost": -5,
+            "Cost": 2,
             "Weight": 0.5
         },
         {
             "Value": "dungeon",
-            "Cost": 3,
+            "Cost": 0,
             "Weight": 1
         },
         {
@@ -401,19 +401,19 @@
         },
         {
             "Value": false,
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         }
     ],
     "shuffle_weird_egg": [
         {
             "Value": true,
-            "Cost": 3,
+            "Cost": 5,
             "Weight": 1
         },
         {
             "Value": false,
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         }
     ],
@@ -425,12 +425,12 @@
         },
         {
             "Value": "adult",
-            "Cost": 3,
+            "Cost": 1,
             "Weight": 1
         },
         {
             "Value": "random",
-            "Cost": 2,
+            "Cost": 1,
             "Weight": 0
         }
     ],
@@ -442,7 +442,7 @@
         },
         {
             "Value": "dungeons",
-            "Cost": 3,
+            "Cost": 5,
             "Weight": 1
         },
         {
@@ -453,13 +453,13 @@
         {
             "Value": "all",
             "Cost": 15,
-            "Weight": 0
+            "Weight": 0.75
         }
     ],
     "zora_fountain": [
         {
             "Value": "closed",
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         },
         {
@@ -469,7 +469,7 @@
         },
         {
             "Value": "open",
-            "Cost": 1,
+            "Cost": 4,
             "Weight": 1
         }
     ]
