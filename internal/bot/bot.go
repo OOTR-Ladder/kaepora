@@ -91,6 +91,13 @@ func (bot *Bot) Serve(wg *sync.WaitGroup, done <-chan struct{}) {
 	log.Println("info: starting Discord bot")
 	wg.Add(1)
 	defer wg.Done()
+
+	if bot.token == "" {
+		log.Println("warning: missing KAEPORA_DISCORD_TOKEN, not running the bot")
+		bot.idle(done)
+		return
+	}
+
 	if err := bot.dg.Open(); err != nil {
 		log.Panic(err)
 	}
@@ -111,6 +118,20 @@ loop:
 		log.Printf("error: could not close Discord bot: %s", err)
 	}
 	log.Println("info: Discord bot closed")
+}
+
+// idle does nothing until done is closed.
+// It consumes notifications and log them.
+func (bot *Bot) idle(done <-chan struct{}) {
+loop:
+	for {
+		select {
+		case notif := <-bot.notifications:
+			log.Printf("info: not sent: %s", notif.String())
+		case <-done:
+			break loop
+		}
+	}
 }
 
 // handleMessage treats incoming messages as CLI commands and runs the corresponding back code.
