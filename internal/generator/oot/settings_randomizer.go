@@ -92,3 +92,7 @@ func (r *SettingsRandomizer) GetDownloadURL([]byte) string {
 func (r *SettingsRandomizer) IsExternal() bool {
 	return false
 }
+
+func (r *SettingsRandomizer) UnlockSpoilerLog([]byte) error {
+	return nil
+}

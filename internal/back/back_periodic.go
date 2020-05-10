@@ -378,6 +378,20 @@ func (b *Back) endMatchSessionsAndUpdateRanks() error {
 	})
 }
 
+// maybeUnlockSpoilerLogs tells ootrandomizer.com to unlock the spoiler log
+func (b *Back) maybeUnlockSpoilerLogs(match Match) error {
+	gen, err := b.generatorFactory.NewGenerator(match.Generator)
+	if err != nil {
+		return err
+	}
+
+	if err := gen.UnlockSpoilerLog(match.GeneratorState); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func getMatchSessionsToPrepare(tx *sqlx.Tx) ([]MatchSession, error) {
 	var sessions []MatchSession
 

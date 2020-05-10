@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -49,8 +48,6 @@ const (
 func (s SeedStatus) IsValid() bool {
 	return s >= 0 && s <= 3
 }
-
-var errTODO = errors.New("not implemented")
 
 func (api *API) getURL(subPath string, q url.Values) string {
 	q.Set("key", api.key)
@@ -151,13 +148,13 @@ func (api *API) GetSeedSpoilerLog(id string) ([]byte, error) {
 	}
 
 	var res struct {
-		SpoilerLog json.RawMessage `json:"spoilerLog"`
+		SpoilerLog string `json:"spoilerLog"`
 	}
 	if err := api.do(request, &res); err != nil {
 		return nil, err
 	}
 
-	return res.SpoilerLog, nil
+	return []byte(res.SpoilerLog), nil
 }
 
 func (api *API) GetSeedPatch(id string) ([]byte, error) {
@@ -185,11 +182,27 @@ func (api *API) GetSeedPatch(id string) ([]byte, error) {
 }
 
 func (api *API) UnlockSeedSpoilerLog(id string) error {
+	log.Printf("debug: unlocking API seed spoiler logs for ID  %s", id)
+
 	if err := api.limiter.Wait(context.TODO()); err != nil {
 		return err
 	}
 
-	return errTODO
+	url := api.getURL("/seed/unlock", url.Values{"id": {id}})
+	request, err := http.NewRequest(http.MethodPost, url, nil)
+	if err != nil {
+		return err
+	}
+	res, err := api.http.Do(request)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusOK {
+		return fmt.Errorf("got status code %d", res.StatusCode)
+	}
+
+	return nil
 }
 
 func (api *API) do(request *http.Request, response interface{}) error {
