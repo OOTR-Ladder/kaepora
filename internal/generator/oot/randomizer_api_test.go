@@ -1,36 +1,24 @@
-//+build docker
+//+build api
 
 package oot_test
 
 import (
-	"kaepora/internal/generator/factory"
 	"kaepora/internal/generator/oot"
+	"kaepora/pkg/ootrapi"
 	"os"
 	"testing"
 )
 
-func TestMain(m *testing.M) {
-	if err := os.Chdir("../../.."); err != nil { // generators are CWD dependant
-		panic(err)
-	}
-	os.Exit(m.Run())
-}
-
-func TestOOTSettingsRandomizer(t *testing.T) {
+func TestCreateSeed(t *testing.T) {
 	t.Parallel()
 
-	f := factory.New(nil)
-	g, err := f.NewGenerator(oot.SettingsRandomizerName + ":5.2.12")
+	g := oot.NewRandomizerAPI("5.2.12", loadAPI(t))
+	out, err := g.Generate("s3.json", "testseed")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	out, err := g.Generate("s3.json", "DEADBEEF")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Patches are not reproducible so we are limited to length checks.
+	// patches are not reproducible so we are limited to length checks.
 	if len(out.SeedPatch) == 0 {
 		t.Fatal("got an empty patch")
 	}
@@ -45,4 +33,13 @@ func TestOOTSettingsRandomizer(t *testing.T) {
 	if len(out.SeedPatch) > 350*1024 {
 		t.Errorf("generated patch seems too large (%d bytes)", len(out.SeedPatch))
 	}
+}
+
+func loadAPI(t *testing.T) *ootrapi.API {
+	key := os.Getenv("KAEPORA_OOTR_API_KEY")
+	if key == "" {
+		t.Skip("KAEPORA_OOTR_API_KEY not provided")
+	}
+
+	return ootrapi.New(key)
 }

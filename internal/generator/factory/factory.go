@@ -23,13 +23,11 @@ func New(ootrAPI *ootrapi.API) Factory {
 
 func (f Factory) NewGenerator(id string) (generator.Generator, error) {
 	switch name, version := parseID(id); name {
-	case "oot-randomizer":
+	case oot.RandomizerName:
 		return oot.NewRandomizer(version), nil
-	case "oot-randomizer-api":
-		g := oot.NewRandomizerAPI(version)
-		g.SetAPI(f.ootrAPI)
-		return g, nil
-	case "oot-settings-randomizer":
+	case oot.RandomizerAPIName:
+		return oot.NewRandomizerAPI(version, f.ootrAPI), nil
+	case oot.SettingsRandomizerName:
 		return oot.NewSettingsRandomizer(version), nil
 	case "test":
 		return generator.NewTest(), nil

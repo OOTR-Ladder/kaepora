@@ -14,6 +14,11 @@ type Output struct {
 
 type Generator interface {
 	Generate(settings, seed string) (Output, error)
+
+	// GetDownloadURL returns an URL where the user can download its seed.  If
+	// there is no external service to download the seed, this will return an
+	// empty string.
+	GetDownloadURL(state []byte) string
 }
 
 type Test struct{}
@@ -39,4 +44,8 @@ func (*Test) Generate(settings, seed string) (Output, error) {
 		SeedPatch:  []byte("generated binary for seed: " + seed),
 		SpoilerLog: spoilerLog,
 	}, nil
+}
+
+func (*Test) GetDownloadURL([]byte) string {
+	return ""
 }

@@ -12,6 +12,8 @@ import (
 	jsonpatch "github.com/evanphx/json-patch"
 )
 
+const SettingsRandomizerName = "oot-settings-randomizer"
+
 type SettingsRandomizer struct {
 	oot *Randomizer
 }
@@ -81,4 +83,8 @@ func (r *SettingsRandomizer) Generate(baseSettingsName, seed string) (generator.
 		SeedPatch:  zpf,
 		SpoilerLog: spoilerLog,
 	}, err
+}
+
+func (r *SettingsRandomizer) GetDownloadURL([]byte) string {
+	return ""
 }

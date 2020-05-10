@@ -6,6 +6,7 @@ import (
 	"kaepora/internal/back"
 	"kaepora/internal/bot"
 	"kaepora/internal/generator/factory"
+	"kaepora/internal/generator/oot"
 	"kaepora/internal/web"
 	"log"
 	"os"
@@ -113,7 +114,7 @@ func serve(b *back.Back) error {
 
 func generateSpoilerLogs() error {
 	factory := factory.New(nil)
-	g, err := factory.NewGenerator("oot-randomizer:5.2.12")
+	g, err := factory.NewGenerator(oot.RandomizerName + ":5.2.12")
 	if err != nil {
 		return err
 	}

@@ -12,6 +12,8 @@ import (
 	"path/filepath"
 )
 
+const RandomizerName = "oot-randomizer"
+
 type Randomizer struct {
 	version string
 }
@@ -116,4 +118,8 @@ func (g *Randomizer) run(outDir, settings, seed string) ([]byte, []byte, error) 
 	}
 
 	return zpf, spoilerLog, nil
+}
+
+func (g *Randomizer) GetDownloadURL([]byte) string {
+	return ""
 }

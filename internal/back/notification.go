@@ -219,6 +219,7 @@ func (b *Back) sendMatchEndNotification(
 
 func (b *Back) sendMatchSeedNotification(
 	session MatchSession,
+	url string,
 	patch []byte,
 	hash string,
 	p1, p2 Player,
@@ -233,17 +234,22 @@ func (b *Back) sendMatchSeedNotification(
 			RecipientType: NotificationRecipientTypeDiscordUser,
 			Recipient:     player.DiscordID.String,
 			Type:          NotificationTypeMatchSeed,
-			Files: []NotificationFile{{
+		}
+
+		if url == "" {
+			notif.Files = []NotificationFile{{
 				Name:        name,
 				ContentType: "application/zlib",
 				Reader:      bytes.NewReader(patch),
-			}},
-		}
+			}}
 
-		notif.Print(
-			"Here is your seed in _Patch_ format. " +
-				"You can use https://ootrandomizer.com/generator to patch your ROM.\n",
-		)
+			notif.Print(
+				"Here is your seed in _Patch_ format. " +
+					"You can use https://ootrandomizer.com/generator to patch your ROM.\n",
+			)
+		} else {
+			notif.Printf("Here is your seed: %s\n", url)
+		}
 
 		if hash != "" {
 			notif.Print("Your seed hash is: **", hash, "**\n")
