@@ -32,6 +32,10 @@ func (b *Back) SendDevSeed(
 			return err
 		}
 
+		if err := gen.UnlockSpoilerLog(out.State); err != nil {
+			return err
+		}
+
 		zlibLog, err := util.NewZLIBBlob(out.SpoilerLog)
 		if err != nil {
 			return err

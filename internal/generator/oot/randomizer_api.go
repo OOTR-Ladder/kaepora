@@ -127,3 +127,12 @@ func (g *RandomizerAPI) GetDownloadURL(stateJSON []byte) string {
 func (g *RandomizerAPI) IsExternal() bool {
 	return true
 }
+
+func (g *RandomizerAPI) UnlockSpoilerLog(stateJSON []byte) error {
+	var state struct{ ID string }
+	if err := json.Unmarshal(stateJSON, &state); err != nil {
+		return fmt.Errorf("error: unable to unmarshal state JSON: %s", err)
+	}
+
+	return g.api.UnlockSeedSpoilerLog(state.ID)
+}

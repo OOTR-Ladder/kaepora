@@ -15,14 +15,18 @@ type Output struct {
 type Generator interface {
 	Generate(settings, seed string) (Output, error)
 
-	// GetDownloadURL returns an URL where the user can download its seed.  If
-	// there is no external service to download the seed, this will return an
-	// empty string.
-	GetDownloadURL(state []byte) string
-
 	// IsExternal returns true if the generation is not done locally but
 	// through an external service (API).
 	IsExternal() bool
+
+	// GetDownloadURL returns an URL where the user can download its seed.
+	// If there is no external service to download the seed, this will return
+	// an empty string.
+	GetDownloadURL(state []byte) string
+
+	// UnlockSpoilerLog tells the external seed generator that the spoiler log
+	// may be published now. On local generators, this is a no-op.
+	UnlockSpoilerLog(stat []byte) error
 }
 
 type Test struct{}
@@ -56,4 +60,8 @@ func (*Test) GetDownloadURL([]byte) string {
 
 func (*Test) IsExternal() bool {
 	return false
+}
+
+func (*Test) UnlockSpoilerLog([]byte) error {
+	return nil
 }

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"kaepora/internal/util"
+	"log"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -121,6 +122,14 @@ func (b *Back) CompleteActiveMatch(player Player) (Match, error) {
 	}
 	b.sendSpoilerLogNotification(player, ret.Seed, ret.SpoilerLog)
 
+	if ret.hasEnded() {
+		go func() {
+			if err := b.maybeUnlockSpoilerLogs(ret); err != nil {
+				log.Printf("error: unable to unlock spoiler log: %s", err)
+			}
+		}()
+	}
+
 	return ret, nil
 }
 
@@ -202,6 +211,14 @@ func (b *Back) ForfeitActiveMatch(player Player) (Match, error) {
 		return Match{}, err
 	}
 	b.sendSpoilerLogNotification(player, ret.Seed, ret.SpoilerLog)
+
+	if ret.hasEnded() {
+		go func() {
+			if err := b.maybeUnlockSpoilerLogs(ret); err != nil {
+				log.Printf("error: unable to unlock spoiler log: %s", err)
+			}
+		}()
+	}
 
 	return ret, nil
 }
