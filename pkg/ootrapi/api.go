@@ -148,13 +148,13 @@ func (api *API) GetSeedSpoilerLog(id string) ([]byte, error) {
 	}
 
 	var res struct {
-		SpoilerLog json.RawMessage `json:"spoilerLog"`
+		SpoilerLog string `json:"spoilerLog"`
 	}
 	if err := api.do(request, &res); err != nil {
 		return nil, err
 	}
 
-	return res.SpoilerLog, nil
+	return []byte(res.SpoilerLog), nil
 }
 
 func (api *API) GetSeedPatch(id string) ([]byte, error) {
