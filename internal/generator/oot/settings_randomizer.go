@@ -4,12 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"kaepora/internal/generator"
 	"kaepora/internal/generator/oot/settings"
 	"os"
 	"path/filepath"
 
 	jsonpatch "github.com/evanphx/json-patch"
 )
+
+const SettingsRandomizerName = "oot-settings-randomizer"
 
 type SettingsRandomizer struct {
 	oot *Randomizer
@@ -61,18 +64,31 @@ func getShuffledSettingsPath(seed string, cost int, baseSettingsName string) (st
 	return settingsPath, nil
 }
 
-func (r *SettingsRandomizer) Generate(baseSettingsName, seed string) ([]byte, []byte, error) {
+func (r *SettingsRandomizer) Generate(baseSettingsName, seed string) (generator.Output, error) {
 	settingsPath, err := getShuffledSettingsPath(seed, 15, baseSettingsName)
 	defer os.Remove(settingsPath)
 	if err != nil {
-		return nil, nil, fmt.Errorf("unable to get shuffled settings: %w", err)
+		return generator.Output{}, fmt.Errorf("unable to get shuffled settings: %w", err)
 	}
 
 	outDir, err := ioutil.TempDir("", "oot-settings-randomizer-output-")
 	if err != nil {
-		return nil, nil, fmt.Errorf("unable to create output directory: %s", err)
+		return generator.Output{}, fmt.Errorf("unable to create output directory: %s", err)
 	}
 	defer os.RemoveAll(outDir)
 
-	return r.oot.run(outDir, settingsPath, seed)
+	zpf, spoilerLog, err := r.oot.run(outDir, settingsPath, seed)
+	return generator.Output{
+		State:      nil,
+		SeedPatch:  zpf,
+		SpoilerLog: spoilerLog,
+	}, err
+}
+
+func (r *SettingsRandomizer) GetDownloadURL([]byte) string {
+	return ""
+}
+
+func (r *SettingsRandomizer) IsExternal() bool {
+	return false
 }

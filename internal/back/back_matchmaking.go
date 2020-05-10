@@ -4,8 +4,8 @@ import (
 	"crypto/rand"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"kaepora/internal/generator"
 	"kaepora/internal/util"
 	"log"
 	"math/big"
@@ -43,6 +43,10 @@ func (b *Back) generateAndSendSeeds(tx *sqlx.Tx, session MatchSession) error {
 	matches, err := getMatchesBySessionID(tx, session.ID)
 	if err != nil {
 		return err
+	}
+
+	if len(matches) == 0 {
+		return errors.New("attempted to generate seeds for 0 matches")
 	}
 
 	players := make(map[util.UUIDAsBlob]Player, len(matches)*2)
@@ -90,6 +94,15 @@ func (b *Back) doParallelSeedGeneration(
 	}
 
 	cpus := runtime.NumCPU()
+	// HACK, arbitrary rate limit for external services, let the API client do
+	// the rate-limiting.
+	if gen, err := b.generatorFactory.NewGenerator(matches[0].Generator); err == nil {
+		if gen.IsExternal() {
+			cpus = 10
+			log.Printf("debug: external seedgen, setting limit to %d", cpus)
+		}
+	}
+
 	pool := make(chan pl, cpus)
 	log.Printf("debug: limiting seedgen to %d at a time", cpus)
 
@@ -120,27 +133,34 @@ func (b *Back) generateAndSendMatchSeed(
 	session MatchSession,
 	p1, p2 Player,
 ) error {
-	gen, err := generator.NewGenerator(match.Generator)
+	gen, err := b.generatorFactory.NewGenerator(match.Generator)
 	if err != nil {
 		return err
 	}
 
-	patch, spoilerLog, err := gen.Generate(match.Settings, match.Seed)
+	out, err := gen.Generate(match.Settings, match.Seed)
 	if err != nil {
 		return err
 	}
 
-	zlibLog, err := util.NewZLIBBlob(spoilerLog)
+	match.SpoilerLog, err = util.NewZLIBBlob(out.SpoilerLog)
 	if err != nil {
 		return err
 	}
 
-	match.SpoilerLog = zlibLog
+	match.SeedPatch = out.SeedPatch
+	match.GeneratorState = out.State
+
 	if err := b.transaction(match.update); err != nil {
 		return err
 	}
 
-	b.sendMatchSeedNotification(session, patch, hashFromSpoilerLog(spoilerLog), p1, p2)
+	b.sendMatchSeedNotification(
+		session,
+		gen.GetDownloadURL(out.State),
+		out.SeedPatch, hashFromSpoilerLog(out.SpoilerLog),
+		p1, p2,
+	)
 
 	return nil
 }

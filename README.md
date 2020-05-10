@@ -14,19 +14,22 @@ Side-goals:
 Non-goals and out of scope:
   - Providing a generic tournament bot.
 
+## Configuration (env vars)
+  - `KAEPORA_DISCORD_TOKEN`, can be omitted if you don't want to run the bot.
+  - `KAEPORA_ADMIN_USER`, can be omitted if you don't want any bot admin.
+  - `KAEPORA_OOTR_API_KEY`, can be omitted if you don't use remote seedgen.
+
 ## Build and run
 ```shell
 $ # Install Go: https://golang.org/dl/
 $ make
 $ ./migrate -database sqlite3://kaepora.db -path resources/migrations up
 $ ./kaepora fixtures
-$ # Place ZOOTDEC.z64 and ARCHIVE.bin in the `resources/oot-randomizer` directory.
-$ KAEPORA_DISCORD_TOKEN=$YOUR_BOT_TOKEN \
-  KAEPORA_ADMIN_USER=$YOUR_DISCORD_USER_ID \
-  ./kaepora serve
+$ # Place ZOOTDEC.z64 and ARCHIVE.bin in the resources/oot-randomizer directory.
+$ ./kaepora serve
 ```
 
-## Hacking
+## Migrations
 - Running migrations:
 ```shell
 $ # Go to latest version:

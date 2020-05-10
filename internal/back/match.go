@@ -24,9 +24,13 @@ type Match struct {
 	Settings  string
 	// Seed is the actual random generator initial seed, not to be confused
 	// with the misnomer "seed" that designates the generated ROM/patch
-	Seed       string
-	SpoilerLog util.ZLIBBlob
+	Seed string
 
+	SpoilerLog     util.ZLIBBlob // arbitrary JSON, compressed
+	GeneratorState []byte        // arbitrary JSON, depends on Generator
+	SeedPatch      []byte        // arbitrary binary, depends on Generator, hopefully already compressed
+
+	// Two entries, one per Player.
 	Entries []MatchEntry `db:"-"`
 }
 
@@ -44,7 +48,6 @@ func NewMatch(tx *sqlx.Tx, session MatchSession, seed string) (Match, error) {
 		Generator:      league.Generator,
 		Settings:       league.Settings,
 		Seed:           seed,
-		SpoilerLog:     util.ZLIBBlob([]byte{}), // NOT NULL
 	}, nil
 }
 
@@ -57,18 +60,22 @@ func (m *Match) hasEnded() bool {
 }
 
 func (m *Match) insert(tx *sqlx.Tx) error {
+	m.ensureNotNULL()
+
 	query, args, err := squirrel.Insert("Match").SetMap(squirrel.Eq{
 		"ID":             m.ID,
 		"LeagueID":       m.LeagueID,
 		"MatchSessionID": m.MatchSessionID,
 
-		"CreatedAt":  m.CreatedAt,
-		"StartedAt":  m.StartedAt,
-		"EndedAt":    m.EndedAt,
-		"Generator":  m.Generator,
-		"Settings":   m.Settings,
-		"Seed":       m.Seed,
-		"SpoilerLog": m.SpoilerLog,
+		"CreatedAt":      m.CreatedAt,
+		"StartedAt":      m.StartedAt,
+		"EndedAt":        m.EndedAt,
+		"Generator":      m.Generator,
+		"Settings":       m.Settings,
+		"Seed":           m.Seed,
+		"SpoilerLog":     m.SpoilerLog,
+		"GeneratorState": m.GeneratorState,
+		"SeedPatch":      m.SeedPatch,
 	}).ToSql()
 	if err != nil {
 		return err
@@ -82,10 +89,15 @@ func (m *Match) insert(tx *sqlx.Tx) error {
 }
 
 func (m *Match) update(tx *sqlx.Tx) error {
+	m.ensureNotNULL()
+
 	query, args, err := squirrel.Update("Match").SetMap(squirrel.Eq{
-		"StartedAt":  m.StartedAt,
-		"EndedAt":    m.EndedAt,
-		"SpoilerLog": m.SpoilerLog,
+		"StartedAt": m.StartedAt,
+		"EndedAt":   m.EndedAt,
+
+		"SpoilerLog":     m.SpoilerLog,
+		"GeneratorState": m.GeneratorState,
+		"SeedPatch":      m.SeedPatch,
 	}).Where("Match.ID = ?", m.ID).ToSql()
 	if err != nil {
 		return err
@@ -96,6 +108,18 @@ func (m *Match) update(tx *sqlx.Tx) error {
 	}
 
 	return nil
+}
+
+func (m *Match) ensureNotNULL() {
+	if m.SeedPatch == nil {
+		m.SeedPatch = []byte{}
+	}
+	if m.SpoilerLog == nil {
+		m.SpoilerLog = []byte{}
+	}
+	if m.GeneratorState == nil {
+		m.GeneratorState = []byte{}
+	}
 }
 
 func getMatchByPlayerAndSession(tx *sqlx.Tx, player Player, session MatchSession) (Match, error) {

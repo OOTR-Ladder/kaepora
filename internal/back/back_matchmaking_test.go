@@ -414,7 +414,7 @@ func createFixturedTestBack(t *testing.T) *Back {
 	}
 	migrator.Close()
 
-	back, err := New("sqlite3", path)
+	back, err := New("sqlite3", path, "")
 	if err != nil {
 		t.Fatal(err)
 	}

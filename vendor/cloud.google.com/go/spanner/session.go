@@ -29,7 +29,10 @@ import (
 	"time"
 
 	"cloud.google.com/go/internal/trace"
+	"cloud.google.com/go/internal/version"
 	vkit "cloud.google.com/go/spanner/apiv1"
+	"go.opencensus.io/stats"
+	"go.opencensus.io/tag"
 	sppb "google.golang.org/genproto/googleapis/spanner/v1"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -225,7 +228,10 @@ func (s *session) ping() error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	// s.getID is safe even when s is invalid.
-	_, err := s.client.GetSession(contextWithOutgoingMetadata(ctx, s.md), &sppb.GetSessionRequest{Name: s.getID()})
+	_, err := s.client.ExecuteSql(contextWithOutgoingMetadata(ctx, s.md), &sppb.ExecuteSqlRequest{
+		Session: s.getID(),
+		Sql:     "SELECT 1",
+	})
 	return err
 }
 
@@ -310,6 +316,7 @@ func (s *session) recycle() {
 		// session pool currently has enough open sessions.
 		s.destroy(false)
 	}
+	s.pool.decNumInUse(context.Background())
 }
 
 // destroy removes the session from its home session pool, healthcheck queue
@@ -520,13 +527,27 @@ type sessionPool struct {
 	SessionPoolConfig
 	// hc is the health checker
 	hc *healthChecker
+	// rand is a separately sourced random generator.
+	rand *rand.Rand
+	// numInUse is the number of sessions that are currently in use (checked out
+	// from the session pool).
+	numInUse uint64
+	// maxNumInUse is the maximum number of sessions in use concurrently in the
+	// current 10 minute interval.
+	maxNumInUse uint64
+	// lastResetTime is the start time of the window for recording maxNumInUse.
+	lastResetTime time.Time
+	// numReads is the number of sessions that are idle for reads.
+	numReads uint64
+	// numWrites is the number of sessions that are idle for writes.
+	numWrites uint64
 
 	// mw is the maintenance window containing statistics for the max number of
 	// sessions checked out of the pool during the last 10 minutes.
 	mw *maintenanceWindow
 
-	// rand is a separately sourced random generator.
-	rand *rand.Rand
+	// tagMap is a map of all tags that are associated with the emitted metrics.
+	tagMap *tag.Map
 }
 
 // newSessionPool creates a new session pool.
@@ -557,6 +578,23 @@ func newSessionPool(sc *sessionClient, config SessionPoolConfig) (*sessionPool, 
 	if config.healthCheckSampleInterval == 0 {
 		config.healthCheckSampleInterval = time.Minute
 	}
+
+	_, instance, database, err := parseDatabaseName(sc.database)
+	if err != nil {
+		return nil, err
+	}
+	// Errors should not prevent initializing the session pool.
+	ctx, err := tag.New(context.Background(),
+		tag.Upsert(tagKeyClientID, sc.id),
+		tag.Upsert(tagKeyDatabase, database),
+		tag.Upsert(tagKeyInstance, instance),
+		tag.Upsert(tagKeyLibVersion, version.Repo),
+	)
+	if err != nil {
+		logf(pool.sc.logger, "Failed to create tag map, error: %v", err)
+	}
+	pool.tagMap = tag.FromContext(ctx)
+
 	// On GCE VM, within the same region an healthcheck ping takes on average
 	// 10ms to finish, given a 5 minutes interval and 10 healthcheck workers, a
 	// healthChecker can effectively mantain
@@ -573,15 +611,29 @@ func newSessionPool(sc *sessionClient, config SessionPoolConfig) (*sessionPool, 
 			return nil, err
 		}
 	}
+	pool.recordStat(context.Background(), MaxAllowedSessionsCount, int64(config.MaxOpened))
 	close(pool.hc.ready)
 	return pool, nil
+}
+
+func (p *sessionPool) recordStat(ctx context.Context, m *stats.Int64Measure, n int64, tags ...tag.Tag) {
+	ctx = tag.NewContext(ctx, p.tagMap)
+	mutators := make([]tag.Mutator, len(tags))
+	for i, t := range tags {
+		mutators[i] = tag.Upsert(t.Key, t.Value)
+	}
+	ctx, err := tag.New(ctx, mutators...)
+	if err != nil {
+		logf(p.sc.logger, "Failed to tag metrics, error: %v", err)
+	}
+	recordStat(ctx, m, n)
 }
 
 func (p *sessionPool) initPool(numSessions int32) error {
 	p.mu.Lock()
 	// Take budget before the actual session creation.
 	p.numOpened += uint64(numSessions)
-	recordStat(context.Background(), OpenSessionCount, int64(p.numOpened))
+	p.recordStat(context.Background(), OpenSessionCount, int64(p.numOpened))
 	p.createReqs += uint64(numSessions)
 	p.mu.Unlock()
 	// Asynchronously create the initial sessions for the pool.
@@ -612,6 +664,7 @@ func (p *sessionPool) sessionReady(s *session) {
 	} else {
 		s.setIdleList(p.idleList.PushBack(s))
 	}
+	p.incNumReadsLocked(context.Background())
 	// Notify other waiters blocking on session creation.
 	close(p.mayGetSession)
 	p.mayGetSession = make(chan struct{})
@@ -626,7 +679,7 @@ func (p *sessionPool) sessionCreationFailed(err error, numSessions int32) {
 	defer p.mu.Unlock()
 	p.createReqs -= uint64(numSessions)
 	p.numOpened -= uint64(numSessions)
-	recordStat(context.Background(), OpenSessionCount, int64(p.numOpened))
+	p.recordStat(context.Background(), OpenSessionCount, int64(p.numOpened))
 	// Notify other waiters blocking on session creation.
 	close(p.mayGetSession)
 	p.mayGetSession = make(chan struct{})
@@ -746,7 +799,7 @@ func (p *sessionPool) createSession(ctx context.Context) (*session, error) {
 		if !done {
 			// Session creation failed, give budget back.
 			p.numOpened--
-			recordStat(ctx, OpenSessionCount, int64(p.numOpened))
+			p.recordStat(ctx, OpenSessionCount, int64(p.numOpened))
 		}
 		p.createReqs--
 		// Notify other waiters blocking on session creation.
@@ -805,10 +858,12 @@ func (p *sessionPool) take(ctx context.Context) (*sessionHandle, error) {
 			s = p.idleList.Remove(p.idleList.Front()).(*session)
 			trace.TracePrintf(ctx, map[string]interface{}{"sessionID": s.getID()},
 				"Acquired read-only session")
+			p.decNumReadsLocked(ctx)
 		} else if p.idleWriteList.Len() > 0 {
 			s = p.idleWriteList.Remove(p.idleWriteList.Front()).(*session)
 			trace.TracePrintf(ctx, map[string]interface{}{"sessionID": s.getID()},
 				"Acquired read-write session")
+			p.decNumWritesLocked(ctx)
 		}
 		if s != nil {
 			s.setIdleList(nil)
@@ -823,6 +878,7 @@ func (p *sessionPool) take(ctx context.Context) (*sessionHandle, error) {
 			if !p.isHealthy(s) {
 				continue
 			}
+			p.incNumInUse(ctx)
 			return p.newSessionHandle(s), nil
 		}
 
@@ -835,6 +891,7 @@ func (p *sessionPool) take(ctx context.Context) (*sessionHandle, error) {
 			select {
 			case <-ctx.Done():
 				trace.TracePrintf(ctx, nil, "Context done waiting for session")
+				p.recordStat(ctx, GetSessionTimeoutsCount, 1)
 				return nil, p.errGetSessionTimeout()
 			case <-mayGetSession:
 			}
@@ -846,7 +903,7 @@ func (p *sessionPool) take(ctx context.Context) (*sessionHandle, error) {
 		// Creating a new session that will be returned directly to the client
 		// means that the max number of sessions in use also increases.
 		numCheckedOut := p.currSessionsCheckedOutLocked()
-		recordStat(ctx, OpenSessionCount, int64(p.numOpened))
+		p.recordStat(ctx, OpenSessionCount, int64(p.numOpened))
 		p.createReqs++
 		p.mu.Unlock()
 		p.mw.updateMaxSessionsCheckedOutDuringWindow(numCheckedOut)
@@ -856,6 +913,7 @@ func (p *sessionPool) take(ctx context.Context) (*sessionHandle, error) {
 		}
 		trace.TracePrintf(ctx, map[string]interface{}{"sessionID": s.getID()},
 			"Created session")
+		p.incNumInUse(ctx)
 		return p.newSessionHandle(s), nil
 	}
 }
@@ -881,9 +939,11 @@ func (p *sessionPool) takeWriteSession(ctx context.Context) (*sessionHandle, err
 			// list.
 			s = p.idleWriteList.Remove(p.idleWriteList.Front()).(*session)
 			trace.TracePrintf(ctx, map[string]interface{}{"sessionID": s.getID()}, "Acquired read-write session")
+			p.decNumWritesLocked(ctx)
 		} else if p.idleList.Len() > 0 {
 			s = p.idleList.Remove(p.idleList.Front()).(*session)
 			trace.TracePrintf(ctx, map[string]interface{}{"sessionID": s.getID()}, "Acquired read-only session")
+			p.decNumReadsLocked(ctx)
 		}
 		if s != nil {
 			s.setIdleList(nil)
@@ -908,6 +968,7 @@ func (p *sessionPool) takeWriteSession(ctx context.Context) (*sessionHandle, err
 				select {
 				case <-ctx.Done():
 					trace.TracePrintf(ctx, nil, "Context done waiting for session")
+					p.recordStat(ctx, GetSessionTimeoutsCount, 1)
 					return nil, p.errGetSessionTimeout()
 				case <-mayGetSession:
 				}
@@ -919,7 +980,7 @@ func (p *sessionPool) takeWriteSession(ctx context.Context) (*sessionHandle, err
 			// Creating a new session that will be returned directly to the client
 			// means that the max number of sessions in use also increases.
 			numCheckedOut := p.currSessionsCheckedOutLocked()
-			recordStat(ctx, OpenSessionCount, int64(p.numOpened))
+			p.recordStat(ctx, OpenSessionCount, int64(p.numOpened))
 			p.createReqs++
 			p.mu.Unlock()
 			p.mw.updateMaxSessionsCheckedOutDuringWindow(numCheckedOut)
@@ -931,6 +992,8 @@ func (p *sessionPool) takeWriteSession(ctx context.Context) (*sessionHandle, err
 				"Created session")
 		}
 		if !s.isWritePrepared() {
+			p.incNumBeingPrepared(ctx)
+			defer p.decNumBeingPrepared(ctx)
 			if err = s.prepareForWrite(ctx); err != nil {
 				if isSessionNotFoundError(err) {
 					s.destroy(false)
@@ -945,6 +1008,7 @@ func (p *sessionPool) takeWriteSession(ctx context.Context) (*sessionHandle, err
 				return nil, toSpannerError(err)
 			}
 		}
+		p.incNumInUse(ctx)
 		return p.newSessionHandle(s), nil
 	}
 }
@@ -958,12 +1022,15 @@ func (p *sessionPool) recycle(s *session) bool {
 		// Reject the session if session is invalid or pool itself is invalid.
 		return false
 	}
+	ctx := context.Background()
 	// Put session at the top of the list to be handed out in LIFO order for load balancing
 	// across channels.
 	if s.isWritePrepared() {
 		s.setIdleList(p.idleWriteList.PushFront(s))
+		p.incNumWritesLocked(ctx)
 	} else {
 		s.setIdleList(p.idleList.PushFront(s))
+		p.incNumReadsLocked(ctx)
 	}
 	// Broadcast that a session has been returned to idle list.
 	close(p.mayGetSession)
@@ -983,16 +1050,22 @@ func (p *sessionPool) remove(s *session, isExpire bool) bool {
 		return false
 	}
 	ol := s.setIdleList(nil)
+	ctx := context.Background()
 	// If the session is in the idlelist, remove it.
 	if ol != nil {
 		// Remove from whichever list it is in.
 		p.idleList.Remove(ol)
 		p.idleWriteList.Remove(ol)
+		if s.isWritePrepared() {
+			p.decNumWritesLocked(ctx)
+		} else {
+			p.decNumReadsLocked(ctx)
+		}
 	}
 	if s.invalidate() {
 		// Decrease the number of opened sessions.
 		p.numOpened--
-		recordStat(context.Background(), OpenSessionCount, int64(p.numOpened))
+		p.recordStat(ctx, OpenSessionCount, int64(p.numOpened))
 		// Broadcast that a session has been destroyed.
 		close(p.mayGetSession)
 		p.mayGetSession = make(chan struct{})
@@ -1003,6 +1076,76 @@ func (p *sessionPool) remove(s *session, isExpire bool) bool {
 
 func (p *sessionPool) currSessionsCheckedOutLocked() uint64 {
 	return p.numOpened - uint64(p.idleList.Len()) - uint64(p.idleWriteList.Len())
+}
+
+func (p *sessionPool) incNumInUse(ctx context.Context) {
+	p.mu.Lock()
+	p.incNumInUseLocked(ctx)
+	p.mu.Unlock()
+}
+
+func (p *sessionPool) incNumInUseLocked(ctx context.Context) {
+	p.numInUse++
+	p.recordStat(ctx, SessionsCount, int64(p.numInUse), tagNumInUseSessions)
+	p.recordStat(ctx, AcquiredSessionsCount, 1)
+	if p.numInUse > p.maxNumInUse {
+		p.maxNumInUse = p.numInUse
+		p.recordStat(ctx, MaxInUseSessionsCount, int64(p.maxNumInUse))
+	}
+}
+
+func (p *sessionPool) decNumInUse(ctx context.Context) {
+	p.mu.Lock()
+	p.decNumInUseLocked(ctx)
+	p.mu.Unlock()
+}
+
+func (p *sessionPool) decNumInUseLocked(ctx context.Context) {
+	p.numInUse--
+	p.recordStat(ctx, SessionsCount, int64(p.numInUse), tagNumInUseSessions)
+	p.recordStat(ctx, ReleasedSessionsCount, 1)
+}
+
+func (p *sessionPool) incNumReadsLocked(ctx context.Context) {
+	p.numReads++
+	p.recordStat(ctx, SessionsCount, int64(p.numReads), tagNumReadSessions)
+}
+
+func (p *sessionPool) decNumReadsLocked(ctx context.Context) {
+	p.numReads--
+	p.recordStat(ctx, SessionsCount, int64(p.numReads), tagNumReadSessions)
+}
+
+func (p *sessionPool) incNumWritesLocked(ctx context.Context) {
+	p.numWrites++
+	p.recordStat(ctx, SessionsCount, int64(p.numWrites), tagNumWriteSessions)
+}
+
+func (p *sessionPool) decNumWritesLocked(ctx context.Context) {
+	p.numWrites--
+	p.recordStat(ctx, SessionsCount, int64(p.numWrites), tagNumWriteSessions)
+}
+
+func (p *sessionPool) incNumBeingPrepared(ctx context.Context) {
+	p.mu.Lock()
+	p.incNumBeingPreparedLocked(ctx)
+	p.mu.Unlock()
+}
+
+func (p *sessionPool) incNumBeingPreparedLocked(ctx context.Context) {
+	p.prepareReqs++
+	p.recordStat(ctx, SessionsCount, int64(p.prepareReqs), tagNumBeingPrepared)
+}
+
+func (p *sessionPool) decNumBeingPrepared(ctx context.Context) {
+	p.mu.Lock()
+	p.decNumBeingPreparedLocked(ctx)
+	p.mu.Unlock()
+}
+
+func (p *sessionPool) decNumBeingPreparedLocked(ctx context.Context) {
+	p.prepareReqs--
+	p.recordStat(ctx, SessionsCount, int64(p.prepareReqs), tagNumBeingPrepared)
 }
 
 // hcHeap implements heap.Interface. It is used to create the priority queue for
@@ -1303,8 +1446,10 @@ func (hc *healthChecker) worker(i int) {
 					return nil
 				}
 				session := hc.pool.idleList.Remove(hc.pool.idleList.Front()).(*session)
+				ctx := context.Background()
+				hc.pool.decNumReadsLocked(ctx)
 				session.checkingHealth = true
-				hc.pool.prepareReqs++
+				hc.pool.incNumBeingPreparedLocked(ctx)
 				return session
 			}
 		}
@@ -1335,7 +1480,7 @@ func (hc *healthChecker) worker(i int) {
 			}
 			hc.pool.recycle(ws)
 			hc.pool.mu.Lock()
-			hc.pool.prepareReqs--
+			hc.pool.decNumBeingPreparedLocked(ctx)
 			hc.pool.mu.Unlock()
 			hc.markDone(ws)
 		}
@@ -1381,6 +1526,15 @@ func (hc *healthChecker) maintainer() {
 		currSessionsOpened := hc.pool.numOpened
 		maxIdle := hc.pool.MaxIdle
 		minOpened := hc.pool.MinOpened
+
+		// Reset the start time for recording the maximum number of sessions
+		// in the pool.
+		now := time.Now()
+		if now.After(hc.pool.lastResetTime.Add(10 * time.Minute)) {
+			hc.pool.maxNumInUse = hc.pool.numInUse
+			hc.pool.recordStat(context.Background(), MaxInUseSessionsCount, int64(hc.pool.maxNumInUse))
+			hc.pool.lastResetTime = now
+		}
 		hc.pool.mu.Unlock()
 		// Get the maximum number of sessions in use during the current
 		// maintenance window.
@@ -1438,7 +1592,7 @@ func (hc *healthChecker) growPool(ctx context.Context, growToNumSessions uint64)
 			break
 		}
 		p.numOpened++
-		recordStat(ctx, OpenSessionCount, int64(p.numOpened))
+		p.recordStat(ctx, OpenSessionCount, int64(p.numOpened))
 		p.createReqs++
 		shouldPrepareWrite := p.shouldPrepareWriteLocked()
 		p.mu.Unlock()

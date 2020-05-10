@@ -4,12 +4,15 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"kaepora/internal/generator"
 	"log"
 	"os"
 	"os/exec"
 	"os/user"
 	"path/filepath"
 )
+
+const RandomizerName = "oot-randomizer"
 
 type Randomizer struct {
 	version string
@@ -21,25 +24,29 @@ func NewRandomizer(version string) *Randomizer {
 	}
 }
 
-func (g *Randomizer) Generate(settingsName, seed string) ([]byte, []byte, error) {
+func (g *Randomizer) Generate(settingsName, seed string) (generator.Output, error) {
 	outDir, err := ioutil.TempDir("", "oot-randomizer-output-")
 	if err != nil {
-		return nil, nil, fmt.Errorf("unable to create output directory: %s", err)
+		return generator.Output{}, fmt.Errorf("unable to create output directory: %s", err)
 	}
 	defer os.RemoveAll(outDir)
 
 	base, err := getBaseDir()
 	if err != nil {
-		return nil, nil, err
+		return generator.Output{}, err
 	}
 	settingsPath := filepath.Join(base, settingsName)
 
 	zpf, spoilerLog, err := g.run(outDir, settingsPath, seed)
 	if err != nil {
-		return nil, nil, fmt.Errorf("unable to generate seed: %s", err)
+		return generator.Output{}, fmt.Errorf("unable to generate seed: %s", err)
 	}
 
-	return zpf, spoilerLog, nil
+	return generator.Output{
+		State:      nil,
+		SeedPatch:  zpf,
+		SpoilerLog: spoilerLog,
+	}, nil
 }
 
 func readFirstGlob(pattern string) ([]byte, error) {
@@ -111,4 +118,12 @@ func (g *Randomizer) run(outDir, settings, seed string) ([]byte, []byte, error) 
 	}
 
 	return zpf, spoilerLog, nil
+}
+
+func (g *Randomizer) GetDownloadURL([]byte) string {
+	return ""
+}
+
+func (g *Randomizer) IsExternal() bool {
+	return false
 }

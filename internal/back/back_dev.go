@@ -2,7 +2,7 @@ package back
 
 import (
 	"fmt"
-	"kaepora/internal/generator"
+	"kaepora/internal/generator/oot"
 	"kaepora/internal/util"
 	"time"
 
@@ -22,22 +22,28 @@ func (b *Back) SendDevSeed(
 			return fmt.Errorf("could not find League: %w", err)
 		}
 
-		gen, err := generator.NewGenerator(league.Generator)
+		gen, err := b.generatorFactory.NewGenerator(league.Generator)
 		if err != nil {
 			return err
 		}
 
-		patch, spoilerLog, err := gen.Generate(league.Settings, seed)
+		out, err := gen.Generate(league.Settings, seed)
 		if err != nil {
 			return err
 		}
-		zlibLog, err := util.NewZLIBBlob(spoilerLog)
+
+		zlibLog, err := util.NewZLIBBlob(out.SpoilerLog)
 		if err != nil {
 			return err
 		}
 
 		player := Player{DiscordID: null.NewString(discordID, true)}
-		b.sendMatchSeedNotification(MatchSession{}, patch, hashFromSpoilerLog(spoilerLog), player, Player{})
+		b.sendMatchSeedNotification(
+			MatchSession{},
+			gen.GetDownloadURL(out.State),
+			out.SeedPatch, hashFromSpoilerLog(out.SpoilerLog),
+			player, Player{},
+		)
 		b.sendSpoilerLogNotification(player, seed, zlibLog)
 
 		return nil
@@ -124,9 +130,9 @@ var debugPlayerNames = []string{ // nolint:gochecknoglobals
 func (b *Back) LoadFixtures() error {
 	game := NewGame("The Legend of Zelda: Ocarina of Time")
 	leagues := []League{
-		NewLeague("Standard", "std", game.ID, "oot-randomizer:5.2.12", "s3.json"),
-		NewLeague("Debug", "debug", game.ID, "oot-randomizer:5.2.12", "s3.json"),
-		NewLeague("Random", "random", game.ID, "oot-settings-randomizer:5.2.12", "s3.json"),
+		NewLeague("Standard", "std", game.ID, oot.RandomizerAPIName+":5.2.0", "s3.json"),
+		NewLeague("Debug", "debug", game.ID, oot.RandomizerName+":5.2.12", "s3.json"),
+		NewLeague("Random", "random", game.ID, oot.SettingsRandomizerName+":5.2.12", "s3.json"),
 	}
 
 	// 20h PST is 05h CEST, Los Angeles was chosen because it observes DST
