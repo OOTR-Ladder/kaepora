@@ -12,8 +12,8 @@ import (
 func TestCreateSeed(t *testing.T) {
 	t.Parallel()
 
-	g := oot.NewRandomizerAPI("5.2.12", loadAPI(t))
-	out, err := g.Generate("s3.json", "testseed")
+	g := oot.NewRandomizerAPI("5.2.0", loadAPI(t))
+	out, err := g.Generate("s3.json", "DEADBEEF")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -25,6 +25,10 @@ func TestCreateSeed(t *testing.T) {
 
 	if len(out.SpoilerLog) == 0 {
 		t.Fatal("got an empty spoiler log")
+	}
+
+	if err := g.UnlockSpoilerLog(out.State); err != nil {
+		t.Error(err)
 	}
 
 	if len(out.SeedPatch) < 250*1024 {
