@@ -19,6 +19,10 @@ type Generator interface {
 	// there is no external service to download the seed, this will return an
 	// empty string.
 	GetDownloadURL(state []byte) string
+
+	// IsExternal returns true if the generation is not done locally but
+	// through an external service (API).
+	IsExternal() bool
 }
 
 type Test struct{}
@@ -48,4 +52,8 @@ func (*Test) Generate(settings, seed string) (Output, error) {
 
 func (*Test) GetDownloadURL([]byte) string {
 	return ""
+}
+
+func (*Test) IsExternal() bool {
+	return false
 }

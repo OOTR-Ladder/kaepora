@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"kaepora/internal/util"
 	"log"
@@ -42,6 +43,10 @@ func (b *Back) generateAndSendSeeds(tx *sqlx.Tx, session MatchSession) error {
 	matches, err := getMatchesBySessionID(tx, session.ID)
 	if err != nil {
 		return err
+	}
+
+	if len(matches) == 0 {
+		return errors.New("attempted to generate seeds for 0 matches")
 	}
 
 	players := make(map[util.UUIDAsBlob]Player, len(matches)*2)
@@ -89,6 +94,15 @@ func (b *Back) doParallelSeedGeneration(
 	}
 
 	cpus := runtime.NumCPU()
+	// HACK, arbitrary rate limit for external services, let the API client do
+	// the rate-limiting.
+	if gen, err := b.generatorFactory.NewGenerator(matches[0].Generator); err == nil {
+		if gen.IsExternal() {
+			cpus = 10
+			log.Printf("debug: external seedgen, setting limit to %d", cpus)
+		}
+	}
+
 	pool := make(chan pl, cpus)
 	log.Printf("debug: limiting seedgen to %d at a time", cpus)
 

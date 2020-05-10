@@ -88,3 +88,7 @@ func (r *SettingsRandomizer) Generate(baseSettingsName, seed string) (generator.
 func (r *SettingsRandomizer) GetDownloadURL([]byte) string {
 	return ""
 }
+
+func (r *SettingsRandomizer) IsExternal() bool {
+	return false
+}

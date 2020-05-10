@@ -123,3 +123,7 @@ func (g *Randomizer) run(outDir, settings, seed string) ([]byte, []byte, error) 
 func (g *Randomizer) GetDownloadURL([]byte) string {
 	return ""
 }
+
+func (g *Randomizer) IsExternal() bool {
+	return false
+}

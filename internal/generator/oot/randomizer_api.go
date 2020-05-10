@@ -123,3 +123,7 @@ func (g *RandomizerAPI) GetDownloadURL(stateJSON []byte) string {
 
 	return fmt.Sprintf("https://ootrandomizer.com/seed/get?id=%s", state.ID)
 }
+
+func (g *RandomizerAPI) IsExternal() bool {
+	return true
+}
