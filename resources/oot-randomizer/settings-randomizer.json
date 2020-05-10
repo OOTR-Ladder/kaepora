@@ -465,7 +465,7 @@
         {
             "Value": "adult",
             "Cost": 1,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "open",
