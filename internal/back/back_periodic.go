@@ -185,7 +185,7 @@ func (b *Back) startMatchSessions() error {
 	return nil
 }
 
-// for tests only, we don't want to wait 90s per test
+// for tests only, we don't want to wait 90s per test.
 func (b *Back) instantlyStartMatchSessions() error {
 	if err := b.transaction(func(tx *sqlx.Tx) error {
 		sessions, err := getMatchSessionsToStart(tx)
@@ -378,7 +378,7 @@ func (b *Back) endMatchSessionsAndUpdateRanks() error {
 	})
 }
 
-// maybeUnlockSpoilerLogs tells ootrandomizer.com to unlock the spoiler log
+// maybeUnlockSpoilerLogs tells ootrandomizer.com to unlock the spoiler log.
 func (b *Back) maybeUnlockSpoilerLogs(match Match) error {
 	gen, err := b.generatorFactory.NewGenerator(match.Generator)
 	if err != nil {

@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// UUIDArrayAsJSON is stored as an UNIX timestamp but used as a time.Time
+// UUIDArrayAsJSON is stored as an UNIX timestamp but used as a time.Time.
 type UUIDArrayAsJSON []uuid.UUID
 
 func (a UUIDArrayAsJSON) Value() (driver.Value, error) {

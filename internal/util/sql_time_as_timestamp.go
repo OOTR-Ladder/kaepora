@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// TimeAsTimestamp is stored as an UNIX timestamp but used as a time.Time
+// TimeAsTimestamp is stored as an UNIX timestamp but used as a time.Time.
 type TimeAsTimestamp time.Time
 
 func (t TimeAsTimestamp) Value() (driver.Value, error) {

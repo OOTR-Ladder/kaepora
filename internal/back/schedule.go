@@ -79,7 +79,7 @@ func (s *Schedule) NextBetween(t time.Time, max time.Time) time.Time {
 	return s.NextBetween(next, max)
 }
 
-// Returns the next scheduled date in a week span
+// Returns the next scheduled date in a week span.
 func (s *Schedule) Next() time.Time {
 	return s.NextBetween(time.Now(), time.Now().AddDate(0, 0, 7))
 }

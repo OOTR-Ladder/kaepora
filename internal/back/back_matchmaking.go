@@ -247,7 +247,7 @@ func clamp(v, min, max int) int {
 // pairPlayers randomly pairs close players together.
 // It takes list of players sorted by their tank and matches two players close
 // enough in the list until there is no player left.
-// TODO: Heuristics, if both shared their last match: go one neighbor down/up
+// TODO: Heuristics, if both shared their last match: go one neighbor down/up.
 func pairPlayers(players []Player) []pair {
 	if len(players) < 2 {
 		return nil

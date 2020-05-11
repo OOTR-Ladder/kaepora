@@ -87,7 +87,6 @@ func (b *Back) SetLeagueAnnounceChannel(shortcode, channelID string) error {
 	})
 }
 
-// TODO remove the need for this
 func (b *Back) GetPlayerByDiscordID(discordID string) (player Player, _ error) {
 	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
 		player, err = getPlayerByDiscordID(tx, discordID)

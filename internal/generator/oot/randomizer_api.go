@@ -102,7 +102,7 @@ func loadSettings(name string) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close() // nolint:gosec
+	defer f.Close()
 
 	dec := json.NewDecoder(f)
 	var ret map[string]interface{}

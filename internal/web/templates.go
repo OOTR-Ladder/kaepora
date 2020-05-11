@@ -157,7 +157,7 @@ func tplAssetIntegrity(baseDir string) func(name string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		defer f.Close() // nolint:gosec
+		defer f.Close()
 
 		h := sha512.New()
 		if _, err := io.Copy(h, f); err != nil {

@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// TimeAsDateTimeTZ is stored as an UNIX timestamp but used as a time.Time
+// TimeAsDateTimeTZ is stored as an UNIX timestamp but used as a time.Time.
 type TimeAsDateTimeTZ time.Time
 
 func (t TimeAsDateTimeTZ) Value() (driver.Value, error) {

@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// UUIDAsBlob is stored as blob(16) but used as a uuid.UUID
+// UUIDAsBlob is stored as blob(16) but used as a uuid.UUID.
 type UUIDAsBlob uuid.UUID
 
 func NewUUIDAsBlob() UUIDAsBlob {

@@ -124,7 +124,7 @@ var debugPlayerIDs = []util.UUIDAsBlob{ // nolint:gochecknoglobals
 	util.UUIDAsBlob(uuid.MustParse("00000000-7777-0000-0000-000000000000")),
 }
 
-// sames indices as debugPlayerIDs
+// order matches debugPlayerIDs.
 var debugPlayerNames = []string{ // nolint:gochecknoglobals
 	"Darunia", "Nabooru", "Rauru",
 	"Ruto", "Saria", "Zelda",

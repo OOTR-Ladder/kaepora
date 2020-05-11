@@ -1,4 +1,4 @@
-package back
+package back // nolint:testpackage
 
 import (
 	"errors"

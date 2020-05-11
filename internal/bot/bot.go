@@ -236,7 +236,6 @@ func parseCommand(cmd string) (string, []string) {
 	}
 }
 
-// nolint:funlen
 func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
 	fmt.Fprintf(w, "Hoo hoot! %s… Look up here!\n"+
 		"It appears that the time has finally come for you to start your adventure!\n"+

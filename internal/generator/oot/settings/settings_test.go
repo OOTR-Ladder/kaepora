@@ -1,6 +1,7 @@
-package settings
+package settings_test
 
 import (
+	"kaepora/internal/generator/oot/settings"
 	"os"
 	"reflect"
 	"testing"
@@ -11,7 +12,7 @@ func TestShuffle(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	s, err := Load("resources/oot-randomizer/" + DefaultName)
+	s, err := settings.Load("resources/oot-randomizer/" + settings.DefaultName)
 	if err != nil {
 		t.Fatal(err)
 	}

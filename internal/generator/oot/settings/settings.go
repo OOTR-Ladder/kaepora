@@ -19,8 +19,7 @@ const DefaultName = "settings-randomizer.json"
 // The probability is there to ensure some values are scarcely or never used.
 // It is an integer that only has meaning relative to the sum of all
 // probabilities.
-
-// TODO check "warp_songs" and "spawn_positions" in the fork
+// TODO check "warp_songs" and "spawn_positions" in the fork.
 type Settings map[string]setting // name (json key) => possible values
 
 func Load(path string) (Settings, error) {
@@ -29,7 +28,7 @@ func Load(path string) (Settings, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close() // nolint:gosec
+	defer f.Close()
 
 	dec := json.NewDecoder(f)
 	if err := dec.Decode(&ret); err != nil {

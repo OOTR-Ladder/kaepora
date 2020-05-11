@@ -444,7 +444,7 @@ func (b *Back) sendSessionRecapNotification(
 	return nil
 }
 
-// entryDetails is a formatting helper for sendSessionRecapNotification
+// entryDetails is a formatting helper for sendSessionRecapNotification.
 func entryDetails(tx *sqlx.Tx, entry MatchEntry) (wrap string, name string, duration string) {
 	if entry.Outcome == MatchEntryOutcomeWin {
 		wrap = "*"

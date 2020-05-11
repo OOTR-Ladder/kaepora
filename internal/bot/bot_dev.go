@@ -86,7 +86,7 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 	return nil
 }
 
-// cmdDevRandomSettings is a temporary DEBUG command to demonstrate randomized settings
+// cmdDevRandomSettings is a temporary DEBUG command to demonstrate randomized settings.
 func (bot *Bot) cmdDevRandomSettings(m *discordgo.Message, args []string, w io.Writer) (err error) {
 	cost := 15
 	seed := uuid.New().String()

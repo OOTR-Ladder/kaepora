@@ -59,7 +59,7 @@ func getPlayerRating(
 	return ret, nil
 }
 
-// getGlickoRatingsForLeague returns players indexed by Player ID
+// getGlickoRatingsForLeague returns players indexed by Player ID.
 func getGlickoPlayersForLeague(
 	tx *sqlx.Tx, leagueID util.UUIDAsBlob,
 ) (map[util.UUIDAsBlob]*glicko.Player, error) {
