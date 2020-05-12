@@ -6,81 +6,85 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: internal/web/templates.go:68
-msgid "planned"
-msgstr "planifiée"
+msgid "Planned"
+msgstr "Planifiée"
 
 #: internal/web/templates.go:71
-msgid "joinable"
-msgstr "joinable"
+msgid "Joinable"
+msgstr "Inscriptions ouvertes"
 
 #: internal/web/templates.go:74
-msgid "preparing"
-msgstr "en préparation"
+msgid "Preparing"
+msgstr "En préparation"
 
 #: internal/web/templates.go:77
-msgid "in progress"
-msgstr "en cours"
+msgid "Race in progress"
+msgstr "Course en cours"
 
 #: internal/web/templates.go:79
-msgid "closed"
-msgstr "fermée"
+msgid "Closed"
+msgstr "Fermée"
 
 #: resources/web/templates/includes/base.html:9
 msgid "The Legend of Zelda: Ocarina of Time Randomizer racing leagues."
 msgstr "Compétitions de Randomizer sur The Legend of Zelda: Ocarina of Time."
 
+#: resources/web/templates/includes/menu.html:38
+msgid "Schedule"
+msgstr "Planning"
+
+#: resources/web/templates/includes/menu.html:38
+msgid "Leaderboards"
+msgstr "Classements"
+
+#: resources/web/templates/includes/menu.html:38
+msgid "Documentation"
+msgstr "Documentation"
+
+#: resources/web/templates/includes/menu.html:38
+msgid "Rules"
+msgstr "Règles"
+
+#: resources/web/templates/includes/menu.html:38
+msgid "Join the server"
+msgstr "Rejoignez le serveur"
+
 #: resources/web/templates/layouts/index.html:4
 msgid "OoTR Randomizer Ladder"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:9
-msgid "Welcome to the _Ocarina of Time Randomizer_ ladder."
-msgstr "Bienvenue sur les ligues _ladder_ pour _Ocarina of Time_."
+#: resources/web/templates/layouts/index.html:12
+msgid "Next races"
+msgstr "Prochaines courses"
 
-#: resources/web/templates/layouts/index.html:13
-msgid "Join the Discord server"
-msgstr "Rejoignez le serveur Discord"
+#: resources/web/templates/layouts/index.html:16
+msgid "%s league"
+msgstr "Ligue %s"
 
-#: resources/web/templates/layouts/index.html:14
-msgid "Read the documentation"
-msgstr "Lisez la documentation"
+#: resources/web/templates/layouts/index.html:23
+msgid "Starts in %s"
+msgstr "Commence dans %s"
 
-#: resources/web/templates/layouts/index.html:15
-msgid "Read the rules"
-msgstr "Lisez les règles"
-
-#: resources/web/templates/layouts/index.html:20
-msgid "Recent and scheduled races"
-msgstr "Courses récentes et courses planifiées"
-
-#: resources/web/templates/layouts/index.html:26
-msgid "League"
-msgstr "Ligue"
-
-#: resources/web/templates/layouts/index.html:27
-msgid "Race start"
-msgstr "Départ"
-
-#: resources/web/templates/layouts/index.html:28
-msgid "Status"
-msgstr "Statut"
-
-#: resources/web/templates/layouts/index.html:29
-msgid "Players"
-msgstr "Joueurs"
-
-#: resources/web/templates/layouts/index.html:39
-msgid "(in %s)"
-msgstr "(dans %s)"
-
-#: resources/web/templates/layouts/index.html:51
-msgid "There is no recent or scheduled race right now."
+#: resources/web/templates/layouts/index.html:62
+msgid "There is no scheduled race right now."
 msgstr "Il n'y a pas de course programmée pour l'instant."
 
-#: resources/web/templates/layouts/index.html:58
+#: resources/web/templates/layouts/index.html:74
+msgid "Scheduled races"
+msgstr "Courses planifiées"
+
+#: resources/web/templates/layouts/index.html:84
+msgid "Races history"
+msgstr "Historique des courses"
+
+#: resources/web/templates/layouts/index.html:91
 msgid "Leaderboard"
 msgstr "Classement"
 
-#: resources/web/templates/layouts/index.html:59
+#: resources/web/templates/layouts/index.html:92
 msgid "Standard league"
 msgstr "Ligue standard"
+
+#: resources/web/templates/layouts/index.html:111
+msgid "Full leaderboard"
+msgstr "Classement complet"

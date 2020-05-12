@@ -64,19 +64,19 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 			var str, class string
 			switch status {
 			case back.MatchSessionStatusWaiting:
-				str = s.locales[locale].Get("planned")
+				str = s.locales[locale].Get("Planned")
 				class = "is-success is-light"
 			case back.MatchSessionStatusJoinable:
-				str = s.locales[locale].Get("joinable")
+				str = s.locales[locale].Get("Joinable")
 				class = "is-success is-light"
 			case back.MatchSessionStatusPreparing:
-				str = s.locales[locale].Get("preparing")
+				str = s.locales[locale].Get("Preparing")
 				class = "is-warning is-light"
 			case back.MatchSessionStatusInProgress:
-				str = s.locales[locale].Get("in progress")
+				str = s.locales[locale].Get("Race in progress")
 				class = "is-success"
 			case back.MatchSessionStatusClosed:
-				str = s.locales[locale].Get("closed")
+				str = s.locales[locale].Get("Closed")
 			default:
 				return ""
 			}

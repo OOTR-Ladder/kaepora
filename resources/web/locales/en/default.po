@@ -6,81 +6,81 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: internal/web/templates.go:68
-msgid "planned"
+msgid "Planned"
 msgstr ""
 
 #: internal/web/templates.go:71
-msgid "joinable"
+msgid "Joinable"
 msgstr ""
 
 #: internal/web/templates.go:74
-msgid "preparing"
+msgid "Preparing"
 msgstr ""
 
 #: internal/web/templates.go:77
-msgid "in progress"
+msgid "Race in progress"
 msgstr ""
 
 #: internal/web/templates.go:79
-msgid "closed"
+msgid "Closed"
 msgstr ""
 
 #: resources/web/templates/includes/base.html:9
 msgid "The Legend of Zelda: Ocarina of Time Randomizer racing leagues."
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:4
-msgid "OoTR Randomizer Ladder"
+#: resources/web/templates/includes/menu.html:38
+msgid "Schedule"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:9
-msgid "Welcome to the _Ocarina of Time Randomizer_ ladder."
+#: resources/web/templates/includes/menu.html:38
+msgid "Leaderboards"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:13
-msgid "Join the Discord server"
+#: resources/web/templates/includes/menu.html:38
+msgid "Documentation"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:14
-msgid "Read the documentation"
+#: resources/web/templates/includes/menu.html:38
+msgid "Rules"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:15
-msgid "Read the rules"
+#: resources/web/templates/includes/menu.html:38
+msgid "Join the server"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:20
-msgid "Recent and scheduled races"
+#: resources/web/templates/layouts/index.html:12
+msgid "Next races"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:26
-msgid "League"
+#: resources/web/templates/layouts/index.html:16
+msgid "%s league"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:27
-msgid "Race start"
+#: resources/web/templates/layouts/index.html:23
+msgid "Starts in %s"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:28
-msgid "Status"
+#: resources/web/templates/layouts/index.html:62
+msgid "There is no scheduled race right now."
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:29
-msgid "Players"
+#: resources/web/templates/layouts/index.html:74
+msgid "Scheduled races"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:39
-msgid "(in %s)"
+#: resources/web/templates/layouts/index.html:84
+msgid "Races history"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:51
-msgid "There is no recent or scheduled race right now."
-msgstr ""
-
-#: resources/web/templates/layouts/index.html:58
+#: resources/web/templates/layouts/index.html:91
 msgid "Leaderboard"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:59
+#: resources/web/templates/layouts/index.html:92
 msgid "Standard league"
+msgstr ""
+
+#: resources/web/templates/layouts/index.html:111
+msgid "Full leaderboard"
 msgstr ""

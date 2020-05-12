@@ -14,9 +14,9 @@
 
     <div id="mainMenu" class="navbar-menu">
         <div class="navbar-end">
-            <a class="navbar-item" href="#">Planning</a>
+            <a class="navbar-item" href="#">{{t .Locale "Schedule"}}</a>
             <div class="navbar-item has-dropdown is-hoverable">
-                <a href="#" class="navbar-link"> Classements</a>
+                <a href="#" class="navbar-link">{{t .Locale "Leaderboards"}}</a>
 
                 <div class="navbar-dropdown is-boxed">
                     <a class="navbar-item has-text-dark">
@@ -27,15 +27,15 @@
                     </a>
                 </div>
             </div>
-            <a class="navbar-item" href="/documentation">Documentation</a>
-            <a class="navbar-item" href="/rules">Règlement</a>
+            <a class="navbar-item" href="/documentation">{{t .Locale "Documentation"}}</a>
+            <a class="navbar-item" href="/rules">{{t .Locale "Rules"}}</a>
 
             <div class="navbar-item">
                 <a href="https://discord.gg/TvTnwVJ" target="_blank" class="button">
                     <span class="icon">
                         <i class="ri-discord-fill"></i>
                     </span>
-                    <span>Rejoignez le serveur</span>
+                    <span>{{t .Locale "Join the server"}}</span>
                 </a>
             </div>
         </div>

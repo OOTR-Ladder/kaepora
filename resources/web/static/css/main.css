@@ -1,5 +1,6 @@
 /* Général styles */
 body { font-family: "Jost", Arial, sans-serif; }
+#mainMenu .navbar-item { font-weight: bold; }
 
 /* Homepage specific */
 
