@@ -1,8 +1,176 @@
-/* "leaderboard" is in one of my ublock blacklist */
-.league_leaderboard {
-    padding: 0 20px 0 20px;
+/* General styles */
+body { font-family: "Jost", Arial, sans-serif; }
+#mainMenu .navbar-item { font-weight: bold; }
+
+/* Homepage specific */
+
+.homeHeader {
+    /*background-image: linear-gradient(
+        to right bottom,
+        rgba(100, 180, 255, 1),
+        rgba(80, 90, 255, 1)
+    );*/
+    background-color: #2a2a72;
+    background-image: linear-gradient(
+        to right bottom,
+        rgba(42, 42, 114, 1),
+        rgba(0, 159, 253, 1)
+    );
 }
 
-body {
-    margin-top: 10px;
+.message.nextRace--registration {
+    position: absolute;
+    left: 15px;
+    bottom: 0;
+    margin-bottom: 0;
+
+    z-index: 1;
+
+    transform: translateY(25%);
+}
+
+.nextRace--registration .message-body {
+    padding: .5rem 1rem;
+    line-height: 30px;
+}
+.nextRace--registration .button { margin-left: 1rem; }
+
+
+.nextRace--status {
+    position: absolute;
+    top: 0;
+    right: 50px;
+    z-index: 2;
+
+    transform: translate(0, -50%);
+}
+
+.nextRace--contextual {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+
+    overflow: hidden;
+}
+
+div[class^="nextRace--contextual--"] {
+    padding-right: 1rem;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: auto;
+
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: right;
+    opacity: .5;
+}
+div[class^="nextRace--contextual--"] > div {
+    padding-bottom: 10px;
+    font-size: 1rem;
+    line-height: 1rem;
+    text-transform: uppercase;
+}
+div[class^="nextRace--contextual--"] > i {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 90px;
+    font-size: 8rem;
+    color: #505aff;
+    opacity: .2;
+    z-index: -1;
+
+    transform: translate(-50%, -40%);
+}
+
+.nextRace--contextual--players > div > .nbPlayers {
+    display: block;
+    font-size: 4rem;
+    line-height: 4rem;
+    font-weight: 900;
+
+}
+.nextRace--contextual--countdown > div > span {
+    display: block;
+    font-size: 3rem;
+    line-height: 3rem;
+    font-weight: 900;
+    text-transform: none;
+}
+
+.nextRace.is-mini { 
+    padding: .5rem 1.25rem;
+    box-shadow: 0 .5em 1em -.125em rgba(10,10,10,.03),0 0 0 1px rgba(10,10,10,.02);
+}
+.nextRace.is-mini .subtitle { margin-bottom: 0; }
+.nextRace.is-mini div[class^="nextRace--contextual--"] > div {
+    padding-bottom: .5rem;
+    font-size: .8rem;
+    line-height: .8rem;
+}
+.nextRace.is-mini div[class^="nextRace--contextual--"] > i {
+    height: 45px;
+    font-size: 4rem;
+}
+.nextRace.is-mini .nextRace--contextual--countdown > div > span {
+    font-size: 2rem;
+    line-height: 2rem;
+}
+
+@media screen and (max-width:768px) {
+    .nextRace:not(.is-mini) .subtitle { margin-bottom: 3.5rem; }
+    .nextRace--status { right: 25px; }
+    .nextRace--contextual { 
+        width: 100%;
+        z-index: 0;
+    }
+    .nextRace:not(.is-mini) div[class^="nextRace--contextual--"] > i {
+        font-size: 5rem;
+        transform: translate(-40%, 10%);
+    }
+    .nextRace:not(.is-mini) .nextRace--contextual--players > div > .nbPlayers { 
+        font-size: 3rem;
+        line-height: 3rem;
+    }
+    .nextRace:not(.is-mini) div.nextRace--contextual--countdown {
+        padding-left: 1rem;
+        padding-right: 0;
+        left: 0;
+        right: unset;
+        text-align: left;
+    }
+    .nextRace:not(.is-mini) .nextRace--contextual--countdown > div > span {
+        font-size: 2rem;
+        line-height: 2rem;
+    }
+    .nextRace:not(.is-mini) div.nextRace--contextual--countdown > i {
+        right: unset;
+        left: 0;
+
+        transform: translate(40%, 10%);
+    }
+}
+
+.leaderboard { margin-bottom: 2rem; }
+.leaderboard--players {
+    text-align: center;
+}
+.leaderboard--players .player {
+    font-weight: bold;
+    line-height: normal;
+}
+
+.leaderboard--players .player:nth-child(1) { font-size: 2.5rem; }
+.leaderboard--players .player:nth-child(2) { font-size: 1.75rem; }
+.leaderboard--players .player:nth-child(3) { font-size: 1.5rem; }
+
+.leaderboard--players .player:nth-child(1) i { color: gold; }
+.leaderboard--players .player:nth-child(2) i { color: silver; }
+.leaderboard--players .player:nth-child(3) i { color: #cd7f32; }
+
+.league_leaderboard {
+    padding: 0 20px 0 20px;
 }
