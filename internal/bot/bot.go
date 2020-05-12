@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"io"
 	"kaepora/internal/back"
+	"kaepora/internal/config"
 	"kaepora/internal/util"
 	"log"
-	"os"
 	"runtime/debug"
 	"strings"
 	"sync"
@@ -23,12 +23,12 @@ type commandHandler func(m *discordgo.Message, args []string, w io.Writer) error
 
 // Bot is a Discord bot that acts as a CLI front-end for the Back.
 type Bot struct {
-	back *back.Back
+	back   *back.Back
+	config *config.Config
 
-	startedAt   time.Time
-	token       string
-	dg          *discordgo.Session
-	adminUserID string
+	startedAt time.Time
+	token     string
+	dg        *discordgo.Session
 
 	handlers      map[string]commandHandler
 	notifications <-chan back.Notification
@@ -40,9 +40,14 @@ func New(back *back.Back, token string) (*Bot, error) {
 		return nil, err
 	}
 
+	conf, err := config.NewFromUserConfigDir()
+	if err != nil {
+		return nil, err
+	}
+
 	bot := &Bot{
 		back:          back,
-		adminUserID:   os.Getenv("KAEPORA_ADMIN_USER"),
+		config:        conf,
 		token:         token,
 		dg:            dg,
 		startedAt:     time.Now(),
@@ -79,11 +84,13 @@ func New(back *back.Back, token string) (*Bot, error) {
 // isAdmin returns true if the given Discord user ID is a Kaepora admin,
 // meaning he has access to extra data and dangerous commands.
 func (bot *Bot) isAdmin(discordID string) bool {
-	if bot.adminUserID == "" {
-		return false
+	for _, v := range bot.config.DiscordAdminUserIDs {
+		if discordID == v {
+			return true
+		}
 	}
 
-	return discordID == bot.adminUserID
+	return false
 }
 
 // Serve runs the Discord bot until the done channel is closed.
@@ -134,12 +141,43 @@ loop:
 	}
 }
 
+// isListeningOn returns true if the bot should listen to commands sent on the given channel ID.
+func (bot *Bot) isListeningOn(channelID string) bool {
+	// This should be cached into a map, but I don't plan on having more than
+	// one or two channels for now.
+	for _, v := range bot.config.DiscordListenIDs {
+		if channelID == v {
+			return true
+		}
+	}
+
+	return false
+}
+
 // handleMessage treats incoming messages as CLI commands and runs the corresponding back code.
 func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Ignore webooks, self, bots, non-commands.
 	if m.Author == nil || m.Author.ID == s.State.User.ID ||
 		m.Author.Bot || !strings.HasPrefix(m.Content, "!") {
 		return
+	}
+
+	channel, err := s.Channel(m.ChannelID)
+	if err != nil {
+		log.Printf("error: unable to fetch channel: %s", err)
+		return
+	}
+
+	// Only act on PMs and a predetermined set of channels.
+	if channel.Type == discordgo.ChannelTypeGuildText {
+		bypass := m.Message.Content == `!dev addlisten` && bot.isAdmin(m.Author.ID) // HACK
+		if !bypass && !bot.isListeningOn(m.ChannelID) {
+			return
+		}
+
+		if err := s.ChannelMessageDelete(m.ChannelID, m.Message.ID); err != nil {
+			log.Printf("error: unable to delete message: %s", err)
+		}
 	}
 
 	log.Printf(
@@ -159,28 +197,12 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 		}
 	}()
 
-	defer func() {
-		r := recover()
-		if r != nil {
-			out.Reset()
-			fmt.Fprintf(out, "Someting went very wrong, please tell <@%s>.", bot.adminUserID)
-			log.Print("panic: ", r)
-			log.Printf("%s", debug.Stack())
-		}
-	}()
-
-	if err := bot.maybeCleanupMessage(s, m.ChannelID, m.Message.ID); err != nil {
-		log.Printf("error: unable to cleanup message: %s", err)
-	}
-
 	if err := bot.dispatch(m.Message, out); err != nil {
 		out.Reset()
 		fmt.Fprintln(out, "There was an error processing your command.")
 
 		if errors.Is(err, util.ErrPublic("")) {
 			fmt.Fprintf(out, "```%s\n```\nIf you need help, send `!help`.", err)
-		} else {
-			fmt.Fprintf(out, "<@%s> will check the logs when he has time.", bot.adminUserID)
 		}
 
 		log.Printf("error: failed to process command: %s", err)
@@ -188,7 +210,17 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 }
 
 // dispatch is the handleMessage internals without the Discord-specific stuff.
-func (bot *Bot) dispatch(m *discordgo.Message, w io.Writer) error {
+func (bot *Bot) dispatch(m *discordgo.Message, w *channelWriter) error {
+	defer func() {
+		r := recover()
+		if r != nil {
+			w.Reset()
+			fmt.Fprint(w, "Someting went very wrong.")
+			log.Print("panic: ", r)
+			log.Printf("%s", debug.Stack())
+		}
+	}()
+
 	command, args := parseCommand(m.Content)
 	handler, ok := bot.handlers[command]
 	if !ok {
@@ -196,29 +228,6 @@ func (bot *Bot) dispatch(m *discordgo.Message, w io.Writer) error {
 	}
 
 	return handler(m, args, w)
-}
-
-// maybeCleanupMessage removes the original message the user sent to us if it
-// was written in a public channel. If it was in a PM, nothing happens.
-func (bot *Bot) maybeCleanupMessage(
-	s *discordgo.Session,
-	channelID string,
-	messageID string,
-) error {
-	channel, err := s.Channel(channelID)
-	if err != nil {
-		return err
-	}
-
-	if channel.Type != discordgo.ChannelTypeGuildText {
-		return nil
-	}
-
-	if err := s.ChannelMessageDelete(channelID, messageID); err != nil {
-		log.Printf("error: unable to delete message: %s", err)
-	}
-
-	return nil
 }
 
 // parseCommand splits a raw string as sent to the bot into a command name and

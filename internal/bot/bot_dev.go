@@ -79,11 +79,46 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 		return bot.back.CreateDevMatchSession(args[1])
 	case "closesession":
 		return bot.back.CloseDevMatchSession()
+	case "addlisten":
+		return bot.cmdDevAddListen(m, args, out)
+	case "removelisten":
+		return bot.cmdDevRemoveListen(m, args, out)
 	default:
 		return util.ErrPublic("invalid command")
 	}
 
 	return nil
+}
+
+func (bot *Bot) cmdDevRemoveListen(m *discordgo.Message, _ []string, _ io.Writer) (err error) {
+	i := -1
+	for k, v := range bot.config.DiscordListenIDs {
+		if v == m.ChannelID {
+			i = k
+		}
+	}
+
+	if i < 0 {
+		return util.ErrPublic("channel was not being listened on")
+	}
+
+	bot.config.DiscordListenIDs = append(
+		bot.config.DiscordListenIDs[:i],
+		bot.config.DiscordListenIDs[i+1:]...,
+	)
+
+	return bot.config.Write()
+}
+
+func (bot *Bot) cmdDevAddListen(m *discordgo.Message, _ []string, _ io.Writer) (err error) {
+	for _, v := range bot.config.DiscordListenIDs {
+		if v == m.ChannelID {
+			return util.ErrPublic("channel is already being listened on")
+		}
+	}
+
+	bot.config.DiscordListenIDs = append(bot.config.DiscordListenIDs, m.ChannelID)
+	return bot.config.Write()
 }
 
 // cmdDevRandomSettings is a temporary DEBUG command to demonstrate randomized settings.

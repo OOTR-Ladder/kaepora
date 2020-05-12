@@ -16,8 +16,18 @@ Non-goals and out of scope:
 
 ## Configuration (env vars)
   - `KAEPORA_DISCORD_TOKEN`, can be omitted if you don't want to run the bot.
-  - `KAEPORA_ADMIN_USER`, can be omitted if you don't want any bot admin.
   - `KAEPORA_OOTR_API_KEY`, can be omitted if you don't use remote seedgen.
+
+## Configuration file
+Located at: `$XDG_CONFIG_HOME/kaepora/config.json`
+```
+{
+	"DiscordAdminUserIDs": ["<discord user id>"]
+}
+```
+
+Having at least one user ID is mandatory to make the bot listen to a channel
+and not only to PMs.
 
 ## Build and run
 ```shell
@@ -28,6 +38,9 @@ $ ./kaepora fixtures
 $ # Place ZOOTDEC.z64 and ARCHIVE.bin in the resources/oot-randomizer directory.
 $ ./kaepora serve
 ```
+
+To allow/disallow the bot to listen to a channel, send `!dev addlisten` or
+`!dev removelisten` in said channel.
 
 ## Migrations
 - Running migrations:
