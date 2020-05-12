@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"kaepora/internal/generator/oot"
 	"kaepora/internal/util"
-	"time"
 
-	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"gopkg.in/guregu/null.v4"
 )
@@ -54,83 +52,6 @@ func (b *Back) SendDevSeed(
 	})
 }
 
-func (b *Back) CreateDevMatchSession(leagueShortCode string) error {
-	return b.transaction(func(tx *sqlx.Tx) error {
-		league, err := getLeagueByShortCode(tx, leagueShortCode)
-		if err != nil {
-			return fmt.Errorf("could not find League: %w", err)
-		}
-
-		// Create joinable
-		session := NewMatchSession(league.ID, time.Now().Add(-MatchSessionJoinableAfterOffset))
-		session.Status = MatchSessionStatusJoinable
-		if err := session.insert(tx); err != nil {
-			return err
-		}
-
-		// Add players
-		for _, playerID := range debugPlayerIDs {
-			player, err := getPlayerByID(tx, playerID)
-			if err != nil {
-				return err
-			}
-			if session, err = joinCurrentMatchSessionTx(tx, player, league); err != nil {
-				return err
-			}
-		}
-
-		// Reach preparing
-		session.StartDate = util.TimeAsDateTimeTZ(time.Now().Add(-MatchSessionPreparationOffset))
-		return session.update(tx)
-	})
-}
-
-func (b *Back) CloseDevMatchSession() error {
-	players := make([]Player, 0, len(debugPlayerIDs))
-	if err := b.transaction(func(tx *sqlx.Tx) error {
-		for _, v := range debugPlayerIDs {
-			player, err := getPlayerByID(tx, v)
-			if err != nil {
-				return err
-			}
-			players = append(players, player)
-		}
-
-		return nil
-	}); err != nil {
-		return err
-	}
-
-	for k := range players {
-		if k == len(players)-1 { // skip last player who has no active match
-			continue
-		}
-
-		if _, err := b.CompleteActiveMatch(players[k]); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-var debugPlayerIDs = []util.UUIDAsBlob{ // nolint:gochecknoglobals
-	util.UUIDAsBlob(uuid.MustParse("00000000-1111-0000-0000-000000000000")),
-	util.UUIDAsBlob(uuid.MustParse("00000000-2222-0000-0000-000000000000")),
-	util.UUIDAsBlob(uuid.MustParse("00000000-3333-0000-0000-000000000000")),
-	util.UUIDAsBlob(uuid.MustParse("00000000-4444-0000-0000-000000000000")),
-	util.UUIDAsBlob(uuid.MustParse("00000000-5555-0000-0000-000000000000")),
-	util.UUIDAsBlob(uuid.MustParse("00000000-6666-0000-0000-000000000000")),
-	util.UUIDAsBlob(uuid.MustParse("00000000-7777-0000-0000-000000000000")),
-}
-
-// order matches debugPlayerIDs.
-var debugPlayerNames = []string{ // nolint:gochecknoglobals
-	"Darunia", "Nabooru", "Rauru",
-	"Ruto", "Saria", "Zelda",
-	"Impa",
-}
-
 func (b *Back) LoadFixtures() error {
 	game := NewGame("The Legend of Zelda: Ocarina of Time")
 	leagues := []League{
@@ -153,14 +74,6 @@ func (b *Back) LoadFixtures() error {
 
 		for _, v := range leagues {
 			if err := v.insert(tx); err != nil {
-				return err
-			}
-		}
-
-		for k, v := range debugPlayerNames {
-			player := NewPlayer(v)
-			player.ID = debugPlayerIDs[k]
-			if err := player.insert(tx); err != nil {
 				return err
 			}
 		}

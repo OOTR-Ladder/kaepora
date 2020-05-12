@@ -22,8 +22,6 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 		fmt.Fprintf(out, `
 **Admin-only commands**:
 %[1]s
-!dev closesession            # close the debug race
-!dev createsession SHORTCODE # create a new debug race starting immediately
 !dev error                   # error out
 !dev panic                   # panic and abort
 !dev seed SHORTCODE [SEED]   # generate a seed valid for the given league
@@ -72,18 +70,46 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 			seed = args[2]
 		}
 		return bot.back.SendDevSeed(m.Author.ID, args[1], seed)
-	case "createsession": // SHORTCODE
-		if len(args) != 2 {
-			return util.ErrPublic("expected 1 argument: SHORTCODE")
-		}
-		return bot.back.CreateDevMatchSession(args[1])
-	case "closesession":
-		return bot.back.CloseDevMatchSession()
+	case "addlisten":
+		return bot.cmdDevAddListen(m, args, out)
+	case "removelisten":
+		return bot.cmdDevRemoveListen(m, args, out)
 	default:
 		return util.ErrPublic("invalid command")
 	}
 
 	return nil
+}
+
+func (bot *Bot) cmdDevRemoveListen(m *discordgo.Message, _ []string, _ io.Writer) (err error) {
+	i := -1
+	for k, v := range bot.config.DiscordListenIDs {
+		if v == m.ChannelID {
+			i = k
+		}
+	}
+
+	if i < 0 {
+		return util.ErrPublic("channel was not being listened on")
+	}
+
+	bot.config.DiscordListenIDs = append(
+		bot.config.DiscordListenIDs[:i],
+		bot.config.DiscordListenIDs[i+1:]...,
+	)
+
+	return bot.config.Write()
+}
+
+func (bot *Bot) cmdDevAddListen(m *discordgo.Message, _ []string, _ io.Writer) (err error) {
+	for _, v := range bot.config.DiscordListenIDs {
+		if v == m.ChannelID {
+			return util.ErrPublic("channel is already being listened on")
+		}
+	}
+
+	bot.config.DiscordListenIDs = append(bot.config.DiscordListenIDs, m.ChannelID)
+	return bot.config.Write()
 }
 
 // cmdDevRandomSettings is a temporary DEBUG command to demonstrate randomized settings.
