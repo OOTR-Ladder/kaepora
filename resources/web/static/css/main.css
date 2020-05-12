@@ -174,11 +174,18 @@ div[class^="nextRace--contextual--"] > i {
     padding: 0 20px 0 20px;
 }
 
-/* "leaderboard" is in one of my ublock blacklist */
-.league_leaderboard {
-    padding: 0 20px 0 20px;
-}
+/* Leaderboard page */
 
-body {
-    margin-top: 10px;
+.leaderboardTable__first-page .leaderboardTable--player:nth-child(1) i[class="ri-trophy-fill"] { color: gold; }
+.leaderboardTable__first-page .leaderboardTable--player:nth-child(2) i[class="ri-trophy-fill"] { color: silver; }
+.leaderboardTable__first-page .leaderboardTable--player:nth-child(3) i[class="ri-trophy-fill"] { color: #cd7f32; }
+
+.leaderboardTable__first-page .leaderboardTable--player:nth-child(1) td,
+.leaderboardTable__first-page .leaderboardTable--player:nth-child(2) td,
+.leaderboardTable__first-page .leaderboardTable--player:nth-child(3) td { font-weight: bold; }
+
+@media only screen and (min-width: 769px){
+    .leaderboardTable__first-page .leaderboardTable--player:nth-child(1) td { font-size: 2rem; }
+    .leaderboardTable__first-page .leaderboardTable--player:nth-child(2) td { font-size: 1.5rem; }
+    .leaderboardTable__first-page .leaderboardTable--player:nth-child(3) td { font-size: 1.25rem; }
 }
