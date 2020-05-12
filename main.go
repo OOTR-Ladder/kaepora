@@ -98,8 +98,7 @@ func serve(b *back.Back) error {
 
 	var wg sync.WaitGroup
 	go b.Run(&wg, done)
-	//go bot.Serve(&wg, done)
-	_ = bot
+	go bot.Serve(&wg, done)
 	go server.Serve(&wg, done)
 
 	sig := <-signaled
