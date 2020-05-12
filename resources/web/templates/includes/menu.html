@@ -1,0 +1,44 @@
+{{define "menu"}}
+<header class="navbar is-transparent is-spaced" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a href="https://ootrladder.com/" class="navbar-item">
+            OoTR LADDER
+        </a>
+
+        <a role="button" class="navbar-burger" data-target="mainMenu" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="mainMenu" class="navbar-menu">
+        <div class="navbar-end">
+            <a class="navbar-item" href="#">Planning</a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href="#" class="navbar-link"> Classements</a>
+
+                <div class="navbar-dropdown is-boxed">
+                    <a class="navbar-item has-text-dark">
+                      Standard
+                    </a>
+                    <a class="navbar-item has-text-dark">
+                      Random
+                    </a>
+                </div>
+            </div>
+            <a class="navbar-item" href="/documentation">Documentation</a>
+            <a class="navbar-item" href="/rules">Règlement</a>
+
+            <div class="navbar-item">
+                <a href="https://discord.gg/TvTnwVJ" target="_blank" class="button">
+                    <span class="icon">
+                        <i class="ri-discord-fill"></i>
+                    </span>
+                    <span>Rejoignez le serveur</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+{{end}}

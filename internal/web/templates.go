@@ -65,23 +65,23 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 			switch status {
 			case back.MatchSessionStatusWaiting:
 				str = s.locales[locale].Get("planned")
-				class = "is-primary is-light"
+				class = "is-success is-light"
 			case back.MatchSessionStatusJoinable:
 				str = s.locales[locale].Get("joinable")
-				class = "is-success"
+				class = "is-success is-light"
 			case back.MatchSessionStatusPreparing:
 				str = s.locales[locale].Get("preparing")
-				class = "is-success is-light"
+				class = "is-warning is-light"
 			case back.MatchSessionStatusInProgress:
 				str = s.locales[locale].Get("in progress")
-				class = "is-primary"
+				class = "is-success"
 			case back.MatchSessionStatusClosed:
 				str = s.locales[locale].Get("closed")
 			default:
 				return ""
 			}
 
-			return template.HTML(fmt.Sprintf(`<span class="tag %s">%s</span>`, class, str)) // nolint:gosec
+			return template.HTML(fmt.Sprintf(`<span class="tag is-medium is-rounded %s">%s</span>`, class, str)) // nolint:gosec
 		},
 
 		"ranking":        tplRanking,
