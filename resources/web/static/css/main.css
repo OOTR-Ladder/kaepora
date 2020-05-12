@@ -1,3 +1,6 @@
+/* Général styles */
+body { font-family: "Jost", Arial, sans-serif; }
+
 /* "leaderboard" is in one of my ublock blacklist */
 .league_leaderboard {
     padding: 0 20px 0 20px;
