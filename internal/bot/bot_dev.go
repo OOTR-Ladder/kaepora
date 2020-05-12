@@ -22,8 +22,6 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 		fmt.Fprintf(out, `
 **Admin-only commands**:
 %[1]s
-!dev closesession            # close the debug race
-!dev createsession SHORTCODE # create a new debug race starting immediately
 !dev error                   # error out
 !dev panic                   # panic and abort
 !dev seed SHORTCODE [SEED]   # generate a seed valid for the given league
@@ -72,13 +70,6 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 			seed = args[2]
 		}
 		return bot.back.SendDevSeed(m.Author.ID, args[1], seed)
-	case "createsession": // SHORTCODE
-		if len(args) != 2 {
-			return util.ErrPublic("expected 1 argument: SHORTCODE")
-		}
-		return bot.back.CreateDevMatchSession(args[1])
-	case "closesession":
-		return bot.back.CloseDevMatchSession()
 	case "addlisten":
 		return bot.cmdDevAddListen(m, args, out)
 	case "removelisten":
