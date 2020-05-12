@@ -1,4 +1,113 @@
 {{define "content"}}
+<section class="hero is-dark is-fullheight homeHeader">
+    <div class="hero-head">
+        {{template "menu"}}
+    </div>
+
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-vcentered is-variable is-8">
+                <div class="column is-two-thirds">
+                    {{if .Payload.MatchSessions}}
+                        <h2 class="title is-1">Prochaines courses</h2>
+                    
+                        {{range $k, $v := .Payload.MatchSessions}}
+                            <div class="box is-relative nextRace">
+                                <div class="title has-text-dark nextRace--league">Ligue <span>{{(index $.Payload.Leagues $v.LeagueID).Name}}</span></div>
+                                <div class="subtitle has-text-dark is-size-6-mobile nextRace--schedule">{{$v.StartDate | datetime}}</div>
+        
+                                <!-- if joinable race -->
+                                <div class="is-unselectable nextRace--status">
+                                    {{matchSessionStatusTag $.Locale $v.Status}}
+                                    {{if future $v.StartDate}}
+                                        <span class="tag is-info is-light is-medium is-rounded is-hidden-mobile">{{tf $.Locale "(in %s)" (until $v.StartDate "m")}}</span>
+                                    {{end}}
+                                </div>
+                                <div class="is-unselectable nextRace--contextual">
+                                    <!-- when the race isn't joinable yet or if we are in a joinable race case on a mobile device  -->
+                                    {{if future $v.StartDate}}
+                                        <div class="nextRace--contextual--countdown is-hidden-desktop">
+                                            <i class="ri-time-line"></i>
+                                            <div>
+                                                dans <span>{{until $v.StartDate "m"}}</span>
+                                            </div>
+                                        </div>
+                                    {{end}}
+                                    <!-- if joinable race and has at least one player -->
+                                    {{if gt (len $v.PlayerIDs) 0}}
+                                        <div class="nextRace--contextual--players">
+                                            <i class="ri-group-fill"></i>
+                                            <div>
+                                                <span class="nbPlayers">{{len $v.PlayerIDs}}</span>
+                                                {{if gt (len $v.PlayerIDs) 1}}
+                                                    joueurs
+                                                {{else}}
+                                                    joueur
+                                                {{end}}
+                                            </div>
+                                        </div>
+                                    {{end}}
+                                </div>
+                            </div>
+                        {{end}}
+                    {{else}}
+                        <article class="message is-danger">
+                            <div class="message-body">
+                                {{t .Locale "There is no recent or scheduled race right now."}}
+                            </div>
+                        </article>
+                    {{end}}
+
+                    <div class="level is-mobile">
+                        <div class="level-left">
+                            <div class="buttons">
+                                <a href="#" class="button is-outlined is-white is-small is-rounded is-mobile-fullwidth detailButton">
+                                    <span class="icon">
+                                        <i class="ri-calendar-2-fill"></i>
+                                    </span>
+                                    <span>Courses planifiées</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="level-right">
+                            <a href="#" class="button is-outlined is-white is-small is-rounded is-mobile-fullwidth detailButton">
+                                <span class="icon">
+                                    <i class="ri-history-line"></i>
+                                </span>
+                                <span>Historique des courses</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column has-text-centered">
+                    <h2 class="title">{{t .Locale "Leaderboard"}}</h2>
+                    <h3 class="subtitle">{{t .Locale "Standard league"}}</h3>
+
+                    <div class="leaderboard">
+                        <div class="leaderboard--players">
+                            {{range $i, $v := .Payload.Top20}}
+                                {{if lt $i 3}}
+                                    <div class="player">
+                                        <span class="icon"><i class="ri-trophy-fill"></i></span> {{$v.PlayerName}}
+                                    </div>
+                                {{end}}
+                            {{end}}
+                        </div>
+                    </div>
+
+                    <a href="#" class="button is-outlined is-white is-fullwidth is-rounded detailButton">
+                        <span class="icon">
+                            <i class="ri-trophy-line"></i>
+                        </span>
+                        <span>Classement complet</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+</section>
+
 <div class="container">
 
 <h1 class="title">{{t .Locale "OoTR Randomizer Ladder"}}</h1>
@@ -33,7 +142,7 @@
                     <tr>
                         <td>{{(index $.Payload.Leagues $v.LeagueID).Name}}</td>
                         <td>
-                            {{$v.StartDate | datetime}}
+                            {{$v.StartDate | datetime}}
                             {{if future $v.StartDate}}
                                 {{tf $.Locale "(in %s)" (until $v.StartDate "m")}}
                             {{end}}
