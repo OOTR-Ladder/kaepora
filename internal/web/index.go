@@ -43,7 +43,7 @@ func (s *Server) index(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// getStdTop3 returns the Top 3 leaderboard
+// getStdTop3 returns the Top 3 leaderboard.
 func (s *Server) getStdTop3(shortcode string) ([]back.LeaderboardEntry, error) {
 	leaderboard, err := s.back.GetLeaderboardForShortcode(
 		shortcode,

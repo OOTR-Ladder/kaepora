@@ -49,7 +49,6 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 	r.Get("/documentation", s.markdownContent(baseDir, "documentation.md"))
 
 	r.Get("/leaderboard/{shortcode}", s.leaderboard)
-	// r.Get("/schedule", s.schedule)
 	r.Get("/history", s.history)
 	r.Get("/", s.index)
 	r.NotFound(s.notFound)
@@ -191,7 +190,7 @@ func (s *Server) response(
 		Payload    interface{}
 	}{
 		r.Context().Value(ctxKeyLocale).(string),
-		s.getAlternates(r.URL),
+		s.getAlternates(r.URL.String()),
 		leagues,
 		payload,
 	}
@@ -201,11 +200,11 @@ func (s *Server) response(
 	}
 }
 
-func (s *Server) getAlternates(original *url.URL) map[string]string {
+func (s *Server) getAlternates(original string) map[string]string {
 	ret := make(map[string]string, len(s.locales))
 
 	for k := range s.locales {
-		cpy, err := url.Parse(original.String())
+		cpy, err := url.Parse(original)
 		if err != nil {
 			continue
 		}
@@ -289,11 +288,6 @@ func getMarkdownTitle(mdPath string) string {
 	}
 
 	return string(title)
-}
-
-func (s *Server) schedule(w http.ResponseWriter, r *http.Request) {
-	s.cache(w, "public", 1*time.Hour)
-	s.response(w, r, http.StatusOK, "schedule.html", nil)
 }
 
 func (s *Server) history(w http.ResponseWriter, r *http.Request) {
