@@ -5,37 +5,23 @@
             <img src="/_/img/logo.png" alt="logo" width="32" height="32" />
             OoTR Ladder
         </a>
-
-        <!-- TODO
-        <div class="navbar-item is-hidden-desktop">
-            <a href="#" class="button is-white">
-                <span class="icon">
-                    <i class="ri-calendar-2-fill"></i>
-                </span>
-                <span>{{t .Locale "Schedule"}}</span>
-            </a>
-        </div>
-        -->
     </div>
 
     <div id="mainMenu" class="navbar-menu">
         <div class="navbar-end">
 
-            <!-- TODO
-            <a class="navbar-item" href="#">{{t .Locale "Schedule"}}</a>
+            <!-- TODO <a class="navbar-item" href="/schedule">{{t .Locale "Schedule"}}</a> -->
+
             <div class="navbar-item has-dropdown is-hoverable">
-                <a href="#" class="navbar-link">{{t .Locale "Leaderboards"}}</a>
+                <span class="navbar-link">{{t .Locale "Leaderboards"}}</span>
 
                 <div class="navbar-dropdown is-boxed">
-                    <a class="navbar-item has-text-dark">
-                      Standard
-                    </a>
-                    <a class="navbar-item has-text-dark">
-                      Random
-                    </a>
+                    {{range $v := .Leagues}}
+                        <a href="/leaderboard/{{$v.ShortCode}}" class="navbar-item has-text-dark">{{$v.Name}}</a>
+                    {{end}}
                 </div>
             </div>
-            -->
+
             <a class="navbar-item" href="/documentation">{{t .Locale "Documentation"}}</a>
             <a class="navbar-item" href="/rules">{{t .Locale "Rules"}}</a>
 

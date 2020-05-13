@@ -2,6 +2,8 @@ package web
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 	"html/template"
 	"io/ioutil"
@@ -42,9 +44,15 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 	})
 
 	r.Get("/favicon.ico", s.favicon(fs))
+
 	r.Get("/rules", s.markdownContent(baseDir, "rules.md"))
 	r.Get("/documentation", s.markdownContent(baseDir, "documentation.md"))
+
+	r.Get("/leaderboard/{shortcode}", s.leaderboard)
+	// r.Get("/schedule", s.schedule)
+	r.Get("/history", s.history)
 	r.Get("/", s.index)
+	r.NotFound(s.notFound)
 
 	return r
 }
@@ -71,6 +79,10 @@ func langDetect(next http.Handler) http.Handler {
 		ctx := context.WithValue(r.Context(), ctxKeyLocale, key)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
+}
+
+func (s *Server) notFound(w http.ResponseWriter, r *http.Request) {
+	s.error(w, r, errors.New(http.StatusText(http.StatusNotFound)), http.StatusNotFound)
 }
 
 // Server contains the state required to serve the OOTRLadder website over HTTP.
@@ -158,20 +170,29 @@ func (s *Server) response(
 ) {
 	tpl, ok := s.tpl[template]
 	if !ok {
-		s.error(w, fmt.Errorf("template not found: %s", template), http.StatusInternalServerError)
+		log.Printf("template not found: %s", template)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(code)
 
+	leagues, err := s.back.GetLeagues()
+	if err != nil {
+		log.Printf("error: %s", err)
+		return
+	}
+
 	wrapped := struct {
 		Locale     string
 		Alternates map[string]string
+		Leagues    []back.League
 		Payload    interface{}
 	}{
 		r.Context().Value(ctxKeyLocale).(string),
 		s.getAlternates(r.URL),
+		leagues,
 		payload,
 	}
 
@@ -199,8 +220,15 @@ func (s *Server) getAlternates(original *url.URL) map[string]string {
 	return ret
 }
 
-func (s *Server) error(w http.ResponseWriter, err error, code int) {
+func (s *Server) error(w http.ResponseWriter, r *http.Request, err error, code int) {
+	if errors.Is(err, sql.ErrNoRows) {
+		code = http.StatusNotFound
+	}
+
 	log.Printf("error: HTTP %d: %s", code, err)
+	s.response(w, r, code, "error.html", struct {
+		HTTPCode int
+	}{code})
 	w.WriteHeader(code)
 }
 
@@ -225,14 +253,14 @@ func (s *Server) markdownContent(baseDir, name string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		locale := r.Context().Value(ctxKeyLocale).(string)
 		if len(locale) != 2 || (locale[0] == '.' || locale[0] == '/') {
-			s.error(w, fmt.Errorf("got a dangerous locale: %s", locale), http.StatusBadRequest)
+			s.error(w, r, fmt.Errorf("got a dangerous locale: %s", locale), http.StatusBadRequest)
 			return
 		}
 
 		path := fmt.Sprintf(pathFmt, locale)
 		md, err := ioutil.ReadFile(path)
 		if err != nil {
-			s.error(w, err, http.StatusInternalServerError)
+			s.error(w, r, err, http.StatusInternalServerError)
 			return
 		}
 
@@ -263,45 +291,52 @@ func getMarkdownTitle(mdPath string) string {
 	return string(title)
 }
 
-// index serves the homepage with a quick recap of the std league.
-func (s *Server) index(w http.ResponseWriter, r *http.Request) {
-	top3, err := s.getStdTop3()
+func (s *Server) schedule(w http.ResponseWriter, r *http.Request) {
+	s.cache(w, "public", 1*time.Hour)
+	s.response(w, r, http.StatusOK, "schedule.html", nil)
+}
+
+func (s *Server) history(w http.ResponseWriter, r *http.Request) {
+	sessions, leagues, err := s.back.GetMatchSessions(
+		time.Now().Add(-30*24*time.Hour),
+		time.Now(),
+		[]back.MatchSessionStatus{
+			back.MatchSessionStatusClosed,
+		},
+		`StartDate DESC`,
+	)
 	if err != nil {
-		s.error(w, err, http.StatusInternalServerError)
+		s.error(w, r, err, http.StatusInternalServerError)
 		return
 	}
 
-	sessions, leagues, err := s.back.GetIndexMatchSessions()
-	if err != nil {
-		s.error(w, err, http.StatusInternalServerError)
-		return
-	}
-
-	s.cache(w, "public", 1*time.Minute)
-	s.response(w, r, http.StatusOK, "index.html", struct {
-		Top3          []back.LeaderboardEntry
+	s.cache(w, "public", 1*time.Hour)
+	s.response(w, r, http.StatusOK, "history.html", struct {
 		MatchSessions []back.MatchSession
 		Leagues       map[util.UUIDAsBlob]back.League
 	}{
-		top3,
 		sessions,
 		leagues,
 	})
 }
 
-// getStdTop3 returns the Top 3 leaderboard for the standard league.
-func (s *Server) getStdTop3() ([]back.LeaderboardEntry, error) {
-	leaderboard, err := s.back.GetLeaderboardForShortcode(
-		"std",
-		back.DeviationThreshold,
-	)
+func (s *Server) leaderboard(w http.ResponseWriter, r *http.Request) {
+	shortcode := chi.URLParam(r, "shortcode")
+	league, err := s.back.GetLeagueByShortcode(shortcode)
 	if err != nil {
-		return nil, err
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
 	}
 
-	if len(leaderboard) > 3 {
-		leaderboard = leaderboard[:3]
+	leaderboard, err := s.back.GetLeaderboardForShortcode(shortcode, back.DeviationThreshold)
+	if err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
 	}
 
-	return leaderboard, nil
+	s.cache(w, "public", 1*time.Hour)
+	s.response(w, r, http.StatusOK, "leaderboard.html", struct {
+		League      back.League
+		Leaderboard []back.LeaderboardEntry
+	}{league, leaderboard})
 }

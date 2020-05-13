@@ -29,68 +29,108 @@ msgstr ""
 msgid "The Legend of Zelda: Ocarina of Time Randomizer racing leagues."
 msgstr ""
 
-#: resources/web/templates/includes/menu.html:15
+#: resources/web/templates/includes/menu.html:13
 msgid "Schedule"
 msgstr ""
 
-#: resources/web/templates/includes/menu.html:27
+#: resources/web/templates/includes/menu.html:16
 msgid "Leaderboards"
 msgstr ""
 
-#: resources/web/templates/includes/menu.html:39
+#: resources/web/templates/includes/menu.html:25
 msgid "Documentation"
 msgstr ""
 
-#: resources/web/templates/includes/menu.html:40
+#: resources/web/templates/includes/menu.html:26
 msgid "Rules"
 msgstr ""
 
-#: resources/web/templates/includes/menu.html:47
+#: resources/web/templates/includes/menu.html:33
 msgid "Join the server"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:12
-msgid "Next races"
+#: resources/web/templates/layouts/error.html:12
+msgid "The page you requested does not exist."
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:16
-msgid "%s league"
+#: resources/web/templates/layouts/error.html:14
+msgid "An internal error occured."
+msgstr ""
+
+#: resources/web/templates/layouts/error.html:16
+msgid "Error %d"
+msgstr ""
+
+#: resources/web/templates/layouts/history.html:10
+msgid "Races completed in the last 30 days"
+msgstr ""
+
+#: resources/web/templates/layouts/history.html:21
+msgid "League"
+msgstr ""
+
+#: resources/web/templates/layouts/history.html:22
+msgid "Date"
+msgstr ""
+
+#: resources/web/templates/layouts/history.html:23
+msgid "Players"
+msgstr ""
+
+#: resources/web/templates/layouts/index.html:13
+msgid "Next races"
 msgstr ""
 
 #: resources/web/templates/layouts/index.html:24
 msgid "Starts in %s"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:39
+#: resources/web/templates/layouts/index.html:34
 msgid "in"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:49
+#: resources/web/templates/layouts/index.html:45
 msgid "player"
 msgid_plural "players"
 msgstr[0] ""
 msgstr[1] ""
 
-#: resources/web/templates/layouts/index.html:59
+#: resources/web/templates/layouts/index.html:55
 msgid "There is no scheduled race right now."
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:72
+#: resources/web/templates/layouts/index.html:68
 msgid "Scheduled races"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:82
+#: resources/web/templates/layouts/index.html:79
 msgid "Races history"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:90
-msgid "Leaderboard"
-msgstr ""
-
-#: resources/web/templates/layouts/index.html:91
+#: resources/web/templates/layouts/index.html:88
 msgid "Standard league"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:108
+#: resources/web/templates/layouts/index.html:102
 msgid "Full leaderboard"
+msgstr ""
+
+#: resources/web/templates/layouts/leaderboard.html:7
+msgid "Leaderboard"
+msgstr ""
+
+#: resources/web/templates/layouts/leaderboard.html:8
+msgid "%s league"
+msgstr ""
+
+#: resources/web/templates/layouts/leaderboard.html:19
+msgid "Rank"
+msgstr ""
+
+#: resources/web/templates/layouts/leaderboard.html:20
+msgid "Nickname"
+msgstr ""
+
+#: resources/web/templates/layouts/leaderboard.html:21
+msgid "Skill range"
 msgstr ""

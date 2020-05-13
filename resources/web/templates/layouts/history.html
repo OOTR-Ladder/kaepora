@@ -6,8 +6,8 @@
 
         <div class="hero-body">
             <div class="container">
-                <h1 class="title">Historique</h1>
-                <h2 class="subtitle">Liste des courses OoTR Ladder terminées</h2>
+                <h1 class="title">{{t .Locale "Races history"}}</h1>
+                <h1 class="subtitle">{{t .Locale "Races completed in the last 30 days"}}</h1>
             </div>
         </div>
     </section>
@@ -18,60 +18,22 @@
                 <div class="column is-two-thirds">
                     <table class="table is-fullwidth is-hoverable pastRacesTables">
                         <thead>
-                            <th align="center">Ligue</th>
-                            <th>Date</th>
-                            <th align="center"><span class="icon"><i class="ri-group-fill"></i></span></th>
-                            <th><!-- When we will have the detail of past races --></th>
+                            <th>{{t .Locale "League"}}</th>
+                            <th>{{t .Locale "Date"}}</th>
+                            <th align="right">{{t .Locale "Players"}}</th>
+                            <!-- TODO details <th><th> -->
                         </thead>
                         <tbody>
+
+                            {{- range $v := .Payload.MatchSessions -}}
                             <tr class="pastRacesTables--race">
-                                <td align="center">Standard</td>
-                                <td>2020-05-05 20:15:00 +0200 +0200</td>
-                                <td align="center"><span class="tag is-dark is-rounded has-text-weight-bold"><i class="ri-group-line"></i> 12</span></td>
-                                <td class="pastRacesTables--race__detail">&nbsp;</td>
+                                <td>{{(index $.Payload.Leagues $v.LeagueID).Name}}</td>
+                                <td>{{$v.StartDate | datetime}}</td>
+                                <td align="right">{{len $v.PlayerIDs}}</td>
+                                <!-- TODO  <td class="pastRacesTables--race__detail"></td> -->
                             </tr>
-                            <tr class="pastRacesTables--race">
-                                <td align="center">Standard</td>
-                                <td>2020-05-05 20:15:00 +0200 +0200</td>
-                                <td align="center"><span class="tag is-dark is-rounded has-text-weight-bold"><i class="ri-group-line"></i> 12</span></td>
-                                <td class="pastRacesTables--race__detail">&nbsp;</td>
-                            </tr>
-                            <tr class="pastRacesTables--race">
-                                <td align="center">Standard</td>
-                                <td>2020-05-05 20:15:00 +0200 +0200</td>
-                                <td align="center"><span class="tag is-dark is-rounded has-text-weight-bold"><i class="ri-group-line"></i> 12</span></td>
-                                <td class="pastRacesTables--race__detail">&nbsp;</td>
-                            </tr>
-                            <tr class="pastRacesTables--race">
-                                <td align="center">Standard</td>
-                                <td>2020-05-05 20:15:00 +0200 +0200</td>
-                                <td align="center"><span class="tag is-dark is-rounded has-text-weight-bold"><i class="ri-group-line"></i> 12</span></td>
-                                <td class="pastRacesTables--race__detail">&nbsp;</td>
-                            </tr>
-                            <tr class="pastRacesTables--race">
-                                <td align="center">Standard</td>
-                                <td>2020-05-05 20:15:00 +0200 +0200</td>
-                                <td align="center"><span class="tag is-dark is-rounded has-text-weight-bold"><i class="ri-group-line"></i> 12</span></td>
-                                <td class="pastRacesTables--race__detail">&nbsp;</td>
-                            </tr>
-                            <tr class="pastRacesTables--race">
-                                <td align="center">Standard</td>
-                                <td>2020-05-05 20:15:00 +0200 +0200</td>
-                                <td align="center"><span class="tag is-dark is-rounded has-text-weight-bold"><i class="ri-group-line"></i> 12</span></td>
-                                <td class="pastRacesTables--race__detail">&nbsp;</td>
-                            </tr>
-                            <tr class="pastRacesTables--race">
-                                <td align="center">Standard</td>
-                                <td>2020-05-05 20:15:00 +0200 +0200</td>
-                                <td align="center"><span class="tag is-dark is-rounded has-text-weight-bold"><i class="ri-group-line"></i> 12</span></td>
-                                <td class="pastRacesTables--race__detail">&nbsp;</td>
-                            </tr>
-                            <tr class="pastRacesTables--race">
-                                <td align="center">Standard</td>
-                                <td>2020-05-05 20:15:00 +0200 +0200</td>
-                                <td align="center"><span class="tag is-dark is-rounded has-text-weight-bold"><i class="ri-group-line"></i> 12</span></td>
-                                <td class="pastRacesTables--race__detail">&nbsp;</td>
-                            </tr>
+                            {{- end -}}
+
                         </tbody>
                     </table>
                 </div>

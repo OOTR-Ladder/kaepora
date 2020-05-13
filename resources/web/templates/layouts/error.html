@@ -1,0 +1,23 @@
+{{define "content"}}
+<section class="hero is-dark is-fullheight homeHeader">
+    <div class="hero-head">
+        {{- template "menu" . -}}
+    </div>
+
+    <div class="hero-body">
+        <div class="container">
+            <article class="message is-danger">
+                <div class="message-body">
+                    {{if eq .Payload.HTTPCode 404}}
+                        {{t .Locale "The page you requested does not exist."}}
+                    {{else if eq .Payload.HTTPCode 500}}
+                        {{t .Locale "An internal error occured."}}
+                    {{else}}
+                        {{t .Locale "Error %d" .Payload.HTTPCode}}
+                    {{end}}
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+{{end}}
