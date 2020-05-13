@@ -1,5 +1,8 @@
 package back
 
+// This file contains functions specific to the web frontend.
+// Please do not call them outside of the webserver.
+
 import (
 	"kaepora/internal/util"
 	"time"
@@ -33,26 +36,40 @@ func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) ([
 	return ret, nil
 }
 
-func (b *Back) GetIndexMatchSessions() ([]MatchSession, map[util.UUIDAsBlob]League, error) {
+func (b *Back) GetLeagues() (ret []League, _ error) {
+	return ret, b.transaction(func(tx *sqlx.Tx) (err error) {
+		ret, err = getLeagues(tx)
+		return err
+	})
+}
+
+// GetMatchSessions returns session in a timeframe that have the given statuses
+// ordered by the given SQL clause.
+// The leagues the sessions belong to are returned indexed by their ID.
+func (b *Back) GetMatchSessions(
+	fromDate, toDate time.Time,
+	statuses []MatchSessionStatus,
+	order string,
+) ([]MatchSession, map[util.UUIDAsBlob]League, error) {
 	var (
 		sessions []MatchSession
 		leagues  map[util.UUIDAsBlob]League
 	)
 
-	now := time.Now()
-
 	if err := b.transaction(func(tx *sqlx.Tx) error {
-		query := `SELECT * FROM MatchSession
-        WHERE DATETIME(StartDate) >= DATETIME(?) AND
-              DATETIME(StartDate) <= DATETIME(?) AND
-              Status != ?
-        ORDER BY StartDate ASC`
-		if err := tx.Select(
-			&sessions, query,
-			now.Add(-24*time.Hour),
-			now.Add(2*24*time.Hour),
-			MatchSessionStatusClosed,
-		); err != nil {
+		query, args, err := sqlx.In(`
+            SELECT * FROM MatchSession
+            WHERE DATETIME(StartDate) >= DATETIME(?) AND
+                  DATETIME(StartDate) <= DATETIME(?) AND
+                  Status IN(?)`,
+			fromDate, toDate, statuses,
+		)
+		if err != nil {
+			return err
+		}
+		query = tx.Rebind(query) + ` ORDER BY ` + order
+
+		if err := tx.Select(&sessions, query, args...); err != nil {
 			return err
 		}
 		ids := make([]util.UUIDAsBlob, 0, len(sessions))
@@ -64,7 +81,7 @@ func (b *Back) GetIndexMatchSessions() ([]MatchSession, map[util.UUIDAsBlob]Leag
 			return nil
 		}
 
-		query, args, err := sqlx.In(`SELECT * FROM League WHERE ID IN (?)`, ids)
+		query, args, err = sqlx.In(`SELECT * FROM League WHERE ID IN (?)`, ids)
 		if err != nil {
 			return err
 		}

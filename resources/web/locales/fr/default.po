@@ -29,25 +29,41 @@ msgstr "Fermée"
 msgid "The Legend of Zelda: Ocarina of Time Randomizer racing leagues."
 msgstr "Compétitions de Randomizer sur The Legend of Zelda: Ocarina of Time."
 
-#: resources/web/templates/includes/menu.html:15
+#: resources/web/templates/includes/menu.html:13
 msgid "Schedule"
 msgstr "Planning"
 
-#: resources/web/templates/includes/menu.html:27
+#: resources/web/templates/includes/menu.html:15
 msgid "Leaderboards"
 msgstr "Classements"
 
-#: resources/web/templates/includes/menu.html:39
+#: resources/web/templates/includes/menu.html:24
 msgid "Documentation"
 msgstr "Documentation"
 
-#: resources/web/templates/includes/menu.html:40
+#: resources/web/templates/includes/menu.html:25
 msgid "Rules"
 msgstr "Règles"
 
-#: resources/web/templates/includes/menu.html:47
+#: resources/web/templates/includes/menu.html:32
 msgid "Join the server"
 msgstr "Rejoignez le serveur"
+
+#: resources/web/templates/layouts/history.html:10
+msgid "Races completed in the last 30 days"
+msgstr "Courses terminées dans les 30 derniers jours"
+
+#: resources/web/templates/layouts/history.html:21
+msgid "League"
+msgstr "Ligue"
+
+#: resources/web/templates/layouts/history.html:22
+msgid "Date"
+msgstr "Date"
+
+#: resources/web/templates/layouts/history.html:23
+msgid "Players"
+msgstr "Joueurs"
 
 #: resources/web/templates/layouts/index.html:12
 msgid "Next races"
@@ -75,22 +91,22 @@ msgstr[1] "joueurs"
 msgid "There is no scheduled race right now."
 msgstr "Il n'y a pas de course programmée pour l'instant."
 
-#: resources/web/templates/layouts/index.html:72
+#: resources/web/templates/layouts/index.html:71
 msgid "Scheduled races"
 msgstr "Courses planifiées"
 
-#: resources/web/templates/layouts/index.html:82
+#: resources/web/templates/layouts/index.html:81
 msgid "Races history"
 msgstr "Historique des courses"
 
-#: resources/web/templates/layouts/index.html:90
+#: resources/web/templates/layouts/index.html:88
 msgid "Leaderboard"
 msgstr "Classement"
 
-#: resources/web/templates/layouts/index.html:91
+#: resources/web/templates/layouts/index.html:89
 msgid "Standard league"
 msgstr "Ligue standard"
 
-#: resources/web/templates/layouts/index.html:108
+#: resources/web/templates/layouts/index.html:105
 msgid "Full leaderboard"
 msgstr "Classement complet"

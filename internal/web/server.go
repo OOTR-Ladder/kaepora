@@ -44,6 +44,8 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 	r.Get("/favicon.ico", s.favicon(fs))
 	r.Get("/rules", s.markdownContent(baseDir, "rules.md"))
 	r.Get("/documentation", s.markdownContent(baseDir, "documentation.md"))
+	r.Get("/schedule", s.schedule)
+	r.Get("/history", s.history)
 	r.Get("/", s.index)
 
 	return r
@@ -165,13 +167,21 @@ func (s *Server) response(
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(code)
 
+	leagues, err := s.back.GetLeagues()
+	if err != nil {
+		s.error(w, err, http.StatusInternalServerError)
+		return
+	}
+
 	wrapped := struct {
 		Locale     string
 		Alternates map[string]string
+		Leagues    []back.League
 		Payload    interface{}
 	}{
 		r.Context().Value(ctxKeyLocale).(string),
 		s.getAlternates(r.URL),
+		leagues,
 		payload,
 	}
 
@@ -263,45 +273,31 @@ func getMarkdownTitle(mdPath string) string {
 	return string(title)
 }
 
-// index serves the homepage with a quick recap of the std league.
-func (s *Server) index(w http.ResponseWriter, r *http.Request) {
-	top3, err := s.getStdTop3()
+func (s *Server) schedule(w http.ResponseWriter, r *http.Request) {
+	s.cache(w, "public", 1*time.Hour)
+	s.response(w, r, http.StatusOK, "schedule.html", nil)
+}
+
+func (s *Server) history(w http.ResponseWriter, r *http.Request) {
+	sessions, leagues, err := s.back.GetMatchSessions(
+		time.Now().Add(-30*24*time.Hour),
+		time.Now(),
+		[]back.MatchSessionStatus{
+			back.MatchSessionStatusClosed,
+		},
+		`StartDate DESC`,
+	)
 	if err != nil {
 		s.error(w, err, http.StatusInternalServerError)
 		return
 	}
 
-	sessions, leagues, err := s.back.GetIndexMatchSessions()
-	if err != nil {
-		s.error(w, err, http.StatusInternalServerError)
-		return
-	}
-
-	s.cache(w, "public", 1*time.Minute)
-	s.response(w, r, http.StatusOK, "index.html", struct {
-		Top3          []back.LeaderboardEntry
+	s.cache(w, "public", 1*time.Hour)
+	s.response(w, r, http.StatusOK, "history.html", struct {
 		MatchSessions []back.MatchSession
 		Leagues       map[util.UUIDAsBlob]back.League
 	}{
-		top3,
 		sessions,
 		leagues,
 	})
-}
-
-// getStdTop3 returns the Top 3 leaderboard for the standard league.
-func (s *Server) getStdTop3() ([]back.LeaderboardEntry, error) {
-	leaderboard, err := s.back.GetLeaderboardForShortcode(
-		"std",
-		back.DeviationThreshold,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(leaderboard) > 3 {
-		leaderboard = leaderboard[:3]
-	}
-
-	return leaderboard, nil
 }
