@@ -25,14 +25,14 @@
                         </thead>
                         <tbody>
 
-                            {{range $v := .Payload.MatchSessions}}
+                            {{- range $v := .Payload.MatchSessions -}}
                             <tr class="pastRacesTables--race">
                                 <td>{{(index $.Payload.Leagues $v.LeagueID).Name}}</td>
                                 <td>{{$v.StartDate | datetime}}</td>
                                 <td align="right">{{len $v.PlayerIDs}}</td>
                                 <!-- TODO  <td class="pastRacesTables--race__detail"></td> -->
                             </tr>
-                            {{end}}
+                            {{- end -}}
 
                         </tbody>
                     </table>
