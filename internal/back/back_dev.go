@@ -56,8 +56,8 @@ func (b *Back) LoadFixtures() error {
 	game := NewGame("The Legend of Zelda: Ocarina of Time")
 	leagues := []League{
 		NewLeague("Standard", "std", game.ID, oot.RandomizerAPIName+":5.2.0", "s3.json"),
-		NewLeague("Debug", "debug", game.ID, oot.RandomizerName+":5.2.12", "s3.json"),
-		NewLeague("Random", "random", game.ID, oot.SettingsRandomizerName+":5.2.12", "s3.json"),
+		NewLeague("Debug", "debug", game.ID, oot.RandomizerName+":5.2.13", "s3.json"),
+		NewLeague("Random", "random", game.ID, oot.SettingsRandomizerName+":5.2.13", "s3.json"),
 	}
 
 	// 20h PST is 05h CEST, Los Angeles was chosen because it observes DST

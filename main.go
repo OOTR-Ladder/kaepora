@@ -114,7 +114,7 @@ func serve(b *back.Back) error {
 
 func generateSpoilerLogs() error {
 	factory := factory.New(nil)
-	g, err := factory.NewGenerator(oot.RandomizerName + ":5.2.12")
+	g, err := factory.NewGenerator(oot.RandomizerName + ":5.2.13")
 	if err != nil {
 		return err
 	}

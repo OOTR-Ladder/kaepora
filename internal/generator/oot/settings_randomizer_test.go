@@ -20,7 +20,7 @@ func TestOOTSettingsRandomizer(t *testing.T) {
 	t.Parallel()
 
 	f := factory.New(nil)
-	g, err := f.NewGenerator(oot.SettingsRandomizerName + ":5.2.12")
+	g, err := f.NewGenerator(oot.SettingsRandomizerName + ":5.2.13")
 	if err != nil {
 		t.Fatal(err)
 	}
