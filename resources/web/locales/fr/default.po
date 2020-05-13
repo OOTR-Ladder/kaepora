@@ -29,23 +29,23 @@ msgstr "Fermée"
 msgid "The Legend of Zelda: Ocarina of Time Randomizer racing leagues."
 msgstr "Compétitions de Randomizer sur The Legend of Zelda: Ocarina of Time."
 
-#: resources/web/templates/includes/menu.html:11
+#: resources/web/templates/includes/menu.html:15
 msgid "Schedule"
 msgstr "Planning"
 
-#: resources/web/templates/includes/menu.html:20
+#: resources/web/templates/includes/menu.html:27
 msgid "Leaderboards"
 msgstr "Classements"
 
-#: resources/web/templates/includes/menu.html:31
+#: resources/web/templates/includes/menu.html:39
 msgid "Documentation"
 msgstr "Documentation"
 
-#: resources/web/templates/includes/menu.html:32
+#: resources/web/templates/includes/menu.html:40
 msgid "Rules"
 msgstr "Règles"
 
-#: resources/web/templates/includes/menu.html:39
+#: resources/web/templates/includes/menu.html:47
 msgid "Join the server"
 msgstr "Rejoignez le serveur"
 
@@ -62,8 +62,8 @@ msgid "Starts in %s"
 msgstr "Commence dans %s"
 
 #: resources/web/templates/layouts/index.html:39
-msgid "in <span>%s</span>"
-msgstr "dans <span>%s</span>"
+msgid "in"
+msgstr "dans"
 
 #: resources/web/templates/layouts/index.html:49
 msgid "player"
@@ -75,22 +75,22 @@ msgstr[1] "joueurs"
 msgid "There is no scheduled race right now."
 msgstr "Il n'y a pas de course programmée pour l'instant."
 
-#: resources/web/templates/layouts/index.html:71
+#: resources/web/templates/layouts/index.html:72
 msgid "Scheduled races"
 msgstr "Courses planifiées"
 
-#: resources/web/templates/layouts/index.html:81
+#: resources/web/templates/layouts/index.html:82
 msgid "Races history"
 msgstr "Historique des courses"
 
-#: resources/web/templates/layouts/index.html:88
+#: resources/web/templates/layouts/index.html:90
 msgid "Leaderboard"
 msgstr "Classement"
 
-#: resources/web/templates/layouts/index.html:89
+#: resources/web/templates/layouts/index.html:91
 msgid "Standard league"
 msgstr "Ligue standard"
 
-#: resources/web/templates/layouts/index.html:107
+#: resources/web/templates/layouts/index.html:108
 msgid "Full leaderboard"
 msgstr "Classement complet"

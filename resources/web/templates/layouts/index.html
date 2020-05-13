@@ -36,7 +36,7 @@
                                         {{end}}
                                         <i class="ri-time-line"></i>
                                         <div>
-                                            {{tmd $.Locale "in <span>%s</span>" (until $v.StartDate "m")}}
+                                            {{t $.Locale "in"}} <span>{{(until $v.StartDate "m")}}</span>
                                         </div>
                                     </div>
                                     {{end}}
