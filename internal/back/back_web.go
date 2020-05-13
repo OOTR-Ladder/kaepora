@@ -33,7 +33,7 @@ func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) ([
 	return ret, nil
 }
 
-func (b *Back) GetMatchSessionsAroundNow() ([]MatchSession, map[util.UUIDAsBlob]League, error) {
+func (b *Back) GetNextMatchSessions() ([]MatchSession, map[util.UUIDAsBlob]League, error) {
 	var (
 		sessions []MatchSession
 		leagues  map[util.UUIDAsBlob]League
@@ -44,14 +44,24 @@ func (b *Back) GetMatchSessionsAroundNow() ([]MatchSession, map[util.UUIDAsBlob]
 	if err := b.transaction(func(tx *sqlx.Tx) error {
 		query := `SELECT * FROM MatchSession
         WHERE DATETIME(StartDate) >= DATETIME(?) AND
-              DATETIME(StartDate) <= DATETIME(?)
+              DATETIME(StartDate) <= DATETIME(?) AND
+              Status != ?
         ORDER BY StartDate ASC`
-		if err := tx.Select(&sessions, query, now.Add(-24*time.Hour), now.Add(24*time.Hour)); err != nil {
+		if err := tx.Select(
+			&sessions, query,
+			now,
+			now.Add(2*24*time.Hour),
+			MatchSessionStatusClosed,
+		); err != nil {
 			return err
 		}
 		ids := make([]util.UUIDAsBlob, 0, len(sessions))
 		for k := range sessions {
 			ids = append(ids, sessions[k].LeagueID)
+		}
+
+		if len(ids) == 0 {
+			return nil
 		}
 
 		query, args, err := sqlx.In(`SELECT * FROM League WHERE ID IN (?)`, ids)

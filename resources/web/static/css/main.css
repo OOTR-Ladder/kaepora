@@ -1,0 +1,202 @@
+/* {{{ Global */
+body { font-family: "Jost", "Ubuntu", "Noto Sans", Arial, sans-serif; }
+#mainMenu .navbar-item { font-weight: bold; }
+/* }}} Global */
+
+/* {{{ Homepage */
+.homeHeader {
+    background-color: #2a2a72;
+    background-image: linear-gradient(
+        to right bottom,
+        rgba(42, 42, 114, 1),
+        rgba(0, 159, 253, 1)
+    );
+}
+
+.message.nextRace--registration {
+    position: absolute;
+    left: 15px;
+    bottom: 0;
+    margin-bottom: 0;
+
+    z-index: 1;
+
+    transform: translateY(25%);
+}
+
+.nextRace--registration .message-body {
+    padding: .5rem 1rem;
+    line-height: 30px;
+}
+.nextRace--registration .button { margin-left: 1rem; }
+
+.nextRace--status {
+    position: absolute;
+    top: 0;
+    right: 50px;
+    z-index: 2;
+
+    transform: translate(0, -50%);
+}
+
+.nextRace--contextual {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+
+    overflow: hidden;
+}
+
+div[class^="nextRace--contextual--"] {
+    padding-right: 1rem;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: auto;
+
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: right;
+    opacity: .5;
+}
+div[class^="nextRace--contextual--"] > div {
+    padding-bottom: 10px;
+    font-size: 1rem;
+    line-height: 1rem;
+    text-transform: uppercase;
+}
+div[class^="nextRace--contextual--"] > i {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 90px;
+    font-size: 8rem;
+    color: #505aff;
+    opacity: .2;
+    z-index: -1;
+
+    transform: translate(-50%, -40%);
+}
+
+.nextRace--contextual--players > div > .nbPlayers {
+    display: block;
+    font-size: 4rem;
+    line-height: 4rem;
+    font-weight: 900;
+
+}
+.nextRace--contextual--countdown > div > span {
+    display: block;
+    font-size: 3rem;
+    line-height: 3rem;
+    font-weight: 900;
+    text-transform: none;
+}
+
+.nextRace.is-mini {
+    padding: .5rem 1.25rem;
+    box-shadow: 0 .5em 1em -.125em rgba(10,10,10,.03),0 0 0 1px rgba(10,10,10,.02);
+}
+.nextRace.is-mini .subtitle { margin-bottom: 0; }
+.nextRace.is-mini div[class^="nextRace--contextual--"] > div {
+    padding-bottom: .5rem;
+    font-size: .8rem;
+    line-height: .8rem;
+}
+.nextRace.is-mini div[class^="nextRace--contextual--"] > i {
+    height: 45px;
+    font-size: 4rem;
+}
+.nextRace.is-mini .nextRace--contextual--countdown > div > span {
+    font-size: 2rem;
+    line-height: 2rem;
+}
+
+@media screen and (max-width:768px) {
+    .nextRace:not(.is-mini) .subtitle { margin-bottom: 3.5rem; }
+    .nextRace--status { right: 25px; }
+    .nextRace--contextual {
+        width: 100%;
+        z-index: 0;
+    }
+    .nextRace:not(.is-mini) div[class^="nextRace--contextual--"] > i {
+        font-size: 5rem;
+        transform: translate(-40%, 10%);
+    }
+    .nextRace:not(.is-mini) .nextRace--contextual--players > div > .nbPlayers {
+        font-size: 3rem;
+        line-height: 3rem;
+    }
+    .nextRace:not(.is-mini) div.nextRace--contextual--countdown {
+        padding-left: 1rem;
+        padding-right: 0;
+        left: 0;
+        right: unset;
+        text-align: left;
+    }
+    .nextRace:not(.is-mini) .nextRace--contextual--countdown > div > span {
+        font-size: 2rem;
+        line-height: 2rem;
+    }
+    .nextRace:not(.is-mini) div.nextRace--contextual--countdown > i {
+        right: unset;
+        left: 0;
+
+        transform: translate(40%, 10%);
+    }
+}
+
+/* Do NOT name this "leaderboard", it trips an adblocker rule. */
+.ldbrd { margin-bottom: 2rem; }
+.ldbrd--players {
+    text-align: center;
+}
+.ldbrd--players .player {
+    font-weight: bold;
+    line-height: normal;
+}
+
+.ldbrd--players .player:nth-child(1) { font-size: 2.5rem; }
+.ldbrd--players .player:nth-child(2) { font-size: 1.75rem; }
+.ldbrd--players .player:nth-child(3) { font-size: 1.5rem; }
+
+.ldbrd--players .player:nth-child(1) i { color: gold; }
+.ldbrd--players .player:nth-child(2) i { color: silver; }
+.ldbrd--players .player:nth-child(3) i { color: #cd7f32; }
+
+/* }}} Homepage */
+
+/* {{{ Leaderboard */
+.leaderboardTable__first-page .leaderboardTable--player:nth-child(1) i[class="ri-trophy-fill"] { color: gold; }
+.leaderboardTable__first-page .leaderboardTable--player:nth-child(2) i[class="ri-trophy-fill"] { color: silver; }
+.leaderboardTable__first-page .leaderboardTable--player:nth-child(3) i[class="ri-trophy-fill"] { color: #cd7f32; }
+
+.leaderboardTable--player:nth-child(1) td,
+.leaderboardTable--player:nth-child(2) td,
+.leaderboardTable--player:nth-child(3) td { font-weight: bold; }
+
+@media only screen and (min-width: 769px){
+    .leaderboardTable__first-page .leaderboardTable--player:nth-child(1) td { font-size: 2rem; }
+    .leaderboardTable__first-page .leaderboardTable--player:nth-child(2) td { font-size: 1.5rem; }
+    .leaderboardTable__first-page .leaderboardTable--player:nth-child(3) td { font-size: 1.25rem; }
+}
+/* }}} Leaderboard */
+
+/* {{{ Schedule */
+.upcomingRace--title {
+    padding-left: 1rem;
+    font-size: 3.6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+
+    transform: translateY(65%);
+
+    opacity: .2;
+}
+
+@media only screen and (max-width: 1215px) {
+    .upcomingRace--title { transform: translateY(30%); }
+}
+/* }}} Schedule */

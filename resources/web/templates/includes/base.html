@@ -10,8 +10,13 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://ootrladder.com/" />
 
-    <link rel="stylesheet" href="{{assetURL "bulma.min.css"}}" integrity="{{assetIntegrity "bulma.min.css"}}" />
-    <link rel="stylesheet" href="{{assetURL "main.css"}}" integrity="{{assetIntegrity "main.css"}}" />
+    <link rel="stylesheet" href="{{assetURL "css/bulma.min.css"}}" integrity="{{assetIntegrity "css/bulma.min.css"}}" />
+    <link rel="stylesheet" href="{{assetURL "css/main.css"}}" integrity="{{assetIntegrity "css/main.css"}}" />
+    <link rel="stylesheet" href="{{assetURL "css/remixicon.css"}}" integrity="{{assetIntegrity "css/remixicon.css"}}" />
+
+    {{range $lang, $url := .Alternates}}
+        <link rel="alternate" hreflang="{{$lang}}" href="{{$url}}" />
+    {{end}}
 </head>
 <body>
     {{- template "content" . -}}

@@ -46,17 +46,17 @@ func (s *Server) loadTemplates(baseDir string) (map[string]*template.Template, e
 
 func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 	return template.FuncMap{
-		"t": func(locale string, str string) string {
-			return s.locales[locale].Get(str)
+		"t": func(locale string, str string, args ...interface{}) string {
+			return s.locales[locale].Get(str, args...)
 		},
 
-		"tf": func(locale string, str string, args ...interface{}) string {
-			return fmt.Sprintf(s.locales[locale].Get(str), args...)
+		"tn": func(locale, singular, plural string, count int, args ...interface{}) string {
+			return s.locales[locale].GetN(singular, plural, count, args...)
 		},
 
-		"tmd": func(locale, str string) template.HTML {
+		"tmd": func(locale, str string, args ...interface{}) template.HTML {
 			return template.HTML(blackfriday.Run( // nolint:gosec
-				[]byte(s.locales[locale].Get(str)),
+				[]byte(s.locales[locale].Get(str, args...)),
 			))
 		},
 
@@ -64,24 +64,24 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 			var str, class string
 			switch status {
 			case back.MatchSessionStatusWaiting:
-				str = s.locales[locale].Get("planned")
-				class = "is-primary is-light"
-			case back.MatchSessionStatusJoinable:
-				str = s.locales[locale].Get("joinable")
-				class = "is-success"
-			case back.MatchSessionStatusPreparing:
-				str = s.locales[locale].Get("preparing")
+				str = s.locales[locale].Get("Planned")
 				class = "is-success is-light"
+			case back.MatchSessionStatusJoinable:
+				str = s.locales[locale].Get("Joinable")
+				class = "is-success is-light"
+			case back.MatchSessionStatusPreparing:
+				str = s.locales[locale].Get("Preparing")
+				class = "is-warning is-light"
 			case back.MatchSessionStatusInProgress:
-				str = s.locales[locale].Get("in progress")
-				class = "is-primary"
+				str = s.locales[locale].Get("Race in progress")
+				class = "is-success"
 			case back.MatchSessionStatusClosed:
-				str = s.locales[locale].Get("closed")
+				str = s.locales[locale].Get("Closed")
 			default:
 				return ""
 			}
 
-			return template.HTML(fmt.Sprintf(`<span class="tag %s">%s</span>`, class, str)) // nolint:gosec
+			return template.HTML(fmt.Sprintf(`<span class="tag is-medium is-rounded %s">%s</span>`, class, str)) // nolint:gosec
 		},
 
 		"ranking":        tplRanking,

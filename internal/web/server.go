@@ -9,6 +9,7 @@ import (
 	"kaepora/internal/util"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"sync"
@@ -165,16 +166,37 @@ func (s *Server) response(
 	w.WriteHeader(code)
 
 	wrapped := struct {
-		Locale  string
-		Payload interface{}
+		Locale     string
+		Alternates map[string]string
+		Payload    interface{}
 	}{
 		r.Context().Value(ctxKeyLocale).(string),
+		s.getAlternates(r.URL),
 		payload,
 	}
 
 	if err := tpl.ExecuteTemplate(w, "base", wrapped); err != nil {
 		log.Printf("error: unable to render template: %s", err)
 	}
+}
+
+func (s *Server) getAlternates(original *url.URL) map[string]string {
+	ret := make(map[string]string, len(s.locales))
+
+	for k := range s.locales {
+		cpy, err := url.Parse(original.String())
+		if err != nil {
+			continue
+		}
+
+		q := cpy.Query()
+		q.Set("lang", k)
+		cpy.RawQuery = q.Encode()
+
+		ret[k] = cpy.String()
+	}
+
+	return ret
 }
 
 func (s *Server) error(w http.ResponseWriter, err error, code int) {
@@ -207,28 +229,49 @@ func (s *Server) markdownContent(baseDir, name string) http.HandlerFunc {
 			return
 		}
 
-		md, err := ioutil.ReadFile(fmt.Sprintf(pathFmt, locale))
+		path := fmt.Sprintf(pathFmt, locale)
+		md, err := ioutil.ReadFile(path)
 		if err != nil {
 			s.error(w, err, http.StatusInternalServerError)
 			return
 		}
 
 		parsed := template.HTML(blackfriday.Run(md)) // nolint:gosec
+		title := getMarkdownTitle(path)
 
 		s.cache(w, "public", 1*time.Hour)
-		s.response(w, r, http.StatusOK, "markdown.html", parsed)
+		s.response(w, r, http.StatusOK, "markdown.html", struct {
+			Title    string
+			Markdown template.HTML
+		}{
+			Title:    title,
+			Markdown: parsed,
+		})
 	}
+}
+
+// getMarkdownTitle fetches the sibling file of a ".md" with the ".title"
+// extension and returns its contents.
+// If we ever need more stuff, change this to a "getMarkdownMeta".
+func getMarkdownTitle(mdPath string) string {
+	titlePath := mdPath[:len(mdPath)-2] + "title"
+	title, err := ioutil.ReadFile(titlePath)
+	if err != nil {
+		return ""
+	}
+
+	return string(title)
 }
 
 // index serves the homepage with a quick recap of the std league.
 func (s *Server) index(w http.ResponseWriter, r *http.Request) {
-	top20, err := s.getStdTop20()
+	top3, err := s.getStdTop3()
 	if err != nil {
 		s.error(w, err, http.StatusInternalServerError)
 		return
 	}
 
-	sessions, leagues, err := s.back.GetMatchSessionsAroundNow()
+	sessions, leagues, err := s.back.GetNextMatchSessions()
 	if err != nil {
 		s.error(w, err, http.StatusInternalServerError)
 		return
@@ -236,18 +279,18 @@ func (s *Server) index(w http.ResponseWriter, r *http.Request) {
 
 	s.cache(w, "public", 1*time.Minute)
 	s.response(w, r, http.StatusOK, "index.html", struct {
-		Top20         []back.LeaderboardEntry
+		Top3          []back.LeaderboardEntry
 		MatchSessions []back.MatchSession
 		Leagues       map[util.UUIDAsBlob]back.League
 	}{
-		top20,
+		top3,
 		sessions,
 		leagues,
 	})
 }
 
-// getStdTop20 returns the Top 20 leaderboard for the standard league.
-func (s *Server) getStdTop20() ([]back.LeaderboardEntry, error) {
+// getStdTop3 returns the Top 3 leaderboard for the standard league.
+func (s *Server) getStdTop3() ([]back.LeaderboardEntry, error) {
 	leaderboard, err := s.back.GetLeaderboardForShortcode(
 		"std",
 		back.DeviationThreshold,
@@ -256,8 +299,8 @@ func (s *Server) getStdTop20() ([]back.LeaderboardEntry, error) {
 		return nil, err
 	}
 
-	if len(leaderboard) > 20 {
-		leaderboard = leaderboard[:20]
+	if len(leaderboard) > 3 {
+		leaderboard = leaderboard[:3]
 	}
 
 	return leaderboard, nil
