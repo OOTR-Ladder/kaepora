@@ -1,15 +1,10 @@
-/* General styles */
+/* {{{ Global */
 body { font-family: "Jost", "Ubuntu", "Noto Sans", Arial, sans-serif; }
 #mainMenu .navbar-item { font-weight: bold; }
+/* }}} Global */
 
-/* Homepage specific */
-
+/* {{{ Homepage */
 .homeHeader {
-    /*background-image: linear-gradient(
-        to right bottom,
-        rgba(100, 180, 255, 1),
-        rgba(80, 90, 255, 1)
-    );*/
     background-color: #2a2a72;
     background-image: linear-gradient(
         to right bottom,
@@ -34,7 +29,6 @@ body { font-family: "Jost", "Ubuntu", "Noto Sans", Arial, sans-serif; }
     line-height: 30px;
 }
 .nextRace--registration .button { margin-left: 1rem; }
-
 
 .nextRace--status {
     position: absolute;
@@ -101,7 +95,7 @@ div[class^="nextRace--contextual--"] > i {
     text-transform: none;
 }
 
-.nextRace.is-mini { 
+.nextRace.is-mini {
     padding: .5rem 1.25rem;
     box-shadow: 0 .5em 1em -.125em rgba(10,10,10,.03),0 0 0 1px rgba(10,10,10,.02);
 }
@@ -123,7 +117,7 @@ div[class^="nextRace--contextual--"] > i {
 @media screen and (max-width:768px) {
     .nextRace:not(.is-mini) .subtitle { margin-bottom: 3.5rem; }
     .nextRace--status { right: 25px; }
-    .nextRace--contextual { 
+    .nextRace--contextual {
         width: 100%;
         z-index: 0;
     }
@@ -131,7 +125,7 @@ div[class^="nextRace--contextual--"] > i {
         font-size: 5rem;
         transform: translate(-40%, 10%);
     }
-    .nextRace:not(.is-mini) .nextRace--contextual--players > div > .nbPlayers { 
+    .nextRace:not(.is-mini) .nextRace--contextual--players > div > .nbPlayers {
         font-size: 3rem;
         line-height: 3rem;
     }
@@ -175,8 +169,9 @@ div[class^="nextRace--contextual--"] > i {
     padding: 0 20px 0 20px;
 }
 
-/* Leaderboard page */
+/* }}} Homepage */
 
+/* {{{ Leaderboard */
 .leaderboardTable__first-page .leaderboardTable--player:nth-child(1) i[class="ri-trophy-fill"] { color: gold; }
 .leaderboardTable__first-page .leaderboardTable--player:nth-child(2) i[class="ri-trophy-fill"] { color: silver; }
 .leaderboardTable__first-page .leaderboardTable--player:nth-child(3) i[class="ri-trophy-fill"] { color: #cd7f32; }
@@ -190,9 +185,9 @@ div[class^="nextRace--contextual--"] > i {
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(2) td { font-size: 1.5rem; }
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(3) td { font-size: 1.25rem; }
 }
+/* }}} Leaderboard */
 
-/* Schedule page */
-
+/* {{{ Schedule */
 .upcomingRace--title {
     padding-left: 1rem;
     font-size: 3.6rem;
@@ -207,3 +202,4 @@ div[class^="nextRace--contextual--"] > i {
 @media only screen and (max-width: 1215px) {
     .upcomingRace--title { transform: translateY(30%); }
 }
+/* }}} Schedule */
