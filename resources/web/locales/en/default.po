@@ -29,23 +29,23 @@ msgstr ""
 msgid "The Legend of Zelda: Ocarina of Time Randomizer racing leagues."
 msgstr ""
 
-#: resources/web/templates/includes/menu.html:13
+#: resources/web/templates/includes/menu.html:11
 msgid "Schedule"
 msgstr ""
 
-#: resources/web/templates/includes/menu.html:22
+#: resources/web/templates/includes/menu.html:20
 msgid "Leaderboards"
 msgstr ""
 
-#: resources/web/templates/includes/menu.html:33
+#: resources/web/templates/includes/menu.html:31
 msgid "Documentation"
 msgstr ""
 
-#: resources/web/templates/includes/menu.html:34
+#: resources/web/templates/includes/menu.html:32
 msgid "Rules"
 msgstr ""
 
-#: resources/web/templates/includes/menu.html:41
+#: resources/web/templates/includes/menu.html:39
 msgid "Join the server"
 msgstr ""
 
@@ -61,26 +61,36 @@ msgstr ""
 msgid "Starts in %s"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:62
+#: resources/web/templates/layouts/index.html:39
+msgid "in <span>%s</span>"
+msgstr ""
+
+#: resources/web/templates/layouts/index.html:49
+msgid "player"
+msgid_plural "players"
+msgstr[0] ""
+msgstr[1] ""
+
+#: resources/web/templates/layouts/index.html:59
 msgid "There is no scheduled race right now."
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:74
+#: resources/web/templates/layouts/index.html:71
 msgid "Scheduled races"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:84
+#: resources/web/templates/layouts/index.html:81
 msgid "Races history"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:91
+#: resources/web/templates/layouts/index.html:88
 msgid "Leaderboard"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:92
+#: resources/web/templates/layouts/index.html:89
 msgid "Standard league"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:110
+#: resources/web/templates/layouts/index.html:107
 msgid "Full leaderboard"
 msgstr ""

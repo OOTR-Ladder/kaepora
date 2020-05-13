@@ -7,17 +7,9 @@ function main():int {
     $messages = [];
     output('find_template', 'parse_template', $messages);
     output('find_call', 'parse_call', $messages);
+    output_plural('find_templateN', 'parse_templateN', $messages);
 
     return 0;
-}
-
-function find_template(): array {
-    exec(
-        "find resources -type f -name '*.html' -print0 | xargs -0 grep -EHn 't(md|f)? \\$?.Locale \"'",
-        $calls,
-    );
-
-    return $calls;
 }
 
 function output(callable $finder, callable $parser, array &$messages) {
@@ -25,7 +17,7 @@ function output(callable $finder, callable $parser, array &$messages) {
         list($path, $line, $raw) = explode(':', $v, 3);
         $id = $parser($raw);
         if ($id === null) {
-            fprintf(STDERR, "Unable to parse $path:$line: $v\n");
+            fwrite(STDERR, "Unable to parse $path:$line: $v\n");
             continue;
         }
 
@@ -42,13 +34,69 @@ function output(callable $finder, callable $parser, array &$messages) {
     return 0;
 }
 
+function output_plural(callable $finder, callable $parser, array &$messages) {
+    foreach ($finder() as $v) {
+        list($path, $line, $raw) = explode(':', $v, 3);
+        list($singular, $plural) = $parser($raw);
+        if ($singular === null || $plural == null) {
+            fwrite(STDERR, "Unable to parse $path:$line: $v\n");
+            continue;
+        }
+
+        $key = $singular.$plural;
+        if (array_key_exists($key, $messages)) {
+            continue;
+        }
+        $messages[$key] = true;
+
+        echo "#: $path:$line\n";
+        echo "msgid $singular\n";
+        echo "msgid_plural $plural\n";
+        echo "msgstr[0] \"\"\n\n";
+        echo "msgstr[1] \"\"\n\n";
+    }
+
+    return 0;
+}
+
+function encode(string $v): string {
+    return preg_replace('`\\\([^"])`', '$1', json_encode($v));
+}
+
+function find_template(): array {
+    exec(
+        "find resources -type f -name '*.html' -print0 | xargs -0 grep -EHn 't(md)? \\$?.Locale \"'",
+        $calls,
+    );
+
+    return $calls;
+}
+
+function find_templateN(): array {
+    exec(
+        "find resources -type f -name '*.html' -print0 | xargs -0 grep -EHn 'tn \\$?.Locale \"'",
+        $calls,
+    );
+
+    return $calls;
+}
+
 function parse_template(string $str): ?string {
-    preg_match('`\{\{\s*t(md|f)?\s+\$?\.Locale\s+"([^"]*)".*\}\}`', $str, $matches);
+    preg_match('`\{\{\s*t(md)?\s+\$?\.Locale\s+"([^"]*)".*\}\}`', $str, $matches);
     if (count($matches) < 3) {
         return null;
     }
 
-    return json_encode($matches[2]);
+    return encode($matches[2]);
+}
+
+function parse_templateN(string $str): ?array {
+    preg_match('`\{\{\s*tn\s+\$?\.Locale\s+"([^"]*)"\s+"([^"]*)"\s+.*\}\}`', $str, $matches);
+    if (count($matches) < 3) {
+        return null;
+    }
+
+    return [encode($matches[1]), encode($matches[2])];
 }
 
 function find_call(): array {
@@ -66,5 +114,5 @@ function parse_call(string $str): ?string {
         return null;
     }
 
-    return json_encode($matches[1]);
+    return encode($matches[1]);
 }

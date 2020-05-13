@@ -44,9 +44,15 @@ func (b *Back) GetMatchSessionsAroundNow() ([]MatchSession, map[util.UUIDAsBlob]
 	if err := b.transaction(func(tx *sqlx.Tx) error {
 		query := `SELECT * FROM MatchSession
         WHERE DATETIME(StartDate) >= DATETIME(?) AND
-              DATETIME(StartDate) <= DATETIME(?)
+              DATETIME(StartDate) <= DATETIME(?) AND
+              Status != ?
         ORDER BY StartDate ASC`
-		if err := tx.Select(&sessions, query, now.Add(-24*time.Hour), now.Add(24*time.Hour)); err != nil {
+		if err := tx.Select(
+			&sessions, query,
+			now.Add(-24*time.Hour),
+			now.Add(24*time.Hour),
+			MatchSessionStatusClosed,
+		); err != nil {
 			return err
 		}
 		ids := make([]util.UUIDAsBlob, 0, len(sessions))

@@ -46,17 +46,17 @@ func (s *Server) loadTemplates(baseDir string) (map[string]*template.Template, e
 
 func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 	return template.FuncMap{
-		"t": func(locale string, str string) string {
-			return s.locales[locale].Get(str)
+		"t": func(locale string, str string, args ...interface{}) string {
+			return s.locales[locale].Get(str, args...)
 		},
 
-		"tf": func(locale string, str string, args ...interface{}) string {
-			return fmt.Sprintf(s.locales[locale].Get(str), args...)
+		"tn": func(locale, singular, plural string, count int, args ...interface{}) string {
+			return s.locales[locale].GetN(singular, plural, count, args...)
 		},
 
-		"tmd": func(locale, str string) template.HTML {
+		"tmd": func(locale, str string, args ...interface{}) template.HTML {
 			return template.HTML(blackfriday.Run( // nolint:gosec
-				[]byte(s.locales[locale].Get(str)),
+				[]byte(s.locales[locale].Get(str, args...)),
 			))
 		},
 
