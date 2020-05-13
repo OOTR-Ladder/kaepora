@@ -11,7 +11,7 @@ import (
 func (s *Server) index(w http.ResponseWriter, r *http.Request) {
 	top3, err := s.getStdTop3("std")
 	if err != nil {
-		s.error(w, err, http.StatusInternalServerError)
+		s.error(w, r, err, http.StatusInternalServerError)
 		return
 	}
 
@@ -27,7 +27,7 @@ func (s *Server) index(w http.ResponseWriter, r *http.Request) {
 		`StartDate ASC`,
 	)
 	if err != nil {
-		s.error(w, err, http.StatusInternalServerError)
+		s.error(w, r, err, http.StatusInternalServerError)
 		return
 	}
 

@@ -90,6 +90,10 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 		"datetime":       util.Datetime,
 		"assetURL":       tplAssetURL,
 		"assetIntegrity": tplAssetIntegrity(baseDir),
+
+		"add": func(a, b int) int {
+			return a + b
+		},
 	}
 }
 

@@ -43,6 +43,13 @@ func (b *Back) GetLeagues() (ret []League, _ error) {
 	})
 }
 
+func (b *Back) GetLeagueByShortcode(shortcode string) (ret League, _ error) {
+	return ret, b.transaction(func(tx *sqlx.Tx) (err error) {
+		ret, err = getLeagueByShortCode(tx, shortcode)
+		return err
+	})
+}
+
 // GetMatchSessions returns session in a timeframe that have the given statuses
 // ordered by the given SQL clause.
 // The leagues the sessions belong to are returned indexed by their ID.
