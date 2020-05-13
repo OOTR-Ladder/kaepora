@@ -39,7 +39,7 @@ test:
 	go test -tags docker,api --timeout=30s ./...
 
 run:
-	gin --bin "$(EXEC)" --buildArgs "${BUILDFLAGS}" -- serve
+	gin --all --bin "$(EXEC)" --buildArgs "${BUILDFLAGS}" -- serve
 
 extract:
 	./extract > out.po
