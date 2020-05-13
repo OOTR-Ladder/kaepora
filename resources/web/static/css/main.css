@@ -1,5 +1,5 @@
 /* General styles */
-body { font-family: "Jost", Arial, sans-serif; }
+body { font-family: "Jost", "Ubuntu", "Noto Sans", Arial, sans-serif; }
 #mainMenu .navbar-item { font-weight: bold; }
 
 /* Homepage specific */
