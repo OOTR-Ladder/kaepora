@@ -328,7 +328,7 @@ func (s *Server) leaderboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, "public", 1*time.Hour)
+	s.cache(w, "public", 5*time.Minute)
 	s.response(w, r, http.StatusOK, "leaderboard.html", struct {
 		League      back.League
 		Leaderboard []back.LeaderboardEntry
