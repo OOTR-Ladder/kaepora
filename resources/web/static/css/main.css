@@ -190,3 +190,20 @@ div[class^="nextRace--contextual--"] > i {
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(2) td { font-size: 1.5rem; }
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(3) td { font-size: 1.25rem; }
 }
+
+/* Schedule page */
+
+.upcomingRace--title {
+    padding-left: 1rem;
+    font-size: 3.6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+
+    transform: translateY(65%);
+
+    opacity: .2;
+}
+
+@media only screen and (max-width: 1215px) {
+    .upcomingRace--title { transform: translateY(30%); }
+}
