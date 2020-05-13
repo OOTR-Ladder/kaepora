@@ -207,17 +207,38 @@ func (s *Server) markdownContent(baseDir, name string) http.HandlerFunc {
 			return
 		}
 
-		md, err := ioutil.ReadFile(fmt.Sprintf(pathFmt, locale))
+		path := fmt.Sprintf(pathFmt, locale)
+		md, err := ioutil.ReadFile(path)
 		if err != nil {
 			s.error(w, err, http.StatusInternalServerError)
 			return
 		}
 
 		parsed := template.HTML(blackfriday.Run(md)) // nolint:gosec
+		title := getMarkdownTitle(path)
 
 		s.cache(w, "public", 1*time.Hour)
-		s.response(w, r, http.StatusOK, "markdown.html", parsed)
+		s.response(w, r, http.StatusOK, "markdown.html", struct {
+			Title    string
+			Markdown template.HTML
+		}{
+			Title:    title,
+			Markdown: parsed,
+		})
 	}
+}
+
+// getMarkdownTitle fetches the sibling file of a ".md" with the ".title"
+// extension and returns its contents.
+// If we ever need more stuff, change this to a "getMarkdownMeta".
+func getMarkdownTitle(mdPath string) string {
+	titlePath := mdPath[:len(mdPath)-2] + "title"
+	title, err := ioutil.ReadFile(titlePath)
+	if err != nil {
+		return ""
+	}
+
+	return string(title)
 }
 
 // index serves the homepage with a quick recap of the std league.
