@@ -148,26 +148,23 @@ div[class^="nextRace--contextual--"] > i {
     }
 }
 
-.leaderboard { margin-bottom: 2rem; }
-.leaderboard--players {
+/* Do NOT name this "leaderboard", it trips an adblocker rule. */
+.ldbrd { margin-bottom: 2rem; }
+.ldbrd--players {
     text-align: center;
 }
-.leaderboard--players .player {
+.ldbrd--players .player {
     font-weight: bold;
     line-height: normal;
 }
 
-.leaderboard--players .player:nth-child(1) { font-size: 2.5rem; }
-.leaderboard--players .player:nth-child(2) { font-size: 1.75rem; }
-.leaderboard--players .player:nth-child(3) { font-size: 1.5rem; }
+.ldbrd--players .player:nth-child(1) { font-size: 2.5rem; }
+.ldbrd--players .player:nth-child(2) { font-size: 1.75rem; }
+.ldbrd--players .player:nth-child(3) { font-size: 1.5rem; }
 
-.leaderboard--players .player:nth-child(1) i { color: gold; }
-.leaderboard--players .player:nth-child(2) i { color: silver; }
-.leaderboard--players .player:nth-child(3) i { color: #cd7f32; }
-
-.league_leaderboard {
-    padding: 0 20px 0 20px;
-}
+.ldbrd--players .player:nth-child(1) i { color: gold; }
+.ldbrd--players .player:nth-child(2) i { color: silver; }
+.ldbrd--players .player:nth-child(3) i { color: #cd7f32; }
 
 /* }}} Homepage */
 

@@ -88,14 +88,12 @@
                     <h2 class="title">{{t .Locale "Leaderboard"}}</h2>
                     <h3 class="subtitle">{{t .Locale "Standard league"}}</h3>
 
-                    <div class="leaderboard">
-                        <div class="leaderboard--players">
-                            {{range $i, $v := .Payload.Top20}}
-                                {{if lt $i 3}}
-                                    <div class="player">
-                                        <span class="icon"><i class="ri-trophy-fill"></i></span> {{$v.PlayerName}}
-                                    </div>
-                                {{end}}
+                    <div class="ldbrd">
+                        <div class="ldbrd--players">
+                            {{range $i, $v := .Payload.Top3}}
+                                <div class="player">
+                                    <span class="icon"><i class="ri-trophy-fill"></i></span> {{$v.PlayerName}}
+                                </div>
                             {{end}}
                         </div>
                     </div>

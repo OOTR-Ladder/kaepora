@@ -243,7 +243,7 @@ func getMarkdownTitle(mdPath string) string {
 
 // index serves the homepage with a quick recap of the std league.
 func (s *Server) index(w http.ResponseWriter, r *http.Request) {
-	top20, err := s.getStdTop20()
+	top3, err := s.getStdTop3()
 	if err != nil {
 		s.error(w, err, http.StatusInternalServerError)
 		return
@@ -257,18 +257,18 @@ func (s *Server) index(w http.ResponseWriter, r *http.Request) {
 
 	s.cache(w, "public", 1*time.Minute)
 	s.response(w, r, http.StatusOK, "index.html", struct {
-		Top20         []back.LeaderboardEntry
+		Top3          []back.LeaderboardEntry
 		MatchSessions []back.MatchSession
 		Leagues       map[util.UUIDAsBlob]back.League
 	}{
-		top20,
+		top3,
 		sessions,
 		leagues,
 	})
 }
 
-// getStdTop20 returns the Top 20 leaderboard for the standard league.
-func (s *Server) getStdTop20() ([]back.LeaderboardEntry, error) {
+// getStdTop3 returns the Top 3 leaderboard for the standard league.
+func (s *Server) getStdTop3() ([]back.LeaderboardEntry, error) {
 	leaderboard, err := s.back.GetLeaderboardForShortcode(
 		"std",
 		back.DeviationThreshold,
@@ -277,8 +277,8 @@ func (s *Server) getStdTop20() ([]back.LeaderboardEntry, error) {
 		return nil, err
 	}
 
-	if len(leaderboard) > 20 {
-		leaderboard = leaderboard[:20]
+	if len(leaderboard) > 3 {
+		leaderboard = leaderboard[:3]
 	}
 
 	return leaderboard, nil
