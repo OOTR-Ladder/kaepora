@@ -9,6 +9,7 @@ import (
 	"kaepora/internal/util"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"sync"
@@ -165,16 +166,37 @@ func (s *Server) response(
 	w.WriteHeader(code)
 
 	wrapped := struct {
-		Locale  string
-		Payload interface{}
+		Locale     string
+		Alternates map[string]string
+		Payload    interface{}
 	}{
 		r.Context().Value(ctxKeyLocale).(string),
+		s.getAlternates(r.URL),
 		payload,
 	}
 
 	if err := tpl.ExecuteTemplate(w, "base", wrapped); err != nil {
 		log.Printf("error: unable to render template: %s", err)
 	}
+}
+
+func (s *Server) getAlternates(original *url.URL) map[string]string {
+	ret := make(map[string]string, len(s.locales))
+
+	for k := range s.locales {
+		cpy, err := url.Parse(original.String())
+		if err != nil {
+			continue
+		}
+
+		q := cpy.Query()
+		q.Set("lang", k)
+		cpy.RawQuery = q.Encode()
+
+		ret[k] = cpy.String()
+	}
+
+	return ret
 }
 
 func (s *Server) error(w http.ResponseWriter, err error, code int) {

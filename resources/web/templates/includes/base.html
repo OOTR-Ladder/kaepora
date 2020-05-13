@@ -13,6 +13,10 @@
     <link rel="stylesheet" href="{{assetURL "css/bulma.min.css"}}" integrity="{{assetIntegrity "css/bulma.min.css"}}" />
     <link rel="stylesheet" href="{{assetURL "css/main.css"}}" integrity="{{assetIntegrity "css/main.css"}}" />
     <link rel="stylesheet" href="{{assetURL "css/remixicon.css"}}" integrity="{{assetIntegrity "css/remixicon.css"}}" />
+
+    {{range $lang, $url := .Alternates}}
+        <link rel="alternate" hreflang="{{$lang}}" href="{{$url}}" />
+    {{end}}
 </head>
 <body>
     {{- template "content" . -}}
