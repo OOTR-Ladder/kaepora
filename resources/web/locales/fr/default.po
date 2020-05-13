@@ -5,19 +5,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: internal/web/templates.go:68
+#: internal/web/templates.go:67
 msgid "Planned"
 msgstr "Planifiée"
 
-#: internal/web/templates.go:71
+#: internal/web/templates.go:70
 msgid "Joinable"
 msgstr "Inscriptions ouvertes"
 
-#: internal/web/templates.go:74
+#: internal/web/templates.go:73
 msgid "Preparing"
 msgstr "En préparation"
 
-#: internal/web/templates.go:77
+#: internal/web/templates.go:76
 msgid "Race in progress"
 msgstr "Course en cours"
 
@@ -29,29 +29,25 @@ msgstr "Fermée"
 msgid "The Legend of Zelda: Ocarina of Time Randomizer racing leagues."
 msgstr "Compétitions de Randomizer sur The Legend of Zelda: Ocarina of Time."
 
-#: resources/web/templates/includes/menu.html:38
+#: resources/web/templates/includes/menu.html:13
 msgid "Schedule"
 msgstr "Planning"
 
-#: resources/web/templates/includes/menu.html:38
+#: resources/web/templates/includes/menu.html:22
 msgid "Leaderboards"
 msgstr "Classements"
 
-#: resources/web/templates/includes/menu.html:38
+#: resources/web/templates/includes/menu.html:33
 msgid "Documentation"
 msgstr "Documentation"
 
-#: resources/web/templates/includes/menu.html:38
+#: resources/web/templates/includes/menu.html:34
 msgid "Rules"
 msgstr "Règles"
 
-#: resources/web/templates/includes/menu.html:38
+#: resources/web/templates/includes/menu.html:41
 msgid "Join the server"
 msgstr "Rejoignez le serveur"
-
-#: resources/web/templates/layouts/index.html:4
-msgid "OoTR Randomizer Ladder"
-msgstr ""
 
 #: resources/web/templates/layouts/index.html:12
 msgid "Next races"
@@ -61,7 +57,7 @@ msgstr "Prochaines courses"
 msgid "%s league"
 msgstr "Ligue %s"
 
-#: resources/web/templates/layouts/index.html:23
+#: resources/web/templates/layouts/index.html:24
 msgid "Starts in %s"
 msgstr "Commence dans %s"
 
@@ -85,6 +81,6 @@ msgstr "Classement"
 msgid "Standard league"
 msgstr "Ligue standard"
 
-#: resources/web/templates/layouts/index.html:111
+#: resources/web/templates/layouts/index.html:110
 msgid "Full leaderboard"
 msgstr "Classement complet"

@@ -4,8 +4,9 @@
 exit(main());
 
 function main():int {
-    output('find_template', 'parse_template');
-    output('find_call', 'parse_call');
+    $messages = [];
+    output('find_template', 'parse_template', $messages);
+    output('find_call', 'parse_call', $messages);
 
     return 0;
 }
@@ -19,7 +20,7 @@ function find_template(): array {
     return $calls;
 }
 
-function output(callable $finder, callable $parser) {
+function output(callable $finder, callable $parser, array &$messages) {
     foreach ($finder() as $v) {
         list($path, $line, $raw) = explode(':', $v, 3);
         $id = $parser($raw);
@@ -27,6 +28,11 @@ function output(callable $finder, callable $parser) {
             fprintf(STDERR, "Unable to parse $path:$line: $v\n");
             continue;
         }
+
+        if (array_key_exists($id, $messages)) {
+            continue;
+        }
+        $messages[$id] = true;
 
         echo "#: $path:$line\n";
         echo "msgid $id\n";

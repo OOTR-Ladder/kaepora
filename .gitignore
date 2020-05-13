@@ -13,4 +13,5 @@
 *.z64
 /coverage.cov
 /coverage.html
+/out.po
 /spoilers
