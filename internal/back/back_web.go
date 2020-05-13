@@ -33,7 +33,7 @@ func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) ([
 	return ret, nil
 }
 
-func (b *Back) GetNextMatchSessions() ([]MatchSession, map[util.UUIDAsBlob]League, error) {
+func (b *Back) GetIndexMatchSessions() ([]MatchSession, map[util.UUIDAsBlob]League, error) {
 	var (
 		sessions []MatchSession
 		leagues  map[util.UUIDAsBlob]League
@@ -49,7 +49,7 @@ func (b *Back) GetNextMatchSessions() ([]MatchSession, map[util.UUIDAsBlob]Leagu
         ORDER BY StartDate ASC`
 		if err := tx.Select(
 			&sessions, query,
-			now,
+			now.Add(-24*time.Hour),
 			now.Add(2*24*time.Hour),
 			MatchSessionStatusClosed,
 		); err != nil {

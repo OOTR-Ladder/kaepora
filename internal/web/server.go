@@ -271,7 +271,7 @@ func (s *Server) index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sessions, leagues, err := s.back.GetNextMatchSessions()
+	sessions, leagues, err := s.back.GetIndexMatchSessions()
 	if err != nil {
 		s.error(w, err, http.StatusInternalServerError)
 		return
