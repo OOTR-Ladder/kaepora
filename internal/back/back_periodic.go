@@ -344,12 +344,16 @@ func (b *Back) endMatchSessionsAndUpdateRanks() error {
 			if err := sessions[k].update(tx); err != nil {
 				return err
 			}
+		}
+		return nil
+	}); err != nil {
+		return err
+	}
 
-			if err := b.updateRankingsForMatchSession(tx, sessions[k], matches[sessions[k].ID]); err != nil {
-				return err
-			}
-
-			if err := b.sendSessionStatusUpdateNotification(tx, sessions[k]); err != nil {
+	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
+		now := time.Now()
+		for k := range sessions {
+			if err := b.updateLeagueRankings(tx, sessions[k].LeagueID, now); err != nil {
 				return err
 			}
 		}
@@ -362,6 +366,10 @@ func (b *Back) endMatchSessionsAndUpdateRanks() error {
 	// In a separate transaction to avoid delaying ranking updates and working with stale data.
 	return b.transaction(func(tx *sqlx.Tx) error {
 		for k := range sessions {
+			if err := b.sendSessionStatusUpdateNotification(tx, sessions[k]); err != nil {
+				return err
+			}
+
 			if err := b.sendSessionRecapNotification(
 				tx, sessions[k], matches[sessions[k].ID],
 				RecapScopePublic, nil,

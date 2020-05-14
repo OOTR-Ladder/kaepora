@@ -57,6 +57,10 @@ func main() {
 		if err := serve(back); err != nil {
 			log.Fatal(err)
 		}
+	case "rerank":
+		if err := back.Rerank(flag.Arg(1)); err != nil {
+			log.Fatal(err)
+		}
 	default:
 		fmt.Fprint(os.Stderr, help())
 		os.Exit(1)
@@ -76,6 +80,8 @@ COMMANDS
     serve       start the Discord bot
     spoilers    generate a spoiler log in $cwd/spoilers
     version     display the current version
+
+    rerank SHORTCODE  recompute all rankings in a league
 `,
 		os.Args[0],
 	)
