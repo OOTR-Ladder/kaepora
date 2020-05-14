@@ -69,7 +69,7 @@ func (g *RandomizerAPI) Generate(settingsName, seed string) (generator.Output, e
 }
 
 func (g *RandomizerAPI) waitForSeedgen(id string) error {
-	timeout := time.Now().Add(60 * time.Second)
+	timeout := time.Now().Add(120 * time.Second)
 	for {
 		time.Sleep(5 * time.Second)
 

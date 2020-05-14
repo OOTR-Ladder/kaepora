@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -25,7 +26,7 @@ type API struct {
 func New(key string) *API {
 	return &API{
 		// We're allowed 20 requests per 10 second
-		limiter: rate.NewLimiter(2, 10),
+		limiter: rate.NewLimiter(20/10, 1),
 		key:     key,
 		http: http.Client{
 			Timeout: 10 * time.Second,
@@ -63,9 +64,6 @@ func (api *API) getURL(subPath string, q url.Values) string {
 
 func (api *API) CreateSeed(version string, settings map[string]interface{}) (string, error) {
 	log.Print("debug: creating API seed")
-	if err := api.limiter.Wait(context.TODO()); err != nil {
-		return "", err
-	}
 
 	body, err := json.Marshal(settings)
 	if err != nil {
@@ -106,10 +104,6 @@ func (api *API) CreateSeed(version string, settings map[string]interface{}) (str
 func (api *API) GetSeedStatus(id string) (SeedStatus, error) {
 	log.Printf("debug: fetching API seed status for ID  %s", id)
 
-	if err := api.limiter.Wait(context.TODO()); err != nil {
-		return SeedStatusInvalid, err
-	}
-
 	url := api.getURL("/seed/status", url.Values{"id": {id}})
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -137,10 +131,6 @@ func (api *API) GetSeedStatus(id string) (SeedStatus, error) {
 func (api *API) GetSeedSpoilerLog(id string) ([]byte, error) {
 	log.Printf("debug: fetching API seed spoiler log for ID  %s", id)
 
-	if err := api.limiter.Wait(context.TODO()); err != nil {
-		return nil, err
-	}
-
 	url := api.getURL("/seed/details", url.Values{"id": {id}})
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -160,59 +150,85 @@ func (api *API) GetSeedSpoilerLog(id string) ([]byte, error) {
 func (api *API) GetSeedPatch(id string) ([]byte, error) {
 	log.Printf("debug: fetching API seed patch for ID  %s", id)
 
-	if err := api.limiter.Wait(context.TODO()); err != nil {
-		return nil, err
-	}
-
 	url := api.getURL("/seed/patch", url.Values{"id": {id}})
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, err := api.http.Do(request)
-	if err != nil {
+
+	var ret []byte
+	if err := api.do(request, &ret); err != nil {
 		return nil, err
 	}
-	defer res.Body.Close()
-	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("got status code %d", res.StatusCode)
-	}
 
-	return ioutil.ReadAll(res.Body)
+	return ret, nil
 }
 
 func (api *API) UnlockSeedSpoilerLog(id string) error {
 	log.Printf("debug: unlocking API seed spoiler logs for ID  %s", id)
-
-	if err := api.limiter.Wait(context.TODO()); err != nil {
-		return err
-	}
 
 	url := api.getURL("/seed/unlock", url.Values{"id": {id}})
 	request, err := http.NewRequest(http.MethodPost, url, nil)
 	if err != nil {
 		return err
 	}
-	res, err := api.http.Do(request)
-	if err != nil {
-		return err
-	}
-	defer res.Body.Close()
-	if res.StatusCode != http.StatusOK {
-		return fmt.Errorf("got status code %d", res.StatusCode)
-	}
 
-	return nil
+	return api.do(request, nil)
 }
 
+var errRateLimit = errors.New("triggered API rate-limiter")
+
+// do performs a rate-limited request on the API and writes the JSON-decoded
+// response body in response.
+// If response is nil the body is discarded, if response is *[]byte, the body
+// is written raw.
 func (api *API) do(request *http.Request, response interface{}) error {
+	var tries int
+
+	for {
+		err := api.doInner(request, response)
+		if errors.Is(err, errRateLimit) {
+			tries++
+			log.Printf("warning: rate-limited %d times", tries)
+			continue
+		}
+
+		return err
+	}
+}
+
+func (api *API) doInner(request *http.Request, response interface{}) error {
+	start := time.Now()
+	if err := api.limiter.Wait(context.TODO()); err != nil {
+		return err
+	}
+	log.Printf("debug: waited %s before calling API", time.Since(start))
+
 	res, err := api.http.Do(request)
 	if err != nil {
 		return fmt.Errorf("unable to perform HTTP request: %w", err)
 	}
 	defer res.Body.Close()
+	if res.StatusCode == http.StatusTooManyRequests {
+		return errRateLimit
+	}
+
 	if res.StatusCode != http.StatusOK {
 		return fmt.Errorf("got status code %d", res.StatusCode)
+	}
+
+	// Special case, treat byte slices as asking for raw contents
+	if response, ok := response.(*[]byte); ok {
+		*response, err = ioutil.ReadAll(res.Body)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}
+
+	if response == nil {
+		return nil
 	}
 
 	dec := json.NewDecoder(res.Body)

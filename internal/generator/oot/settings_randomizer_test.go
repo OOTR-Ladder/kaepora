@@ -5,16 +5,8 @@ package oot_test
 import (
 	"kaepora/internal/generator/factory"
 	"kaepora/internal/generator/oot"
-	"os"
 	"testing"
 )
-
-func TestMain(m *testing.M) {
-	if err := os.Chdir("../../.."); err != nil { // generators are CWD dependant
-		panic(err)
-	}
-	os.Exit(m.Run())
-}
 
 func TestOOTSettingsRandomizer(t *testing.T) {
 	t.Parallel()

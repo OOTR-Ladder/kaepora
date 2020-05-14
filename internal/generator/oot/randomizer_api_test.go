@@ -10,9 +10,22 @@ import (
 )
 
 func TestCreateSeed(t *testing.T) {
-	t.Parallel()
+	api := loadAPI(t)
 
-	g := oot.NewRandomizerAPI("5.2.0", loadAPI(t))
+	testCreateSeed_inner(t, api)
+
+	/*
+		for i := 0; i < 10; i++ {
+			t.Run(strconv.Itoa(i), func(t *testing.T) {
+				t.Parallel()
+				testCreateSeed_inner(t, api)
+			})
+		}
+	*/
+}
+
+func testCreateSeed_inner(t *testing.T, api *ootrapi.API) {
+	g := oot.NewRandomizerAPI("5.2.0", api)
 	out, err := g.Generate("s3.json", "DEADBEEF")
 	if err != nil {
 		t.Fatal(err)
