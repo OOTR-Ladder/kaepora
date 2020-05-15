@@ -219,7 +219,8 @@ func getFirstMatchStartOfLeague(tx *sqlx.Tx, leagueID util.UUIDAsBlob) (util.Tim
 	var ret util.NullTimeAsTimestamp
 	if err := tx.Get(
 		&ret,
-		`SELECT StartedAt FROM Match WHERE LeagueID = ?
+		`SELECT StartedAt FROM Match
+        WHERE StartedAt IS NOT NULL AND LeagueID = ?
         ORDER BY StartedAt LIMIT 1`,
 		leagueID,
 	); err != nil {
