@@ -17,7 +17,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
-	glicko "github.com/zelenin/go-glicko2"
 )
 
 // doMatchMaking creates all Match and MatchEntry on Matches that reached the
@@ -383,70 +382,4 @@ func getActiveMatchAndEntriesForPlayer(tx *sqlx.Tx, player Player) (
 	}
 
 	return match, self, opponent, nil
-}
-
-// updateRankingsForMatchSession updates every player in a League with the
-// outcome from the matches in the session.
-// The matches slice is an implementation detail and contains all matches of
-// the session, since the caller already has the list we don't want to fetch
-// them again.
-// TODO: Fro my understanding of Glicko-2 This should be done over multiple
-// sessions and not only the session that just ended.
-func (b *Back) updateRankingsForMatchSession(tx *sqlx.Tx, session MatchSession, matches []Match) error {
-	if session.Status != MatchSessionStatusClosed {
-		return fmt.Errorf("can't update rankings for non-closed session %s", session.ID)
-	}
-
-	glickoPlayers, err := getGlickoPlayersForLeague(tx, session.LeagueID)
-	if err != nil {
-		return err
-	}
-
-	period := glicko.NewRatingPeriod()
-
-	getGlickoPlayer := func(playerID, leagueID util.UUIDAsBlob) *glicko.Player {
-		p, ok := glickoPlayers[playerID]
-		if !ok {
-			p = glicko.NewPlayer(NewPlayerRating(playerID, leagueID).GlickoRating())
-			glickoPlayers[playerID] = p
-		}
-		return p
-	}
-
-	for k := range matches {
-		p1 := getGlickoPlayer(matches[k].Entries[0].PlayerID, session.LeagueID)
-		p2 := getGlickoPlayer(matches[k].Entries[1].PlayerID, session.LeagueID)
-
-		switch matches[k].Entries[0].Outcome {
-		case MatchEntryOutcomeWin:
-			period.AddMatch(p1, p2, glicko.MATCH_RESULT_WIN)
-		case MatchEntryOutcomeDraw:
-			period.AddMatch(p1, p2, glicko.MATCH_RESULT_DRAW)
-		case MatchEntryOutcomeLoss:
-			period.AddMatch(p1, p2, glicko.MATCH_RESULT_LOSS)
-		}
-	}
-
-	start := time.Now()
-	period.Calculate()
-	log.Printf("info: recalculated leaderboard for %d players in %s", len(glickoPlayers), time.Since(start))
-
-	for playerID, glickoPlayer := range glickoPlayers {
-		rating := NewPlayerRating(playerID, session.LeagueID)
-		glickoRating := glickoPlayer.Rating()
-
-		rating.Rating = glickoRating.R()
-		rating.Deviation = glickoRating.Rd()
-		rating.Volatility = glickoRating.Sigma()
-
-		if err := rating.insertHistory(tx); err != nil {
-			return fmt.Errorf("unable to insert rating history: %w", err)
-		}
-
-		if err := rating.upsert(tx); err != nil {
-			return fmt.Errorf("unable to update rating: %w", err)
-		}
-	}
-
-	return nil
 }

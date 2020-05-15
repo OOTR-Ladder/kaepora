@@ -141,6 +141,27 @@ func getMatchByPlayerAndSession(tx *sqlx.Tx, player Player, session MatchSession
 	return match, nil
 }
 
+func getMatchesByPeriod(tx *sqlx.Tx, from, to util.TimeAsTimestamp) ([]Match, error) {
+	var matches []Match
+	query := `
+        SELECT Match.* FROM Match
+        WHERE Match.StartedAt >= ? AND Match.StartedAt < ?
+        ORDER BY StartedAt ASC
+        `
+
+	if err := tx.Select(&matches, query, from, to); err != nil {
+		return nil, fmt.Errorf("could not fetch matches: %w", err)
+	}
+
+	for k := range matches {
+		if err := injectEntries(tx, &matches[k]); err != nil {
+			return nil, err
+		}
+	}
+
+	return matches, nil
+}
+
 func injectEntries(tx *sqlx.Tx, match *Match) error {
 	query := `SELECT * FROM MatchEntry WHERE MatchEntry.MatchID = ?`
 	if err := tx.Select(&match.Entries, query, match.ID); err != nil {
@@ -168,7 +189,7 @@ func getMatchesBySessionID(tx *sqlx.Tx, sessionID util.UUIDAsBlob) ([]Match, err
 	var matches []Match
 	query := `SELECT Match.* FROM Match WHERE Match.MatchSessionID = ?`
 	if err := tx.Select(&matches, query, sessionID); err != nil {
-		return nil, fmt.Errorf("could not fetch match: %w", err)
+		return nil, fmt.Errorf("could not fetch matches: %w", err)
 	}
 
 	for k := range matches {
@@ -192,4 +213,18 @@ func (m *Match) getPlayerAndOpponentEntries(playerID util.UUIDAsBlob) (MatchEntr
 	}
 
 	return MatchEntry{}, MatchEntry{}, fmt.Errorf("could not find MatchEntry for player %s in Match %d", playerID, m.ID)
+}
+
+func getFirstMatchStartOfLeague(tx *sqlx.Tx, leagueID util.UUIDAsBlob) (util.TimeAsTimestamp, error) {
+	var ret util.NullTimeAsTimestamp
+	if err := tx.Get(
+		&ret,
+		`SELECT StartedAt FROM Match WHERE LeagueID = ?
+        ORDER BY StartedAt LIMIT 1`,
+		leagueID,
+	); err != nil {
+		return util.TimeAsTimestamp{}, err
+	}
+
+	return ret.Time, nil
 }

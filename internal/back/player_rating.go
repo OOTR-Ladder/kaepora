@@ -19,6 +19,9 @@ type PlayerRating struct {
 	LeagueID  util.UUIDAsBlob
 	CreatedAt util.TimeAsTimestamp
 
+	// Used only on PlayerRatingHistory table
+	RatingPeriodStartedAt util.TimeAsTimestamp
+
 	// Glicko-2
 	Rating     float64
 	Deviation  float64
@@ -27,6 +30,12 @@ type PlayerRating struct {
 
 func (r PlayerRating) GlickoRating() *glicko.Rating {
 	return glicko.NewRating(r.Rating, r.Deviation, r.Volatility)
+}
+
+func (r *PlayerRating) SetRating(g *glicko.Rating) {
+	r.Rating = g.R()
+	r.Deviation = g.Rd()
+	r.Volatility = g.Sigma()
 }
 
 func NewPlayerRating(playerID, leagueID util.UUIDAsBlob) PlayerRating {
@@ -61,11 +70,16 @@ func getPlayerRating(
 
 // getGlickoRatingsForLeague returns players indexed by Player ID.
 func getGlickoPlayersForLeague(
-	tx *sqlx.Tx, leagueID util.UUIDAsBlob,
+	tx *sqlx.Tx,
+	leagueID util.UUIDAsBlob,
+	periodStart util.TimeAsTimestamp,
 ) (map[util.UUIDAsBlob]*glicko.Player, error) {
-	query := `SELECT * FROM PlayerRating WHERE PlayerRating.LeagueID = ?`
+	query := `
+        SELECT * FROM PlayerRatingHistory
+        WHERE LeagueID = ? AND RatingPeriodStartedAt = ?`
+
 	var ratings []PlayerRating
-	if err := tx.Select(&ratings, query, leagueID); err != nil {
+	if err := tx.Select(&ratings, query, leagueID, periodStart); err != nil {
 		return nil, err
 	}
 
@@ -103,14 +117,15 @@ func (r PlayerRating) upsert(tx *sqlx.Tx) error {
 	return nil
 }
 
-func (r PlayerRating) insertHistory(tx *sqlx.Tx) error {
+func (r PlayerRating) insertHistory(tx *sqlx.Tx, ratingPeriodStartedAt util.TimeAsTimestamp) error {
 	query, args, err := squirrel.Insert("PlayerRatingHistory").SetMap(squirrel.Eq{
-		"PlayerID":   r.PlayerID,
-		"LeagueID":   r.LeagueID,
-		"CreatedAt":  r.CreatedAt,
-		"Rating":     r.Rating,
-		"Deviation":  r.Deviation,
-		"Volatility": r.Volatility,
+		"PlayerID":              r.PlayerID,
+		"LeagueID":              r.LeagueID,
+		"CreatedAt":             r.CreatedAt,
+		"RatingPeriodStartedAt": ratingPeriodStartedAt,
+		"Rating":                r.Rating,
+		"Deviation":             r.Deviation,
+		"Volatility":            r.Volatility,
 	}).ToSql()
 	if err != nil {
 		return err

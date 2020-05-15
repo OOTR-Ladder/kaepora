@@ -24,6 +24,7 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 %[1]s
 !dev error                   # error out
 !dev panic                   # panic and abort
+!dev rerank SHORTCODE        # erase and recompute all the ranking history for a league
 !dev seed SHORTCODE [SEED]   # generate a seed valid for the given league
 !dev setannounce SHORTCODE   # configure a league to post its announcements in the channel the command was sent in
 !dev uptime                  # display for how long the server has been running
@@ -74,6 +75,8 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 		return bot.cmdDevAddListen(m, args, out)
 	case "removelisten":
 		return bot.cmdDevRemoveListen(m, args, out)
+	case "rerank":
+		return bot.cmdDevRerank(m, args, out)
 	default:
 		return util.ErrPublic("invalid command")
 	}
@@ -141,4 +144,9 @@ func (bot *Bot) cmdDevRandomSettings(m *discordgo.Message, args []string, w io.W
 	fmt.Fprint(w, "\n```")
 
 	return nil
+}
+
+func (bot *Bot) cmdDevRerank(_ *discordgo.Message, args []string, _ io.Writer) error {
+	shortcode := argsAsName(args[1:])
+	return bot.back.Rerank(shortcode)
 }
