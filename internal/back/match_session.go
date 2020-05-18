@@ -1,6 +1,7 @@
 package back
 
 import (
+	"database/sql"
 	"errors"
 	"kaepora/internal/util"
 	"log"
@@ -86,17 +87,19 @@ func getMatchSessionByID(tx *sqlx.Tx, id util.UUIDAsBlob) (MatchSession, error) 
 	return ret, nil
 }
 
-func getPlayerActiveSession(tx *sqlx.Tx, playerID uuid.UUID) (MatchSession, error) {
-	var ret MatchSession
+// getPlayerActiveSession returns the MatchSession the player is currently
+// _running_. If a session is still in progress but the player has completed
+// his race in it, it won't be considered as active.
+func getPlayerActiveSession(tx *sqlx.Tx, playerID util.UUIDAsBlob) (MatchSession, error) {
 	query := `
         SELECT * FROM MatchSession
         WHERE MatchSession.Status IN(?, ?, ?) AND
             PlayerIDs LIKE ?
-        ORDER BY MatchSession.StartDate ASC
-        LIMIT 1`
+        ORDER BY MatchSession.StartDate ASC`
 
-	if err := tx.Get(
-		&ret, query,
+	var sessions []MatchSession
+	if err := tx.Select(
+		&sessions, query,
 		MatchSessionStatusJoinable,
 		MatchSessionStatusPreparing,
 		MatchSessionStatusInProgress,
@@ -105,7 +108,28 @@ func getPlayerActiveSession(tx *sqlx.Tx, playerID uuid.UUID) (MatchSession, erro
 		return MatchSession{}, err
 	}
 
-	return ret, nil
+	for _, v := range sessions {
+		match, err := getMatchByPlayerAndSession(tx, playerID, v.ID)
+		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				// No match = joined but race did not start, consider as active.
+				// You'd have to cancel this one to race another.
+				return v, nil
+			}
+
+			return MatchSession{}, err
+		}
+
+		self, _, err := match.getPlayerAndOpponentEntries(playerID)
+		if err != nil {
+			return MatchSession{}, err
+		}
+		if !self.hasEnded() {
+			return v, nil
+		}
+	}
+
+	return MatchSession{}, sql.ErrNoRows
 }
 
 func getNextMatchSessionForLeague(tx *sqlx.Tx, leagueID util.UUIDAsBlob) (MatchSession, error) {

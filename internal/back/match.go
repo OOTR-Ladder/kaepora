@@ -120,15 +120,16 @@ func (m *Match) ensureNotNULL() {
 	}
 }
 
-func getMatchByPlayerAndSession(tx *sqlx.Tx, player Player, session MatchSession) (Match, error) {
-	var match Match
+func getMatchByPlayerAndSession(tx *sqlx.Tx, playerID, sessionID util.UUIDAsBlob) (Match, error) {
 	query := `
     SELECT Match.* FROM Match
     INNER JOIN MatchEntry ON (MatchEntry.MatchID = Match.ID)
     WHERE Match.MatchSessionID = ? AND MatchEntry.PlayerID = ?
     LIMIT 1
     `
-	if err := tx.Get(&match, query, session.ID, player.ID); err != nil {
+
+	var match Match
+	if err := tx.Get(&match, query, sessionID, playerID); err != nil {
 		return Match{}, fmt.Errorf("could not fetch match: %w", err)
 	}
 

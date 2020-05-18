@@ -65,19 +65,8 @@ func joinCurrentMatchSessionTx(
 		))
 	}
 
-	if active, err := getPlayerActiveSession(tx, player.ID.UUID()); err == nil {
-		activeLeague, err := getLeagueByID(tx, active.LeagueID)
-		if err != nil {
-			return MatchSession{}, err
-		}
-
-		if active.ID != session.ID {
-			return MatchSession{},
-				util.ErrPublic(fmt.Sprintf(
-					"you are already registered for another race on the %s league",
-					activeLeague.Name,
-				))
-		}
+	if err := ensurePlayerHasNoActiveMatch(tx, player.ID); err != nil {
+		return MatchSession{}, err
 	}
 
 	session.AddPlayerID(player.ID.UUID())
@@ -86,6 +75,20 @@ func joinCurrentMatchSessionTx(
 	}
 
 	return session, nil
+}
+
+// ensurePlayerHasNoActiveMatch returns an error if the player is currently in
+// an active race (ie. he did not start or did not complete the race)
+func ensurePlayerHasNoActiveMatch(tx *sqlx.Tx, playerID util.UUIDAsBlob) error {
+	_, err := getPlayerActiveSession(tx, playerID)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil
+		}
+		return err
+	}
+
+	return util.ErrPublic("you already have a race in progress")
 }
 
 func (b *Back) CompleteActiveMatch(player Player) (Match, error) {
@@ -156,7 +159,7 @@ func (b *Back) CancelActiveMatchSession(player Player) (MatchSession, error) {
 	var ret MatchSession
 
 	if err := b.transaction(func(tx *sqlx.Tx) error {
-		session, err := getPlayerActiveSession(tx, player.ID.UUID())
+		session, err := getPlayerActiveSession(tx, player.ID)
 		if err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
 				return util.ErrPublic("you are not in any active race right now")

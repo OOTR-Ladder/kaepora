@@ -359,7 +359,7 @@ func randomInt(iMin, iMax int) int {
 func getActiveMatchAndEntriesForPlayer(tx *sqlx.Tx, player Player) (
 	match Match, self MatchEntry, opponent MatchEntry, _ error,
 ) {
-	session, err := getPlayerActiveSession(tx, player.ID.UUID())
+	session, err := getPlayerActiveSession(tx, player.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return match, self, opponent, util.ErrPublic("you are not in any active race right now")
@@ -371,7 +371,7 @@ func getActiveMatchAndEntriesForPlayer(tx *sqlx.Tx, player Player) (
 		return match, self, opponent, err
 	}
 
-	match, err = getMatchByPlayerAndSession(tx, player, session)
+	match, err = getMatchByPlayerAndSession(tx, player.ID, session.ID)
 	if err != nil {
 		return match, self, opponent, fmt.Errorf("cannot find Match: %w", err)
 	}
