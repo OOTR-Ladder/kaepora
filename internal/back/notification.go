@@ -69,6 +69,11 @@ func (n *Notification) Write(p []byte) (int, error) {
 	return n.body.Write(p)
 }
 
+func (n *Notification) Reset() {
+	n.body.Reset()
+	n.Files = nil
+}
+
 func NotificationTypeName(typ NotificationType) string {
 	switch typ {
 	case NotificationTypeMatchSessionStatusUpdate:
@@ -405,11 +410,12 @@ func (b *Back) sendSessionRecapNotification(
 		notif.SetDiscordUserRecipient(*toDiscordUserID)
 	}
 
-	notif.Printf("Results for `%s` race started at %s:\n```\n", league.ShortCode, session.StartDate)
+	notif.Printf("Results for `%s` race started at %s:\n```\n", league.ShortCode, util.Datetime(session.StartDate))
 	table := tabwriter.NewWriter(&notif, 0, 0, 2, ' ', 0)
 	fmt.Fprintln(table, "Player 1\t\tvs\tPlayer 2\t\tSeed")
 
 	unknown := 0
+	known := 0
 	for _, match := range matches {
 		if scope != RecapScopeAdmin {
 			if !match.Entries[0].hasEnded() && !match.Entries[1].hasEnded() {
@@ -430,10 +436,15 @@ func (b *Back) sendSessionRecapNotification(
 			wrap0, name0, wrap0, "\t", duration0, "\t\t",
 			wrap1, name1, wrap1, "\t", duration1, "\t", match.Seed, "\n",
 		)
+		known++
 	}
 
 	table.Flush()
 	notif.Print("```\n")
+
+	if known == 0 {
+		notif.Reset()
+	}
 
 	if unknown > 0 {
 		notif.Printf("There are still %d race(s) in progress.\n", unknown)
