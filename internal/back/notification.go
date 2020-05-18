@@ -310,7 +310,7 @@ func (b *Back) sendSessionStatusUpdateNotification(tx *sqlx.Tx, session MatchSes
 		)
 	case MatchSessionStatusInProgress:
 		notif.Printf(
-			"The race for league `%s` **starts now**. Good luck and have fun! @here",
+			"The race for league `%s` **starts now**. Good luck and have fun!",
 			league.ShortCode,
 		)
 	case MatchSessionStatusClosed:
