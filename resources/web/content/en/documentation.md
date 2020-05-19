@@ -52,7 +52,7 @@ settings that will continue to evolve along with the community.
 
 ### Running a OoTR Ladder race
 #### Prerequisites
-**All race registrations are done in the OoTR Ladder Discord server.** You can
+**All race registrations are done in the OoTR Discord server.** You can
 find the link in the upper right corner if this page.
 
 When arriving in the server, you will have to input some commands in order to
@@ -124,8 +124,8 @@ possible. Not giving you your opponent's identity is a choice we think
 compatible with this philosophy.
 
 When the pig is finally dead, you'll just have to send the `!done` command
-either by PM to the bot, either in the **#talk-to-kaepora** channel. In the
-case where you unfortunately can't finish, use the `!forfeit` command.
+either by PM to the bot or in the **#ladder-signup** channel. In the case where
+you unfortunately can't finish, use the `!forfeit` command.
 
 When the last member of the pair has sent one of the commands, your one-on-one
 match is officially over and the identity of your opponent as well as your
