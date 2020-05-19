@@ -1,6 +1,6 @@
 # Règlement
 1. **Le Ladder OOTR est pour tout le monde, soyez sympa et rappelez vous que
-   vous parlez à d'autre humains.**
+   vous parlez à des êtres humains.**
 2. Vous devez diffuser vos matches en _live-stream_, les enregistrements de ces
    matches doivent être publics (ex. pas d'enregistrements réservés aux _subs_).
 3. **Toute forme de triche sera punie par un bannissement définitif**, incluant
