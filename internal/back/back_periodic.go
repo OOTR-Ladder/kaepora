@@ -229,6 +229,17 @@ func (b *Back) countdownAndStartMatchSession(session MatchSession) {
 	for {
 		delta := time.Until(session.StartDate.Time())
 		if delta <= 0 {
+			// HACK, send the notification ASAP, avoid delays.
+			go func() {
+				if err := b.transaction(func(tx *sqlx.Tx) error {
+					sessionCopy := session
+					sessionCopy.Status = MatchSessionStatusInProgress
+					return b.sendSessionStatusUpdateNotification(tx, sessionCopy)
+				}); err != nil {
+					log.Printf("error: unable to send status update: %s", err)
+				}
+			}()
+
 			break
 		}
 
@@ -254,10 +265,6 @@ func (b *Back) countdownAndStartMatchSession(session MatchSession) {
 		}
 
 		if err := session.update(tx); err != nil {
-			return err
-		}
-
-		if err := b.sendSessionStatusUpdateNotification(tx, session); err != nil {
 			return err
 		}
 
