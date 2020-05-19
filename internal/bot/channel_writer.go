@@ -2,9 +2,11 @@ package bot
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"kaepora/internal/back"
 	"log"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -79,15 +81,35 @@ func (w *channelWriter) Flush() error {
 	if w == nil || w.buf.Len() <= 0 {
 		return nil
 	}
+	defer w.buf.Reset()
 
 	msg := discordgo.MessageSend{
 		Content: w.buf.String(),
 		Files:   w.files,
 	}
 
-	_, err := w.dg.ChannelMessageSendComplex(w.channelID, &msg)
-	log.Printf("info: %s: %s", w.debugInfo, msg.Content)
+	if len(msg.Content) >= 2000 {
+		return errors.New("message reached 2000 chars limit")
+	}
 
-	w.buf.Reset()
-	return err
+	attempts := 0
+	maxAttempts := 4
+	for attempts < maxAttempts {
+		_, err := w.dg.ChannelMessageSendComplex(w.channelID, &msg)
+		log.Printf("info: %s: %s", w.debugInfo, msg.Content)
+		if err != nil {
+			log.Printf("warning: unable to send Discord message, retrying in 250ms: %s", err)
+			attempts++
+			time.Sleep(250 * time.Millisecond)
+			continue
+		}
+
+		break
+	}
+
+	if attempts >= maxAttempts {
+		return fmt.Errorf("unable to send Discord message after %d tries", attempts)
+	}
+
+	return nil
 }
