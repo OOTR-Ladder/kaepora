@@ -110,7 +110,7 @@ func currentPeriodStart(t time.Time) time.Time {
 		t = t.AddDate(0, 0, -int(wd)+1)
 	}
 
-	return t.Truncate(7 * 24 * time.Hour)
+	return t.Truncate(24 * time.Hour)
 }
 
 // nextPeriodStart returns the next monday at 00:00 UTC.
