@@ -13,8 +13,8 @@
 6. You are strongly encouraged to hide your seed hash before the race starts.
 7. **You must not alter your seed in any way** after obtaining it from
    [ootrandomizer.com][1].
-8. If you break a rule, at the appreciation of the ladder moderation team you
-   may get one or more of the following sanctions:
+8. If you break a rule, at the discretion of the ladder moderation team you may
+   get one or more of the following sanctions:
     1. Stern warning.
     2. Forced loss.
     3. Temporary ban from the ladder races or Discord category.
