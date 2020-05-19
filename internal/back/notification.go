@@ -371,6 +371,10 @@ func (b *Back) sendLeaderboardUpdateNotification(
 		return err
 	}
 
+	if len(top) == 0 {
+		return nil
+	}
+
 	notif.Printf("Top players for league `%s`:\n```\n", league.ShortCode)
 	for i := range top {
 		notif.Printf(" %2.d. %s\n", i+1, top[i].PlayerName)
