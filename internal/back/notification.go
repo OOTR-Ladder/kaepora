@@ -411,11 +411,32 @@ func (b *Back) sendSessionRecapNotification(
 	}
 
 	notif.Printf("Results for `%s` race started at %s:\n```\n", league.ShortCode, util.Datetime(session.StartDate))
-	table := tabwriter.NewWriter(&notif, 0, 0, 2, ' ', 0)
-	fmt.Fprintln(table, "Player 1\t\tvs\tPlayer 2\t\tSeed")
+	known, unknown := writeResultsTable(tx, &notif, matches, scope)
+	notif.Print("```\n")
 
-	unknown := 0
-	known := 0
+	if known == 0 {
+		notif.Reset()
+	}
+
+	if unknown > 0 {
+		notif.Printf("There are still %d race(s) in progress.\n", unknown)
+		notif.Printf("You can get an up to date recap with `!recap %s`.", league.ShortCode)
+	}
+
+	b.notifications <- notif
+	return nil
+}
+
+// writeResultsTable is an helper for sendSessionRecapNotification.
+func writeResultsTable(
+	tx *sqlx.Tx,
+	w io.Writer,
+	matches []Match,
+	scope RecapScope,
+) (known, unknown int) {
+	table := tabwriter.NewWriter(w, 0, 0, 2, ' ', 0)
+	fmt.Fprintln(table, "Player 1\t\tvs\tPlayer 2\t")
+
 	for _, match := range matches {
 		if scope != RecapScopeAdmin {
 			if !match.Entries[0].hasEnded() && !match.Entries[1].hasEnded() {
@@ -434,25 +455,13 @@ func (b *Back) sendSessionRecapNotification(
 		fmt.Fprint(
 			table,
 			wrap0, name0, wrap0, "\t", duration0, "\t\t",
-			wrap1, name1, wrap1, "\t", duration1, "\t", match.Seed, "\n",
+			wrap1, name1, wrap1, "\t", duration1, "\n",
 		)
 		known++
 	}
 
 	table.Flush()
-	notif.Print("```\n")
-
-	if known == 0 {
-		notif.Reset()
-	}
-
-	if unknown > 0 {
-		notif.Printf("There are still %d race(s) in progress.\n", unknown)
-		notif.Printf("You can get an up to date recap with `!recap %s`.", league.ShortCode)
-	}
-
-	b.notifications <- notif
-	return nil
+	return known, unknown
 }
 
 // entryDetails is a formatting helper for sendSessionRecapNotification.
