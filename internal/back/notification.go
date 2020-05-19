@@ -203,7 +203,7 @@ func (b *Back) sendMatchEndNotification(
 		if opponentEntry.Status == MatchEntryStatusForfeit {
 			notif.Printf("%s forfeited after %s.\n", opponent.Name, delta)
 		} else if opponentEntry.Status == MatchEntryStatusFinished {
-			notif.Printf("%s completed his/her race in %s.\n", opponent.Name, delta)
+			notif.Printf("%s completed their race in %s.\n", opponent.Name, delta)
 		}
 	} else if opponentEntry.Status == MatchEntryStatusForfeit {
 		notif.Printf("%s forfeited before the race started.\n", opponent.Name)

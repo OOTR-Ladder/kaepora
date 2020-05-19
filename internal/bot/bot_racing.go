@@ -75,7 +75,7 @@ func (bot *Bot) cmdComplete(m *discordgo.Message, _ []string, w io.Writer) error
 		return err
 	}
 
-	fmt.Fprint(w, `You have completed your race! You will receive the results as soon as your opponent ends his/her race.`)
+	fmt.Fprint(w, `You have completed your race! You will receive the results as soon as your opponent ends their race.`)
 
 	return nil
 }
