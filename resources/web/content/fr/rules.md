@@ -6,15 +6,15 @@
 3. **Toute forme de triche sera punie par un bannissement définitif**, incluant
    (liste non exhaustive) :
     1. Toute tentative de deviner ou de regarder le _stream_ de votre adversaire.
-    2. Explorer la _seed_ avant le début officiel d'un match.
+    2. Explorer le jeu avant le début officiel d'un match.
     3. Obtenir des informations sur votre _seed_.
 4. **Il est interdit d'être en chat vocal** pendant un match.
 5. Un match commence toujours à l'horaire prévu, si vous n'êtes pas prêt quand
    le match commence, c'est un retard qui sera compté dans votre temps de jeu.
 6. Il est fortement encourage de cacher le _seed hash_ avant que le match ne
    commence.
-7. **Il est interdit de modifier sa seed** de quelque manière que ce soit par
-   un outil extérieur à [ootrandomizer.com][1].
+7. **Il est interdit de modifier le Patch/WAD/ROM** de quelque manière que ce
+   soit après son obtention sur [ootrandomizer.com][1].
 8. Si vous enfreignez une règle, l'équipe de modération du ladder peut
    appliquer une ou plusieurs des sanctions suivantes :
     1. Avertissement.

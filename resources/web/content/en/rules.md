@@ -5,13 +5,13 @@
 3. **Cheating in any form will result in a permanent ban**, this includes (but is
    no limited to):
     1. Any attempt to guess or _stream-snipe_ your opponent.
-    2. Exploring the seed before the race officially starts.
+    2. Exploring the game before the race officially starts.
     3. Being fed spoilers by any means.
 4. **Being in voice chat during a race is forbidden**.
 5. The race starts when it is planned to start and won't be delayed, if you are
    not ready when Kaepora gives you the "go", it's on you.
-6. You are strongly encouraged to hide your seed hash before the race starts.
-7. **You must not alter your seed in any way** after obtaining it from
+6. You are strongly encouraged to hide your _seed hash_ before the race starts.
+7. **You must not alter your ROM/Patch/WAD in any way** after obtaining it from
    [ootrandomizer.com][1].
 8. If you break a rule, at the discretion of the ladder moderation team you may
    get one or more of the following sanctions:
