@@ -1,7 +1,7 @@
 ## Rules
 1. **OOTR Ladder races are for everyone, be nice and remember the human.**
-2. **Live-streaming your races is mandatory**, leaving the VoDs accessible
-   freely accessible is mandatory (eg. no sub-only VoDs).
+2. **Live-streaming your races is mandatory**, leaving the VoDs freely
+   accessible is mandatory (eg. no sub-only VoDs).
 3. **Cheating in any form will result in a permanent ban**, this includes (but is
    no limited to):
     1. Any attempt to guess or _stream-snipe_ your opponent.
