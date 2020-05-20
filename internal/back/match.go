@@ -75,7 +75,6 @@ func (m *Match) insert(tx *sqlx.Tx) error {
 		"Seed":           m.Seed,
 		"SpoilerLog":     m.SpoilerLog,
 		"GeneratorState": m.GeneratorState,
-		"SeedPatch":      m.SeedPatch,
 	}).ToSql()
 	if err != nil {
 		return err
@@ -97,7 +96,6 @@ func (m *Match) update(tx *sqlx.Tx) error {
 
 		"SpoilerLog":     m.SpoilerLog,
 		"GeneratorState": m.GeneratorState,
-		"SeedPatch":      m.SeedPatch,
 	}).Where("Match.ID = ?", m.ID).ToSql()
 	if err != nil {
 		return err
