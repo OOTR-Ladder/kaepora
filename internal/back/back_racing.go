@@ -78,7 +78,7 @@ func joinCurrentMatchSessionTx(
 }
 
 // ensurePlayerHasNoActiveMatch returns an error if the player is currently in
-// an active race (ie. he did not start or did not complete the race)
+// an active race (ie. he did not start or did not complete the race).
 func ensurePlayerHasNoActiveMatch(tx *sqlx.Tx, playerID util.UUIDAsBlob) error {
 	_, err := getPlayerActiveSession(tx, playerID)
 	if err != nil {

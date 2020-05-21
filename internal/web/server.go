@@ -246,8 +246,8 @@ func (s *Server) markdownContent(baseDir, name string) http.HandlerFunc {
 		}
 
 		// HACK, prefix every absolute link to local content with the locale.
-		parsed := template.HTML(strings.ReplaceAll(
-			string(blackfriday.Run(md)), // nolint:gosec
+		parsed := template.HTML(strings.ReplaceAll( // nolint:gosec
+			string(blackfriday.Run(md)),
 			`href="/`,
 			`href="/`+locale+`/`,
 		))
