@@ -8,11 +8,11 @@ import (
 	"html/template"
 	"io/ioutil"
 	"kaepora/internal/back"
-	"kaepora/internal/util"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -245,7 +245,12 @@ func (s *Server) markdownContent(baseDir, name string) http.HandlerFunc {
 			return
 		}
 
-		parsed := template.HTML(blackfriday.Run(md)) // nolint:gosec
+		// HACK, prefix every absolute link to local content with the locale.
+		parsed := template.HTML(strings.ReplaceAll(
+			string(blackfriday.Run(md)), // nolint:gosec
+			`href="/`,
+			`href="/`+locale+`/`,
+		))
 		title := getMarkdownTitle(path)
 
 		s.cache(w, "public", 1*time.Hour)
@@ -272,52 +277,7 @@ func getMarkdownTitle(mdPath string) string {
 	return string(title)
 }
 
-func (s *Server) history(w http.ResponseWriter, r *http.Request) {
-	sessions, leagues, err := s.back.GetMatchSessions(
-		time.Now().Add(-30*24*time.Hour),
-		time.Now(),
-		[]back.MatchSessionStatus{
-			back.MatchSessionStatusClosed,
-		},
-		`StartDate DESC`,
-	)
-	if err != nil {
-		s.error(w, r, err, http.StatusInternalServerError)
-		return
-	}
-
-	s.cache(w, "public", 1*time.Hour)
-	s.response(w, r, http.StatusOK, "history.html", struct {
-		MatchSessions []back.MatchSession
-		Leagues       map[util.UUIDAsBlob]back.League
-	}{
-		sessions,
-		leagues,
-	})
-}
-
 func (s *Server) redirectToLocale(w http.ResponseWriter, r *http.Request) {
 	locale := r.Context().Value(ctxKeyLocale).(string)
 	http.Redirect(w, r, "/"+locale, http.StatusTemporaryRedirect)
-}
-
-func (s *Server) leaderboard(w http.ResponseWriter, r *http.Request) {
-	shortcode := chi.URLParam(r, "shortcode")
-	league, err := s.back.GetLeagueByShortcode(shortcode)
-	if err != nil {
-		s.error(w, r, err, http.StatusInternalServerError)
-		return
-	}
-
-	leaderboard, err := s.back.GetLeaderboardForShortcode(shortcode, back.DeviationThreshold)
-	if err != nil {
-		s.error(w, r, err, http.StatusInternalServerError)
-		return
-	}
-
-	s.cache(w, "public", 5*time.Minute)
-	s.response(w, r, http.StatusOK, "leaderboard.html", struct {
-		League      back.League
-		Leaderboard []back.LeaderboardEntry
-	}{league, leaderboard})
 }
