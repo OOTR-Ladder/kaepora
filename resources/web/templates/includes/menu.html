@@ -1,7 +1,7 @@
 {{define "menu"}}
 <header class="navbar is-transparent is-spaced" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-        <a href="/" class="navbar-item">
+        <a href="{{uri .Locale}}" class="navbar-item">
             <img src="/_/img/logo.png" alt="logo" width="32" height="32" />
             OoTR Ladder
         </a>
@@ -17,13 +17,13 @@
 
                 <div class="navbar-dropdown is-boxed">
                     {{range $v := .Leagues}}
-                        <a href="/leaderboard/{{$v.ShortCode}}" class="navbar-item has-text-dark">{{$v.Name}}</a>
+                        <a href="{{uri $.Locale "leaderboard" $v.ShortCode}}" class="navbar-item has-text-dark">{{$v.Name}}</a>
                     {{end}}
                 </div>
             </div>
 
-            <a class="navbar-item" href="/documentation">{{t .Locale "Documentation"}}</a>
-            <a class="navbar-item" href="/rules">{{t .Locale "Rules"}}</a>
+            <a class="navbar-item" href="{{uri .Locale "documentation"}}">{{t .Locale "Documentation"}}</a>
+            <a class="navbar-item" href="{{uri .Locale "rules"}}">{{t .Locale "Rules"}}</a>
 
             <div class="navbar-item">
                 <a href="https://discord.gg/yZtdURz" target="_blank" class="button">

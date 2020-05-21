@@ -54,6 +54,14 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 			return s.locales[locale].GetN(singular, plural, count, args...)
 		},
 
+		"uri": func(locale string, parts ...string) string {
+			if len(parts) == 0 {
+				return "/" + locale
+			}
+
+			return "/" + locale + "/" + filepath.Join(parts...)
+		},
+
 		"tmd": func(locale, str string, args ...interface{}) template.HTML {
 			return template.HTML(blackfriday.Run( // nolint:gosec
 				[]byte(s.locales[locale].Get(str, args...)),

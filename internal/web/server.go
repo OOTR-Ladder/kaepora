@@ -11,7 +11,6 @@ import (
 	"kaepora/internal/util"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"path/filepath"
 	"sync"
@@ -33,7 +32,6 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Logger)
-	r.Use(langDetect)
 
 	fs := http.StripPrefix("/_/", http.FileServer(http.Dir(
 		filepath.Join(baseDir, "static"),
@@ -45,13 +43,18 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 
 	r.Get("/favicon.ico", s.favicon(fs))
 
-	r.Get("/rules", s.markdownContent(baseDir, "rules.md"))
-	r.Get("/documentation", s.markdownContent(baseDir, "documentation.md"))
+	r.With(langDetect).Route("/{locale}", func(r chi.Router) {
+		r.Get("/rules", s.markdownContent(baseDir, "rules.md"))
+		r.Get("/documentation", s.markdownContent(baseDir, "documentation.md"))
 
-	r.Get("/leaderboard/{shortcode}", s.leaderboard)
-	r.Get("/history", s.history)
-	r.Get("/", s.index)
-	r.NotFound(s.notFound)
+		r.Get("/leaderboard/{shortcode}", s.leaderboard)
+		r.Get("/history", s.history)
+		r.Get("/", s.index)
+
+		r.NotFound(s.notFound)
+	})
+
+	r.With(langDetect).Get("/", s.redirectToLocale)
 
 	return r
 }
@@ -69,7 +72,7 @@ func langDetect(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		locale, _ := language.MatchStrings(
 			matcher,
-			r.URL.Query().Get("lang"),
+			chi.URLParam(r, "locale"),
 			r.Header.Get("Accept-Language"),
 		)
 		base, _ := locale.Base()
@@ -184,13 +187,11 @@ func (s *Server) response(
 	}
 
 	wrapped := struct {
-		Locale     string
-		Alternates map[string]string
-		Leagues    []back.League
-		Payload    interface{}
+		Locale  string
+		Leagues []back.League
+		Payload interface{}
 	}{
 		r.Context().Value(ctxKeyLocale).(string),
-		s.getAlternates(r.URL.String()),
 		leagues,
 		payload,
 	}
@@ -200,31 +201,12 @@ func (s *Server) response(
 	}
 }
 
-func (s *Server) getAlternates(original string) map[string]string {
-	ret := make(map[string]string, len(s.locales))
-
-	for k := range s.locales {
-		cpy, err := url.Parse(original)
-		if err != nil {
-			continue
-		}
-
-		q := cpy.Query()
-		q.Set("lang", k)
-		cpy.RawQuery = q.Encode()
-
-		ret[k] = cpy.String()
-	}
-
-	return ret
-}
-
 func (s *Server) error(w http.ResponseWriter, r *http.Request, err error, code int) {
 	if errors.Is(err, sql.ErrNoRows) {
 		code = http.StatusNotFound
 	}
 
-	log.Printf("error: HTTP %d: %s", code, err)
+	log.Printf("error: HTTP %d: %v", code, err)
 	s.response(w, r, code, "error.html", struct {
 		HTTPCode int
 	}{code})
@@ -312,6 +294,11 @@ func (s *Server) history(w http.ResponseWriter, r *http.Request) {
 		sessions,
 		leagues,
 	})
+}
+
+func (s *Server) redirectToLocale(w http.ResponseWriter, r *http.Request) {
+	locale := r.Context().Value(ctxKeyLocale).(string)
+	http.Redirect(w, r, "/"+locale, http.StatusTemporaryRedirect)
 }
 
 func (s *Server) leaderboard(w http.ResponseWriter, r *http.Request) {

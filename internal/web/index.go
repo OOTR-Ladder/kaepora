@@ -9,6 +9,13 @@ import (
 
 // index serves the homepage with a quick recap of the std league.
 func (s *Server) index(w http.ResponseWriter, r *http.Request) {
+	// HACK: hack-ish way to handle bad first path element.
+	// The index acts as a catch all.
+	if r.URL.Path != "/"+r.Context().Value(ctxKeyLocale).(string) {
+		s.error(w, r, nil, http.StatusNotFound)
+		return
+	}
+
 	top3, err := s.getStdTop3("std")
 	if err != nil {
 		s.error(w, r, err, http.StatusInternalServerError)
