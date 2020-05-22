@@ -31,6 +31,11 @@ func (g *RandomizerAPI) Generate(settingsName, seed string) (generator.Output, e
 	if err != nil {
 		return generator.Output{}, err
 	}
+
+	return g.generateFromSettings(settings, seed)
+}
+
+func (g *RandomizerAPI) generateFromSettings(settings map[string]interface{}, seed string) (generator.Output, error) {
 	settings["seed"] = seed
 
 	id, err := g.api.CreateSeed(g.version, settings)

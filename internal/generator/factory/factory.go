@@ -29,6 +29,8 @@ func (f Factory) NewGenerator(id string) (generator.Generator, error) {
 		return oot.NewRandomizerAPI(version, f.ootrAPI), nil
 	case oot.SettingsRandomizerName:
 		return oot.NewSettingsRandomizer(version), nil
+	case oot.SettingsRandomizerAPIName:
+		return oot.NewSettingsRandomizerAPI(version, f.ootrAPI), nil
 	case "test":
 		return generator.NewTest(), nil
 	default:

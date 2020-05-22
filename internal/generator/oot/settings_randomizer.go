@@ -14,6 +14,8 @@ import (
 
 const SettingsRandomizerName = "oot-settings-randomizer"
 
+const SettingsCostBudget = 15
+
 type SettingsRandomizer struct {
 	oot *Randomizer
 }
@@ -24,28 +26,37 @@ func NewSettingsRandomizer(version string) *SettingsRandomizer {
 	}
 }
 
-func getShuffledSettingsPath(seed string, cost int, baseSettingsName string) (string, error) {
+func getShuffledSettings(seed string, cost int, baseSettingsName string) ([]byte, error) {
 	base, err := getBaseDir()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	s, err := settings.Load(filepath.Join(base, settings.DefaultName))
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	shuffledPatch, err := json.Marshal(s.Shuffle(seed, cost))
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	original, err := ioutil.ReadFile(filepath.Join(base, baseSettingsName))
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	patched, err := jsonpatch.MergePatch(original, shuffledPatch)
+	if err != nil {
+		return nil, err
+	}
+
+	return patched, nil
+}
+
+func getShuffledSettingsPath(seed string, cost int, baseSettingsName string) (string, error) {
+	settings, err := getShuffledSettings(seed, cost, baseSettingsName)
 	if err != nil {
 		return "", err
 	}
@@ -57,7 +68,7 @@ func getShuffledSettingsPath(seed string, cost int, baseSettingsName string) (st
 	settingsPath := f.Name()
 	f.Close()
 
-	if err := ioutil.WriteFile(settingsPath, patched, 0o600); err != nil {
+	if err := ioutil.WriteFile(settingsPath, settings, 0o600); err != nil {
 		return "", err
 	}
 
@@ -65,7 +76,7 @@ func getShuffledSettingsPath(seed string, cost int, baseSettingsName string) (st
 }
 
 func (r *SettingsRandomizer) Generate(baseSettingsName, seed string) (generator.Output, error) {
-	settingsPath, err := getShuffledSettingsPath(seed, 15, baseSettingsName)
+	settingsPath, err := getShuffledSettingsPath(seed, SettingsCostBudget, baseSettingsName)
 	defer os.Remove(settingsPath)
 	if err != nil {
 		return generator.Output{}, fmt.Errorf("unable to get shuffled settings: %w", err)
