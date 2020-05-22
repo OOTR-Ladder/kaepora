@@ -23,7 +23,7 @@
 [1]: https://ootrandomizer.com
 
 ## Allowed glitches and techniques
-All _Standard_ ladder races follow the [OOTR Standard ruleset][2].  
+All _Standard_ ladder races follow the [OOTR Standard Racing Ruleset (SRR)][2].  
 Using banned glitches to your own benefit will result in a loss.
 
 [2]: https://wiki.ootrandomizer.com/index.php?title=Standard

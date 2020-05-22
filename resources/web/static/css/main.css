@@ -1,6 +1,11 @@
 /* {{{ Global */
 body { font-family: "Jost", "Ubuntu", "Noto Sans", Arial, sans-serif; }
 #mainMenu .navbar-item { font-weight: bold; }
+
+/* Fix uglyness */
+.message .message-body > ul {
+    margin-top: 0;
+}
 /* }}} Global */
 
 /* {{{ Homepage */
