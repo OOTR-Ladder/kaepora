@@ -464,12 +464,89 @@
         },
         {
             "Value": "adult",
-            "Cost": 1,
-            "Weight": 0
+            "Cost": 2,
+            "Weight": 1
         },
         {
             "Value": "open",
             "Cost": 4,
+            "Weight": 1
+        }
+    ],
+    "gerudo_fortress": [
+        {
+            "Value": "normal",
+            "Cost": 3,
+            "Weight": 0
+        },
+        {
+            "Value": "fast",
+            "Cost": 0,
+            "Weight": 1
+        },
+        {
+            "Value": "open",
+            "Cost": 1,
+            "Weight": 1
+        }
+    ],
+    "triforce_hunt": [
+        {
+            "Value": true,
+            "Cost": 8,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 0,
+            "Weight": 1
+        }
+    ],
+    "free_scarecrow": [
+        {
+            "Value": true,
+            "Cost": 2,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 0,
+            "Weight": 1
+        }
+    ],
+    "start_with_consumables": [
+        {
+            "Value": true,
+            "Cost": 1,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 0,
+            "Weight": 1
+        }
+    ],
+    "chicken_count_random": [
+        {
+            "Value": true,
+            "Cost": 1,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 0,
+            "Weight": 1
+        }
+    ],
+    "shuffle_kokiri_sword": [
+        {
+            "Value": true,
+            "Cost": 1,
+            "Weight": 1
+        },
+        {
+            "Value": false,
+            "Cost": 0,
             "Weight": 1
         }
     ]
