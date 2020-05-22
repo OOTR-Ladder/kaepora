@@ -161,7 +161,7 @@
         },
         {
             "Value": "minimal",
-            "Cost": 7,
+            "Cost": 8,
             "Weight": 0.25
         }
     ],
@@ -231,27 +231,27 @@
         },
         {
             "Value": "1",
-            "Cost": 5,
-            "Weight": 0
+            "Cost": 1,
+            "Weight": 1
         },
         {
             "Value": "2",
-            "Cost": 5,
-            "Weight": 0
+            "Cost": 2,
+            "Weight": 1
         },
         {
             "Value": "3",
-            "Cost": 5,
-            "Weight": 0
+            "Cost": 3,
+            "Weight": 1
         },
         {
             "Value": "4",
-            "Cost": 5,
-            "Weight": 0
+            "Cost": 4,
+            "Weight": 1
         },
         {
             "Value": "random",
-            "Cost": 5,
+            "Cost": 4,
             "Weight": 1
         }
     ],
@@ -270,7 +270,7 @@
     "shuffle_bosskeys": [
         {
             "Value": "vanilla",
-            "Cost": 0,
+            "Cost": 1,
             "Weight": 1
         },
         {
@@ -329,7 +329,7 @@
         {
             "Value": true,
             "Cost": 3,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": false,
@@ -362,12 +362,12 @@
         },
         {
             "Value": "regular",
-            "Cost": 5,
+            "Cost": 8,
             "Weight": 0
         },
         {
             "Value": "random",
-            "Cost": 7,
+            "Cost": 10,
             "Weight": 0
         }
     ],
@@ -448,7 +448,7 @@
         {
             "Value": "overworld",
             "Cost": 10,
-            "Weight": 0
+            "Weight": 0.75
         },
         {
             "Value": "all",
