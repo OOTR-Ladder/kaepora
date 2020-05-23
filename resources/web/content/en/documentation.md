@@ -33,9 +33,9 @@ affect your ranking.
     </div>
 </div>
 
-**Fifteen minutes before the race** Kaepora will send you a link to your _seed_
-on [ootrandomizer.com](https://ootrandomizer.com). There you can patch your own
-ROM and install it on your Wii or emulator
+**Fifteen minutes before the race** _Kaepora_ will send you a link to your
+_seed_ on [ootrandomizer.com](https://ootrandomizer.com). There you can patch
+your own ROM and install it on your Wii or emulator
 ([Retroarch](https://www.retroarch.com/) with the ParaLLEl core is strongly
 recommended, Bizhawk and Project64 1.6-1.7 are also allowed).
 
@@ -60,9 +60,9 @@ automatic loss unless your opponent also forfeited, which incurs a tie.
         <li><code>!help</code> should be the only command you need to remember and probably the first one to try out.</li>
         <li><code>!register</code> first.</li>
         <li><code>!join &lt;short name&gt;</code> when a race is open for registration.</li>
-        <li><code>!done</code> on the final blow or <code>!forfeit</code>.
-    </ul>
-</div>
+        <li><code>!done</code> on the final blow or <code>!forfeit</code>.</li>
+        </ul>
+    </div>
 </div>
 
 ## Leaderboards

@@ -1,148 +1,131 @@
-## Introduction
-Avec la popularité grandissante de la communauté *Ocarina of Time Randomizer*
-(OoTR), il est de plus en plus difficile de déterminer le véritable niveau de
-chaque joueur. De plus, un nombre toujours plus important de joueurs exprime un
-souhait de voir un nouveau format voir le jour au sein de la communauté.
+## Que sont les matches de Ladder ?
+Un match de Ladder est une course en un contre un où vous ne connaissez pas
+votre adversaire avant d'avoir terminé. Le but est de finir une partie de
+_Ocarina of Time: Randomizer_ (OoTR) le plus rapidement possible.  
+Quand tous les matches d'une sessions sont terminés, les scores sont mis à
+jour et les trois meilleurs joueurs ont l'honneur d'apparaître sur le podium.
 
-Certaines communautés rando ont déjà répondu à cette demande, avec notamment la
-communauté *A Link To The Past Randomizer*.
+## S'inscrire et participer
+Pour participer vous devez [lire les règles](/rules) et vous inscrire en
+envoyant la commande `!register` dans le canal `#ladder-signup` du [serveur
+Discord OoTR](https://discord.gg/yZtdURz). Le bot _Kaepora_ vous répondra en
+message privé et c'est dans ces messages privés que vous devrez taper toutes
+les autres commandes.
 
-Voyant cela, nous avons décidé de mettre en place nous aussi une nouvelle
-manière de profiter de tout ce que le randomizer a à offrir.  
-Nous sommes heureux de vous présenter notre système de race ladder OoTR.
-
-### Comment cela fonctionne ?
-Le système de classement utilisé pour le ladder OoTR est un classement
-[_Glicko-2_](https://fr.wikipedia.org/wiki/Classement_Glicko).  
-De ce fait, l'évolution du score de chacun s'effectue par le biais de matchs en
-un contre un. Des points seront ajoutés ou retirés au joueur en fonction de ses
-performances de telle sorte que le nombre de points des deux participants,
-supposés de niveau égal, se rapproche de l'égalité.
-
-Le nombre de points gagnés ou perdus par le joueur dépendra en partie de
-l'écart de classement entre son adversaire et lui, ainsi que les performances
-passées de chacun.
-
-Aucun joueur ne connaît son adversaire. L'identité des deux membres du binôme
-ainsi que leurs temps respectifs ne sera révélée que lorsque chacun d'entre-eux
-aura terminé sa seed.
-
-À chaque fin de session, le classement sera mis à jour en fonction des
-résultats de chacun.
-
-### Qui peut rejoindre les courses ladder OoTR ?
-Tout joueur souhaitant progresser dans *Ocarina of Time Randomizer* est libre
-de rejoindre les différentes courses qui sont programmées.
-
-Nous tenons à garder cette notion importante qu'est l'accessibilité. Peu
-importe vos performances, vous aurez un adversaire à votre niveau pour vous
-permettre de donner le meilleur de vous-même tout en évitant cette sensation de
-déséquilibre notable que peuvent donner certaines races classiques.
-
-## Aspect technique
-### Les ligues OoTR Ladder
-Chacune des ligues qui composent le ladder OoTR se base sur le ruleset
-**Standard**. Si vous souhaitez plus d'informations sur l'ensemble des tricks
-autorisés par le ruleset, nous vous invitons à consulter [cette page (en
-anglais)](https://wiki.ootrandomizer.com/index.php?title=Standard).
-
-Chaque ligue aura un thème qui lui est propre. À l'heure actuelle seule la
-ligue Standard est disponible.  Il s'agira de la ligue la plus représentative
-pour tout joueur souhaitant connaître son véritable niveau. Cette ligue
-proposera uniquement des seeds dans des **Weekly Settings**, settings qui vont
-continuer à évoluer au grès de la communauté.
-
-### Déroulement d'une course ladder OoTR
-#### Pré-requis
-**Toute inscription aux races s'effectue sur le serveur Discord OoTR Ladder.**
-Vous pouvez trouver le lien en haut à droite de cette page.
-
-À votre arrivée sur le serveur, il vous sera demandé de lancer quelques
-commande avant de pouvoir rejoindre une race. La commande `!help` du bot
-développé à cet effet vous donnera tous les outils nécessaires.
-
-Voici une liste exhaustive des commandes du bot Discord vous permettant de
-remplir tous les pré-requis pour rejoindre une race :
-
-- `!help` : Affiche un message regroupant l'ensemble des commandes
-- `!leagues` : Affiche la liste des ligues proposées sur OoTR Ladder
-- `!leaderboard <Ligue>` : Affiche le top 20 de la ligue souhaitée
-- `!recap <Ligue>` : Affiche les résultats des 1v1 de la session en cours
-- `!register` : Donne la possibilité au membre de rejoindre les races
-- `!register <Pseudo>` : Donne la possibilité au membre de rejoindre les races avec un pseudo particulier
-- `!rename <Pseudo>` : Permet de changer son pseudo sur OoTR
-
-#### Rejoindre une room
-Lorsque vous vous êtes inscrit pour participer à votre première race avec la
-commande `!register`, vous allez pouvoir guetter les annonces du bot Discord
-pour la ligue qui vous intéresse.  
-Chaque ligue a son propre canal d'annonce.
-
-Chaque race est matérialisée sous la forme de room. Une room s'ouvrira toujours
-1 heure avant le début de la race. Pour la rejoindre, il vous suffit de taper
-la commande indiquée par l'annonce.
-
-Si vous avez rejoint une room mais qu'un imprévu se manifeste vous empêchant de
-garantir votre présence, vous pouvez toujours annuler votre participation
-***jusqu'à T-15 minutes*** avec la commande `!cancel`. Aucune pénalité ne vous
-sera attribuée.
-
-Lorsqu'il ne restera plus que **15 minutes** avant le départ des différents
-matchs, la room sera verrouillée : il sera impossible d'annuler sa
-participation ou même de rejoindre la room.  
-Toutes les personnes inscrites se verront désigner un adversaire, et la seed
-correspondant à votre match 1v1 vous sera envoyée via message privé Discord.
-Vous aurez alors 15 minutes pour vous préparer.
-
-Vous l'aurez compris, **chaque match 1v1 constituant la room aura une seed qui
-lui est propre** : seul votre adversaire se verra attribuer la même seed
-Ocarina of Time Randomizer que la vôtre.
-
-Un dernier rappel vous sera envoyé une minute avant le début de votre match,
-deux autres rappels à 30 secondes ainsi que 10 secondes. Un décompte se lancera
-dans les 5 dernières secondes avant que le bot donne le top départ à
-l'intégralité des joueurs inscrits.
-
-<div class="notification is-danger is-light">
-<strong>Dans le cas où un nombre de joueurs impair est inscrit dans la
-room</strong> … c'est la dure loi du « premiers arrivés, premiers servis » qui
-s'applique. Comme il est tout simplement impossible de jouer contre soi-même,
-la participation de la  dernière personne s'étant inscrite dans la room sera
-automatiquement annulée. Naturellement, aucune pénalité ne sera attribuée à ce
-joueur.
+<div class="message is-warning">
+    <div class="message-body">
+        <p>Vous devez <em>autoriser les messages privés en provenance des
+        members du serveur</em> dans vos paramètres Discord de
+        <em>Confidentialité & Sécurité</em> sinon le bot ne pourra pas vous
+        contacter.</p>
+    </div>
 </div>
 
-Voici une liste exhaustive des commandes du bot Discord qui vous seront utiles
-pour la préparation de vos matchs 1v1 OoTR Ladder :
+Quand une session approche, _Kaepora_ fera une annonce sur un canal dédié dans
+la catégorie _IR Ladder_ du serveur. Après cette annonce, vous pourrez envoyer
+à _Kaepora_ la commande `!join` suivie du nom court de la ligue dans laquelle
+vous voulez participer. Par exemple pour la ligue _Standard_ vous devrez
+envoyer `!join std`.  
+Si vous voulez annuler votre inscription envoyez `!cancel`, votre score ne sera
+pas affecté.
 
-- `!join <Ligue>` : Rejoindre une room ouverte de la ligue souhaitée
-- `!cancel` : Annuler votre participation (commande inutilisable dans les 15
-  dernières minutes précédant le début de votre match)
+<div class="message is-warning">
+    <div class="message-body">
+        <p>S'il y a un nombre impair de joueurs, la dernière personne a avoir
+        rejoint la session sera exclue.</p>
+    </div>
+</div>
 
-#### Départ des matchs
-Le bot annonce le top départ. À partir de là, nous ne pouvons que vous
-souhaiter bonne chance et de **respecter scrupuleusement** l'ensemble des
-règles OoTR Ladder en vigueur que vous pouvez consulter sur la [page des
-règles](/rules).
+**Quinze minutes avant que le match ne commence** _Kaepora_ vous enverra un lien
+vers votre _seed_ sur [ootrandomizer.com](https://ootrandomizer.com), vous
+pourrez y patcher votre ROM et l'installer sur votre Wii ou votre émulateur
+([Retroarch](https://www.retroarch.com/) avec le noyeau ParaLLEl est fortement
+recommandé, Bizhawk et Project64 1.6-1.7 sont aussi autorisés).
 
-Nous encourageons tous les participants de chaque match à terminer leurs seeds
-et à abandonner le moins souvent possible. Ne pas vous donner l'identité de
-votre adversaire est un choix que nous pensons compatible avec cette
-philosophie.
+Le match commence après un compte à rebours donné par _Kaepora_ sur le canal de
+la ligue que vous avez rejoint (par exemple `#ladder-league-standard`).  
+Tous les matches commencent au même moment, si vous êtes en retard le match ne
+sera pas reporté et vous partirez avec un désavantage.
 
-Lorsque le coup final a été porté, il vous suffira d'utiliser la commande
-`!done` en message privé au bot Kaepora. Dans le cas où vous ne pouvez
-malheureusement pas terminer votre seed, utilisez la commande `!forfeit`.
+Une fois votre partie terminée (soit en portant le coup de grâce à Ganon, soit
+en trouvant la dernière pièce de Triforce dans certains matches de _Shuffled
+Settings_) vous devez envoyer `!done` à _Kaepora_.
+Le bot vous donnera alors votre temps, le nom de votre adversaire, son temps
+s'il a fini avant vous, et votre _spoiler log_ contenant l'emplacement et
+l'ordre d'obtention de tous les objets que vous aviez à trouver (cette
+information est aussi disponible sur le lien de votre _seed_).
 
-Lorsque le dernier membre du binôme a utilisé l'une de ces deux commande, votre
-match 1v1 est officiellement terminé et l'identité de votre adversaire ainsi
-que vos temps respectifs seront dévoilés publiquement sur le serveur Discord.
+Si vous ne pouvez pas finir votre partie, peu importe la raison, vous devez
+envoyer `!forfeit`. Un forfait vous fait perdre automatiquement la partie, sauf
+si votre adversaire déclare aussi forfait auquel cas le match se termine par
+une égalité.
 
-**La mise à jour des points ne s'effectuera cependant que lorsque l'ensemble
-des matchs 1v1 constituant la session seront terminés.**
+<div class="message is-info">
+    <div class="message-header"><p>En résumé :</p></div>
+    <div class="message-body">
+        <ul>
+        <li><code>!help</code> contient l'aide du bot et devrait être la première commande que vous envoyez.</li>
+        <li><code>!register</code> pour vous inscrire au Ladder.</li>
+        <li><code>!join &lt;short name&gt;</code> quand une session commence.</li>
+        <li><code>!done</code> sur le coup de grâce ou <code>!forfeit</code>.</li>
+        </ul>
+    </div>
+</div>
 
-## Outils utiles pour vos courses
-### Trackers
-- [EmoTracker](https://emotracker.net/)
-- [LinSo Tracker](https://pastebin.com/vYrNGweu)
-- [Track-OOT](https://track-oot.net/)
+## Scores
+Chaque ligue a ses propres scores qui sont gérés par le [système de classement
+Glicko-2][1].
+
+Ce système a quelques particularité :
+
+ - Votre niveau n'est pas représenté par un seul nombre mais par une plage dans
+   laquelle on estime que votre niveau réel se trouve à 95 % de confiance.
+ - La récompense (ou la pénalité) pour une victoire (ou une défaite) est
+   proportionnelle à l'écart de niveau entre les joueurs.
+ - Vous devez finir plusieurs matches pour faire baisser votre _déviation de
+   niveau_ et atteindre le palier nécessaire pour apparaître sur le tableau des
+   scores.
+ - Ne pas faire de match pendant une semaine fera baisser légèrement votre
+   niveau et augmentera votre _déviation de niveau_.
+
+[1]: https://fr.wikipedia.org/wiki/Classement_Glicko
+
+## Ligues
+### Standard (`std`)
+La ligue standard est la ligue par défaut que tous les joueurs de tous les
+niveaux devraient rejoindre pour mettre à l'épreuve leur chance et leurs
+compétences.  
+La liste des _tricks_ et _glitches_ autorisés dans cette ligue est définie par
+le [OoTR Standard Racing Ruleset (SRR)][2].
+
+Il y a plusieurs sessions par jour et vous pouvez en rejoindre autant que vous
+voulez.
+
+Chaque versus a sa propre _seed_.
+
+[2]: https://wiki.ootrandomizer.com/index.php?title=Standard
+
+### Shuffled Settings (`shu`)
+La ligue _Shuffled Settings_ ou « paramètres mélangés » utilise une génération
+de _seed_ différente où les paramètres du générateur lui-même sont choisis
+aléatoirement.
+
+Les paramètres ne sont pas choisis complètement au hasard : l'algorithme itère
+sur une liste _pondérée_ de valeurs pour en choisir une aléatoirement et ajoute
+son _coût_ au décompte provisoire.  
+Quand le décompte provisoire atteint le coût budgétisé, l'algorithme s'arrête
+et applique les paramètres choisis par dessus les paramètres de la ligue
+standard.
+
+Les poids et probabilités ont été choisis pour permettre des _seeds_
+intéressantes sans pour autant forcer les joueurs à faire des parties
+interminables en _fullsanity_.
+
+Chaque versus a ses propres paramètres et sa propre _seed_.
+
+## Contribuer
+Le Ladder est un effort collaboratif diffusé sous la licence libre MIT.  
+Vous pouvez contribuer en envoyant une _pull request_ au dépôt [Kaepora][3] qui
+contient les sources du bot et du site web.
+
+[3]: https://github.com/OOTR-Ladder/kaepora
