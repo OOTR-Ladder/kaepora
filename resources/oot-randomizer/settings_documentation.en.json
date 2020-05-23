@@ -1,0 +1,422 @@
+{
+    "all_reachable": {
+        "title": "All reachable",
+        "values": [
+            {
+                "value": false,
+                "title": "false",
+                "description": "Only required items and locations to beat the game will be guaranteed reachable."
+            }
+        ]
+    },
+    "bombchus_in_logic": {
+        "title": "Bombchus in logic",
+        "values": [
+            {
+                "value": true,
+                "title": "true",
+                "description": "Bombchus are properly considered in logic."
+            }
+        ]
+    },
+    "bridge": {
+        "title": "Rainbow bridge",
+        "values": [
+            {
+                "value": "medallions",
+                "title": "medallions",
+                "description": "Bridge to Ganon's Castle appears when all 6 medaillons are obtained."
+            },
+            {
+                "value": "dungeons",
+                "title": "dungeons",
+                "description": "Bridge to Ganon's Castle appears when all 6 medaillons and all 3 Spiritual Stones are obtained."
+            },
+            {
+                "value": "open",
+                "title": "open",
+                "description": "Bridge to Ganon's Castle is always there."
+            },
+            {
+                "value": "stones",
+                "title": "stones",
+                "description": "Bridge to Ganon's Castle appears when all 3 Spiritual Stones are obtained."
+            },
+            {
+                "value": "vanilla",
+                "title": "vanilla",
+                "description": "Bridge to Ganon's Castle appears when Shadow Medaillon, Spirit Medaillon and Light Arrows are obtained."
+            }
+        ]
+    },
+    "correct_chest_sizes": {
+        "title": "Correct chest sizes",
+        "values": [
+            {
+                "value": true,
+                "title": "true",
+                "description": "Chests will be large if they contain a major item and small if they don't."
+            }
+        ]
+    },
+    "damage_multiplier": {
+        "title": "Damage multiplier",
+        "values": [
+            {
+                "value": "double",
+                "title": "double",
+                "description": "Link takes double the damage."
+            },
+            {
+                "value": "quadruple",
+                "title": "quadruple",
+                "description": "Link takes quadruple the damage."
+            },
+            {
+                "value": "half",
+                "title": "half",
+                "description": "Link takes half the damage."
+            }
+        ]
+    },
+    "entrance_shuffle": {
+        "title": "Entrance shuffle",
+        "values": [
+            {
+                "value": "dungeons",
+                "title": "dungeons",
+                "description": "Dungeon entrances are shuffled with each other, including Bottom of the Well, Ice Cavern, and Gerudo Training Grounds."
+            },
+            {
+                "value": "simple-indoors",
+                "title": "simple indoors",
+                "description": "Shuffle dungeon entrances along with simple Grotto and Interior entrances (i.e. most Houses and Great Fairies)."
+            }
+        ]
+    },
+    "hints": {
+        "title": "Hints",
+        "values": [
+            {
+                "value": "none",
+                "title": "none",
+                "description": "Gossip Stones give no hints."
+            },
+            {
+                "value": "agony",
+                "title": "Stone of Agony",
+                "description": "The Stone of Agony is required to read the Gossip Stones hints."
+            }
+        ]
+    },
+    "item_pool_value": {
+        "title": "Item pool",
+        "values": [
+            {
+                "value": "plentiful",
+                "title": "plentiful",
+                "description": "Extra major items are added."
+            },
+            {
+                "value": "scarce",
+                "title": "scarce",
+                "description": "Some excess items are removed, including health upgrades."
+            },
+            {
+                "value": "minimal",
+                "title": "minimal",
+                "description": "Most excess items are removed."
+            }
+        ]
+    },
+    "one_item_per_dungeon": {
+        "title": "Dungeons Have One Major Item",
+        "values": [
+            {
+                "value": true,
+                "title": "true",
+                "description": "Dungeons have exactly one major item except Spirit Temple which has TWO items to match vanilla distribution."
+            }
+        ]
+    },
+    "open_door_of_time": {
+        "title": "Open Door of Time",
+        "values": [
+            {
+                "value": false,
+                "title": "false",
+                "description": "The Door of Time is closed and will open if you play Song of Time in front of it."
+            }
+        ]
+    },
+    "open_forest": {
+        "title": "Kokiri Forest",
+        "values": [
+            {
+                "value": "closed_deku",
+                "title": "closed deku",
+                "description": "Mido blocks the path to the Deku Tree, requiring Kokiri Sword and Deku Shield to access the Deku Tree."
+            },
+            {
+                "value": "closed",
+                "title": "closed",
+                "description": "Completing Deku Tree is needed to get out of Kokiri Forest."
+            }
+        ]
+    },
+    "shopsanity": {
+        "title": "Shopsanity",
+        "values": [
+            {
+                "value": "1",
+                "title": "1",
+                "description": "Shops have 1 random non-shop item. They will always be on the left side."
+            },
+            {
+                "value": "2",
+                "title": "2",
+                "description": "Shops have 2 random non-shop items. They will always be on the left side."
+            },
+            {
+                "value": "3",
+                "title": "3",
+                "description": "Shops have 3 random non-shop items. They will always be on the left side."
+            },
+            {
+                "value": "4",
+                "title": "4",
+                "description": "Shops have 4 random non-shop items. They will always be on the left side."
+            },
+            {
+                "value": "random",
+                "title": "random",
+                "description": "Each shop will have a random number of non-shop items up to a maximum of 4."
+            }
+        ]
+    },
+    "shuffle_beans": {
+        "title": "Shuffle Magic Beans",
+        "values": [
+            {
+                "value": true,
+                "title": "true",
+                "description": "Adds a pack of 10 beans to the item pool, and the Magic Bean Salesman now sells a random item once at the price of 60 Rupees."
+            }
+        ]
+    },
+    "shuffle_bosskeys": {
+        "title": "Shuffle Boss Keys",
+        "values": [
+            {
+                "value": "vanilla",
+                "title": "vanilla",
+                "description": "Boss Keys will appear in their vanilla locations."
+            },
+            {
+                "value": "remove",
+                "title": "remove",
+                "description": "Boss Keys are removed and all Boss doors are unlocked."
+            },
+            {
+                "value": "keysanity",
+                "title": "anywhere",
+                "description": "Boss Keys can appear anywhere in the world."
+            }
+        ]
+    },
+    "shuffle_cows": {
+        "title": "Shuffle Cows",
+        "values": [
+            {
+                "value": true,
+                "title": "true",
+                "description": "Playing Epona's song in front of cows gives an item."
+            }
+        ]
+    },
+    "shuffle_ganon_bosskey": {
+        "title": "Shuffle Ganon Boss Key",
+        "values": [
+            {
+                "value": "lacs_vanilla",
+                "title": "vanilla Light Arrow custcene",
+                "description": "Ganon's Castle Boss Key is on the Light Arrow cutscene which unlocks when you get both Shadow and Spirit medallions."
+            }
+        ]
+    },
+    "shuffle_gerudo_card": {
+        "title": "Shuffle Gerudo card",
+        "values": [
+            {
+                "value": true,
+                "title": "true",
+                "description": "Shuffles the Gerudo Card into the item pool."
+            }
+        ]
+    },
+    "shuffle_ocarinas": {
+        "title": "Shuffle Ocarinas",
+        "values": [
+            {
+                "value": true,
+                "title": "true",
+                "description": "Shuffles the Fairy Ocarina and the Ocarina of Time into the item pool."
+            }
+        ]
+    },
+    "shuffle_scrubs": {
+        "title": "Shuffle Scrubs",
+        "values": [
+            {
+                "value": "low",
+                "title": "affordable",
+                "description": "All Deku Scrubs sells an item for 10 rupees each."
+            }
+        ]
+    },
+    "shuffle_smallkeys": {
+        "title": "Small Keys",
+        "values": [
+            {
+                "value": "vanilla",
+                "title": "vanilla",
+                "description": "Small Keys will appear in their vanilla locations."
+            },
+            {
+                "value": "remove",
+                "title": "remove",
+                "description": "Small Keys are removed and all locked doors in dungeons will be unlocked, except Boss Door."
+            },
+            {
+                "value": "keysanity",
+                "title": "anywhere",
+                "description": "Small Keys can appear anywhere in the world."
+            }
+        ]
+    },
+    "shuffle_song_items": {
+        "title": "Shuffle Songs with Items",
+        "values": [
+            {
+                "value": true,
+                "title": "true",
+                "description": "Shuffles the songs into the rest of the item pool."
+            }
+        ]
+    },
+    "shuffle_weird_egg": {
+        "title": "Shuffle Weird Egg",
+        "values": [
+            {
+                "value": true,
+                "title": "true",
+                "description": "Enabling this shuffles the Weird Egg from Malon into the pool."
+            }
+        ]
+    },
+    "starting_age": {
+        "title": "Starting age",
+        "values": [
+            {
+                "value": "adult",
+                "title": "adult",
+                "description": "Link starts as adult in Temple of Time."
+            }
+        ]
+    },
+    "tokensanity": {
+        "title": "Tokensanity",
+        "values": [
+            {
+                "value": "dungeons",
+                "title": "dungeons",
+                "description": "Token rewards from Gold Skulltulas within dungeons are shuffled into the pool."
+            },
+            {
+                "value": "overworld",
+                "title": "overworld",
+                "description": "Token rewards from Gold Skulltulas outside of dungeons are shuffled into the pool."
+            },
+            {
+                "value": "all",
+                "title": "all tokens",
+                "description": "Every Gold Skulltula token is shuffled into the pool."
+            }
+        ]
+    },
+    "zora_fountain": {
+        "title": "Zora's Fountain",
+        "values": [
+            {
+                "value": "adult",
+                "title": "open for adult",
+                "description": "King Zora is always moved in the adult era."
+            },
+            {
+                "value": "open",
+                "title": "always open",
+                "description": "King Zora starts as moved in both the child and adult eras."
+            }
+        ]
+    },
+    "gerudo_fortress": {
+        "title": "Gerudo Fortress",
+        "values": [
+            {
+                "value": "open",
+                "title": "open",
+                "description": "The bridge in Gerudo Valley is already rebuild."
+            }
+        ]
+    },
+    "triforce_hunt": {
+        "title": "Triforce Hunt",
+        "values": [
+            {
+                "value": true,
+                "title": "true",
+                "description": "Pieces of the Triforce have been scattered around the world. Find 20 of them to finish the game !"
+            }
+        ]
+    },
+    "free_scarecrow": {
+        "title": "Free Scarecrow's Song",
+        "values": [
+            {
+                "value": true,
+                "title": "true",
+                "description": "Pulling out the Ocarina near a spot at which Pierre can spawn will do so, without needing the song."
+            }
+        ]
+    },
+    "start_with_consumables": {
+        "title": "Start with Consumables",
+        "values": [
+            {
+                "value": true,
+                "title": "true",
+                "description": "Start the game with maxed out Deku Sticks and Deku Nuts."
+            }
+        ]
+    },
+    "chicken_count_random": {
+        "title": "Random Cucco Count",
+        "values": [
+            {
+                "value": true,
+                "title": "true",
+                "description": "Anju will give a reward for collecting a random number of Cuccos."
+            }
+        ]
+    },
+    "shuffle_kokiri_sword": {
+        "title": "Shuffle Kokiri Sword",
+        "values": [
+            {
+                "value": false,
+                "title": "false",
+                "description": "The Kokiri Sword is at its vanilla location."
+            }
+        ]
+    }
+}
