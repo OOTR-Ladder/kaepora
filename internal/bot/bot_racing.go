@@ -30,6 +30,7 @@ func (bot *Bot) cmdJoin(m *discordgo.Message, args []string, w io.Writer) error 
 	}
 
 	fmt.Fprintf(w, "You have been registered for the next race in the %s league.\n", league.Name)
+	fmt.Fprint(w, "Please ensure you have read the rules before the race: https://ootrladder.com/en/rules\n")
 
 	cancelDelta := time.Until(session.StartDate.Time().Add(back.MatchSessionPreparationOffset))
 	if cancelDelta > 0 {
