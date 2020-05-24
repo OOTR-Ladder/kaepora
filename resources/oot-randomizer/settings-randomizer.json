@@ -308,7 +308,7 @@
             "Weight": 1
         },
         {
-            "Value": "lacs_vanilla",
+            "Value": "lacs_medallions",
             "Cost": 1,
             "Weight": 0.5
         }
@@ -541,12 +541,12 @@
     "shuffle_kokiri_sword": [
         {
             "Value": true,
-            "Cost": 0,
+            "Cost": 1,
             "Weight": 1
         },
         {
             "Value": false,
-            "Cost": 1,
+            "Cost": 0,
             "Weight": 1
         }
     ]
