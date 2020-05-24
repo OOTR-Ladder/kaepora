@@ -11,21 +11,21 @@
 4. **Il est interdit d'être en chat vocal** pendant un match.
 5. Un match commence toujours à l'horaire prévu, si vous n'êtes pas prêt quand
    le match commence, c'est un retard qui sera compté dans votre temps de jeu.
-6. Il est fortement encourage de cacher le _seed hash_ avant que le match ne
+6. Il est fortement encouragé de cacher le _seed hash_ avant que le match ne
    commence.
 7. **Il est interdit de modifier le Patch/WAD/ROM** de quelque manière que ce
    soit après son obtention sur [ootrandomizer.com][1].
-8. Si vous enfreignez une règle, l'équipe de modération du ladder peut
+8. Si vous enfreignez une règle, l'équipe de modération du Ladder peut
    appliquer une ou plusieurs des sanctions suivantes :
     1. Avertissement.
     2. Défaite forcée.
-    3. Bannissement temporaire du ladder ou de sa catégorie sur Discord.
-    4. Bannissement définitif du ladder ou de sa catégorie sur Discord.
+    3. Bannissement temporaire du Ladder ou de sa catégorie sur Discord.
+    4. Bannissement définitif du Ladder ou de sa catégorie sur Discord.
 
 [1]: https://ootrandomizer.com
 
 ## Techniques et _glitches_ autorisés
-Tous les matches _Standard_ du ladder suivent les règles [OOTR Standard][2].  
+Tous les matches _Standard_ du Ladder suivent les règles [OOTR Standard][2].  
 Se prévaloir de l'utilisation d'un _glitch_ interdit amènera à une défaite
 forcée.
 
