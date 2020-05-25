@@ -60,14 +60,13 @@ func (g *RandomizerAPI) generateFromSettings(settings map[string]interface{}, se
 		return generator.Output{}, fmt.Errorf("API error: %w", err)
 	}
 
-	state := struct{ ID string }{id}
-	stateStr, err := json.Marshal(state)
+	state, err := json.Marshal(State{ID: id})
 	if err != nil {
 		return generator.Output{}, err
 	}
 
 	return generator.Output{
-		State:      stateStr,
+		State:      state,
 		SpoilerLog: spoilerLog,
 		SeedPatch:  patch,
 	}, nil
@@ -120,7 +119,7 @@ func loadSettings(name string) (map[string]interface{}, error) {
 }
 
 func (g *RandomizerAPI) GetDownloadURL(stateJSON []byte) string {
-	var state struct{ ID string }
+	var state State
 	if err := json.Unmarshal(stateJSON, &state); err != nil {
 		log.Printf("error: unable to unmarshal state JSON: %s", err)
 		return ""
@@ -134,7 +133,7 @@ func (g *RandomizerAPI) IsExternal() bool {
 }
 
 func (g *RandomizerAPI) UnlockSpoilerLog(stateJSON []byte) error {
-	var state struct{ ID string }
+	var state State
 	if err := json.Unmarshal(stateJSON, &state); err != nil {
 		return fmt.Errorf("error: unable to unmarshal state JSON: %s", err)
 	}

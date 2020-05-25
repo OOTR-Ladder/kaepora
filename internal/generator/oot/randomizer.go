@@ -18,6 +18,15 @@ type Randomizer struct {
 	version string
 }
 
+// State is the generator-specific state carried along OOT seeds.
+type State struct {
+	// For API-generated seeds only.
+	ID string `json:",omitempty"`
+
+	// For shuffled settings seeds only.
+	SettingsPatch map[string]interface{} `json:",omitempty"`
+}
+
 func NewRandomizer(version string) *Randomizer {
 	return &Randomizer{
 		version: version,

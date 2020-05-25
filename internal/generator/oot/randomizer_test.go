@@ -3,6 +3,7 @@
 package oot_test
 
 import (
+	"kaepora/internal/generator"
 	"kaepora/internal/generator/factory"
 	"kaepora/internal/generator/oot"
 	"testing"
@@ -22,13 +23,19 @@ func TestOOTRandomizer(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// patches are not reproducible so we are limited to length checks.
+	assertGeneratorOutputValid(t, out)
+}
+
+func assertGeneratorOutputValid(t *testing.T, out generator.Output) {
+	t.Helper()
+
+	// Patches are not reproducible so we are limited to length checks.
 	if len(out.SeedPatch) == 0 {
-		t.Fatal("got an empty patch")
+		t.Fatal("seed patch is empty")
 	}
 
 	if len(out.SpoilerLog) == 0 {
-		t.Fatal("got an empty spoiler log")
+		t.Fatal("spoiler log is empty")
 	}
 
 	if len(out.SeedPatch) < 250*1024 {

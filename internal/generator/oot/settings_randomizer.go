@@ -12,9 +12,10 @@ import (
 	jsonpatch "github.com/evanphx/json-patch"
 )
 
-const SettingsRandomizerName = "oot-settings-randomizer"
-
-const SettingsCostBudget = 15
+const (
+	SettingsRandomizerName = "oot-settings-randomizer"
+	SettingsCostBudget     = 15
+)
 
 type SettingsRandomizer struct {
 	oot *Randomizer
@@ -26,23 +27,28 @@ func NewSettingsRandomizer(version string) *SettingsRandomizer {
 	}
 }
 
-func getShuffledSettings(seed string, cost int, baseSettingsName string) ([]byte, error) {
-	base, err := getBaseDir()
+func getShuffledSettings(
+	seed string, cost int,
+	baseDir string,
+) (map[string]interface{}, error) {
+	s, err := settings.Load(filepath.Join(baseDir, settings.DefaultName))
 	if err != nil {
 		return nil, err
 	}
 
-	s, err := settings.Load(filepath.Join(base, settings.DefaultName))
-	if err != nil {
-		return nil, err
-	}
+	return s.Shuffle(seed, cost), nil
+}
 
-	shuffledPatch, err := json.Marshal(s.Shuffle(seed, cost))
-	if err != nil {
-		return nil, err
-	}
-
+func getMergedShuffledSettingsJSON(
+	settings map[string]interface{},
+	base, baseSettingsName string,
+) ([]byte, error) {
 	original, err := ioutil.ReadFile(filepath.Join(base, baseSettingsName))
+	if err != nil {
+		return nil, err
+	}
+
+	shuffledPatch, err := json.Marshal(settings)
 	if err != nil {
 		return nil, err
 	}
@@ -55,8 +61,11 @@ func getShuffledSettings(seed string, cost int, baseSettingsName string) ([]byte
 	return patched, nil
 }
 
-func getShuffledSettingsPath(seed string, cost int, baseSettingsName string) (string, error) {
-	settings, err := getShuffledSettings(seed, cost, baseSettingsName)
+func getMergedShuffledSettingsPath(
+	settings map[string]interface{},
+	baseDir, baseSettingsName string,
+) (string, error) {
+	settingsJSON, err := getMergedShuffledSettingsJSON(settings, baseDir, baseSettingsName)
 	if err != nil {
 		return "", err
 	}
@@ -68,15 +77,28 @@ func getShuffledSettingsPath(seed string, cost int, baseSettingsName string) (st
 	settingsPath := f.Name()
 	f.Close()
 
-	if err := ioutil.WriteFile(settingsPath, settings, 0o600); err != nil {
+	if err := ioutil.WriteFile(settingsPath, settingsJSON, 0o600); err != nil {
 		return "", err
 	}
 
 	return settingsPath, nil
 }
 
-func (r *SettingsRandomizer) Generate(baseSettingsName, seed string) (generator.Output, error) {
-	settingsPath, err := getShuffledSettingsPath(seed, SettingsCostBudget, baseSettingsName)
+func (r *SettingsRandomizer) Generate(
+	baseSettingsName,
+	seed string,
+) (generator.Output, error) {
+	baseDir, err := getBaseDir()
+	if err != nil {
+		return generator.Output{}, err
+	}
+
+	settings, err := getShuffledSettings(seed, SettingsCostBudget, baseDir)
+	if err != nil {
+		return generator.Output{}, err
+	}
+
+	settingsPath, err := getMergedShuffledSettingsPath(settings, baseDir, baseSettingsName)
 	defer os.Remove(settingsPath)
 	if err != nil {
 		return generator.Output{}, fmt.Errorf("unable to get shuffled settings: %w", err)
@@ -88,9 +110,14 @@ func (r *SettingsRandomizer) Generate(baseSettingsName, seed string) (generator.
 	}
 	defer os.RemoveAll(outDir)
 
+	state, err := patchStateWithSettings(nil, settings)
+	if err != nil {
+		return generator.Output{}, err
+	}
+
 	zpf, spoilerLog, err := r.oot.run(outDir, settingsPath, seed)
 	return generator.Output{
-		State:      nil,
+		State:      state,
 		SeedPatch:  zpf,
 		SpoilerLog: spoilerLog,
 	}, err
