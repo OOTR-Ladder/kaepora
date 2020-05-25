@@ -1,421 +1,421 @@
 {
     "all_reachable": {
-        "title": "All reachable",
-        "values": [
+        "Title": "All reachable",
+        "Values": [
             {
-                "value": false,
-                "title": "false",
-                "description": "Only required items and locations to beat the game will be guaranteed reachable."
+                "Value": false,
+                "Title": "no",
+                "Description": "Only required items and locations to beat the game will be guaranteed reachable."
             }
         ]
     },
     "bombchus_in_logic": {
-        "title": "Bombchus in logic",
-        "values": [
+        "Title": "Bombchus in logic",
+        "Values": [
             {
-                "value": true,
-                "title": "true",
-                "description": "Bombchus are properly considered in logic."
+                "Value": true,
+                "Title": "yes",
+                "Description": "Bombchus are properly considered in logic."
             }
         ]
     },
     "bridge": {
-        "title": "Rainbow bridge",
-        "values": [
+        "Title": "Rainbow bridge",
+        "Values": [
             {
-                "value": "medallions",
-                "title": "medallions",
-                "description": "Bridge to Ganon's Castle appears when all 6 medaillons are obtained."
+                "Value": "medallions",
+                "Title": "medallions",
+                "Description": "Bridge to Ganon's Castle appears when all 6 medaillons are obtained."
             },
             {
-                "value": "dungeons",
-                "title": "dungeons",
-                "description": "Bridge to Ganon's Castle appears when all 6 medaillons and all 3 Spiritual Stones are obtained."
+                "Value": "dungeons",
+                "Title": "dungeons",
+                "Description": "Bridge to Ganon's Castle appears when all 6 medaillons and all 3 Spiritual Stones are obtained."
             },
             {
-                "value": "open",
-                "title": "open",
-                "description": "Bridge to Ganon's Castle is always there."
+                "Value": "open",
+                "Title": "open",
+                "Description": "Bridge to Ganon's Castle is always there."
             },
             {
-                "value": "stones",
-                "title": "stones",
-                "description": "Bridge to Ganon's Castle appears when all 3 Spiritual Stones are obtained."
+                "Value": "stones",
+                "Title": "stones",
+                "Description": "Bridge to Ganon's Castle appears when all 3 Spiritual Stones are obtained."
             },
             {
-                "value": "vanilla",
-                "title": "vanilla",
-                "description": "Bridge to Ganon's Castle appears when Shadow Medaillon, Spirit Medaillon and Light Arrows are obtained."
+                "Value": "vanilla",
+                "Title": "vanilla",
+                "Description": "Bridge to Ganon's Castle appears when Shadow Medaillon, Spirit Medaillon and Light Arrows are obtained."
             }
         ]
     },
     "correct_chest_sizes": {
-        "title": "Correct chest sizes",
-        "values": [
+        "Title": "Correct chest sizes",
+        "Values": [
             {
-                "value": true,
-                "title": "true",
-                "description": "Chests will be large if they contain a major item and small if they don't."
+                "Value": true,
+                "Title": "yes",
+                "Description": "Chests will be large if they contain a major item and small if they don't."
             }
         ]
     },
     "damage_multiplier": {
-        "title": "Damage multiplier",
-        "values": [
+        "Title": "Damage multiplier",
+        "Values": [
             {
-                "value": "double",
-                "title": "double",
-                "description": "Link takes double the damage."
+                "Value": "double",
+                "Title": "double",
+                "Description": "Link takes double the damage."
             },
             {
-                "value": "quadruple",
-                "title": "quadruple",
-                "description": "Link takes quadruple the damage."
+                "Value": "quadruple",
+                "Title": "quadruple",
+                "Description": "Link takes quadruple the damage."
             },
             {
-                "value": "half",
-                "title": "half",
-                "description": "Link takes half the damage."
+                "Value": "half",
+                "Title": "half",
+                "Description": "Link takes half the damage."
             }
         ]
     },
     "entrance_shuffle": {
-        "title": "Entrance shuffle",
-        "values": [
+        "Title": "Entrance shuffle",
+        "Values": [
             {
-                "value": "dungeons",
-                "title": "dungeons",
-                "description": "Dungeon entrances are shuffled with each other, including Bottom of the Well, Ice Cavern, and Gerudo Training Grounds."
+                "Value": "dungeons",
+                "Title": "dungeons",
+                "Description": "Dungeon entrances are shuffled with each other, including Bottom of the Well, Ice Cavern, and Gerudo Training Grounds."
             },
             {
-                "value": "simple-indoors",
-                "title": "simple indoors",
-                "description": "Shuffle dungeon entrances along with simple Grotto and Interior entrances (i.e. most Houses and Great Fairies)."
+                "Value": "simple-indoors",
+                "Title": "simple indoors",
+                "Description": "Shuffle dungeon entrances along with simple Grotto and Interior entrances (i.e. most Houses and Great Fairies)."
             }
         ]
     },
     "hints": {
-        "title": "Hints",
-        "values": [
+        "Title": "Hints",
+        "Values": [
             {
-                "value": "none",
-                "title": "none",
-                "description": "Gossip Stones give no hints."
+                "Value": "none",
+                "Title": "none",
+                "Description": "Gossip Stones give no hints."
             },
             {
-                "value": "agony",
-                "title": "Stone of Agony",
-                "description": "The Stone of Agony is required to read the Gossip Stones hints."
+                "Value": "agony",
+                "Title": "Stone of Agony",
+                "Description": "The Stone of Agony is required to read the Gossip Stones hints."
             }
         ]
     },
     "item_pool_value": {
-        "title": "Item pool",
-        "values": [
+        "Title": "Item pool",
+        "Values": [
             {
-                "value": "plentiful",
-                "title": "plentiful",
-                "description": "Extra major items are added."
+                "Value": "plentiful",
+                "Title": "plentiful",
+                "Description": "Extra major items are added."
             },
             {
-                "value": "scarce",
-                "title": "scarce",
-                "description": "Some excess items are removed, including health upgrades."
+                "Value": "scarce",
+                "Title": "scarce",
+                "Description": "Some excess items are removed, including health upgrades."
             },
             {
-                "value": "minimal",
-                "title": "minimal",
-                "description": "Most excess items are removed."
+                "Value": "minimal",
+                "Title": "minimal",
+                "Description": "Most excess items are removed."
             }
         ]
     },
     "one_item_per_dungeon": {
-        "title": "Dungeons Have One Major Item",
-        "values": [
+        "Title": "Dungeons Have One Major Item",
+        "Values": [
             {
-                "value": true,
-                "title": "true",
-                "description": "Dungeons have exactly one major item except Spirit Temple which has TWO items to match vanilla distribution."
+                "Value": true,
+                "Title": "yes",
+                "Description": "Dungeons have exactly one major item except Spirit Temple which has TWO items to match vanilla distribution."
             }
         ]
     },
     "open_door_of_time": {
-        "title": "Open Door of Time",
-        "values": [
+        "Title": "Open Door of Time",
+        "Values": [
             {
-                "value": false,
-                "title": "false",
-                "description": "The Door of Time is closed and will open if you play Song of Time in front of it."
+                "Value": false,
+                "Title": "no",
+                "Description": "The Door of Time is closed and will open if you play Song of Time in front of it."
             }
         ]
     },
     "open_forest": {
-        "title": "Kokiri Forest",
-        "values": [
+        "Title": "Kokiri Forest",
+        "Values": [
             {
-                "value": "closed_deku",
-                "title": "closed deku",
-                "description": "Mido blocks the path to the Deku Tree, requiring Kokiri Sword and Deku Shield to access the Deku Tree."
+                "Value": "closed_deku",
+                "Title": "closed deku",
+                "Description": "Mido blocks the path to the Deku Tree, requiring Kokiri Sword and Deku Shield to access the Deku Tree."
             },
             {
-                "value": "closed",
-                "title": "closed",
-                "description": "Completing Deku Tree is needed to get out of Kokiri Forest."
+                "Value": "closed",
+                "Title": "closed",
+                "Description": "Completing Deku Tree is needed to get out of Kokiri Forest."
             }
         ]
     },
     "shopsanity": {
-        "title": "Shopsanity",
-        "values": [
+        "Title": "Shopsanity",
+        "Values": [
             {
-                "value": "1",
-                "title": "1",
-                "description": "Shops have 1 random non-shop item. They will always be on the left side."
+                "Value": "1",
+                "Title": "1",
+                "Description": "Shops have 1 random non-shop item. They will always be on the left side."
             },
             {
-                "value": "2",
-                "title": "2",
-                "description": "Shops have 2 random non-shop items. They will always be on the left side."
+                "Value": "2",
+                "Title": "2",
+                "Description": "Shops have 2 random non-shop items. They will always be on the left side."
             },
             {
-                "value": "3",
-                "title": "3",
-                "description": "Shops have 3 random non-shop items. They will always be on the left side."
+                "Value": "3",
+                "Title": "3",
+                "Description": "Shops have 3 random non-shop items. They will always be on the left side."
             },
             {
-                "value": "4",
-                "title": "4",
-                "description": "Shops have 4 random non-shop items. They will always be on the left side."
+                "Value": "4",
+                "Title": "4",
+                "Description": "Shops have 4 random non-shop items. They will always be on the left side."
             },
             {
-                "value": "random",
-                "title": "random",
-                "description": "Each shop will have a random number of non-shop items up to a maximum of 4."
+                "Value": "random",
+                "Title": "random",
+                "Description": "Each shop will have a random number of non-shop items up to a maximum of 4."
             }
         ]
     },
     "shuffle_beans": {
-        "title": "Shuffle Magic Beans",
-        "values": [
+        "Title": "Shuffle Magic Beans",
+        "Values": [
             {
-                "value": true,
-                "title": "true",
-                "description": "Adds a pack of 10 beans to the item pool, and the Magic Bean Salesman now sells a random item once at the price of 60 Rupees."
+                "Value": true,
+                "Title": "yes",
+                "Description": "Adds a pack of 10 beans to the item pool, and the Magic Bean Salesman now sells a random item once at the price of 60 Rupees."
             }
         ]
     },
     "shuffle_bosskeys": {
-        "title": "Shuffle Boss Keys",
-        "values": [
+        "Title": "Shuffle Boss Keys",
+        "Values": [
             {
-                "value": "vanilla",
-                "title": "vanilla",
-                "description": "Boss Keys will appear in their vanilla locations."
+                "Value": "vanilla",
+                "Title": "vanilla",
+                "Description": "Boss Keys will appear in their vanilla locations."
             },
             {
-                "value": "remove",
-                "title": "remove",
-                "description": "Boss Keys are removed and all Boss doors are unlocked."
+                "Value": "remove",
+                "Title": "remove",
+                "Description": "Boss Keys are removed and all Boss doors are unlocked."
             },
             {
-                "value": "keysanity",
-                "title": "anywhere",
-                "description": "Boss Keys can appear anywhere in the world."
+                "Value": "keysanity",
+                "Title": "anywhere",
+                "Description": "Boss Keys can appear anywhere in the world."
             }
         ]
     },
     "shuffle_cows": {
-        "title": "Shuffle Cows",
-        "values": [
+        "Title": "Shuffle Cows",
+        "Values": [
             {
-                "value": true,
-                "title": "true",
-                "description": "Playing Epona's song in front of cows gives an item."
+                "Value": true,
+                "Title": "yes",
+                "Description": "Playing Epona's song in front of cows gives an item."
             }
         ]
     },
     "shuffle_ganon_bosskey": {
-        "title": "Shuffle Ganon Boss Key",
-        "values": [
+        "Title": "Shuffle Ganon Boss Key",
+        "Values": [
             {
-                "value": "lacs_vanilla",
-                "title": "vanilla Light Arrow custcene",
-                "description": "Ganon's Castle Boss Key is on the Light Arrow cutscene which unlocks when you get both Shadow and Spirit medallions."
+                "Value": "lacs_vanilla",
+                "Title": "vanilla Light Arrow custcene",
+                "Description": "Ganon's Castle Boss Key is on the Light Arrow cutscene which unlocks when you get both Shadow and Spirit medallions."
             }
         ]
     },
     "shuffle_gerudo_card": {
-        "title": "Shuffle Gerudo card",
-        "values": [
+        "Title": "Shuffle Gerudo card",
+        "Values": [
             {
-                "value": true,
-                "title": "true",
-                "description": "Shuffles the Gerudo Card into the item pool."
+                "Value": true,
+                "Title": "yes",
+                "Description": "Shuffles the Gerudo Card into the item pool."
             }
         ]
     },
     "shuffle_ocarinas": {
-        "title": "Shuffle Ocarinas",
-        "values": [
+        "Title": "Shuffle Ocarinas",
+        "Values": [
             {
-                "value": true,
-                "title": "true",
-                "description": "Shuffles the Fairy Ocarina and the Ocarina of Time into the item pool."
+                "Value": true,
+                "Title": "yes",
+                "Description": "Shuffles the Fairy Ocarina and the Ocarina of Time into the item pool."
             }
         ]
     },
     "shuffle_scrubs": {
-        "title": "Shuffle Scrubs",
-        "values": [
+        "Title": "Shuffle Scrubs",
+        "Values": [
             {
-                "value": "low",
-                "title": "affordable",
-                "description": "All Deku Scrubs sells an item for 10 rupees each."
+                "Value": "low",
+                "Title": "affordable",
+                "Description": "All Deku Scrubs sells an item for 10 rupees each."
             }
         ]
     },
     "shuffle_smallkeys": {
-        "title": "Small Keys",
-        "values": [
+        "Title": "Small Keys",
+        "Values": [
             {
-                "value": "vanilla",
-                "title": "vanilla",
-                "description": "Small Keys will appear in their vanilla locations."
+                "Value": "vanilla",
+                "Title": "vanilla",
+                "Description": "Small Keys will appear in their vanilla locations."
             },
             {
-                "value": "remove",
-                "title": "remove",
-                "description": "Small Keys are removed and all locked doors in dungeons will be unlocked, except Boss Door."
+                "Value": "remove",
+                "Title": "remove",
+                "Description": "Small Keys are removed and all locked doors in dungeons will be unlocked, except Boss Door."
             },
             {
-                "value": "keysanity",
-                "title": "anywhere",
-                "description": "Small Keys can appear anywhere in the world."
+                "Value": "keysanity",
+                "Title": "anywhere",
+                "Description": "Small Keys can appear anywhere in the world."
             }
         ]
     },
     "shuffle_song_items": {
-        "title": "Shuffle Songs with Items",
-        "values": [
+        "Title": "Shuffle Songs with Items",
+        "Values": [
             {
-                "value": true,
-                "title": "true",
-                "description": "Shuffles the songs into the rest of the item pool."
+                "Value": true,
+                "Title": "yes",
+                "Description": "Shuffles the songs into the rest of the item pool."
             }
         ]
     },
     "shuffle_weird_egg": {
-        "title": "Shuffle Weird Egg",
-        "values": [
+        "Title": "Shuffle Weird Egg",
+        "Values": [
             {
-                "value": true,
-                "title": "true",
-                "description": "Enabling this shuffles the Weird Egg from Malon into the pool."
+                "Value": true,
+                "Title": "yes",
+                "Description": "Enabling this shuffles the Weird Egg from Malon into the pool."
             }
         ]
     },
     "starting_age": {
-        "title": "Starting age",
-        "values": [
+        "Title": "Starting age",
+        "Values": [
             {
-                "value": "adult",
-                "title": "adult",
-                "description": "Link starts as adult in Temple of Time."
+                "Value": "adult",
+                "Title": "adult",
+                "Description": "Link starts as adult in Temple of Time."
             }
         ]
     },
     "tokensanity": {
-        "title": "Tokensanity",
-        "values": [
+        "Title": "Tokensanity",
+        "Values": [
             {
-                "value": "dungeons",
-                "title": "dungeons",
-                "description": "Token rewards from Gold Skulltulas within dungeons are shuffled into the pool."
+                "Value": "dungeons",
+                "Title": "dungeons",
+                "Description": "Token rewards from Gold Skulltulas within dungeons are shuffled into the pool."
             },
             {
-                "value": "overworld",
-                "title": "overworld",
-                "description": "Token rewards from Gold Skulltulas outside of dungeons are shuffled into the pool."
+                "Value": "overworld",
+                "Title": "overworld",
+                "Description": "Token rewards from Gold Skulltulas outside of dungeons are shuffled into the pool."
             },
             {
-                "value": "all",
-                "title": "all tokens",
-                "description": "Every Gold Skulltula token is shuffled into the pool."
+                "Value": "all",
+                "Title": "all tokens",
+                "Description": "Every Gold Skulltula token is shuffled into the pool."
             }
         ]
     },
     "zora_fountain": {
-        "title": "Zora's Fountain",
-        "values": [
+        "Title": "Zora's Fountain",
+        "Values": [
             {
-                "value": "adult",
-                "title": "open for adult",
-                "description": "King Zora is always moved in the adult era."
+                "Value": "adult",
+                "Title": "open for adult",
+                "Description": "King Zora is always moved in the adult era."
             },
             {
-                "value": "open",
-                "title": "always open",
-                "description": "King Zora starts as moved in both the child and adult eras."
+                "Value": "open",
+                "Title": "always open",
+                "Description": "King Zora starts as moved in both the child and adult eras."
             }
         ]
     },
     "gerudo_fortress": {
-        "title": "Gerudo Fortress",
-        "values": [
+        "Title": "Gerudo Fortress",
+        "Values": [
             {
-                "value": "open",
-                "title": "open",
-                "description": "The bridge in Gerudo Valley is already rebuild."
+                "Value": "open",
+                "Title": "open",
+                "Description": "The bridge in Gerudo Valley is already rebuild."
             }
         ]
     },
     "triforce_hunt": {
-        "title": "Triforce Hunt",
-        "values": [
+        "Title": "Triforce Hunt",
+        "Values": [
             {
-                "value": true,
-                "title": "true",
-                "description": "Pieces of the Triforce have been scattered around the world. Find 20 of them to finish the game !"
+                "Value": true,
+                "Title": "yes",
+                "Description": "Pieces of the Triforce have been scattered around the world. Find 20 of them to finish the game !"
             }
         ]
     },
     "free_scarecrow": {
-        "title": "Free Scarecrow's Song",
-        "values": [
+        "Title": "Free Scarecrow's Song",
+        "Values": [
             {
-                "value": true,
-                "title": "true",
-                "description": "Pulling out the Ocarina near a spot at which Pierre can spawn will do so, without needing the song."
+                "Value": true,
+                "Title": "yes",
+                "Description": "Pulling out the Ocarina near a spot at which Pierre can spawn will do so, without needing the song."
             }
         ]
     },
     "start_with_consumables": {
-        "title": "Start with Consumables",
-        "values": [
+        "Title": "Start with Consumables",
+        "Values": [
             {
-                "value": true,
-                "title": "true",
-                "description": "Start the game with maxed out Deku Sticks and Deku Nuts."
+                "Value": true,
+                "Title": "yes",
+                "Description": "Start the game with maxed out Deku Sticks and Deku Nuts."
             }
         ]
     },
     "chicken_count_random": {
-        "title": "Random Cucco Count",
-        "values": [
+        "Title": "Random Cucco Count",
+        "Values": [
             {
-                "value": true,
-                "title": "true",
-                "description": "Anju will give a reward for collecting a random number of Cuccos."
+                "Value": true,
+                "Title": "yes",
+                "Description": "Anju will give a reward for collecting a random number of Cuccos."
             }
         ]
     },
     "shuffle_kokiri_sword": {
-        "title": "Shuffle Kokiri Sword",
-        "values": [
+        "Title": "Shuffle Kokiri Sword",
+        "Values": [
             {
-                "value": false,
-                "title": "false",
-                "description": "The Kokiri Sword is at its vanilla location."
+                "Value": false,
+                "Title": "no",
+                "Description": "The Kokiri Sword is at its vanilla location."
             }
         ]
     }
