@@ -42,8 +42,7 @@ func (b *Back) SendDevSeed(
 		player := Player{DiscordID: null.NewString(discordID, true)}
 		b.sendMatchSeedNotification(
 			MatchSession{},
-			gen.GetDownloadURL(out.State),
-			out.SeedPatch, hashFromSpoilerLog(out.SpoilerLog),
+			gen.GetDownloadURL(out.State), out,
 			player, Player{},
 		)
 		b.sendSpoilerLogNotification(player, seed, zlibLog)

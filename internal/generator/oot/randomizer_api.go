@@ -97,7 +97,7 @@ func (g *RandomizerAPI) waitForSeedgen(id string) error {
 }
 
 func loadSettings(name string) (map[string]interface{}, error) {
-	base, err := getBaseDir()
+	base, err := GetBaseDir()
 	if err != nil {
 		return nil, err
 	}

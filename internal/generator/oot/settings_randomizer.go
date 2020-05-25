@@ -88,7 +88,7 @@ func (r *SettingsRandomizer) Generate(
 	baseSettingsName,
 	seed string,
 ) (generator.Output, error) {
-	baseDir, err := getBaseDir()
+	baseDir, err := GetBaseDir()
 	if err != nil {
 		return generator.Output{}, err
 	}

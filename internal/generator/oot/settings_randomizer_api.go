@@ -19,7 +19,7 @@ func NewSettingsRandomizerAPI(version string, api *ootrapi.API) *SettingsRandomi
 }
 
 func (r *SettingsRandomizerAPI) Generate(baseSettingsName, seed string) (generator.Output, error) {
-	baseDir, err := getBaseDir()
+	baseDir, err := GetBaseDir()
 	if err != nil {
 		return generator.Output{}, err
 	}

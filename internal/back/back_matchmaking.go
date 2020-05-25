@@ -156,8 +156,7 @@ func (b *Back) generateAndSendMatchSeed(
 
 	b.sendMatchSeedNotification(
 		session,
-		gen.GetDownloadURL(out.State),
-		out.SeedPatch, hashFromSpoilerLog(out.SpoilerLog),
+		gen.GetDownloadURL(out.State), out,
 		p1, p2,
 	)
 
