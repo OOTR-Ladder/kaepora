@@ -18,6 +18,15 @@ type Randomizer struct {
 	version string
 }
 
+// State is the generator-specific state carried along OOT seeds.
+type State struct {
+	// For API-generated seeds only.
+	ID string `json:",omitempty"`
+
+	// For shuffled settings seeds only.
+	SettingsPatch map[string]interface{} `json:",omitempty"`
+}
+
 func NewRandomizer(version string) *Randomizer {
 	return &Randomizer{
 		version: version,
@@ -31,7 +40,7 @@ func (g *Randomizer) Generate(settingsName, seed string) (generator.Output, erro
 	}
 	defer os.RemoveAll(outDir)
 
-	base, err := getBaseDir()
+	base, err := GetBaseDir()
 	if err != nil {
 		return generator.Output{}, err
 	}
@@ -63,7 +72,9 @@ func readFirstGlob(pattern string) ([]byte, error) {
 	return out, nil
 }
 
-func getBaseDir() (string, error) {
+// GetBaseDir returns the directory where all the resources needed by the
+// generators are stored.
+func GetBaseDir() (string, error) {
 	wd, err := os.Getwd()
 	if err != nil {
 		return "", err
@@ -73,7 +84,7 @@ func getBaseDir() (string, error) {
 }
 
 func (g *Randomizer) run(outDir, settings, seed string) ([]byte, []byte, error) {
-	base, err := getBaseDir()
+	base, err := GetBaseDir()
 	if err != nil {
 		return nil, nil, err
 	}

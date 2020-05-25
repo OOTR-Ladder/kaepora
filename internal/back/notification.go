@@ -5,7 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"kaepora/internal/generator"
+	"kaepora/internal/generator/oot"
 	"kaepora/internal/util"
+	"log"
 	"text/tabwriter"
 	"time"
 
@@ -225,8 +228,7 @@ func (b *Back) sendMatchEndNotification(
 func (b *Back) sendMatchSeedNotification(
 	session MatchSession,
 	url string,
-	patch []byte,
-	hash string,
+	out generator.Output,
 	p1, p2 Player,
 ) {
 	name := fmt.Sprintf(
@@ -245,7 +247,7 @@ func (b *Back) sendMatchSeedNotification(
 			notif.Files = []NotificationFile{{
 				Name:        name,
 				ContentType: "application/zlib",
-				Reader:      bytes.NewReader(patch),
+				Reader:      bytes.NewReader(out.SeedPatch),
 			}}
 
 			notif.Print(
@@ -256,7 +258,7 @@ func (b *Back) sendMatchSeedNotification(
 			notif.Printf("Here is your seed: %s\n", url)
 		}
 
-		if hash != "" {
+		if hash := hashFromSpoilerLog(out.SpoilerLog); hash != "" {
 			notif.Print("Your seed hash is: **", hash, "**\n")
 		}
 
@@ -267,11 +269,52 @@ func (b *Back) sendMatchSeedNotification(
 			)
 		}
 
+		if err := maybeWriteSettingsPatchInfo(&notif, out.State); err != nil {
+			log.Printf("warning: unable to send settings info: %v", err)
+		}
+
 		b.notifications <- notif
 	}
 
 	send(p1)
 	send(p2)
+}
+
+// maybeWriteSettingsPatchInfo sends OOTR-specific documentation about the
+// settings used to generate the seed (used in shuffled settings).
+func maybeWriteSettingsPatchInfo(w io.Writer, stateJSON []byte) error {
+	var state oot.State
+	if err := json.Unmarshal(stateJSON, &state); err != nil {
+		return err
+	}
+	if len(state.SettingsPatch) == 0 {
+		return nil
+	}
+
+	doc, err := loadSettingsDocumentation("en") // HARDCODED every bot message is in English.
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprint(w, "Seed settings:\n")
+
+	for k, v := range state.SettingsPatch {
+		setting := doc[k]
+		value := setting.getValueEntry(v)
+
+		if setting.Title == "" {
+			log.Printf("warning: no title for setting %s", k)
+			continue
+		}
+		if value.Title == "" {
+			log.Printf("warning: no title for value %s = %v", k, v)
+			continue
+		}
+
+		fmt.Fprintf(w, "  - %s: %s\n", setting.Title, value.Title)
+	}
+
+	return nil
 }
 
 func (b *Back) sendSessionStatusUpdateNotification(tx *sqlx.Tx, session MatchSession) error {

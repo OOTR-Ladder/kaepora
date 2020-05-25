@@ -25,7 +25,6 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 !dev error                   # error out
 !dev panic                   # panic and abort
 !dev rerank SHORTCODE        # erase and recompute all the ranking history for a league
-!dev seed SHORTCODE [SEED]   # generate a seed valid for the given league
 !dev setannounce SHORTCODE   # configure a league to post its announcements in the channel the command was sent in
 !dev uptime                  # display for how long the server has been running
 !dev url                     # display the link to use when adding the bot to a new server
@@ -61,16 +60,6 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 		channel := newChannelWriter(bot.dg, m.ChannelID)
 		defer channel.Flush()
 		fmt.Fprintf(channel, "Announcements for league `%s` now will now happen in this channel.", shortcode)
-	case "seed": // SHORTCODE
-		if len(args) < 2 || len(args) > 3 {
-			return util.ErrPublic("expected 2 arguments: SHORTCODE [SEED]")
-		}
-
-		seed := uuid.New().String()
-		if len(args) == 3 {
-			seed = args[2]
-		}
-		return bot.back.SendDevSeed(m.Author.ID, args[1], seed)
 	case "addlisten":
 		return bot.cmdDevAddListen(m, args, out)
 	case "removelisten":

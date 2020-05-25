@@ -1,0 +1,422 @@
+{
+    "all_reachable": {
+        "Title": "Tout accessible",
+        "Values": [
+            {
+                "Value": false,
+                "Title": "non",
+                "Description": "Certains objets et lieux peuvent être inaccessibles."
+            }
+        ]
+    },
+    "bombchus_in_logic": {
+        "Title": "Missiles teigneux en logique",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "oui",
+                "Description": "Les missiles teigneux sont pris en compte dans la logique."
+            }
+        ]
+    },
+    "bridge": {
+        "Title": "Pont arc-en-ciel",
+        "Values": [
+            {
+                "Value": "medallions",
+                "Title": "médaillons",
+                "Description": "Le pont donnant accès au château de Ganon apparait une fois les 6 médaillons obtenus."
+            },
+            {
+                "Value": "dungeons",
+                "Title": "donjons",
+                "Description": "Le pont donnant accès au château de Ganon apparait une fois les 6 médaillons et les 3 pierres ancestrales obtenus."
+            },
+            {
+                "Value": "open",
+                "Title": "ouvert",
+                "Description": "Le pont donnant accès au château de Ganon est toujours présent."
+            },
+            {
+                "Value": "stones",
+                "Title": "pierres",
+                "Description": "Le pont donnant accès au château de Ganon apparait une fois les 3 pierres ancestrales obtenues."
+            },
+            {
+                "Value": "vanilla",
+                "Title": "vanille",
+                "Description": "Le pont donnant accès au château de Ganon apparait une fois que le médaillon de l'Ombre, de l'Esprit, et les Flèches de Lumière aient été obtenus."
+            }
+        ]
+    },
+    "correct_chest_sizes": {
+        "Title": "Coffres à la bonne taille",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "oui",
+                "Description": "Seuls les coffres contenant un objet important sont grands."
+            }
+        ]
+    },
+    "damage_multiplier": {
+        "Title": "Modification des dégâts reçus",
+        "Values": [
+            {
+                "Value": "double",
+                "Title": "double",
+                "Description": "Tout fait deux fois plus de dégâts."
+            },
+            {
+                "Value": "quadruple",
+                "Title": "quadruple",
+                "Description": "Tout fait quatre fois plus de dégâts."
+            },
+            {
+                "Value": "half",
+                "Title": "moitié",
+                "Description": "Tout fait moitié moins de dégâts."
+            }
+        ]
+    },
+    "entrance_shuffle": {
+        "Title": "Entrées aléatoires",
+        "Values": [
+            {
+                "Value": "dungeons",
+                "Title": "donjons",
+                "Description": "Les entrées des donjons sont mélangées entre elles, y compris le Puits, la Caverne Polaire et le Gymnase Gerudo."
+            },
+            {
+                "Value": "simple-indoors",
+                "Title": "intérieurs simplifié",
+                "Description": "Les entrées des donjons sont mélangées entre elles. Les entrées de grottes sont mélangées entre elles. La plupart des maisons ainsi que les fontaines des grandes fées sont mélangées entre elles."
+            }
+        ]
+    },
+    "hints": {
+        "Title": "Indices",
+        "Values": [
+            {
+                "Value": "none",
+                "Title": "aucun",
+                "Description": "Les Pierres à potin ne donnent aucun indice."
+            },
+            {
+                "Value": "agony",
+                "Title": "Pierre de Souffrance",
+                "Description": "Les Pierres à potin donnent des indices une fois la Pierre de Souffrance obtenue."
+            }
+        ]
+    },
+    "item_pool_value": {
+        "Title": "Nombre d'objets disponibles",
+        "Values": [
+            {
+                "Value": "plentiful",
+                "Title": "en abondance",
+                "Description": "Les items importants sont disponibles en abondance."
+            },
+            {
+                "Value": "scarce",
+                "Title": "rare",
+                "Description": "Certains objets non nécessaires sont retirés."
+            },
+            {
+                "Value": "minimal",
+                "Title": "unique",
+                "Description": "La plupart des objets non nécessaires sont retirés."
+            }
+        ]
+    },
+    "one_item_per_dungeon": {
+        "Title": "Un unique objet par donjon",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "oui",
+                "Description": "Les donjons ne peuvent contenir qu'un seul objet important, à l'exception du Temple de l'Esprit qui en contient deux."
+            }
+        ]
+    },
+    "open_door_of_time": {
+        "Title": "Porte du Temps ouverte",
+        "Values": [
+            {
+                "Value": false,
+                "Title": "non",
+                "Description": "La Porte du Temps est fermée et ne peut s'ouvrir qu'en jouant le Chant du Temps."
+            }
+        ]
+    },
+    "open_forest": {
+        "Title": "Forêt Kokiri",
+        "Values": [
+            {
+                "Value": "closed_deku",
+                "Title": "Arbre Mojo bloqué",
+                "Description": "Mido bloque l'Arbre Mojo et ne laisse passer Link qu'une fois équipé d'un bouclier Mojo et de l'épée Kokiri."
+            },
+            {
+                "Value": "closed",
+                "Title": "fermée",
+                "Description": "La sortie de la forêt Kokiri vers la plaine d'Hyrule est bloquée. Le Kokiri la bloquant ne se déplacera qu'une fois l'Arbre Mojo complété."
+            }
+        ]
+    },
+    "shopsanity": {
+        "Title": "Nombre d'objets aléatoires dans les boutiques",
+        "Values": [
+            {
+                "Value": "1",
+                "Title": "1",
+                "Description": "Les boutiques vendent un objet aléatoire. Cet objet sera toujours sur le côté gauche."
+            },
+            {
+                "Value": "2",
+                "Title": "2",
+                "Description": "Les boutiques vendent deux objets aléatoires. Ces objets seront toujours sur le côté gauche."
+            },
+            {
+                "Value": "3",
+                "Title": "3",
+                "Description": "Les boutiques vendent trois objets aléatoires. Ces objets seront toujours sur le côté gauche."
+            },
+            {
+                "Value": "4",
+                "Title": "4",
+                "Description": "Les boutiques vendent quatre objets aléatoires. Ces objets seront toujours sur le côté gauche."
+            },
+            {
+                "Value": "random",
+                "Title": "random",
+                "Description": "Les boutiques vendent un nombre d'objets aléatoire, de 0 à 4. Ces objets seront toujours sur le côté gauche."
+            }
+        ]
+    },
+    "shuffle_beans": {
+        "Title": "Haricots magiques",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "oui",
+                "Description": "Un pack de 10 haricots magiques est trouvable, et le vendeur de Haricots vend un unique item pour 60 rubis."
+            }
+        ]
+    },
+    "shuffle_bosskeys": {
+        "Title": "Clefs de Boss",
+        "Values": [
+            {
+                "Value": "vanilla",
+                "Title": "vanille",
+                "Description": "Les clefs de Boss sont à leur emplacement d'origine."
+            },
+            {
+                "Value": "remove",
+                "Title": "retirées",
+                "Description": "Il n'y a pas de clefs de Boss et les portes vers les Boss sont toujours ouvertes."
+            },
+            {
+                "Value": "keysanity",
+                "Title": "partout",
+                "Description": "Les clefs de Boss peuvent être partout"
+            }
+        ]
+    },
+    "shuffle_cows": {
+        "Title": "Vaches",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "oui",
+                "Description": "Jouer le Chant d'Epona à une vache donne un objet aléatoire."
+            }
+        ]
+    },
+    "shuffle_ganon_bosskey": {
+        "Title": "Grande clef du Château de Ganon",
+        "Values": [
+            {
+                "Value": "lacs_vanilla",
+                "Title": "sur la cinématique des Flèches de Lumière vanille",
+                "Description": "La Grande clef du Château de Ganon est sur la cinématique des Flèches de lumière, qui se déclenche une fois les médaillons de l'Ombre et de l'Esprit obtenus."
+            }
+        ]
+    },
+    "shuffle_gerudo_card": {
+        "Title": "Carte Gerudo aléatoire",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "oui",
+                "Description": "La carte Gerudo peut se trouver partout."
+            }
+        ]
+    },
+    "shuffle_ocarinas": {
+        "Title": "Ocarina aléatoires",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "oui",
+                "Description": "Les deux ocarinas peuvent se trouver partout."
+            }
+        ]
+    },
+    "shuffle_scrubs": {
+        "Title": "Pestes mojo",
+        "Values": [
+            {
+                "Value": "low",
+                "Title": "abordable",
+                "Description": "Toutes les Pestes Mojo vendent un item pour 10 rubis."
+            }
+        ]
+    },
+    "shuffle_smallkeys": {
+        "Title": "Petites Clefs",
+        "Values": [
+            {
+                "Value": "vanilla",
+                "Title": "vanille",
+                "Description": "Les petites clefs sont à leur emplacement d'origine."
+            },
+            {
+                "Value": "remove",
+                "Title": "retirées",
+                "Description": "Les petites clefs sont retirées, et toutes les portes des donjons sont ouvertes, excepté la porte du Boss."
+            },
+            {
+                "Value": "keysanity",
+                "Title": "partout",
+                "Description": "Les petites clefs peuvent être partout."
+            }
+        ]
+    },
+    "shuffle_song_items": {
+        "Title": "Chants aléatoires",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "oui",
+                "Description": "Les chants peuvent être partout."
+            }
+        ]
+    },
+    "shuffle_weird_egg": {
+        "Title": "Oeuf curieux aléatoire",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "oui",
+                "Description": "L'œuf curieux donné par Malon peut être partout."
+            }
+        ]
+    },
+    "starting_age": {
+        "Title": "Age de départ",
+        "Values": [
+            {
+                "Value": "adult",
+                "Title": "adulte",
+                "Description": "Le jeu commence en tant que Link adulte."
+            }
+        ]
+    },
+    "tokensanity": {
+        "Title": "Skulltulas d'or",
+        "Values": [
+            {
+                "Value": "dungeons",
+                "Title": "donjons",
+                "Description": "Les skulltula d'or des donjons peuvent être des objets."
+            },
+            {
+                "Value": "overworld",
+                "Title": "extérieur",
+                "Description": "Les skulltula d'or hors des dojons peuvent être des objets."
+            },
+            {
+                "Value": "all",
+                "Title": "toutes",
+                "Description": "Toutes les skulltula d'or peuvent être des objets."
+            }
+        ]
+    },
+    "zora_fountain": {
+        "Title": "Fontaine Zora",
+        "Values": [
+            {
+                "Value": "adult",
+                "Title": "ouverte en adulte",
+                "Description": "Le roi Zora est déplacé et la fontaine Zora toujours accessible depuis le domaine Zora uniquement en adulte."
+            },
+            {
+                "Value": "open",
+                "Title": "toujours ouverte",
+                "Description": "Le roi Zora est déplacé et la fontaine Zora toujours accessible depuis le domaine Zora."
+            }
+        ]
+    },
+    "gerudo_fortress": {
+        "Title": "Forteresse Gerudo",
+        "Values": [
+            {
+                "Value": "open",
+                "Title": "ouverte",
+                "Description": "Le pont menant à la vallée Gerudo en adulte est déjà reconstruit."
+            }
+        ]
+    },
+    "triforce_hunt": {
+        "Title": "Quête de la triforce",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "oui",
+                "Description": "La Triforce a été brisée par Ganon et répartie dans tout Hyrule. Trouvez 20 morceaux pour finir le jeu !"
+            }
+        ]
+    },
+    "free_scarecrow": {
+        "Title": "Epouvantail toujours disponible",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "oui",
+                "Description": "Sortir l'Ocarina aux endroit où Pierre l'épouvantail peut apparaitre, le fera apparaitre sans avoir besoin de jouer le chant."
+            }
+        ]
+    },
+    "start_with_consumables": {
+        "Title": "Démarrer avec batons et noix",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "oui",
+                "Description": "Le jeu commence avec 10 bâtons et 20 noix."
+            }
+        ]
+    },
+    "chicken_count_random": {
+        "Title": "Nombre de cocottes aléatoire",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "oui",
+                "Description": "Le nombre de cocottes à ramener dans l'enclos d'Anju est aléatoire."
+            }
+        ]
+    },
+    "shuffle_kokiri_sword": {
+        "Title": "Epée Kokiri aléatoire",
+        "Values": [
+            {
+                "Value": false,
+                "Title": "non",
+                "Description": "L'épée Kokiri est à son endroit d'origine."
+            }
+        ]
+    }
+}

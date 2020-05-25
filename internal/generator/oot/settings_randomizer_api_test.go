@@ -3,6 +3,7 @@
 package oot_test
 
 import (
+	"encoding/json"
 	"kaepora/internal/generator/oot"
 	"kaepora/pkg/ootrapi"
 	"testing"
@@ -22,23 +23,18 @@ func testCreateSettingsRandomizerAPISeed_inner(t *testing.T, api *ootrapi.API) {
 		t.Fatal(err)
 	}
 
-	// patches are not reproducible so we are limited to length checks.
-	if len(out.SeedPatch) == 0 {
-		t.Fatal("got an empty patch")
+	assertGeneratorOutputValid(t, out)
+
+	var state oot.State
+	if err := json.Unmarshal(out.State, &state); err != nil {
+		t.Fatal(err)
 	}
 
-	if len(out.SpoilerLog) == 0 {
-		t.Fatal("got an empty spoiler log")
+	if len(state.SettingsPatch) == 0 {
+		t.Errorf("empty list of shuffled settings")
 	}
 
-	if err := g.UnlockSpoilerLog(out.State); err != nil {
-		t.Error(err)
-	}
-
-	if len(out.SeedPatch) < 250*1024 {
-		t.Errorf("generated patch seems too small (%d bytes)", len(out.SeedPatch))
-	}
-	if len(out.SeedPatch) > 350*1024 {
-		t.Errorf("generated patch seems too large (%d bytes)", len(out.SeedPatch))
+	if state.ID == "" {
+		t.Errorf("empty OOTR seed ID")
 	}
 }

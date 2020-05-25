@@ -19,7 +19,17 @@ func NewSettingsRandomizerAPI(version string, api *ootrapi.API) *SettingsRandomi
 }
 
 func (r *SettingsRandomizerAPI) Generate(baseSettingsName, seed string) (generator.Output, error) {
-	settingsJSON, err := getShuffledSettings(seed, SettingsCostBudget, baseSettingsName)
+	baseDir, err := GetBaseDir()
+	if err != nil {
+		return generator.Output{}, err
+	}
+
+	settingsDiff, err := getShuffledSettings(seed, SettingsCostBudget, baseDir)
+	if err != nil {
+		return generator.Output{}, err
+	}
+
+	settingsJSON, err := getMergedShuffledSettingsJSON(settingsDiff, baseDir, baseSettingsName)
 	if err != nil {
 		return generator.Output{}, err
 	}
@@ -29,7 +39,17 @@ func (r *SettingsRandomizerAPI) Generate(baseSettingsName, seed string) (generat
 		return generator.Output{}, err
 	}
 
-	return r.oot.generateFromSettings(settings, seed)
+	out, err := r.oot.generateFromSettings(settings, seed)
+	if err != nil {
+		return generator.Output{}, err
+	}
+
+	out.State, err = patchStateWithSettings(out.State, settingsDiff)
+	if err != nil {
+		return generator.Output{}, err
+	}
+
+	return out, nil
 }
 
 func (r *SettingsRandomizerAPI) GetDownloadURL(stateJSON []byte) string {
@@ -42,4 +62,19 @@ func (r *SettingsRandomizerAPI) IsExternal() bool {
 
 func (r *SettingsRandomizerAPI) UnlockSpoilerLog(stateJSON []byte) error {
 	return r.oot.UnlockSpoilerLog(stateJSON)
+}
+
+func patchStateWithSettings(stateJSON []byte, settings map[string]interface{}) ([]byte, error) {
+	if len(stateJSON) == 0 {
+		return json.Marshal(State{SettingsPatch: settings})
+	}
+
+	var state State
+	if err := json.Unmarshal(stateJSON, &state); err != nil {
+		return nil, err
+	}
+
+	state.SettingsPatch = settings
+
+	return json.Marshal(state)
 }
