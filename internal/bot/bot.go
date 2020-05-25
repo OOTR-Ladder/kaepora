@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/google/uuid"
 )
 
 type commandHandler func(m *discordgo.Message, args []string, w io.Writer) error
@@ -59,19 +60,21 @@ func New(back *back.Back, token string) (*Bot, error) {
 	bot.handlers = map[string]commandHandler{
 		"!dev":          bot.cmdDev,
 		"!help":         bot.cmdHelp,
-		"!no":           bot.cmdHelp,
-		"!yes":          bot.cmdAllRight,
-		"!leagues":      bot.cmdLeagues,
 		"!leaderboard":  bot.cmdLeaderboards,
 		"!leaderboards": bot.cmdLeaderboards,
+		"!leagues":      bot.cmdLeagues,
+		"!no":           bot.cmdHelp,
+		"!recap":        bot.cmdRecap,
 		"!register":     bot.cmdRegister,
 		"!rename":       bot.cmdRename,
+		"!seed":         bot.cmdSendSeed,
 		"!spoilers":     bot.cmdSpoilers,
-		"!recap":        bot.cmdRecap,
+		"!yes":          bot.cmdAllRight,
 
 		"!cancel":   bot.cmdCancel,
-		"!done":     bot.cmdComplete,
+		"!unjoin":   bot.cmdCancel,
 		"!complete": bot.cmdComplete,
+		"!done":     bot.cmdComplete,
 		"!forfeit":  bot.cmdForfeit,
 		"!join":     bot.cmdJoin,
 
@@ -264,6 +267,7 @@ func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
 !register               # create your account and link it to your Discord account
 !register NAME          # same as "!register" but use another name
 !rename NAME            # set your display name to NAME
+!seed SHORTCODE [SEED]  # generate a seed valid for the given league
 
 # Racing
 !cancel            # cancel joining the next race without penalty until T%[3]s
@@ -296,4 +300,16 @@ func argsAsName(args []string) string {
 func (bot *Bot) cmdAllRight(m *discordgo.Message, _ []string, w io.Writer) error {
 	fmt.Fprintf(w, "All right then, I'll see you around!\nHoot hoot hoot ho!")
 	return nil
+}
+
+func (bot *Bot) cmdSendSeed(m *discordgo.Message, args []string, w io.Writer) error {
+	if len(args) < 1 || len(args) > 2 {
+		return util.ErrPublic("expected 1 or 2 arguments: SHORTCODE [SEED]")
+	}
+
+	seed := uuid.New().String()
+	if len(args) == 2 {
+		seed = args[1]
+	}
+	return bot.back.SendDevSeed(m.Author.ID, args[0], seed)
 }
