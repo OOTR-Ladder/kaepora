@@ -6,40 +6,19 @@
 
         <div class="hero-body">
             <div class="container">
-                <h1 class="title">Planning</h1>
-                <h2 class="subtitle">Liste des courses OoTR Ladder à venir</h2>
-
+                <h1 class="title">{{t .Locale "Schedule"}}</h1>
                 <div class="columns is-centered">
                     <div class="column is-two-thirds">
-                        <h3 class="title is-unselectable upcomingRace--title">Course imminente</h3>
 
-                        <!-- The most close upcoming race from current time. Maybe we can define the homepage box as a template. Don't know -->
-                        <div class="box is-relative nextRace">
-                            <div class="title has-text-dark nextRace--league">Ligue <span>Standard</span></div>
-                            <div class="subtitle has-text-dark is-size-6-mobile nextRace--schedule">2020-05-05 20:15:00 +0200 +0200</div>
+                    {{if .Payload.MatchSessions}}
+                        {{if future (index .Payload.MatchSessions 0).StartDate}}
+                            <h2 class="title is-unselectable upcomingRace--title">{{t .Locale "Upcoming race"}}</h2>
+                        {{else}}
+                            <h2 class="title is-unselectable upcomingRace--title">{{t .Locale "Current race"}}</h2>
+                        {{end}}
+                    {{end}}
 
-                            <div class="is-unselectable nextRace--status">
-                                <span class="tag is-success is-light is-medium is-rounded">Session accessible</span>
-                                <span class="tag is-info is-light is-medium is-rounded is-hidden-mobile">Commence dans 45 minutes</span>
-                            </div>
-                            <div class="is-unselectable nextRace--contextual">
-                                <!-- if upcoming -->
-                                <div class="nextRace--contextual--countdown is-hidden-desktop">
-                                    <i class="ri-time-line"></i>
-                                    <div>
-                                        dans <span>45m</span>
-                                    </div>
-                                </div>
-                                <!-- if preparation -->
-                                <div class="nextRace--contextual--players">
-                                    <i class="ri-group-fill"></i>
-                                    <div>
-                                        <span class="nbPlayers">12</span>
-                                        joueurs
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    {{- template "current_races" . -}}
                     </div>
                 </div>
             </div>
@@ -51,82 +30,25 @@
             <div class="columns is-centered">
                 <div class="column is-two-thirds">
 
-                    <h3 class="title is-4 has-text-link">Prochaines courses plannifiées</h3>
+                    <h2 class="title is-4 has-text-link">{{t .Locale "Next scheduled races" }}</h2>
 
+                    {{range $v := .Payload.Schedules}}
                     <div class="box is-mini is-relative nextRace">
-                        <div class="title is-4 nextRace--league">Ligue <span>Standard</span></div>
-                        <div class="subtitle is-6 nextRace--schedule">2020-05-05 20:15:00 +0200 +0200</div>
+                        <div class="title is-4 nextRace--league">{{t $.Locale "%s league" $v.LeagueName}}</div>
+                        <div class="subtitle is-6 nextRace--schedule">{{$v.StartDate | datetime}}</div>
 
-                        <div class="is-unselectable nextRace--contextual">
+                        <div class="nextRace--contextual">
                             <!-- if upcoming -->
                             <div class="nextRace--contextual--countdown">
                                 <i class="ri-time-line"></i>
                                 <div>
-                                    dans <span>2h45m</span>
+                                    {{t $.Locale "in"}} <span>{{until $v.StartDate "m"}}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {{end}}
 
-                    <div class="box is-mini is-relative nextRace">
-                        <div class="title is-4 nextRace--league">Ligue <span>Standard</span></div>
-                        <div class="subtitle is-6 nextRace--schedule">2020-05-05 20:15:00 +0200 +0200</div>
-
-                        <div class="is-unselectable nextRace--contextual">
-                            <!-- if upcoming -->
-                            <div class="nextRace--contextual--countdown">
-                                <i class="ri-time-line"></i>
-                                <div>
-                                    dans <span>12h45m</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="box is-mini is-relative nextRace">
-                        <div class="title is-4 nextRace--league">Ligue <span>Standard</span></div>
-                        <div class="subtitle is-6 nextRace--schedule">2020-05-05 20:15:00 +0200 +0200</div>
-
-                        <div class="is-unselectable nextRace--contextual">
-                            <!-- if upcoming -->
-                            <div class="nextRace--contextual--countdown">
-                                <i class="ri-time-line"></i>
-                                <div>
-                                    dans <span>1j45m</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="box is-mini is-relative nextRace">
-                        <div class="title is-4 nextRace--league">Ligue <span>Standard</span></div>
-                        <div class="subtitle is-6 nextRace--schedule">2020-05-05 20:15:00 +0200 +0200</div>
-
-                        <div class="is-unselectable nextRace--contextual">
-                            <!-- if upcoming -->
-                            <div class="nextRace--contextual--countdown">
-                                <i class="ri-time-line"></i>
-                                <div>
-                                    dans <span>1j12h45m</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="box is-mini is-relative nextRace">
-                        <div class="title is-4 nextRace--league">Ligue <span>Standard</span></div>
-                        <div class="subtitle is-6 nextRace--schedule">2020-05-05 20:15:00 +0200 +0200</div>
-
-                        <div class="is-unselectable nextRace--contextual">
-                            <!-- if upcoming -->
-                            <div class="nextRace--contextual--countdown">
-                                <i class="ri-time-line"></i>
-                                <div>
-                                    dans <span>2j45m</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

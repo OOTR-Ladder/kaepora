@@ -6,16 +6,24 @@ import (
 	"time"
 )
 
-// TruncateDuration prettifies a duration by removing useless units.
+// FormatDuration prettifies a duration by removing useless units.
 // eg. 1h20m0s -> 1h20m
 // It does not round/truncate the duration, it only works on the string.
-func TruncateDuration(v time.Duration) string {
-	ret := strings.TrimSuffix(v.Truncate(time.Second).String(), "0s")
-	if strings.HasSuffix(ret, "h0m") {
-		return strings.TrimSuffix(ret, "0m")
+// TODO: This should be localized.
+func FormatDuration(d time.Duration) string {
+	var prefix string
+	if d > (24 * time.Hour) {
+		prefix = fmt.Sprintf("%dd", d/(24*time.Hour))
+		// Don't need minutes if its in more than a day
+		d = (d % (24 * time.Hour)).Truncate(time.Hour)
 	}
 
-	return ret
+	ret := strings.TrimSuffix(d.Truncate(time.Second).String(), "0s")
+	if strings.HasSuffix(ret, "h0m") {
+		return prefix + strings.TrimSuffix(ret, "0m")
+	}
+
+	return prefix + ret
 }
 
 // Datetime is the format to use anywhere we need to output a date+time to an user.

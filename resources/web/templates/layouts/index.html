@@ -9,59 +9,14 @@
             <div class="columns is-vcentered is-variable is-8">
 
                 <div class="column is-two-thirds">
-                    {{if .Payload.MatchSessions}}
                     <h2 class="title is-1">{{t .Locale "Next races"}}</h2>
 
-                    {{range $k, $v := .Payload.MatchSessions}}
-                    <div class="box is-relative nextRace">
-                        <div class="title has-text-dark nextRace--league">{{t $.Locale "%s league" (index $.Payload.Leagues $v.LeagueID).Name}}</div>
-                        <div class="subtitle has-text-dark is-size-6-mobile nextRace--schedule">{{$v.StartDate | datetime}}</div>
-
-                        <!-- if joinable race -->
-                        <div class="is-unselectable nextRace--status">
-                            {{matchSessionStatusTag $.Locale $v.Status}}
-                            {{if and (future $v.StartDate) (gt (len $v.PlayerIDs) 0)}}
-                            <span class="tag is-info is-light is-medium is-rounded is-hidden-mobile">{{t $.Locale "Starts in %s" (until $v.StartDate "m")}}</span>
-                            {{end}}
-                        </div>
-
-                        <div class="is-unselectable nextRace--contextual">
-                            <!-- not joinable / no players -->
-                            {{if and (future $v.StartDate) (eq (len $v.PlayerIDs) 0)}}
-                            <div class="nextRace--contextual--countdown">
-                                <i class="ri-time-line"></i>
-                                <div>
-                                    {{t $.Locale "in"}} <span>{{(until $v.StartDate "m")}}</span>
-                                </div>
-                            </div>
-                            {{end}}
-
-                            <!-- joinable or w/ players -->
-                            {{if gt (len $v.PlayerIDs) 0}}
-                            <div class="nextRace--contextual--players">
-                                <i class="ri-group-fill"></i>
-                                <div>
-                                    <span class="nbPlayers">{{len $v.PlayerIDs}}</span>
-                                    {{tn $.Locale "player" "players" (len $v.PlayerIDs)}}
-                                </div>
-                            </div>
-                            {{end}}
-                        </div>
-                    </div><!-- box -->
-                    {{end}}
-                    {{else}}
-                    <article class="message is-danger">
-                        <div class="message-body">
-                            {{t .Locale "There is no scheduled race right now."}}
-                        </div>
-                    </article>
-                    {{end}}
+                    {{- template "current_races" . -}}
 
                     <div class="level is-mobile">
-                        <!-- TODO
                         <div class="level-left">
                             <div class="buttons">
-                                <a href="/schedule" class="button is-outlined is-white is-small is-rounded is-mobile-fullwidth detailButton">
+                                <a href="{{uri .Locale "schedule"}}" class="button is-outlined is-white is-small is-rounded is-mobile-fullwidth detailButton">
                                     <span class="icon">
                                         <i class="ri-calendar-2-fill"></i>
                                     </span>
@@ -69,7 +24,6 @@
                                 </a>
                             </div>
                         </div>
-                        -->
 
                         <div class="level-right">
                             <a href="{{uri .Locale "history"}}" class="button is-outlined is-white is-small is-rounded is-mobile-fullwidth detailButton">
