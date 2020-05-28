@@ -63,11 +63,9 @@ func (s *Server) schedule(w http.ResponseWriter, r *http.Request) {
 	}
 
 	lastStartDate := time.Now()
-	if len(data.MatchSessions) > 0 {
-		lastStartDate = data.MatchSessions[len(data.MatchSessions)-1].StartDate.Time()
-	}
 	if len(data.MatchSessions) > 1 {
 		data.MatchSessions = data.MatchSessions[:1]
+		lastStartDate = data.MatchSessions[0].StartDate.Time()
 	}
 
 	schedules, err := s.getSchedulesBetween(
