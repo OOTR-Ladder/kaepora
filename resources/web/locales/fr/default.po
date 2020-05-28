@@ -141,7 +141,7 @@ msgstr "Prochaines courses"
 
 #: resources/web/templates/layouts/schedule.html:17
 msgid "Upcoming race"
-msgstr "Prochaine imminente"
+msgstr "Course imminente"
 
 #: resources/web/templates/layouts/schedule.html:19
 msgid "Current race"
