@@ -11,6 +11,8 @@
 
 <section class="section">
     <div class="container">
+        <h3 class="title">{{t .Locale "Ladder stats"}}</h3>
+
         <div class="columns is-centered">
             <div class="column is-one-third">
                 <ul>
@@ -21,7 +23,7 @@
             </div>
             <div class="column is-one-third">
                 <ul>
-                    <li>{{t .Locale "Seeds played: %d" .Payload.Misc.SeedsPlayed}}</li>
+                    <li>{{t .Locale "Matches played: %d" .Payload.Misc.SeedsPlayed}}</li>
                     <li>{{t .Locale "Forfeits: %d" .Payload.Misc.Forfeits}}</li>
                     <li>{{t .Locale "Double forfeits: %d" .Payload.Misc.DoubleForfeits}}</li>
                 </ul>
@@ -34,6 +36,69 @@
                 </ul>
             </div>
         </div>
-    </div>
+
+        <div class="columns is-centered">
+            <div class="column is-one-third">
+                <h4 class="title">{{t .Locale "Way of the Hero"}}</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>{{t .Locale "Location"}}</td>
+                            <td>{{t .Locale "% of seeds"}}</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ range $v := .Payload.Seed.WOTH }}
+                        <tr>
+                            <td>{{$v.Name}}</td>
+                            <td>{{printf "%.2f" $v.Pct}}</td>
+                        </tr>
+                        {{end}}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="column is-one-third">
+                <h4 class="title">{{t .Locale "WoTH items"}}</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>{{t .Locale "Item"}}</td>
+                            <td>{{t .Locale "% of seeds"}}</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ range $v := .Payload.Seed.WOTHItems }}
+                        <tr>
+                            <td>{{$v.Name}}</td>
+                            <td>{{printf "%.2f" $v.Pct}}</td>
+                        </tr>
+                        {{end}}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="column is-one-third">
+                <h4 class="title">{{t .Locale "Barren regions"}}</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>{{t .Locale "Region"}}</td>
+                            <td>{{t .Locale "% of seeds"}}</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ range $v := .Payload.Seed.Barren }}
+                        <tr>
+                            <td>{{$v.Name}}</td>
+                            <td>{{printf "%.2f" $v.Pct}}</td>
+                        </tr>
+                        {{end}}
+                    </tbody>
+                </table>
+            </div>
+        </div> <!-- columns -->
+
+    </div> <!-- container -->
 </section>
 {{end}}
