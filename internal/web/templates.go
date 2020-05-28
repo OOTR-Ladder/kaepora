@@ -131,12 +131,13 @@ func tplUntil(iface interface{}, trunc string) string {
 	switch trunc {
 	case "m":
 		delta = delta.Truncate(time.Minute)
-		return strings.TrimSuffix(delta.String(), "0s")
-	default: // nolint: gocritic,stylecheck
-		fallthrough
 	case "s":
-		return delta.Truncate(time.Second).String()
+		fallthrough
+	default:
+		delta = delta.Truncate(time.Second)
 	}
+
+	return util.FormatDuration(delta)
 }
 
 func tplFuture(iface interface{}) bool {

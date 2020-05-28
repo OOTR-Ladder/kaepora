@@ -286,8 +286,8 @@ If you are caught cheating, using an alt, or breaking a league's rules **you wil
 Did you get all that?
 `,
 		"```",
-		util.TruncateDuration(back.MatchSessionJoinableAfterOffset),
-		util.TruncateDuration(back.MatchSessionPreparationOffset),
+		util.FormatDuration(back.MatchSessionJoinableAfterOffset),
+		util.FormatDuration(back.MatchSessionPreparationOffset),
 	)
 
 	return nil

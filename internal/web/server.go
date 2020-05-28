@@ -49,6 +49,7 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 
 		r.Get("/leaderboard/{shortcode}", s.leaderboard)
 		r.Get("/history", s.history)
+		r.Get("/schedule", s.schedule)
 		r.Get("/", s.index)
 
 		r.NotFound(s.notFound)

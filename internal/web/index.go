@@ -16,15 +16,31 @@ func (s *Server) index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	top3, err := s.getStdTop3("std")
+	data, err := s.getIndexTemplateData()
 	if err != nil {
 		s.error(w, r, err, http.StatusInternalServerError)
 		return
 	}
 
+	s.cache(w, "public", 1*time.Minute)
+	s.response(w, r, http.StatusOK, "index.html", data)
+}
+
+type nextRacesTemplateData struct {
+	Top3          []back.LeaderboardEntry
+	MatchSessions []back.MatchSession
+	Leagues       map[util.UUIDAsBlob]back.League
+}
+
+func (s *Server) getIndexTemplateData() (nextRacesTemplateData, error) {
+	top3, err := s.getStdTop3("std")
+	if err != nil {
+		return nextRacesTemplateData{}, err
+	}
+
 	sessions, leagues, err := s.back.GetMatchSessions(
-		time.Now().Add(-24*time.Hour),
-		time.Now().Add(2*24*time.Hour),
+		time.Now().Add(-12*time.Hour),
+		time.Now().Add(12*time.Hour),
 		[]back.MatchSessionStatus{
 			back.MatchSessionStatusWaiting,
 			back.MatchSessionStatusJoinable,
@@ -34,20 +50,14 @@ func (s *Server) index(w http.ResponseWriter, r *http.Request) {
 		`StartDate ASC`,
 	)
 	if err != nil {
-		s.error(w, r, err, http.StatusInternalServerError)
-		return
+		return nextRacesTemplateData{}, err
 	}
 
-	s.cache(w, "public", 1*time.Minute)
-	s.response(w, r, http.StatusOK, "index.html", struct {
-		Top3          []back.LeaderboardEntry
-		MatchSessions []back.MatchSession
-		Leagues       map[util.UUIDAsBlob]back.League
-	}{
+	return nextRacesTemplateData{
 		top3,
 		sessions,
 		leagues,
-	})
+	}, nil
 }
 
 // getStdTop3 returns the Top 3 leaderboard.
