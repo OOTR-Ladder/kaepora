@@ -1,46 +1,46 @@
 {{define "content"}}
-    <section class="hero is-dark homeHeader">
-        {{- template "menu" . -}}
+<section class="hero is-dark homeHeader">
+    {{- template "menu" . -}}
 
-        <div class="hero-body">
-            <div class="container">
-                <h1 class="title">{{t .Locale "Leaderboard"}}</h1>
-                <h2 class="subtitle">{{t .Locale "%s league" .Payload.League.Name}}</h2>
-            </div>
-        </div>
-    </section>
-
-    <section class="section">
+    <div class="hero-body">
         <div class="container">
-            <div class="columns is-centered">
-                <div class="column is-two-thirds">
-                    <table class="table is-fullwidth is-hoverable leaderboardTable__first-page">
-                        <thead>
-                            <tr>
-                                <th>{{t .Locale "Rank"}}</th>
-                                <th align="center">{{t .Locale "Nickname"}}</th>
-                                <th align="center">{{t .Locale "Skill range"}}</th>
+            <h1 class="title">{{t .Locale "Leaderboard"}}</h1>
+            <h2 class="subtitle">{{t .Locale "%s league" .Payload.League.Name}}</h2>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-two-thirds">
+                <table class="table is-fullwidth is-hoverable leaderboardTable__first-page">
+                    <thead>
+                        <tr>
+                            <th>{{t .Locale "Rank"}}</th>
+                            <th align="center">{{t .Locale "Nickname"}}</th>
+                            <th align="center">{{t .Locale "Skill range"}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {{- range $k, $v := .Payload.Leaderboard -}}
+                            <tr class="leaderboardTable--player">
+                                {{- if lt $k 3 -}}
+                                <td><span class="icon" title="{{add $k 1}}"><i class="ri-trophy-fill"></i></span></td>
+                                {{- else -}}
+                                <td>{{add $k 1}}</td>
+                                {{- end -}}
+
+                                <td align="center">{{$v.PlayerName}}</td>
+                                <td align="center">{{$v | ranking}}</td>
                             </tr>
-                        </thead>
-                        <tbody>
+                        {{- end -}}
 
-                            {{- range $k, $v := .Payload.Leaderboard -}}
-                                <tr class="leaderboardTable--player">
-                                    {{- if lt $k 3 -}}
-                                    <td><span class="icon" title="{{add $k 1}}"><i class="ri-trophy-fill"></i></span></td>
-                                    {{- else -}}
-                                    <td>{{add $k 1}}</td>
-                                    {{- end -}}
-
-                                    <td align="center">{{$v.PlayerName}}</td>
-                                    <td align="center">{{$v | ranking}}</td>
-                                </tr>
-                            {{- end -}}
-
-                        </tbody>
-                    </table>
-                </div>
+                    </tbody>
+                </table>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 {{end}}

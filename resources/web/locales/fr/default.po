@@ -33,10 +33,6 @@ msgstr "Compétitions de Randomizer sur The Legend of Zelda: Ocarina of Time."
 msgid "Starts in %s"
 msgstr "Commence dans %s"
 
-#: resources/web/templates/includes/current_races.html:23
-msgid "in"
-msgstr "dans"
-
 #: resources/web/templates/includes/current_races.html:34
 msgid "player"
 msgid_plural "players"
@@ -135,18 +131,90 @@ msgstr "Plage de niveau"
 msgid "Schedule"
 msgstr "Planning"
 
-#: resources/web/templates/layouts/schedule.html:10
-msgid "Upcoming races"
-msgstr "Prochaines courses"
+#: resources/web/templates/layouts/schedule.html:15
+msgid "Upcoming race"
+msgstr "Course imminente"
 
 #: resources/web/templates/layouts/schedule.html:17
-msgid "Upcoming race"
-msgstr "Prochaine imminente"
-
-#: resources/web/templates/layouts/schedule.html:19
 msgid "Current race"
 msgstr "Course en cours"
 
-#: resources/web/templates/layouts/schedule.html:35
+#: resources/web/templates/layouts/schedule.html:33
 msgid "Next scheduled races"
 msgstr "Prochaines courses planifiées"
+
+#: resources/web/templates/layouts/schedule.html:45
+msgid "in"
+msgstr "dans"
+
+#: resources/web/templates/layouts/seed_stats.html:7
+msgid "Ladder & Seed statistics"
+msgstr "Statistiques du Ladder et des seeds"
+
+#: resources/web/templates/layouts/seed_stats.html:14
+msgid "Ladder stats"
+msgstr "Statistiques du Ladder"
+
+#: resources/web/templates/layouts/seed_stats.html:19
+msgid "Registered players: %d"
+msgstr "Joueurs enregistrés : %d"
+
+#: resources/web/templates/layouts/seed_stats.html:20
+msgid "Ranked players: %d"
+msgstr "Joueurs classés : %d"
+
+#: resources/web/templates/layouts/seed_stats.html:21
+msgid "Players on leaderboard: %d"
+msgstr "Joueurs sur le leaderboard : %d"
+
+#: resources/web/templates/layouts/seed_stats.html:26
+msgid "Matches played: %d"
+msgstr "Matches joués : %d"
+
+#: resources/web/templates/layouts/seed_stats.html:27
+msgid "Forfeits: %d"
+msgstr "Forfaits : %d"
+
+#: resources/web/templates/layouts/seed_stats.html:28
+msgid "Double forfeits: %d"
+msgstr "Double forfaits : %d"
+
+#: resources/web/templates/layouts/seed_stats.html:33
+msgid "First ladder race: %s"
+msgstr "Première course du Ladder : %s"
+
+#: resources/web/templates/layouts/seed_stats.html:34
+msgid "Average players per race: %d"
+msgstr "Moyenne de joueurs par session : %d"
+
+#: resources/web/templates/layouts/seed_stats.html:35
+msgid "Most players in a race: %d"
+msgstr "Plus grand nombre de joueurs dans une session : %d"
+
+#: resources/web/templates/layouts/seed_stats.html:42
+msgid "Way of the Hero"
+msgstr "Voies du Héros"
+
+#: resources/web/templates/layouts/seed_stats.html:46
+msgid "Location"
+msgstr "Emplacement"
+
+#: resources/web/templates/layouts/seed_stats.html:47
+msgid "% of seeds"
+msgstr "% des seeds"
+
+#: resources/web/templates/layouts/seed_stats.html:62
+msgid "WoTH items"
+msgstr "Objets sur voies"
+
+#: resources/web/templates/layouts/seed_stats.html:66
+msgid "Item"
+msgstr "Objet"
+
+#: resources/web/templates/layouts/seed_stats.html:82
+msgid "Barren regions"
+msgstr "Régions stériles"
+
+#: resources/web/templates/layouts/seed_stats.html:86
+msgid "Region"
+msgstr "Région"

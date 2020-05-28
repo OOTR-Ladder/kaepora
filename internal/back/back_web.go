@@ -4,6 +4,7 @@ package back
 // Please do not call them outside of the webserver.
 
 import (
+	"io"
 	"kaepora/internal/util"
 	"time"
 
@@ -108,4 +109,30 @@ func (b *Back) GetMatchSessions(
 	}
 
 	return sessions, leagues, nil
+}
+
+func (b *Back) MapSpoilerLogs(
+	cb func(io.Reader) error,
+) error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		rows, err := tx.Query(`SELECT SpoilerLog FROM Match`)
+		if err != nil {
+			return err
+		}
+
+		var buf util.ZLIBBlob
+		for rows.Next() {
+			if err := rows.Scan(&buf); err != nil {
+				return err
+			}
+
+			if err := cb(buf.Uncompressed()); err != nil {
+				return err
+			}
+
+			buf = buf[:0]
+		}
+
+		return rows.Err()
+	})
 }

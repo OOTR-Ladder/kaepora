@@ -33,10 +33,6 @@ msgstr ""
 msgid "Starts in %s"
 msgstr ""
 
-#: resources/web/templates/includes/current_races.html:23
-msgid "in"
-msgstr ""
-
 #: resources/web/templates/includes/current_races.html:34
 msgid "player"
 msgid_plural "players"
@@ -135,18 +131,90 @@ msgstr ""
 msgid "Schedule"
 msgstr ""
 
-#: resources/web/templates/layouts/schedule.html:10
-msgid "Upcoming races"
-msgstr ""
-
-#: resources/web/templates/layouts/schedule.html:17
+#: resources/web/templates/layouts/schedule.html:15
 msgid "Upcoming race"
 msgstr ""
 
-#: resources/web/templates/layouts/schedule.html:19
+#: resources/web/templates/layouts/schedule.html:17
 msgid "Current race"
 msgstr ""
 
-#: resources/web/templates/layouts/schedule.html:35
+#: resources/web/templates/layouts/schedule.html:33
 msgid "Next scheduled races"
+msgstr ""
+
+#: resources/web/templates/layouts/schedule.html:45
+msgid "in"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:7
+msgid "Ladder & Seed statistics"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:14
+msgid "Ladder stats"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:19
+msgid "Registered players: %d"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:20
+msgid "Ranked players: %d"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:21
+msgid "Players on leaderboard: %d"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:26
+msgid "Matches played: %d"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:27
+msgid "Forfeits: %d"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:28
+msgid "Double forfeits: %d"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:33
+msgid "First ladder race: %s"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:34
+msgid "Average players per race: %d"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:35
+msgid "Most players in a race: %d"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:42
+msgid "Way of the Hero"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:46
+msgid "Location"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:47
+msgid "% of seeds"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:62
+msgid "WoTH items"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:66
+msgid "Item"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:82
+msgid "Barren regions"
+msgstr ""
+
+#: resources/web/templates/layouts/seed_stats.html:86
+msgid "Region"
 msgstr ""
