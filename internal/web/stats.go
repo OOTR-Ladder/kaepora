@@ -47,8 +47,30 @@ func (s *Server) getSeedStats() (stats statsSeed, _ error) {
 			return err
 		}
 
+		var force, hookshot int
 		for location, item := range l.WOTHLocations {
 			wothLocations[location]++
+
+			if item == "Progressive Strength Upgrade" {
+				force++
+				switch force {
+				case 1:
+					item = "Goron's Bracelet"
+				case 2:
+					item = "Silver Gauntlets"
+				case 3:
+					item = "Golden Gauntlets"
+				}
+			} else if item == "Progressive Hookshot" {
+				hookshot++
+				switch hookshot {
+				case 1:
+					item = "Hookshot"
+				case 2:
+					item = "Longshot"
+				}
+			}
+
 			wothItems[string(item)]++
 		}
 
