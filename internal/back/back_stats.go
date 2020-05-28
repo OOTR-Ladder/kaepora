@@ -27,7 +27,11 @@ func (b *Back) GetMiscStats() (misc StatsMisc, _ error) {
 		}{
 			{&misc.RegisteredPlayers, `SELECT COUNT(*) FROM Player`, nil},
 			{&misc.RankedPlayers, `SELECT COUNT(*) FROM PlayerRating WHERE LeagueID = ?`, []interface{}{std.ID}},
-			{&misc.PlayersOnLeaderboard, `SELECT COUNT(*) FROM PlayerRating WHERE LeagueID = ? AND Deviation < ?`, []interface{}{std.ID, DeviationThreshold}},
+			{
+				&misc.PlayersOnLeaderboard,
+				`SELECT COUNT(*) FROM PlayerRating WHERE LeagueID = ? AND Deviation < ?`,
+				[]interface{}{std.ID, DeviationThreshold},
+			},
 
 			{&misc.SeedsPlayed, `SELECT COUNT(*) FROM Match`, nil},
 			{&misc.Forfeits, `SELECT COUNT(*) FROM MatchEntry WHERE Status = ?`, []interface{}{MatchEntryStatusForfeit}},
