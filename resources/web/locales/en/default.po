@@ -59,6 +59,90 @@ msgstr ""
 msgid "Join the server"
 msgstr ""
 
+#: resources/web/templates/includes/stats_ladder.html:5
+msgid "Registered players: %d"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:6
+msgid "Ranked players: %d"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:7
+msgid "Players on leaderboard: %d"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:12
+msgid "Matches played: %d"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:13
+msgid "Forfeits: %d"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:14
+msgid "Double forfeits: %d"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:19
+msgid "First ladder race: %s"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:20
+msgid "Average players per race: %d"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:21
+msgid "Most players in a race: %d"
+msgstr ""
+
+#: resources/web/templates/includes/stats_locations.html:5
+msgid "Items"
+msgstr ""
+
+#: resources/web/templates/includes/stats_locations.html:9
+msgid "Location"
+msgstr ""
+
+#: resources/web/templates/includes/stats_locations.html:10
+msgid "% of seeds"
+msgstr ""
+
+#: resources/web/templates/includes/stats_locations.html:22
+msgid "Junk"
+msgstr ""
+
+#: resources/web/templates/includes/stats_locations.html:39
+msgid "Small Keys"
+msgstr ""
+
+#: resources/web/templates/includes/stats_locations.html:56
+msgid "Boss Keys"
+msgstr ""
+
+#: resources/web/templates/includes/stats_locations.html:73
+msgid "Ice Traps"
+msgstr ""
+
+#: resources/web/templates/includes/stats_woth_barren.html:4
+msgid "Way of the Hero"
+msgstr ""
+
+#: resources/web/templates/includes/stats_woth_barren.html:21
+msgid "WoTH items"
+msgstr ""
+
+#: resources/web/templates/includes/stats_woth_barren.html:25
+msgid "Item"
+msgstr ""
+
+#: resources/web/templates/includes/stats_woth_barren.html:38
+msgid "Barren regions"
+msgstr ""
+
+#: resources/web/templates/includes/stats_woth_barren.html:42
+msgid "Region"
+msgstr ""
+
 #: resources/web/templates/layouts/error.html:12
 msgid "The page you requested does not exist."
 msgstr ""
@@ -147,74 +231,24 @@ msgstr ""
 msgid "in"
 msgstr ""
 
-#: resources/web/templates/layouts/seed_stats.html:7
+#: resources/web/templates/layouts/stats.html:7
 msgid "Ladder & Seed statistics"
 msgstr ""
 
-#: resources/web/templates/layouts/seed_stats.html:14
+#: resources/web/templates/layouts/stats.html:17
+msgid ""
+"Enabling JavaScript is required for this page to function properly. I hate "
+"it as much as you do."
+msgstr ""
+
+#: resources/web/templates/layouts/stats.html:29
 msgid "Ladder stats"
 msgstr ""
 
-#: resources/web/templates/layouts/seed_stats.html:19
-msgid "Registered players: %d"
+#: resources/web/templates/layouts/stats.html:31
+msgid "WotH and barrens"
 msgstr ""
 
-#: resources/web/templates/layouts/seed_stats.html:20
-msgid "Ranked players: %d"
-msgstr ""
-
-#: resources/web/templates/layouts/seed_stats.html:21
-msgid "Players on leaderboard: %d"
-msgstr ""
-
-#: resources/web/templates/layouts/seed_stats.html:26
-msgid "Matches played: %d"
-msgstr ""
-
-#: resources/web/templates/layouts/seed_stats.html:27
-msgid "Forfeits: %d"
-msgstr ""
-
-#: resources/web/templates/layouts/seed_stats.html:28
-msgid "Double forfeits: %d"
-msgstr ""
-
-#: resources/web/templates/layouts/seed_stats.html:33
-msgid "First ladder race: %s"
-msgstr ""
-
-#: resources/web/templates/layouts/seed_stats.html:34
-msgid "Average players per race: %d"
-msgstr ""
-
-#: resources/web/templates/layouts/seed_stats.html:35
-msgid "Most players in a race: %d"
-msgstr ""
-
-#: resources/web/templates/layouts/seed_stats.html:42
-msgid "Way of the Hero"
-msgstr ""
-
-#: resources/web/templates/layouts/seed_stats.html:46
-msgid "Location"
-msgstr ""
-
-#: resources/web/templates/layouts/seed_stats.html:47
-msgid "% of seeds"
-msgstr ""
-
-#: resources/web/templates/layouts/seed_stats.html:62
-msgid "WoTH items"
-msgstr ""
-
-#: resources/web/templates/layouts/seed_stats.html:66
-msgid "Item"
-msgstr ""
-
-#: resources/web/templates/layouts/seed_stats.html:82
-msgid "Barren regions"
-msgstr ""
-
-#: resources/web/templates/layouts/seed_stats.html:86
-msgid "Region"
+#: resources/web/templates/layouts/stats.html:34
+msgid "Locations"
 msgstr ""

@@ -1,6 +1,7 @@
 package back
 
 import (
+	"io"
 	"kaepora/internal/util"
 
 	"github.com/jmoiron/sqlx"
@@ -13,7 +14,7 @@ type StatsMisc struct {
 	AveragePlayersPerRace, MostPlayersInARace              int
 }
 
-func (b *Back) GetMiscStats() (misc StatsMisc, _ error) {
+func (b *Back) GetMiscStats() (misc StatsMisc, _ error) { // nolint:funlen
 	if err := b.transaction(func(tx *sqlx.Tx) error {
 		std, err := getLeagueByShortCode(tx, "std")
 		if err != nil {
@@ -33,18 +34,46 @@ func (b *Back) GetMiscStats() (misc StatsMisc, _ error) {
 				[]interface{}{std.ID, DeviationThreshold},
 			},
 
-			{&misc.SeedsPlayed, `SELECT COUNT(*) FROM Match`, nil},
-			{&misc.Forfeits, `SELECT COUNT(*) FROM MatchEntry WHERE Status = ?`, []interface{}{MatchEntryStatusForfeit}},
+			{
+				&misc.SeedsPlayed,
+				`SELECT COUNT(*) FROM Match WHERE LeagueID = ?`,
+				[]interface{}{std.ID},
+			},
+			{
+				&misc.Forfeits,
+				`SELECT COUNT(*) FROM MatchEntry
+                LEFT JOIN Match ON (MatchEntry.MatchID = Match.ID)
+                WHERE Match.LeagueID = ? AND MatchEntry.Status = ?`,
+				[]interface{}{std.ID, MatchEntryStatusForfeit},
+			},
 			{
 				&misc.DoubleForfeits,
 				`SELECT COUNT(*) FROM (SELECT COUNT(*) as cnt FROM "MatchEntry"
-                WHERE MatchEntry.Status == ? GROUP BY MatchID HAVING cnt > 1)`,
-				[]interface{}{MatchEntryStatusForfeit},
+                LEFT JOIN Match ON (MatchEntry.MatchID = Match.ID)
+                WHERE Match.LeagueID = ? AND MatchEntry.Status == ?
+                GROUP BY MatchEntry.MatchID HAVING cnt > 1)`,
+				[]interface{}{std.ID, MatchEntryStatusForfeit},
 			},
 
-			{&misc.FirstLadderRace, `SELECT StartDate FROM MatchSession ORDER BY StartDate ASC LIMIT 1`, nil},
-			{&misc.AveragePlayersPerRace, `SELECT round(avg(json_array_length(PlayerIDs))) FROM MatchSession`, nil},
-			{&misc.MostPlayersInARace, `SELECT max(json_array_length(PlayerIDs)) FROM MatchSession`, nil},
+			{
+				&misc.FirstLadderRace,
+				`SELECT StartDate FROM MatchSession
+                WHERE LeagueID = ?
+                ORDER BY StartDate ASC LIMIT 1`,
+				[]interface{}{std.ID},
+			},
+			{
+				&misc.AveragePlayersPerRace,
+				`SELECT round(avg(json_array_length(PlayerIDs)))
+                FROM MatchSession WHERE LeagueID = ?`,
+				[]interface{}{std.ID},
+			},
+			{
+				&misc.MostPlayersInARace,
+				`SELECT max(json_array_length(PlayerIDs))
+                FROM MatchSession WHERE LeagueID = ?`,
+				[]interface{}{std.ID},
+			},
 		}
 
 		for _, v := range queries {
@@ -59,4 +88,40 @@ func (b *Back) GetMiscStats() (misc StatsMisc, _ error) {
 	}
 
 	return misc, nil
+}
+
+func (b *Back) MapSpoilerLogs(
+	shortcode string,
+	cb func(io.Reader) error,
+) error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		league, err := getLeagueByShortCode(tx, shortcode)
+		if err != nil {
+			return err
+		}
+
+		rows, err := tx.Query(`
+            SELECT SpoilerLog FROM Match WHERE LeagueID = ?
+            AND EndedAt IS NOT NULL`,
+			league.ID,
+		)
+		if err != nil {
+			return err
+		}
+
+		var buf util.ZLIBBlob
+		for rows.Next() {
+			if err := rows.Scan(&buf); err != nil {
+				return err
+			}
+
+			if err := cb(buf.Uncompressed()); err != nil {
+				return err
+			}
+
+			buf = buf[:0]
+		}
+
+		return rows.Err()
+	})
 }

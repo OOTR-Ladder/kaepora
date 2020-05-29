@@ -205,3 +205,17 @@ div[class^="nextRace--contextual--"] > i {
     .upcomingRace--title { transform: translateY(30%); }
 }
 /* }}} Schedule */
+
+/* {{{ Stats */
+.stats--tabs {
+    margin-bottom: 20px;
+}
+
+.stats--long-table-container h4 {
+    position: sticky;
+    top: 0px;
+    background-color: white;
+    border-bottom: 1px grey solid;
+    padding-bottom: 4px;
+}
+/* }}} Stats */
