@@ -100,7 +100,11 @@ func (b *Back) MapSpoilerLogs(
 			return err
 		}
 
-		rows, err := tx.Query(`SELECT SpoilerLog FROM Match WHERE LeagueID = ?`, league.ID)
+		rows, err := tx.Query(`
+            SELECT SpoilerLog FROM Match WHERE LeagueID = ?
+            AND EndedAt IS NOT NULL`,
+			league.ID,
+		)
 		if err != nil {
 			return err
 		}
