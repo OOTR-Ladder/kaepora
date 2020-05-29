@@ -47,21 +47,33 @@ func TestScheduleNextBetween(t *testing.T) {
 func TestScheduleStd(t *testing.T) {
 	s := back.NewSchedule()
 	s.SetAll([]string{
-		"20:00 America/Los_Angeles", "14:00 Europe/Paris", "20:00 Europe/Paris",
+		"21:00 America/Los_Angeles",
+		"21:00 America/New_York",
+		"15:00 Europe/Paris",
+		"21:00 Europe/Paris",
 	})
-	s.Mon = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
-	s.Wed = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
-	s.Fri = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
-	s.Sat = []string{"21:00 America/Los_Angeles", "15:00 Europe/Paris", "21:00 Europe/Paris"}
+
+	// -1h for the other days
+	s.Tue = []string{"20:00 America/Los_Angeles", "20:00 America/New_York", "14:00 Europe/Paris", "20:00 Europe/Paris"}
+	s.Thu = []string{"20:00 America/Los_Angeles", "20:00 America/New_York", "14:00 Europe/Paris", "20:00 Europe/Paris"}
+	s.Sun = []string{"20:00 America/Los_Angeles", "20:00 America/New_York", "14:00 Europe/Paris", "20:00 Europe/Paris"}
 
 	testSchedule(t, s, []scheduleTestData{
 		{
-			now:      "2020-04-15 12:23:00+00:00",
+			now:      "2020-04-15 10:00:00+00:00",
 			expected: "2020-04-15 15:00:00+02:00",
 		},
 		{
-			now:      "2020-04-15 22:00:00+00:00",
-			expected: "2020-04-15 21:00:00-07:00",
+			now:      "2020-04-15 00:00:00+02:00",
+			expected: "2020-04-14 21:00:00-04:00",
+		},
+		{
+			now:      "2020-04-15 01:00:00+00:00",
+			expected: "2020-04-14 21:00:00-07:00",
+		},
+		{
+			now:      "2020-05-29 08:00:00+00:00",
+			expected: "2020-05-29 15:00:00+02:00",
 		},
 	})
 }

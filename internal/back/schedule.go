@@ -56,15 +56,26 @@ func (s *Schedule) NextBetween(t time.Time, max time.Time) time.Time {
 
 		location, err := time.LoadLocation(parts[1])
 		if err != nil {
-			log.Printf("error: ignored schedule, bad location: '%s'", parts[1])
+			log.Printf("error: ignored schedule, bad location '%s': %v", parts[1], err)
+			continue // HACK, silently ignore misconfiguration
+		}
+		hour, err := time.ParseInLocation("15:04", parts[0], location)
+		if err != nil {
+			log.Printf("error: ignored schedule, can't parse time '%s': %v", parts[0], err)
 			continue // HACK, silently ignore misconfiguration
 		}
 
-		hour, _ := time.ParseInLocation("15:04", parts[0], location)
-		next := time.Date(t.Year(), t.Month(), t.Day(), hour.Hour(), hour.Minute(), 0, 0, location)
+		// The date might be the day before. Ugly, but it works.
+		for i := -1; i < 1; i++ {
+			next := time.Date(
+				t.Year(), t.Month(), t.Day()+i,
+				hour.Hour(), hour.Minute(),
+				0, 0, location,
+			)
 
-		if next.After(t) && next.Before(min) {
-			min = next
+			if next.After(t) && next.Before(min) {
+				min = next
+			}
 		}
 	}
 
