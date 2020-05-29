@@ -39,7 +39,7 @@ func (s *Server) getSeedStats() (stats statsSeed, _ error) {
 	wothItems := map[string]int{}
 	barrenRegions := map[string]int{}
 
-	if err := s.back.MapSpoilerLogs(func(raw io.Reader) error {
+	if err := s.back.MapSpoilerLogs("std", func(raw io.Reader) error {
 		seedTotal++
 
 		var l oot.SpoilerLog
