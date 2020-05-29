@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -47,31 +48,15 @@ func (s *Server) getSeedStats() (stats statsSeed, _ error) {
 			return err
 		}
 
-		var force, hookshot int
+		progressive := map[string]int{}
 		for location, item := range l.WOTHLocations {
 			wothLocations[location]++
 
-			if item == "Progressive Strength Upgrade" {
-				force++
-				switch force {
-				case 1:
-					item = "Goron's Bracelet"
-				case 2:
-					item = "Silver Gauntlets"
-				case 3:
-					item = "Golden Gauntlets"
-				}
-			} else if item == "Progressive Hookshot" {
-				hookshot++
-				switch hookshot {
-				case 1:
-					item = "Hookshot"
-				case 2:
-					item = "Longshot"
-				}
+			if strings.HasPrefix(string(item), "Progressive") {
+				wothItems[progressiveItemName(progressive, string(item))]++
+			} else {
+				wothItems[string(item)]++
 			}
-
-			wothItems[string(item)]++
 		}
 
 		for _, name := range l.BarrenRegions {
@@ -90,6 +75,44 @@ func (s *Server) getSeedStats() (stats statsSeed, _ error) {
 	log.Printf("debug: computed stats for %d seeds in %s", seedTotal, time.Since(start))
 
 	return stats, nil
+}
+
+func progressiveItemName(cache map[string]int, item string) string {
+	cache[item]++
+	switch item {
+	case "Progressive Strength Upgrade":
+		switch cache[item] {
+		case 1:
+			return "Goron's Bracelet"
+		case 2:
+			return "Silver Gauntlets"
+		case 3:
+			return "Golden Gauntlets"
+		}
+	case "Progressive Hookshot":
+		switch cache[item] {
+		case 1:
+			return "Hookshot"
+		case 2:
+			return "Longshot"
+		}
+	case "Progressive Scale":
+		switch cache[item] {
+		case 1:
+			return "Silver Scale"
+		case 2:
+			return "Golden Scale"
+		}
+	case "Progressive Wallet":
+		switch cache[item] {
+		case 1:
+			return "Adult's Wallet"
+		case 2:
+			return "Giant's Wallet"
+		}
+	}
+
+	return item
 }
 
 func locationPctFromMap(m map[string]int, total int) (ret []locationPct) {
