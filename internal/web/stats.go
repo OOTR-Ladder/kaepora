@@ -26,7 +26,7 @@ func (s *Server) stats(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s.cache(w, "public", 1*time.Hour)
-	s.response(w, r, http.StatusOK, "seed_stats.html", struct {
+	s.response(w, r, http.StatusOK, "stats.html", struct {
 		Misc back.StatsMisc
 		Seed statsSeed
 	}{misc, seed})

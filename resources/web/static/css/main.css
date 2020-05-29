@@ -205,3 +205,9 @@ div[class^="nextRace--contextual--"] > i {
     .upcomingRace--title { transform: translateY(30%); }
 }
 /* }}} Schedule */
+
+/* {{{ Stats */
+.stats--tabs {
+    margin-bottom: 20px;
+}
+/* }}} Stats */

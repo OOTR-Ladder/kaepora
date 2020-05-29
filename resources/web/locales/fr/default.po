@@ -59,6 +59,34 @@ msgstr "Règles"
 msgid "Join the server"
 msgstr "Rejoignez le serveur"
 
+#: resources/web/templates/includes/stats_barren_woth.html:4
+msgid "Way of the Hero"
+msgstr "Voies du Héros"
+
+#: resources/web/templates/includes/stats_barren_woth.html:8
+msgid "Location"
+msgstr "Emplacement"
+
+#: resources/web/templates/includes/stats_barren_woth.html:9
+msgid "% of seeds"
+msgstr "% des seeds"
+
+#: resources/web/templates/includes/stats_barren_woth.html:24
+msgid "WoTH items"
+msgstr "Objets sur voies"
+
+#: resources/web/templates/includes/stats_barren_woth.html:28
+msgid "Item"
+msgstr "Objet"
+
+#: resources/web/templates/includes/stats_barren_woth.html:44
+msgid "Barren regions"
+msgstr "Régions stériles"
+
+#: resources/web/templates/includes/stats_barren_woth.html:48
+msgid "Region"
+msgstr "Région"
+
 #: resources/web/templates/layouts/error.html:12
 msgid "The page you requested does not exist."
 msgstr "La page que vous avez demandé n'existe pas."
@@ -147,74 +175,54 @@ msgstr "Prochaines courses planifiées"
 msgid "in"
 msgstr "dans"
 
-#: resources/web/templates/layouts/seed_stats.html:7
+#: resources/web/templates/layouts/stats.html:7
 msgid "Ladder & Seed statistics"
 msgstr "Statistiques du Ladder et des seeds"
 
-#: resources/web/templates/layouts/seed_stats.html:14
+#: resources/web/templates/layouts/stats.html:17
+msgid ""
+"Enabling JavaScript is required for this page to function properly. I hate "
+"it as much as you do."
+msgstr ""
+"Activer JavaScript est nécessaire pour que cette page fonctionne "
+"correctement. Ce n'est pas par plaisir."
+
+#: resources/web/templates/layouts/stats.html:26
 msgid "Ladder stats"
 msgstr "Statistiques du Ladder"
 
-#: resources/web/templates/layouts/seed_stats.html:19
+#: resources/web/templates/layouts/stats.html:31
 msgid "Registered players: %d"
 msgstr "Joueurs enregistrés : %d"
 
-#: resources/web/templates/layouts/seed_stats.html:20
+#: resources/web/templates/layouts/stats.html:32
 msgid "Ranked players: %d"
 msgstr "Joueurs classés : %d"
 
-#: resources/web/templates/layouts/seed_stats.html:21
+#: resources/web/templates/layouts/stats.html:33
 msgid "Players on leaderboard: %d"
 msgstr "Joueurs sur le leaderboard : %d"
 
-#: resources/web/templates/layouts/seed_stats.html:26
+#: resources/web/templates/layouts/stats.html:38
 msgid "Matches played: %d"
 msgstr "Matches joués : %d"
 
-#: resources/web/templates/layouts/seed_stats.html:27
+#: resources/web/templates/layouts/stats.html:39
 msgid "Forfeits: %d"
 msgstr "Forfaits : %d"
 
-#: resources/web/templates/layouts/seed_stats.html:28
+#: resources/web/templates/layouts/stats.html:40
 msgid "Double forfeits: %d"
 msgstr "Double forfaits : %d"
 
-#: resources/web/templates/layouts/seed_stats.html:33
+#: resources/web/templates/layouts/stats.html:45
 msgid "First ladder race: %s"
 msgstr "Première course du Ladder : %s"
 
-#: resources/web/templates/layouts/seed_stats.html:34
+#: resources/web/templates/layouts/stats.html:46
 msgid "Average players per race: %d"
 msgstr "Moyenne de joueurs par session : %d"
 
-#: resources/web/templates/layouts/seed_stats.html:35
+#: resources/web/templates/layouts/stats.html:47
 msgid "Most players in a race: %d"
 msgstr "Plus grand nombre de joueurs dans une session : %d"
-
-#: resources/web/templates/layouts/seed_stats.html:42
-msgid "Way of the Hero"
-msgstr "Voies du Héros"
-
-#: resources/web/templates/layouts/seed_stats.html:46
-msgid "Location"
-msgstr "Emplacement"
-
-#: resources/web/templates/layouts/seed_stats.html:47
-msgid "% of seeds"
-msgstr "% des seeds"
-
-#: resources/web/templates/layouts/seed_stats.html:62
-msgid "WoTH items"
-msgstr "Objets sur voies"
-
-#: resources/web/templates/layouts/seed_stats.html:66
-msgid "Item"
-msgstr "Objet"
-
-#: resources/web/templates/layouts/seed_stats.html:82
-msgid "Barren regions"
-msgstr "Régions stériles"
-
-#: resources/web/templates/layouts/seed_stats.html:86
-msgid "Region"
-msgstr "Région"

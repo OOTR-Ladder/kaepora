@@ -1,0 +1,47 @@
+{{define "content"}}
+<section class="hero is-dark homeHeader">
+    {{- template "menu" . -}}
+
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title">{{t .Locale "Ladder & Seed statistics"}}</h1>
+        </div>
+    </div>
+</section>
+
+<noscript>
+    <section class="section">
+        <div class="container">
+            <div class="message is-danger">
+                <div class="message-body">
+                    {{t .Locale "Enabling JavaScript is required for this page to function properly. I hate it as much as you do."}}
+                </div>
+            </div>
+        </div>
+    </section>
+</noscript>
+
+<section class="section">
+    <div class="container">
+        <div class="tabs stats--tabs">
+            <ul class="js-stats-tabs" role="tablist">
+                <li data-target=".js-stats-tab-ladder" class="is-active">
+                    <a href="#ladder" role="tab" aria-controls="stats-ladder">{{t .Locale "Ladder stats"}}</a></li>
+                <li data-target=".js-stats-tab-seeds">
+                    <a href="#seeds" role="tab" aria-controls="stats-seeds">{{t .Locale "WotH and barrens"}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container js-stats-tab-ladder" role="tabpanel" aria-selected="true" aria-labelledby="stats-ladder">
+        {{- template "stats_ladder" . -}}
+    </div>
+
+    <div class="container js-stats-tab-seeds is-hidden" role="tabpanel" aria-labelledby="stats-seeds">
+        {{- template "stats_woth_barren" . -}}
+    </div>
+</section>
+
+<script src="{{assetURL "js/stats.js"}}" integrity="{{assetIntegrity "js/stats.js"}}" ></script>
+{{end}}
