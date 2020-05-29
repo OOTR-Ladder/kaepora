@@ -59,31 +59,87 @@ msgstr "Règles"
 msgid "Join the server"
 msgstr "Rejoignez le serveur"
 
-#: resources/web/templates/includes/stats_barren_woth.html:4
-msgid "Way of the Hero"
-msgstr "Voies du Héros"
+#: resources/web/templates/includes/stats_ladder.html:5
+msgid "Registered players: %d"
+msgstr "Joueurs enregistrés : %d"
 
-#: resources/web/templates/includes/stats_barren_woth.html:8
+#: resources/web/templates/includes/stats_ladder.html:6
+msgid "Ranked players: %d"
+msgstr "Joueurs classés : %d"
+
+#: resources/web/templates/includes/stats_ladder.html:7
+msgid "Players on leaderboard: %d"
+msgstr "Joueurs sur le leaderboard : %d"
+
+#: resources/web/templates/includes/stats_ladder.html:12
+msgid "Matches played: %d"
+msgstr "Matches joués : %d"
+
+#: resources/web/templates/includes/stats_ladder.html:13
+msgid "Forfeits: %d"
+msgstr "Forfaits : %d"
+
+#: resources/web/templates/includes/stats_ladder.html:14
+msgid "Double forfeits: %d"
+msgstr "Double forfaits : %d"
+
+#: resources/web/templates/includes/stats_ladder.html:19
+msgid "First ladder race: %s"
+msgstr "Première course du Ladder : %s"
+
+#: resources/web/templates/includes/stats_ladder.html:20
+msgid "Average players per race: %d"
+msgstr "Moyenne de joueurs par session : %d"
+
+#: resources/web/templates/includes/stats_ladder.html:21
+msgid "Most players in a race: %d"
+msgstr "Plus grand nombre de joueurs dans une session : %d"
+
+#: resources/web/templates/includes/stats_locations.html:5
+msgid "Items"
+msgstr "Objets"
+
+#: resources/web/templates/includes/stats_locations.html:9
 msgid "Location"
 msgstr "Emplacement"
 
-#: resources/web/templates/includes/stats_barren_woth.html:9
+#: resources/web/templates/includes/stats_locations.html:10
 msgid "% of seeds"
 msgstr "% des seeds"
 
-#: resources/web/templates/includes/stats_barren_woth.html:24
+#: resources/web/templates/includes/stats_locations.html:22
+msgid "Junk"
+msgstr "Objets inutiles"
+
+#: resources/web/templates/includes/stats_locations.html:39
+msgid "Small Keys"
+msgstr "Petites clefs"
+
+#: resources/web/templates/includes/stats_locations.html:56
+msgid "Boss Keys"
+msgstr "Clefs de Boss"
+
+#: resources/web/templates/includes/stats_locations.html:73
+msgid "Ice Traps"
+msgstr "Pièges"
+
+#: resources/web/templates/includes/stats_woth_barren.html:4
+msgid "Way of the Hero"
+msgstr "Voies du Héros"
+
+#: resources/web/templates/includes/stats_woth_barren.html:21
 msgid "WoTH items"
 msgstr "Objets sur voies"
 
-#: resources/web/templates/includes/stats_barren_woth.html:28
+#: resources/web/templates/includes/stats_woth_barren.html:25
 msgid "Item"
 msgstr "Objet"
 
-#: resources/web/templates/includes/stats_barren_woth.html:44
+#: resources/web/templates/includes/stats_woth_barren.html:38
 msgid "Barren regions"
 msgstr "Régions stériles"
 
-#: resources/web/templates/includes/stats_barren_woth.html:48
+#: resources/web/templates/includes/stats_woth_barren.html:42
 msgid "Region"
 msgstr "Région"
 
@@ -187,42 +243,14 @@ msgstr ""
 "Activer JavaScript est nécessaire pour que cette page fonctionne "
 "correctement. Ce n'est pas par plaisir."
 
-#: resources/web/templates/layouts/stats.html:26
+#: resources/web/templates/layouts/stats.html:29
 msgid "Ladder stats"
 msgstr "Statistiques du Ladder"
 
 #: resources/web/templates/layouts/stats.html:31
-msgid "Registered players: %d"
-msgstr "Joueurs enregistrés : %d"
+msgid "WotH and barrens"
+msgstr "Voies et Régions stériles"
 
-#: resources/web/templates/layouts/stats.html:32
-msgid "Ranked players: %d"
-msgstr "Joueurs classés : %d"
-
-#: resources/web/templates/layouts/stats.html:33
-msgid "Players on leaderboard: %d"
-msgstr "Joueurs sur le leaderboard : %d"
-
-#: resources/web/templates/layouts/stats.html:38
-msgid "Matches played: %d"
-msgstr "Matches joués : %d"
-
-#: resources/web/templates/layouts/stats.html:39
-msgid "Forfeits: %d"
-msgstr "Forfaits : %d"
-
-#: resources/web/templates/layouts/stats.html:40
-msgid "Double forfeits: %d"
-msgstr "Double forfaits : %d"
-
-#: resources/web/templates/layouts/stats.html:45
-msgid "First ladder race: %s"
-msgstr "Première course du Ladder : %s"
-
-#: resources/web/templates/layouts/stats.html:46
-msgid "Average players per race: %d"
-msgstr "Moyenne de joueurs par session : %d"
-
-#: resources/web/templates/layouts/stats.html:47
-msgid "Most players in a race: %d"
-msgstr "Plus grand nombre de joueurs dans une session : %d"
+#: resources/web/templates/layouts/stats.html:34
+msgid "Locations"
+msgstr "Emplacements"

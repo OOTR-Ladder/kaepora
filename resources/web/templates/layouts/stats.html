@@ -30,6 +30,9 @@
                 <li data-target=".js-stats-tab-seeds">
                     <a href="#seeds" role="tab" aria-controls="stats-seeds">{{t .Locale "WotH and barrens"}}</a>
                 </li>
+                <li data-target=".js-stats-tab-locations">
+                    <a href="#locations" role="tab" aria-controls="stats-locations">{{t .Locale "Locations"}}</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -40,6 +43,10 @@
 
     <div class="container js-stats-tab-seeds is-hidden" role="tabpanel" aria-labelledby="stats-seeds">
         {{- template "stats_woth_barren" . -}}
+    </div>
+
+    <div class="js-stats-tab-locations is-hidden" role="tabpanel" aria-labelledby="stats-locations">
+        {{- template "stats_locations" . -}}
     </div>
 </section>
 
