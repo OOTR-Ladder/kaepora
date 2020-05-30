@@ -7,6 +7,7 @@ import (
 	"kaepora/internal/bot"
 	"kaepora/internal/generator/factory"
 	"kaepora/internal/generator/oot"
+	"kaepora/internal/global"
 	"kaepora/internal/web"
 	"log"
 	"os"
@@ -19,16 +20,13 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// Version holds the build-time version string.
-var Version = "unknown" // nolint:gochecknoglobals
-
 func main() {
 	log.SetFlags(0) // we syslog in prod so we don't care about time here
 	flag.Parse()
 
 	switch flag.Arg(0) { // commands not requiring a back
 	case "version":
-		fmt.Fprintf(os.Stdout, "Kaepora %s\n", Version)
+		fmt.Fprintf(os.Stdout, "Kaepora %s\n", global.Version)
 		return
 	case "help":
 		fmt.Fprint(os.Stdout, help())
@@ -40,6 +38,7 @@ func main() {
 		return
 	}
 
+	log.Printf("info: Starting Kaepora %s", global.Version)
 	back, err := back.New(
 		"sqlite3", "./kaepora.db",
 		os.Getenv("KAEPORA_OOTR_API_KEY"),

@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"io"
 	"kaepora/internal/back"
+	"kaepora/internal/global"
 	"kaepora/internal/util"
 	"math"
 	"os"
@@ -155,7 +156,7 @@ func tplFuture(iface interface{}) bool {
 }
 
 func tplAssetURL(name string) string {
-	return "/_/" + name
+	return "/_/" + name + "?" + global.Version
 }
 
 func tplAssetIntegrity(baseDir string) func(name string) (string, error) {
