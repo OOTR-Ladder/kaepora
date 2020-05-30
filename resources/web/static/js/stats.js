@@ -1,12 +1,12 @@
 "use strict";
+
 (function (){
     bindTabs(".js-stats-tabs");
     bindSortableTables(".js-table-sortable");
 
     function bindSortableTables(tableQuery) {
         const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
-        const comparer = (idx, asc) => (a, b) => (
-            (v1, v2) =>
+        const comparer = (idx, asc) => (a, b) => ((v1, v2) =>
                 (v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2))
                 ? (v1 - v2)
                 : ( v1.toString().localeCompare(v2))
@@ -15,7 +15,7 @@
             getCellValue(asc ? b : a, idx)
         );
 
-        const table = document.querySelectorAll(tableQuery).forEach(table => {
+        document.querySelectorAll(tableQuery).forEach(table => {
             const body = table.querySelector("tbody");
             let dir = true;
             let lastIndex = 0;
