@@ -5,23 +5,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: internal/web/templates.go:75
+#: internal/web/templates.go:85
 msgid "Planned"
 msgstr "Planifiée"
 
-#: internal/web/templates.go:78
+#: internal/web/templates.go:88
 msgid "Joinable"
 msgstr "Inscriptions ouvertes"
 
-#: internal/web/templates.go:81
+#: internal/web/templates.go:91
 msgid "Preparing"
 msgstr "En préparation"
 
-#: internal/web/templates.go:84
+#: internal/web/templates.go:94
 msgid "Race in progress"
 msgstr "Course en cours"
 
-#: internal/web/templates.go:87
+#: internal/web/templates.go:97
 msgid "Closed"
 msgstr "Fermée"
 
@@ -94,6 +94,38 @@ msgstr "Moyenne de joueurs par session : %d"
 #: resources/web/templates/includes/stats_ladder.html:21
 msgid "Most players in a race: %d"
 msgstr "Plus grand nombre de joueurs dans une session : %d"
+
+#: resources/web/templates/includes/stats_ladder.html:29
+msgid "Attendance (avg.)"
+msgstr "Présence (moy.)"
+
+#: resources/web/templates/includes/stats_ladder.html:33
+msgid "Monday"
+msgstr "Lundi"
+
+#: resources/web/templates/includes/stats_ladder.html:34
+msgid "Tuesday"
+msgstr "Mardi"
+
+#: resources/web/templates/includes/stats_ladder.html:35
+msgid "Wednesday"
+msgstr "Mercredi"
+
+#: resources/web/templates/includes/stats_ladder.html:36
+msgid "Thursday"
+msgstr "Jeudi"
+
+#: resources/web/templates/includes/stats_ladder.html:37
+msgid "Friday"
+msgstr "Vendredi"
+
+#: resources/web/templates/includes/stats_ladder.html:38
+msgid "Saturday"
+msgstr "Samedi"
+
+#: resources/web/templates/includes/stats_ladder.html:39
+msgid "Sunday"
+msgstr "Dimanche"
 
 #: resources/web/templates/includes/stats_locations.html:3
 msgid "Items"

@@ -12,6 +12,7 @@ import (
 	"math"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -67,6 +68,14 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 			return template.HTML(blackfriday.Run( // nolint:gosec
 				[]byte(s.locales[locale].Get(str, args...)),
 			))
+		},
+
+		"ignoreZero": func(i int) string {
+			if i == 0 {
+				return ""
+			}
+
+			return strconv.Itoa(i)
 		},
 
 		"matchSessionStatusTag": func(locale string, status back.MatchSessionStatus) template.HTML {

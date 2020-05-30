@@ -1,14 +1,10 @@
 package web
 
 import (
-	"encoding/json"
-	"io"
+	"encoding/hex"
 	"kaepora/internal/back"
-	"kaepora/internal/generator/oot"
-	"log"
+	"math"
 	"net/http"
-	"sort"
-	"strings"
 	"time"
 )
 
@@ -25,192 +21,88 @@ func (s *Server) stats(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	attendance, err := s.getAttendanceStats()
+	if err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
+	}
+
 	s.cache(w, "public", 1*time.Hour)
 	s.response(w, r, http.StatusOK, "stats.html", struct {
-		Misc back.StatsMisc
-		Seed statsSeed
-	}{misc, seed})
+		Misc       back.StatsMisc
+		Attendance []attendanceEntry
+		Seed       statsSeed
+	}{misc, attendance, seed})
 }
 
-func (s *Server) getSeedStats() (statsSeed, error) {
-	start := time.Now()
-	seedTotal := 0
+type attendanceEntry struct {
+	From, To    string    // HH:MM, always UTC
+	Color       [7]string // color to use in heatmap
+	Average     [7]int    // average player count per dow
+	Accumulated [7]int    // total player count per dow
+	Counted     [7]int    // sessions counted in this slot
+}
 
-	wothLocations := map[string]int{}
-	wothItems := map[string]int{}
-	barrenRegions := map[string]int{}
-	locationsAcc := map[string]map[oot.SpoilerLogItemCategory]int{}
+func (s *Server) getAttendanceStats() ([]attendanceEntry, error) {
+	bins := 3
+	ret := make([]attendanceEntry, bins)
+	for i := 0; i < len(ret); i++ {
+		t := time.Unix(int64(24/bins*i*3600), 0).UTC()
+		ret[i].From = t.Format("15")
+		ret[i].To = t.Add(time.Duration(24/bins) * time.Hour).Format("15")
+	}
 
-	if err := s.back.MapSpoilerLogs("std", func(raw io.Reader) error {
-		seedTotal++
-
-		var l oot.SpoilerLog
-		dec := json.NewDecoder(raw)
-		if err := dec.Decode(&l); err != nil {
-			return err
+	max := math.MinInt64
+	if err := s.back.MapMatchSessions("std", func(m back.MatchSession) error {
+		players := len(m.PlayerIDs)
+		if players > max {
+			max = players
 		}
 
-		progressive := map[string]int{}
-		for location, item := range l.WOTHLocations {
-			wothLocations[location]++
-
-			if strings.HasPrefix(string(item), "Progressive") {
-				wothItems[progressiveItemName(progressive, string(item))]++
-			} else {
-				wothItems[string(item)]++
-			}
+		t := m.StartDate.Time().UTC()
+		bin := t.Hour() / (24 / bins)
+		dow := t.Weekday() - 1
+		if dow < 0 {
+			dow = 6
 		}
 
-		for _, name := range l.BarrenRegions {
-			barrenRegions[name]++
-		}
-
-		for name, item := range l.Locations {
-			if _, ok := locationsAcc[name]; !ok {
-				locationsAcc[name] = make(
-					map[oot.SpoilerLogItemCategory]int,
-					oot.SpoilerLogItemCategoryCount,
-				)
-			}
-
-			locationsAcc[name][item.GetCategory()]++
-		}
+		ret[bin].Accumulated[dow] += players
+		ret[bin].Counted[dow]++
 
 		return nil
 	}); err != nil {
-		return statsSeed{}, err
+		return nil, err
 	}
 
-	defer log.Printf("debug: computed stats for %d seeds in %s", seedTotal, time.Since(start))
-	return statsSeed{
-		Barren:    namedPctFromMap(barrenRegions, seedTotal),
-		WOTH:      namedPctFromMap(wothLocations, seedTotal),
-		WOTHItems: namedPctFromMap(wothItems, seedTotal),
-		Locations: locationPctFromMap(locationsAcc, seedTotal),
-	}, nil
-}
+	for i := 0; i < len(ret); i++ {
+		for dow := 0; dow < 7; dow++ {
+			if ret[i].Counted[dow] > 0 {
+				ret[i].Average[dow] = ret[i].Accumulated[dow] / ret[i].Counted[dow]
+			}
 
-func progressiveItemName(cache map[string]int, item string) string {
-	cache[item]++
-	switch item {
-	case "Progressive Strength Upgrade":
-		switch cache[item] {
-		case 1:
-			return "Goron's Bracelet"
-		case 2:
-			return "Silver Gauntlets"
-		case 3:
-			return "Golden Gauntlets"
-		}
-	case "Progressive Hookshot":
-		switch cache[item] {
-		case 1:
-			return "Hookshot"
-		case 2:
-			return "Longshot"
-		}
-	case "Progressive Scale":
-		switch cache[item] {
-		case 1:
-			return "Silver Scale"
-		case 2:
-			return "Golden Scale"
-		}
-	case "Progressive Wallet":
-		switch cache[item] {
-		case 1:
-			return "Adult's Wallet"
-		case 2:
-			return "Giant's Wallet"
+			if max > 0 {
+				ret[i].Color[dow] = lerpColor(float64(ret[i].Average[dow]) / float64(max))
+			} else {
+				ret[i].Color[dow] = lerpColor(0)
+			}
 		}
 	}
 
-	return item
+	return ret, nil
 }
 
-func namedPctFromMap(m map[string]int, totalInt int) (ret []namedPct) {
-	total := float64(totalInt)
-
-	for k, v := range m {
-		ret = append(ret, namedPct{
-			Name: k,
-			Pct:  100.0 * (float64(v) / total),
-		})
+func lerpColor(r float64) string {
+	lerp := func(v0, v1, r float64) float64 {
+		return v0*(1-r) + v1*r
 	}
 
-	sort.Sort(byPctDesc(ret))
+	// lerp white to red
+	a := [3]float64{1, 1, 1}
+	b := [3]float64{1, 0, 0}
 
-	return ret
-}
-
-func locationPctFromMap(
-	m map[string]map[oot.SpoilerLogItemCategory]int,
-	totalInt int,
-) (ret []locationPct) {
-	total := float64(totalInt)
-	for name, v := range m {
-		ret = append(ret, locationPct{
-			Name:      name,
-			Items:     100.0 * (float64(v[oot.SpoilerLogItemCategoryItem]) / total),
-			Junk:      100.0 * (float64(v[oot.SpoilerLogItemCategoryJunk]) / total),
-			IceTraps:  100.0 * (float64(v[oot.SpoilerLogItemCategoryIceTrap]) / total),
-			SmallKeys: 100.0 * (float64(v[oot.SpoilerLogItemCategorySmallKey]) / total),
-			BossKeys:  100.0 * (float64(v[oot.SpoilerLogItemCategoryBossKey]) / total),
-			PoH:       100.0 * (float64(v[oot.SpoilerLogItemCategoryPoH]) / total),
-			Chus:      100.0 * (float64(v[oot.SpoilerLogItemCategoryBombchu]) / total),
-		})
-	}
-
-	sort.Sort(byName(ret))
-
-	return ret
-}
-
-type statsSeed struct {
-	WOTH, WOTHItems, Barren []namedPct
-	Locations               []locationPct
-}
-
-type locationPct struct {
-	Name                     string
-	Items, Junk, IceTraps    float64
-	SmallKeys, BossKeys, PoH float64
-	Chus                     float64
-}
-
-type namedPct struct {
-	Name string
-	Pct  float64
-}
-
-type byPctDesc []namedPct
-
-func (a byPctDesc) Len() int {
-	return len([]namedPct(a))
-}
-
-func (a byPctDesc) Less(i, j int) bool {
-	if a[i].Pct == a[j].Pct {
-		return a[i].Name < a[j].Name
-	}
-
-	return a[i].Pct > a[j].Pct
-}
-
-func (a byPctDesc) Swap(i, j int) {
-	a[i], a[j] = a[j], a[i]
-}
-
-type byName []locationPct
-
-func (a byName) Len() int {
-	return len([]locationPct(a))
-}
-
-func (a byName) Less(i, j int) bool {
-	return a[i].Name < a[j].Name
-}
-
-func (a byName) Swap(i, j int) {
-	a[i], a[j] = a[j], a[i]
+	return "#" + hex.EncodeToString([]byte{
+		byte(lerp(a[0], b[0], r) * 255.0),
+		byte(lerp(a[1], b[1], r) * 255.0),
+		byte(lerp(a[2], b[2], r) * 255.0),
+	})
 }

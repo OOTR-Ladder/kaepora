@@ -234,6 +234,13 @@ div[class^="nextRace--contextual--"] > i {
     margin-bottom: 20px;
 }
 
+table.stats--attendance {
+    margin: auto;
+}
+table.table.stats--attendance td {
+    border: none;
+}
+
 .stats--long-table-container .sticky {
     position: sticky;
     top: 0px;

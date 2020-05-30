@@ -344,3 +344,33 @@ func getActiveSessionsForLeagueID(tx *sqlx.Tx, leagueID util.UUIDAsBlob) ([]Matc
 
 	return ret, nil
 }
+
+func (b *Back) MapMatchSessions(
+	shortcode string,
+	cb func(MatchSession) error,
+) error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		league, err := getLeagueByShortCode(tx, shortcode)
+		if err != nil {
+			return err
+		}
+
+		rows, err := tx.Queryx(`SELECT * FROM MatchSession WHERE LeagueID = ?`, league.ID)
+		if err != nil {
+			return err
+		}
+
+		for rows.Next() {
+			var m MatchSession
+			if err := rows.StructScan(&m); err != nil {
+				return err
+			}
+
+			if err := cb(m); err != nil {
+				return err
+			}
+		}
+
+		return rows.Err()
+	})
+}
