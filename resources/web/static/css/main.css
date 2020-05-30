@@ -11,7 +11,7 @@ body { font-family: "Jost", "Ubuntu", "Noto Sans", Arial, sans-serif; }
     cursor: pointer;
 }
 .js-table-sortable th:hover {
-    filter: brightness(250%);
+    color: gray;
 }
 
 .js-table-sortable span {
