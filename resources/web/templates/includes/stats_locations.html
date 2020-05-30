@@ -1,37 +1,33 @@
 {{define "stats_locations"}}
-<div class="columns is-centered stats--long-table-container">
-
-    <div class="column">
-        <h4 class="title">{{t .Locale "Items"}}</h4>
-        <table class="table is-fullwidth js-table-sortable">
-            <thead>
-                <tr class="sticky">
-                    <th class="is-unselectable">{{t .Locale "Location"}}&nbsp;<span>↓</span></th>
-                    <th class="has-text-right is-unselectable">{{t .Locale "% items"}}&nbsp;<span></span></th>
-                    <th class="has-text-right is-unselectable">{{t .Locale "% junk"}}&nbsp;<span></span></th>
-                    <th class="has-text-right is-unselectable">{{t .Locale "% ice trap"}}&nbsp;<span></span></th>
-                    <th class="has-text-right is-unselectable">{{t .Locale "% piece of heart"}}&nbsp;<span></span></th>
-                    <th class="has-text-right is-unselectable">{{t .Locale "% bombchus"}}&nbsp;<span></span></th>
-                    <th class="has-text-right is-unselectable">{{t .Locale "% small keys"}}&nbsp;<span></span></th>
-                    <th class="has-text-right is-unselectable">{{t .Locale "% boss keys"}}&nbsp;<span></span></th>
-                </tr>
-            </thead>
-            <tbody>
-                {{- range $v := .Payload.Seed.Locations -}}
-                <tr>
-                    <td>{{$v.Name}}</td>
-                    <td>{{printf "%.2f" $v.Items}}</td>
-                    <td>{{printf "%.2f" $v.Junk}}</td>
-                    <td>{{printf "%.2f" $v.IceTraps}}</td>
-                    <td>{{printf "%.2f" $v.PoH}}</td>
-                    <td>{{printf "%.2f" $v.Chus}}</td>
-                    <td>{{printf "%.2f" $v.SmallKeys}}</td>
-                    <td>{{printf "%.2f" $v.BossKeys}}</td>
-                </tr>
-                {{- end -}}
-            </tbody>
-        </table>
-    </div>
-
-</div> <!-- columns -->
+<div class="stats--long-table-container">
+    <h4 class="title">{{t .Locale "Items"}}</h4>
+    <table class="table is-fullwidth js-table-sortable">
+        <thead>
+            <tr class="sticky">
+                <th class="is-unselectable">{{t .Locale "Location"}}&nbsp;<span>↓</span></th>
+                <th class="has-text-right is-unselectable">{{t .Locale "% items"}}&nbsp;<span></span></th>
+                <th class="has-text-right is-unselectable">{{t .Locale "% junk"}}&nbsp;<span></span></th>
+                <th class="has-text-right is-unselectable">{{t .Locale "% ice trap"}}&nbsp;<span></span></th>
+                <th class="has-text-right is-unselectable">{{t .Locale "% piece of heart"}}&nbsp;<span></span></th>
+                <th class="has-text-right is-unselectable">{{t .Locale "% bombchus"}}&nbsp;<span></span></th>
+                <th class="has-text-right is-unselectable">{{t .Locale "% small keys"}}&nbsp;<span></span></th>
+                <th class="has-text-right is-unselectable">{{t .Locale "% boss keys"}}&nbsp;<span></span></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{- range $v := .Payload.Seed.Locations -}}
+            <tr>
+                <td>{{$v.Name}}</td>
+                <td>{{printf "%.2f" $v.Items}}</td>
+                <td>{{printf "%.2f" $v.Junk}}</td>
+                <td>{{printf "%.2f" $v.IceTraps}}</td>
+                <td>{{printf "%.2f" $v.PoH}}</td>
+                <td>{{printf "%.2f" $v.Chus}}</td>
+                <td>{{printf "%.2f" $v.SmallKeys}}</td>
+                <td>{{printf "%.2f" $v.BossKeys}}</td>
+            </tr>
+            {{- end -}}
+        </tbody>
+    </table>
+</div>
 {{end}}
