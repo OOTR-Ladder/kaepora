@@ -95,39 +95,39 @@ msgstr ""
 msgid "Most players in a race: %d"
 msgstr ""
 
-#: resources/web/templates/includes/stats_locations.html:5
+#: resources/web/templates/includes/stats_locations.html:3
 msgid "Items"
 msgstr ""
 
-#: resources/web/templates/includes/stats_locations.html:9
+#: resources/web/templates/includes/stats_locations.html:7
 msgid "Location"
 msgstr ""
 
-#: resources/web/templates/includes/stats_locations.html:10
+#: resources/web/templates/includes/stats_locations.html:8
 msgid "% items"
 msgstr ""
 
-#: resources/web/templates/includes/stats_locations.html:11
+#: resources/web/templates/includes/stats_locations.html:9
 msgid "% junk"
 msgstr ""
 
+#: resources/web/templates/includes/stats_locations.html:10
+msgid "% ice traps"
+msgstr ""
+
+#: resources/web/templates/includes/stats_locations.html:11
+msgid "% pieces of heart"
+msgstr ""
+
 #: resources/web/templates/includes/stats_locations.html:12
-msgid "% ice trap"
-msgstr ""
-
-#: resources/web/templates/includes/stats_locations.html:13
-msgid "% piece of heart"
-msgstr ""
-
-#: resources/web/templates/includes/stats_locations.html:14
 msgid "% bombchus"
 msgstr ""
 
-#: resources/web/templates/includes/stats_locations.html:15
+#: resources/web/templates/includes/stats_locations.html:13
 msgid "% small keys"
 msgstr ""
 
-#: resources/web/templates/includes/stats_locations.html:16
+#: resources/web/templates/includes/stats_locations.html:14
 msgid "% boss keys"
 msgstr ""
 

@@ -95,39 +95,39 @@ msgstr "Moyenne de joueurs par session : %d"
 msgid "Most players in a race: %d"
 msgstr "Plus grand nombre de joueurs dans une session : %d"
 
-#: resources/web/templates/includes/stats_locations.html:5
+#: resources/web/templates/includes/stats_locations.html:3
 msgid "Items"
 msgstr "Objets"
 
-#: resources/web/templates/includes/stats_locations.html:9
+#: resources/web/templates/includes/stats_locations.html:7
 msgid "Location"
 msgstr "Emplacement"
 
-#: resources/web/templates/includes/stats_locations.html:10
+#: resources/web/templates/includes/stats_locations.html:8
 msgid "% items"
 msgstr "% d'objets"
 
-#: resources/web/templates/includes/stats_locations.html:11
+#: resources/web/templates/includes/stats_locations.html:9
 msgid "% junk"
 msgstr "% d'items inutiles"
 
-#: resources/web/templates/includes/stats_locations.html:12
-msgid "% ice trap"
+#: resources/web/templates/includes/stats_locations.html:10
+msgid "% ice traps"
 msgstr "% de pièges"
 
-#: resources/web/templates/includes/stats_locations.html:13
-msgid "% piece of heart"
+#: resources/web/templates/includes/stats_locations.html:11
+msgid "% pieces of heart"
 msgstr "% de ¼ de cœur"
 
-#: resources/web/templates/includes/stats_locations.html:14
+#: resources/web/templates/includes/stats_locations.html:12
 msgid "% bombchus"
 msgstr "% de missiles"
 
-#: resources/web/templates/includes/stats_locations.html:15
+#: resources/web/templates/includes/stats_locations.html:13
 msgid "% small keys"
 msgstr "% de petites clefs"
 
-#: resources/web/templates/includes/stats_locations.html:16
+#: resources/web/templates/includes/stats_locations.html:14
 msgid "% boss keys"
 msgstr "% de clefs de boss"
 
