@@ -3,84 +3,31 @@
 
     <div class="column">
         <h4 class="title">{{t .Locale "Items"}}</h4>
-        <table class="table is-fullwidth">
+        <table class="table is-fullwidth js-table-sortable">
             <thead>
-                <tr>
-                    <td>{{t .Locale "Location"}}</td>
-                    <td>{{t .Locale "% of seeds"}}</td>
+                <tr class="sticky">
+                    <th class="is-unselectable">{{t .Locale "Location"}}&nbsp;<span>↓</span></th>
+                    <th class="has-text-right is-unselectable">{{t .Locale "% items"}}&nbsp;<span></span></th>
+                    <th class="has-text-right is-unselectable">{{t .Locale "% junk"}}&nbsp;<span></span></th>
+                    <th class="has-text-right is-unselectable">{{t .Locale "% ice trap"}}&nbsp;<span></span></th>
+                    <th class="has-text-right is-unselectable">{{t .Locale "% piece of heart"}}&nbsp;<span></span></th>
+                    <th class="has-text-right is-unselectable">{{t .Locale "% bombchus"}}&nbsp;<span></span></th>
+                    <th class="has-text-right is-unselectable">{{t .Locale "% small keys"}}&nbsp;<span></span></th>
+                    <th class="has-text-right is-unselectable">{{t .Locale "% boss keys"}}&nbsp;<span></span></th>
                 </tr>
             </thead>
             <tbody>
-                {{- range $v := .Payload.Seed.ItemLocations -}}
-                <tr> <td>{{$v.Name}}</td> <td>{{printf "%.2f" $v.Pct}}</td> </tr>
-                {{- end -}}
-            </tbody>
-        </table>
-    </div>
-
-    <div class="column">
-        <h4 class="title">{{t .Locale "Junk"}}</h4>
-        <table class="table is-fullwidth">
-            <thead>
+                {{- range $v := .Payload.Seed.Locations -}}
                 <tr>
-                    <td>{{t .Locale "Location"}}</td>
-                    <td>{{t .Locale "% of seeds"}}</td>
+                    <td>{{$v.Name}}</td>
+                    <td>{{printf "%.2f" $v.Items}}</td>
+                    <td>{{printf "%.2f" $v.Junk}}</td>
+                    <td>{{printf "%.2f" $v.IceTraps}}</td>
+                    <td>{{printf "%.2f" $v.PoH}}</td>
+                    <td>{{printf "%.2f" $v.Chus}}</td>
+                    <td>{{printf "%.2f" $v.SmallKeys}}</td>
+                    <td>{{printf "%.2f" $v.BossKeys}}</td>
                 </tr>
-            </thead>
-            <tbody>
-                {{- range $v := .Payload.Seed.JunkLocations -}}
-                <tr> <td>{{$v.Name}}</td> <td>{{printf "%.2f" $v.Pct}}</td> </tr>
-                {{- end -}}
-            </tbody>
-        </table>
-    </div>
-
-    <div class="column">
-        <h4 class="title">{{t .Locale "Small Keys"}}</h4>
-        <table class="table is-fullwidth">
-            <thead>
-                <tr>
-                    <td>{{t .Locale "Location"}}</td>
-                    <td>{{t .Locale "% of seeds"}}</td>
-                </tr>
-            </thead>
-            <tbody>
-                {{- range $v := .Payload.Seed.SmallKeyLocations -}}
-                <tr> <td>{{$v.Name}}</td> <td>{{printf "%.2f" $v.Pct}}</td> </tr>
-                {{- end -}}
-            </tbody>
-        </table>
-    </div>
-
-    <div class="column">
-        <h4 class="title">{{t .Locale "Boss Keys"}}</h4>
-        <table class="table is-fullwidth">
-            <thead>
-                <tr>
-                    <td>{{t .Locale "Location"}}</td>
-                    <td>{{t .Locale "% of seeds"}}</td>
-                </tr>
-            </thead>
-            <tbody>
-                {{- range $v := .Payload.Seed.BossKeyLocations -}}
-                <tr> <td>{{$v.Name}}</td> <td>{{printf "%.2f" $v.Pct}}</td> </tr>
-                {{- end -}}
-            </tbody>
-        </table>
-    </div>
-
-    <div class="column">
-        <h4 class="title">{{t .Locale "Ice Traps"}}</h4>
-        <table class="table is-fullwidth">
-            <thead>
-                <tr>
-                    <td>{{t .Locale "Location"}}</td>
-                    <td>{{t .Locale "% of seeds"}}</td>
-                </tr>
-            </thead>
-            <tbody>
-                {{- range $v := .Payload.Seed.IceTrapLocations -}}
-                <tr> <td>{{$v.Name}}</td> <td>{{printf "%.2f" $v.Pct}}</td> </tr>
                 {{- end -}}
             </tbody>
         </table>

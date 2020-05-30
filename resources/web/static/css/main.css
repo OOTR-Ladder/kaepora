@@ -6,6 +6,19 @@ body { font-family: "Jost", "Ubuntu", "Noto Sans", Arial, sans-serif; }
 .message .message-body > ul {
     margin-top: 0;
 }
+
+.js-table-sortable th {
+    cursor: pointer;
+}
+.js-table-sortable th:hover {
+    filter: brightness(250%);
+}
+
+.js-table-sortable span {
+    /* avoid column resize when adding the arrows */
+    position: absolute;
+}
+
 /* }}} Global */
 
 /* {{{ Homepage */
@@ -207,11 +220,21 @@ div[class^="nextRace--contextual--"] > i {
 /* }}} Schedule */
 
 /* {{{ Stats */
+.stats table thead th,
+.stats table tbody td {
+    text-align: right;
+}
+
+.stats table thead th:first-child,
+.stats table tbody td:first-child {
+    text-align: left;
+}
+
 .stats--tabs {
     margin-bottom: 20px;
 }
 
-.stats--long-table-container h4 {
+.stats--long-table-container .sticky {
     position: sticky;
     top: 0px;
     background-color: white;

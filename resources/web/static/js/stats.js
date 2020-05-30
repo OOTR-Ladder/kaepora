@@ -1,6 +1,39 @@
 "use strict";
 (function (){
     bindTabs(".js-stats-tabs");
+    bindSortableTables(".js-table-sortable");
+
+    function bindSortableTables(tableQuery) {
+        const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+        const comparer = (idx, asc) => (a, b) => (
+            (v1, v2) =>
+                (v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2))
+                ? (v1 - v2)
+                : ( v1.toString().localeCompare(v2))
+        )(
+            getCellValue(asc ? a : b, idx),
+            getCellValue(asc ? b : a, idx)
+        );
+
+        const table = document.querySelectorAll(tableQuery).forEach(table => {
+            const body = table.querySelector("tbody");
+            let dir = true;
+            let lastIndex = 0;
+
+            table.querySelectorAll(`thead tr th`).forEach(th => th.addEventListener('click', e => {
+                const idx = Array.from(th.parentNode.children).indexOf(th);
+                dir = (idx == lastIndex) ? !dir : true;
+                lastIndex = idx;
+
+                table.querySelectorAll('thead th span').forEach(span => span.innerHTML = "");
+                th.querySelector('span').innerHTML = dir ? "↓" : "↑";
+
+                Array.from(body.querySelectorAll('tr')).
+                    sort(comparer(idx, dir)).
+                    forEach(tr => body.appendChild(tr));
+            }));
+        });
+    }
 
     function bindTabs(container) {
         function deselectAll(container) {

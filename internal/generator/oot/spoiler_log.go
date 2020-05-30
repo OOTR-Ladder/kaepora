@@ -3,6 +3,7 @@ package oot
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 )
 
 type SpoilerLog struct {
@@ -21,6 +22,67 @@ type SpoilerLog struct {
 }
 
 type SpoilerLogItem string
+type SpoilerLogItemCategory int
+
+const (
+	SpoilerLogItemCategoryItem SpoilerLogItemCategory = iota
+	SpoilerLogItemCategoryBossKey
+	SpoilerLogItemCategoryIceTrap
+	SpoilerLogItemCategoryJunk
+	SpoilerLogItemCategoryMedallion
+	SpoilerLogItemCategoryPoH
+	SpoilerLogItemCategoryBombchu
+	SpoilerLogItemCategorySmallKey
+	SpoilerLogItemCategorySong
+
+	SpoilerLogItemCategoryCount // keep this last
+)
+
+func (i SpoilerLogItem) GetCategory() SpoilerLogItemCategory {
+	if strings.HasPrefix(string(i), "Small Key") {
+		return SpoilerLogItemCategorySmallKey
+	}
+	if strings.HasPrefix(string(i), "Boss Key") {
+		return SpoilerLogItemCategoryBossKey
+	}
+	if strings.HasPrefix(string(i), "Bombchus") {
+		return SpoilerLogItemCategoryBombchu
+	}
+	if strings.HasSuffix(string(i), "Medallion") {
+		return SpoilerLogItemCategoryMedallion
+	}
+
+	switch i {
+	case
+		"Arrows (10)", "Arrows (30)", "Arrows (5)",
+		"Bombs (10)", "Bombs (20)", "Bombs (5)",
+		"Deku Nuts (10)", "Deku Nuts (5)",
+		"Deku Seeds (30)", "Deku Stick (1)",
+		"Recovery Heart",
+		"Rupee (1)", "Rupees (5)", "Rupees (50)",
+		"Rupees (20)", "Rupees (200)":
+		return SpoilerLogItemCategoryJunk
+
+	case
+		"Zeldas Lullaby", "Eponas Song", "Sarias Song",
+		"Suns Song", "Song of Time", "Song of Storms",
+		"Minuet of Forest", "Bolero of Fire", "Serenade of Water",
+		"Nocturne of Shadow", "Requiem of Spirit", "Prelude of Light":
+		return SpoilerLogItemCategorySong
+
+	case
+		"Kokiri Emerald", "Goron Ruby", "Zora Sapphire":
+		return SpoilerLogItemCategoryMedallion
+	case
+		"Piece of Heart", "Piece of Heart (Treasure Chest Game)",
+		"Heart Container", "Double Defense":
+		return SpoilerLogItemCategoryPoH
+	case "Ice Trap":
+		return SpoilerLogItemCategoryIceTrap
+	default:
+		return SpoilerLogItemCategoryItem
+	}
+}
 
 func (i *SpoilerLogItem) UnmarshalJSON(raw []byte) error {
 	var str string

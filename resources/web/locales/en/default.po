@@ -104,27 +104,39 @@ msgid "Location"
 msgstr ""
 
 #: resources/web/templates/includes/stats_locations.html:10
-msgid "% of seeds"
+msgid "% items"
 msgstr ""
 
-#: resources/web/templates/includes/stats_locations.html:22
-msgid "Junk"
+#: resources/web/templates/includes/stats_locations.html:11
+msgid "% junk"
 msgstr ""
 
-#: resources/web/templates/includes/stats_locations.html:39
-msgid "Small Keys"
+#: resources/web/templates/includes/stats_locations.html:12
+msgid "% ice trap"
 msgstr ""
 
-#: resources/web/templates/includes/stats_locations.html:56
-msgid "Boss Keys"
+#: resources/web/templates/includes/stats_locations.html:13
+msgid "% piece of heart"
 msgstr ""
 
-#: resources/web/templates/includes/stats_locations.html:73
-msgid "Ice Traps"
+#: resources/web/templates/includes/stats_locations.html:14
+msgid "% bombchus"
+msgstr ""
+
+#: resources/web/templates/includes/stats_locations.html:15
+msgid "% small keys"
+msgstr ""
+
+#: resources/web/templates/includes/stats_locations.html:16
+msgid "% boss keys"
 msgstr ""
 
 #: resources/web/templates/includes/stats_woth_barren.html:4
-msgid "Way of the Hero"
+msgid "Ways of the Hero"
+msgstr ""
+
+#: resources/web/templates/includes/stats_woth_barren.html:9
+msgid "% of seeds"
 msgstr ""
 
 #: resources/web/templates/includes/stats_woth_barren.html:21
@@ -231,24 +243,24 @@ msgstr ""
 msgid "in"
 msgstr ""
 
-#: resources/web/templates/layouts/stats.html:7
+#: resources/web/templates/layouts/stats.html:9
 msgid "Ladder & Seed statistics"
 msgstr ""
 
-#: resources/web/templates/layouts/stats.html:17
+#: resources/web/templates/layouts/stats.html:19
 msgid ""
 "Enabling JavaScript is required for this page to function properly. I hate "
 "it as much as you do."
 msgstr ""
 
-#: resources/web/templates/layouts/stats.html:29
+#: resources/web/templates/layouts/stats.html:31
 msgid "Ladder stats"
 msgstr ""
 
-#: resources/web/templates/layouts/stats.html:31
+#: resources/web/templates/layouts/stats.html:33
 msgid "WotH and barrens"
 msgstr ""
 
-#: resources/web/templates/layouts/stats.html:34
+#: resources/web/templates/layouts/stats.html:36
 msgid "Locations"
 msgstr ""

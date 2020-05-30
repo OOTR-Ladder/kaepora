@@ -104,28 +104,40 @@ msgid "Location"
 msgstr "Emplacement"
 
 #: resources/web/templates/includes/stats_locations.html:10
-msgid "% of seeds"
-msgstr "% des seeds"
+msgid "% items"
+msgstr "% d'objets"
 
-#: resources/web/templates/includes/stats_locations.html:22
-msgid "Junk"
-msgstr "Objets inutiles"
+#: resources/web/templates/includes/stats_locations.html:11
+msgid "% junk"
+msgstr "% d'items inutiles"
 
-#: resources/web/templates/includes/stats_locations.html:39
-msgid "Small Keys"
-msgstr "Petites clefs"
+#: resources/web/templates/includes/stats_locations.html:12
+msgid "% ice trap"
+msgstr "% de pièges"
 
-#: resources/web/templates/includes/stats_locations.html:56
-msgid "Boss Keys"
-msgstr "Clefs de Boss"
+#: resources/web/templates/includes/stats_locations.html:13
+msgid "% piece of heart"
+msgstr "% de ¼ de cœur"
 
-#: resources/web/templates/includes/stats_locations.html:73
-msgid "Ice Traps"
-msgstr "Pièges"
+#: resources/web/templates/includes/stats_locations.html:14
+msgid "% bombchus"
+msgstr "% de missiles"
+
+#: resources/web/templates/includes/stats_locations.html:15
+msgid "% small keys"
+msgstr "% de petites clefs"
+
+#: resources/web/templates/includes/stats_locations.html:16
+msgid "% boss keys"
+msgstr "% de clefs de boss"
 
 #: resources/web/templates/includes/stats_woth_barren.html:4
-msgid "Way of the Hero"
+msgid "Ways of the Hero"
 msgstr "Voies du Héros"
+
+#: resources/web/templates/includes/stats_woth_barren.html:9
+msgid "% of seeds"
+msgstr "% des seeds"
 
 #: resources/web/templates/includes/stats_woth_barren.html:21
 msgid "WoTH items"
@@ -231,11 +243,11 @@ msgstr "Prochaines courses planifiées"
 msgid "in"
 msgstr "dans"
 
-#: resources/web/templates/layouts/stats.html:7
+#: resources/web/templates/layouts/stats.html:9
 msgid "Ladder & Seed statistics"
 msgstr "Statistiques du Ladder et des seeds"
 
-#: resources/web/templates/layouts/stats.html:17
+#: resources/web/templates/layouts/stats.html:19
 msgid ""
 "Enabling JavaScript is required for this page to function properly. I hate "
 "it as much as you do."
@@ -243,14 +255,14 @@ msgstr ""
 "Activer JavaScript est nécessaire pour que cette page fonctionne "
 "correctement. Ce n'est pas par plaisir."
 
-#: resources/web/templates/layouts/stats.html:29
+#: resources/web/templates/layouts/stats.html:31
 msgid "Ladder stats"
 msgstr "Statistiques du Ladder"
 
-#: resources/web/templates/layouts/stats.html:31
+#: resources/web/templates/layouts/stats.html:33
 msgid "WotH and barrens"
 msgstr "Voies et Régions stériles"
 
-#: resources/web/templates/layouts/stats.html:34
+#: resources/web/templates/layouts/stats.html:36
 msgid "Locations"
 msgstr "Emplacements"

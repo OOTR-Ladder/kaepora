@@ -32,19 +32,14 @@ func (s *Server) stats(w http.ResponseWriter, r *http.Request) {
 	}{misc, seed})
 }
 
-func (s *Server) getSeedStats() (statsSeed, error) { // nolint:funlen
+func (s *Server) getSeedStats() (statsSeed, error) {
 	start := time.Now()
 	seedTotal := 0
 
 	wothLocations := map[string]int{}
 	wothItems := map[string]int{}
 	barrenRegions := map[string]int{}
-
-	locationItems := map[string]int{}
-	locationSmallKeys := map[string]int{}
-	locationBossKeys := map[string]int{}
-	locationJunk := map[string]int{}
-	locationIceTraps := map[string]int{}
+	locationsAcc := map[string]map[oot.SpoilerLogItemCategory]int{}
 
 	if err := s.back.MapSpoilerLogs("std", func(raw io.Reader) error {
 		seedTotal++
@@ -71,18 +66,14 @@ func (s *Server) getSeedStats() (statsSeed, error) { // nolint:funlen
 		}
 
 		for name, item := range l.Locations {
-			switch getItemCategory(string(item)) {
-			case itemCategoryItem:
-				locationItems[name]++
-			case itemCategoryJunk:
-				locationJunk[name]++
-			case itemCategorySmallKey:
-				locationSmallKeys[name]++
-			case itemCategoryBossKey:
-				locationBossKeys[name]++
-			case itemCategoryIceTrap:
-				locationIceTraps[name]++
+			if _, ok := locationsAcc[name]; !ok {
+				locationsAcc[name] = make(
+					map[oot.SpoilerLogItemCategory]int,
+					oot.SpoilerLogItemCategoryCount,
+				)
 			}
+
+			locationsAcc[name][item.GetCategory()]++
 		}
 
 		return nil
@@ -92,14 +83,10 @@ func (s *Server) getSeedStats() (statsSeed, error) { // nolint:funlen
 
 	defer log.Printf("debug: computed stats for %d seeds in %s", seedTotal, time.Since(start))
 	return statsSeed{
-		Barren:            locationPctFromMap(barrenRegions, seedTotal),
-		WOTH:              locationPctFromMap(wothLocations, seedTotal),
-		WOTHItems:         locationPctFromMap(wothItems, seedTotal),
-		ItemLocations:     locationPctFromMap(locationItems, seedTotal),
-		JunkLocations:     locationPctFromMap(locationJunk, seedTotal),
-		SmallKeyLocations: locationPctFromMap(locationSmallKeys, seedTotal),
-		BossKeyLocations:  locationPctFromMap(locationBossKeys, seedTotal),
-		IceTrapLocations:  locationPctFromMap(locationIceTraps, seedTotal),
+		Barren:    namedPctFromMap(barrenRegions, seedTotal),
+		WOTH:      namedPctFromMap(wothLocations, seedTotal),
+		WOTHItems: namedPctFromMap(wothItems, seedTotal),
+		Locations: locationPctFromMap(locationsAcc, seedTotal),
 	}, nil
 }
 
@@ -141,11 +128,13 @@ func progressiveItemName(cache map[string]int, item string) string {
 	return item
 }
 
-func locationPctFromMap(m map[string]int, total int) (ret []locationPct) {
+func namedPctFromMap(m map[string]int, totalInt int) (ret []namedPct) {
+	total := float64(totalInt)
+
 	for k, v := range m {
-		ret = append(ret, locationPct{
+		ret = append(ret, namedPct{
 			Name: k,
-			Pct:  100.0 * (float64(v) / float64(total)),
+			Pct:  100.0 * (float64(v) / total),
 		})
 	}
 
@@ -154,22 +143,50 @@ func locationPctFromMap(m map[string]int, total int) (ret []locationPct) {
 	return ret
 }
 
-type statsSeed struct {
-	WOTH, WOTHItems, Barren []locationPct
+func locationPctFromMap(
+	m map[string]map[oot.SpoilerLogItemCategory]int,
+	totalInt int,
+) (ret []locationPct) {
+	total := float64(totalInt)
+	for name, v := range m {
+		ret = append(ret, locationPct{
+			Name:      name,
+			Items:     100.0 * (float64(v[oot.SpoilerLogItemCategoryItem]) / total),
+			Junk:      100.0 * (float64(v[oot.SpoilerLogItemCategoryJunk]) / total),
+			IceTraps:  100.0 * (float64(v[oot.SpoilerLogItemCategoryIceTrap]) / total),
+			SmallKeys: 100.0 * (float64(v[oot.SpoilerLogItemCategorySmallKey]) / total),
+			BossKeys:  100.0 * (float64(v[oot.SpoilerLogItemCategoryBossKey]) / total),
+			PoH:       100.0 * (float64(v[oot.SpoilerLogItemCategoryPoH]) / total),
+			Chus:      100.0 * (float64(v[oot.SpoilerLogItemCategoryBombchu]) / total),
+		})
+	}
 
-	ItemLocations, JunkLocations, IceTrapLocations []locationPct
-	SmallKeyLocations, BossKeyLocations            []locationPct
+	sort.Sort(byName(ret))
+
+	return ret
+}
+
+type statsSeed struct {
+	WOTH, WOTHItems, Barren []namedPct
+	Locations               []locationPct
 }
 
 type locationPct struct {
+	Name                     string
+	Items, Junk, IceTraps    float64
+	SmallKeys, BossKeys, PoH float64
+	Chus                     float64
+}
+
+type namedPct struct {
 	Name string
 	Pct  float64
 }
 
-type byPctDesc []locationPct
+type byPctDesc []namedPct
 
 func (a byPctDesc) Len() int {
-	return len([]locationPct(a))
+	return len([]namedPct(a))
 }
 
 func (a byPctDesc) Less(i, j int) bool {
@@ -184,60 +201,16 @@ func (a byPctDesc) Swap(i, j int) {
 	a[i], a[j] = a[j], a[i]
 }
 
-type itemCategory int
+type byName []locationPct
 
-const (
-	itemCategoryItem = iota
-	itemCategoryBossKey
-	itemCategoryIceTrap
-	itemCategoryJunk
-	itemCategoryMedallion
-	itemCategoryPoH
-	itemCategorySmallKey
-	itemCategorySong
-)
+func (a byName) Len() int {
+	return len([]locationPct(a))
+}
 
-func getItemCategory(item string) itemCategory {
-	if strings.HasPrefix(item, "Small Key") {
-		return itemCategorySmallKey
-	}
-	if strings.HasPrefix(item, "Boss Key") {
-		return itemCategoryBossKey
-	}
-	if strings.HasSuffix(item, "Medallion") {
-		return itemCategoryMedallion
-	}
+func (a byName) Less(i, j int) bool {
+	return a[i].Name < a[j].Name
+}
 
-	switch item {
-	case
-		"Arrows (10)", "Arrows (30)", "Arrows (5)",
-		"Bombs (10)", "Bombs (20)", "Bombs (5)",
-		"Deku Nuts (10)", "Deku Nuts (5)",
-		"Deku Seeds (30)", "Deku Stick (1)",
-		"Recovery Heart",
-		"Rupee (1)", "Rupees (5)", "Rupees (50)",
-		"Rupees (20)", "Rupees (200)",
-		// might deserve its own category
-		"Bombchus (5)", "Bombchus (10)", "Bombchus (20)":
-		return itemCategoryJunk
-
-	case
-		"Zeldas Lullaby", "Eponas Song", "Sarias Song",
-		"Suns Song", "Song of Time", "Song of Storms",
-		"Minuet of Forest", "Bolero of Fire", "Serenade of Water",
-		"Nocturne of Shadow", "Requiem of Spirit", "Prelude of Light":
-		return itemCategorySong
-
-	case
-		"Kokiri Emerald", "Goron Ruby", "Zora Sapphire":
-		return itemCategoryMedallion
-	case
-		"Piece of Heart", "Piece of Heart (Treasure Chest Game)",
-		"Heart Container", "Double Defense":
-		return itemCategoryPoH
-	case "Ice Trap":
-		return itemCategoryIceTrap
-	default:
-		return itemCategoryItem
-	}
+func (a byName) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
 }
