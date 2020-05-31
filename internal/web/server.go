@@ -43,7 +43,7 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 
 	r.Get("/favicon.ico", s.favicon(fs))
 
-	r.With(langDetect).Route("/{locale}", func(r chi.Router) {
+	r.With(s.langDetect).Route("/{locale}", func(r chi.Router) {
 		r.Get("/rules", s.markdownContent(baseDir, "rules.md"))
 		r.Get("/documentation", s.markdownContent(baseDir, "documentation.md"))
 
@@ -57,7 +57,7 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 		r.NotFound(s.notFound)
 	})
 
-	r.With(langDetect).Get("/", s.redirectToLocale)
+	r.Get("/", s.redirectToLocale)
 
 	return r
 }
@@ -66,22 +66,37 @@ type ctxKey int
 
 const ctxKeyLocale ctxKey = iota
 
-func langDetect(next http.Handler) http.Handler {
+func chooseLocale(candidates ...string) string {
 	matcher := language.NewMatcher([]language.Tag{
 		language.English,
 		language.French,
 	})
 
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		locale, _ := language.MatchStrings(
-			matcher,
-			chi.URLParam(r, "locale"),
-			r.Header.Get("Accept-Language"),
-		)
-		base, _ := locale.Base()
-		key := base.String()
+	locale, _ := language.MatchStrings(
+		matcher,
+		candidates...,
+	)
+	base, _ := locale.Base()
+	return base.String()
+}
 
-		ctx := context.WithValue(r.Context(), ctxKeyLocale, key)
+func (s *Server) langDetect(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		param := chi.URLParam(r, "locale")
+
+		// Invalid locale, force 404 in accept-language lang.
+		// This is necessary because otherwise users could bypass the
+		// aggressive caching by specifying a bogus locale and get back a fresh
+		// English page.
+		if _, ok := s.locales[param]; !ok {
+			log.Printf("warning: user requested invalid locale: %s", param)
+			ctx := context.WithValue(r.Context(), ctxKeyLocale, "en")
+			s.notFound(w, r.WithContext(ctx))
+			return
+		}
+
+		locale := chooseLocale(param, r.Header.Get("Accept-Language"))
+		ctx := context.WithValue(r.Context(), ctxKeyLocale, locale)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
@@ -281,6 +296,6 @@ func getMarkdownTitle(mdPath string) string {
 }
 
 func (s *Server) redirectToLocale(w http.ResponseWriter, r *http.Request) {
-	locale := r.Context().Value(ctxKeyLocale).(string)
+	locale := chooseLocale(r.Header.Get("Accept-Language"))
 	http.Redirect(w, r, "/"+locale, http.StatusTemporaryRedirect)
 }
