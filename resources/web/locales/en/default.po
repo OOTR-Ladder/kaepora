@@ -5,23 +5,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: internal/web/templates.go:75
+#: internal/web/templates.go:85
 msgid "Planned"
 msgstr ""
 
-#: internal/web/templates.go:78
+#: internal/web/templates.go:88
 msgid "Joinable"
 msgstr ""
 
-#: internal/web/templates.go:81
+#: internal/web/templates.go:91
 msgid "Preparing"
 msgstr ""
 
-#: internal/web/templates.go:84
+#: internal/web/templates.go:94
 msgid "Race in progress"
 msgstr ""
 
-#: internal/web/templates.go:87
+#: internal/web/templates.go:97
 msgid "Closed"
 msgstr ""
 
@@ -93,6 +93,46 @@ msgstr ""
 
 #: resources/web/templates/includes/stats_ladder.html:21
 msgid "Most players in a race: %d"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:29
+msgid "Attendance (avg.)"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:33
+msgid "Monday"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:34
+msgid "Tuesday"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:35
+msgid "Wednesday"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:36
+msgid "Thursday"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:37
+msgid "Friday"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:38
+msgid "Saturday"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:39
+msgid "Sunday"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:58
+msgid "Ratings distribution"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:62
+msgid "Ratings distribution histogram."
 msgstr ""
 
 #: resources/web/templates/includes/stats_locations.html:3

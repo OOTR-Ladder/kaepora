@@ -23,4 +23,45 @@
     </div>
 </div>
 
+<div class="columns is-centered">
+    <div class="column is-half">
+        <table class="table stats--attendance">
+            <caption>{{t .Locale "Attendance (avg.)"}}</caption>
+            <tr>
+                <th>UTC</th>
+
+                <th>{{t .Locale "Monday"}}</th>
+                <th>{{t .Locale "Tuesday"}}</th>
+                <th>{{t .Locale "Wednesday"}}</th>
+                <th>{{t .Locale "Thursday"}}</th>
+                <th>{{t .Locale "Friday"}}</th>
+                <th>{{t .Locale "Saturday"}}</th>
+                <th>{{t .Locale "Sunday"}}</th>
+            </tr>
+
+            {{- range $v := .Payload.Attendance -}}
+            <tr>
+                <th>{{$v.From}}-{{$v.To}}</th>
+
+                <td style="background-color: {{index $v.Color 0}}">{{(index $v.Average 0) | ignoreZero}}</td>
+                <td style="background-color: {{index $v.Color 1}}">{{(index $v.Average 1) | ignoreZero}}</td>
+                <td style="background-color: {{index $v.Color 2}}">{{(index $v.Average 2) | ignoreZero}}</td>
+                <td style="background-color: {{index $v.Color 3}}">{{(index $v.Average 3) | ignoreZero}}</td>
+                <td style="background-color: {{index $v.Color 4}}">{{(index $v.Average 4) | ignoreZero}}</td>
+                <td style="background-color: {{index $v.Color 5}}">{{(index $v.Average 5) | ignoreZero}}</td>
+                <td style="background-color: {{index $v.Color 6}}">{{(index $v.Average 6) | ignoreZero}}</td>
+            </tr>
+            {{- end -}}
+        </table>
+    </div>
+    <div class="column is-half has-text-centered">
+        <p>{{t .Locale "Ratings distribution"}}</p>
+        <img
+            width="600" height="300"
+            src="{{uri .Locale "stats" "ratings.svg"}}"
+            alt="{{t .Locale "Ratings distribution histogram."}}"
+        />
+    </div>
+</div>
+
 {{end}}

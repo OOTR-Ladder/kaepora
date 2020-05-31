@@ -102,7 +102,7 @@ func (b *Back) MapSpoilerLogs(
 
 		rows, err := tx.Query(`
             SELECT SpoilerLog FROM Match WHERE LeagueID = ?
-            AND EndedAt IS NOT NULL`,
+            AND EndedAt IS NOT NULL`, // HACK: ensure we don't leak stats on in-progress matches
 			league.ID,
 		)
 		if err != nil {

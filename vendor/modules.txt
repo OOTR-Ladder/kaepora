@@ -87,6 +87,8 @@ github.com/aws/aws-sdk-go/service/s3/internal/arn
 github.com/aws/aws-sdk-go/service/s3/s3iface
 github.com/aws/aws-sdk-go/service/sts
 github.com/aws/aws-sdk-go/service/sts/stsiface
+# github.com/blend/go-sdk v1.1.1
+## explicit
 # github.com/bombsimon/wsl/v3 v3.1.0
 ## explicit
 github.com/bombsimon/wsl/v3
@@ -199,6 +201,10 @@ github.com/golang-migrate/migrate/v4/source/google_cloud_storage
 github.com/golang-migrate/migrate/v4/source/httpfs
 # github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe
 github.com/golang-sql/civil
+# github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
+## explicit
+github.com/golang/freetype/raster
+github.com/golang/freetype/truetype
 # github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e
 github.com/golang/groupcache/lru
 # github.com/golang/protobuf v1.4.1
@@ -483,6 +489,12 @@ github.com/ultraware/funlen
 github.com/ultraware/whitespace
 # github.com/uudashr/gocognit v1.0.1
 github.com/uudashr/gocognit
+# github.com/wcharczuk/go-chart v2.0.2-0.20191206192251-962b9abdec2b+incompatible
+## explicit
+github.com/wcharczuk/go-chart
+github.com/wcharczuk/go-chart/drawing
+github.com/wcharczuk/go-chart/matrix
+github.com/wcharczuk/go-chart/roboto
 # github.com/xanzy/go-gitlab v0.31.0
 ## explicit
 github.com/xanzy/go-gitlab
@@ -554,6 +566,12 @@ golang.org/x/crypto/nacl/secretbox
 golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/poly1305
 golang.org/x/crypto/salsa20/salsa
+# golang.org/x/image v0.0.0-20200430140353-33d19683fad8
+## explicit
+golang.org/x/image/draw
+golang.org/x/image/font
+golang.org/x/image/math/f64
+golang.org/x/image/math/fixed
 # golang.org/x/lint v0.0.0-20200302205851-738671d3881b
 golang.org/x/lint
 golang.org/x/lint/golint

@@ -9,6 +9,7 @@ require (
 	github.com/ClickHouse/clickhouse-go v1.4.0 // indirect
 	github.com/Masterminds/squirrel v1.4.0
 	github.com/aws/aws-sdk-go v1.30.24 // indirect
+	github.com/blend/go-sdk v1.1.1 // indirect
 	github.com/bombsimon/wsl/v3 v3.1.0 // indirect
 	github.com/bwmarrin/discordgo v0.20.3
 	github.com/cockroachdb/cockroach-go v0.0.0-20200504194139-73ffeee90b62 // indirect
@@ -21,6 +22,7 @@ require (
 	github.com/go-critic/go-critic v0.4.3 // indirect
 	github.com/gocql/gocql v0.0.0-20200505093417-effcbd8bcf0e // indirect
 	github.com/golang-migrate/migrate/v4 v4.11.0
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/protobuf v1.4.1 // indirect
 	github.com/golangci/gocyclo v0.0.0-20180528144436-0a533e8fa43d // indirect
 	github.com/golangci/golangci-lint v1.26.0
@@ -51,10 +53,12 @@ require (
 	github.com/tdakkota/asciicheck v0.0.0-20200416200610-e657995f937b // indirect
 	github.com/tetafro/godot v0.3.8 // indirect
 	github.com/timakin/bodyclose v0.0.0-20200424151742-cb6215831a94 // indirect
+	github.com/wcharczuk/go-chart v2.0.2-0.20191206192251-962b9abdec2b+incompatible
 	github.com/xanzy/go-gitlab v0.31.0 // indirect
 	github.com/zelenin/go-glicko2 v0.0.1
 	go.mongodb.org/mongo-driver v1.3.3 // indirect
 	golang.org/x/crypto v0.0.0-20200429183012-4b2356b1ed79 // indirect
+	golang.org/x/image v0.0.0-20200430140353-33d19683fad8 // indirect
 	golang.org/x/net v0.0.0-20200506145744-7e3656a0809f // indirect
 	golang.org/x/sys v0.0.0-20200509044756-6aff5f38e54f // indirect
 	golang.org/x/text v0.3.2
