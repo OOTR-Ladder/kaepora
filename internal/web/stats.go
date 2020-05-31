@@ -3,17 +3,20 @@ package web
 import (
 	"encoding/hex"
 	"kaepora/internal/back"
+	"log"
 	"math"
 	"net/http"
 	"time"
 )
 
 func (s *Server) stats(w http.ResponseWriter, r *http.Request) {
+	start := time.Now()
 	misc, err := s.back.GetMiscStats()
 	if err != nil {
 		s.error(w, r, err, http.StatusInternalServerError)
 		return
 	}
+	log.Printf("info: computed misc stats in %s", time.Since(start))
 
 	seed, err := s.getSeedStats()
 	if err != nil {
@@ -44,6 +47,9 @@ type attendanceEntry struct {
 }
 
 func (s *Server) getAttendanceStats() ([]attendanceEntry, error) {
+	start := time.Now()
+	defer func() { log.Printf("info: computed attendance in %s", time.Since(start)) }()
+
 	bins := 3
 	ret := make([]attendanceEntry, bins)
 	for i := 0; i < len(ret); i++ {

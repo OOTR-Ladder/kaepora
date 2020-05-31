@@ -109,3 +109,22 @@ func (b *Back) GetMatchSessions(
 
 	return sessions, leagues, nil
 }
+
+func (b *Back) GetPlayerRatings(shortcode string) (ret []PlayerRating, _ error) {
+	return ret, b.transaction(func(tx *sqlx.Tx) (err error) {
+		league, err := getLeagueByShortCode(tx, shortcode)
+		if err != nil {
+			return err
+		}
+
+		if err := tx.Select(
+			&ret,
+			`SELECT * FROM PlayerRating WHERE LeagueID = ? AND Deviation < ?`,
+			league.ID, DeviationThreshold,
+		); err != nil {
+			return err
+		}
+
+		return nil
+	})
+}

@@ -103,7 +103,7 @@ func (s *Server) getSeedStats() (statsSeed, error) {
 		return statsSeed{}, err
 	}
 
-	defer log.Printf("debug: computed stats for %d seeds in %s", seedTotal, time.Since(start))
+	defer func() { log.Printf("info: computed stats for %d seeds in %s", seedTotal, time.Since(start)) }()
 	return statsSeed{
 		Barren:    namedPctFromMap(barrenRegions, seedTotal),
 		WOTH:      namedPctFromMap(wothLocations, seedTotal),

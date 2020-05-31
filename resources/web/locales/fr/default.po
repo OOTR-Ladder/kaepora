@@ -127,6 +127,14 @@ msgstr "Samedi"
 msgid "Sunday"
 msgstr "Dimanche"
 
+#: resources/web/templates/includes/stats_ladder.html:58
+msgid "Ratings distribution"
+msgstr "Distribution du classement"
+
+#: resources/web/templates/includes/stats_ladder.html:62
+msgid "Histogramme de la distribution du classement des joueurs."
+msgstr ""
+
 #: resources/web/templates/includes/stats_locations.html:3
 msgid "Items"
 msgstr "Objets"

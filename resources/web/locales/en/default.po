@@ -127,6 +127,14 @@ msgstr ""
 msgid "Sunday"
 msgstr ""
 
+#: resources/web/templates/includes/stats_ladder.html:58
+msgid "Ratings distribution"
+msgstr ""
+
+#: resources/web/templates/includes/stats_ladder.html:62
+msgid "Ratings distribution histogram."
+msgstr ""
+
 #: resources/web/templates/includes/stats_locations.html:3
 msgid "Items"
 msgstr ""

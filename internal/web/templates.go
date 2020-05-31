@@ -78,29 +78,7 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 			return strconv.Itoa(i)
 		},
 
-		"matchSessionStatusTag": func(locale string, status back.MatchSessionStatus) template.HTML {
-			var str, class string
-			switch status {
-			case back.MatchSessionStatusWaiting:
-				str = s.locales[locale].Get("Planned")
-				class = "is-success is-light"
-			case back.MatchSessionStatusJoinable:
-				str = s.locales[locale].Get("Joinable")
-				class = "is-success is-light"
-			case back.MatchSessionStatusPreparing:
-				str = s.locales[locale].Get("Preparing")
-				class = "is-warning is-light"
-			case back.MatchSessionStatusInProgress:
-				str = s.locales[locale].Get("Race in progress")
-				class = "is-success"
-			case back.MatchSessionStatusClosed:
-				str = s.locales[locale].Get("Closed")
-			default:
-				return ""
-			}
-
-			return template.HTML(fmt.Sprintf(`<span class="tag is-medium is-rounded %s">%s</span>`, class, str)) // nolint:gosec
-		},
+		"matchSessionStatusTag": s.tplMatchSessionStatusTag,
 
 		"ranking":        tplRanking,
 		"until":          tplUntil,
@@ -113,6 +91,30 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 			return a + b
 		},
 	}
+}
+
+func (s *Server) tplMatchSessionStatusTag(locale string, status back.MatchSessionStatus) template.HTML {
+	var str, class string
+	switch status {
+	case back.MatchSessionStatusWaiting:
+		str = s.locales[locale].Get("Planned")
+		class = "is-success is-light"
+	case back.MatchSessionStatusJoinable:
+		str = s.locales[locale].Get("Joinable")
+		class = "is-success is-light"
+	case back.MatchSessionStatusPreparing:
+		str = s.locales[locale].Get("Preparing")
+		class = "is-warning is-light"
+	case back.MatchSessionStatusInProgress:
+		str = s.locales[locale].Get("Race in progress")
+		class = "is-success"
+	case back.MatchSessionStatusClosed:
+		str = s.locales[locale].Get("Closed")
+	default:
+		return ""
+	}
+
+	return template.HTML(fmt.Sprintf(`<span class="tag is-medium is-rounded %s">%s</span>`, class, str)) // nolint:gosec
 }
 
 func tplRanking(v back.LeaderboardEntry) string {

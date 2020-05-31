@@ -50,6 +50,7 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 		r.Get("/leaderboard/{shortcode}", s.leaderboard)
 		r.Get("/history", s.history)
 		r.Get("/schedule", s.schedule)
+		r.Get("/stats/ratings.svg", s.statsRatings)
 		r.Get("/stats", s.stats)
 		r.Get("/", s.index)
 

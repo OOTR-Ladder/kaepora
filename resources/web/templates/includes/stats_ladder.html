@@ -24,7 +24,7 @@
 </div>
 
 <div class="columns is-centered">
-    <div class="column">
+    <div class="column is-half">
         <table class="table stats--attendance">
             <caption>{{t .Locale "Attendance (avg.)"}}</caption>
             <tr>
@@ -53,6 +53,14 @@
             </tr>
             {{- end -}}
         </table>
+    </div>
+    <div class="column is-half has-text-centered">
+        <p>{{t .Locale "Ratings distribution"}}</p>
+        <img
+            width="600" height="300"
+            src="{{uri .Locale "stats" "ratings.svg"}}"
+            alt="{{t .Locale "Ratings distribution histogram."}}"
+        />
     </div>
 </div>
 
