@@ -302,12 +302,6 @@ func getSessionPlayersSortedByRating(tx *sqlx.Tx, session MatchSession) ([]Playe
 func (b *Back) ensureSessionIsValidForMatchMaking(tx *sqlx.Tx, session MatchSession) (MatchSession, bool, error) {
 	players := session.GetPlayerIDs()
 
-	// No players / closed session
-	if len(players) < 2 || session.Status != MatchSessionStatusPreparing {
-		log.Printf("debug: not enough players or closed session %s", session.ID)
-		return MatchSession{}, false, nil
-	}
-
 	// Ditch the one player we can't match with anyone.
 	// The last player to join gets removed per community request.
 	// (They did not like the idea of joining early and be kicked randomly 45
@@ -317,14 +311,21 @@ func (b *Back) ensureSessionIsValidForMatchMaking(tx *sqlx.Tx, session MatchSess
 		session.RemovePlayerID(toRemove)
 		player, err := getPlayerByID(tx, util.UUIDAsBlob(toRemove))
 		if err != nil {
-			log.Printf("info: removed odd player %s (%s) from session %s", player.ID, player.Name, session.ID.UUID())
 			return MatchSession{}, false, fmt.Errorf("unable to fetch odd player: %w", err)
 		}
+		log.Printf("info: removed odd player %s (%s) from session %s", player.ID, player.Name, session.ID.UUID())
+
 		b.sendOddKickNotification(player)
 	}
 
 	if err := session.update(tx); err != nil {
 		return MatchSession{}, false, err
+	}
+
+	// No players / closed session
+	if len(players) < 2 || session.Status != MatchSessionStatusPreparing {
+		log.Printf("debug: not enough players or closed session %s", session.ID)
+		return MatchSession{}, false, nil
 	}
 
 	return session, true, nil
