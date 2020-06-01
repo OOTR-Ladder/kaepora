@@ -1,5 +1,14 @@
 /* {{{ Global */
-body { font-family: "Jost", "Ubuntu", "Noto Sans", Arial, sans-serif; }
+:root{
+    --color-body-bg-color: #fdfdff;
+    --color-gold: rgb(220, 172, 38);
+    --color-silver: rgb(200, 200, 196);
+    --color-bronze: rgb(156, 82, 33);
+}
+body { 
+    background-color: var(--body-bg-color);
+    font-family: "Ubuntu", "Noto Sans", Arial, sans-serif;
+}
 #mainMenu .navbar-item { font-weight: bold; }
 
 /* Fix uglyness */
@@ -180,16 +189,16 @@ div[class^="nextRace--contextual--"] > i {
 .ldbrd--players .player:nth-child(2) { font-size: 1.75rem; }
 .ldbrd--players .player:nth-child(3) { font-size: 1.5rem; }
 
-.ldbrd--players .player:nth-child(1) i { color: gold; }
-.ldbrd--players .player:nth-child(2) i { color: silver; }
-.ldbrd--players .player:nth-child(3) i { color: #cd7f32; }
+.ldbrd--players .player:nth-child(1) i { color: var(--color-gold); }
+.ldbrd--players .player:nth-child(2) i { color: var(--color-silver); }
+.ldbrd--players .player:nth-child(3) i { color: var(--color-bronze); }
 
 /* }}} Homepage */
 
 /* {{{ Leaderboard */
-.leaderboardTable__first-page .leaderboardTable--player:nth-child(1) i[class="ri-trophy-fill"] { color: gold; }
-.leaderboardTable__first-page .leaderboardTable--player:nth-child(2) i[class="ri-trophy-fill"] { color: silver; }
-.leaderboardTable__first-page .leaderboardTable--player:nth-child(3) i[class="ri-trophy-fill"] { color: #cd7f32; }
+.leaderboardTable__first-page .leaderboardTable--player:nth-child(1) i[class="ri-trophy-fill"] { color: var(--color-gold); }
+.leaderboardTable__first-page .leaderboardTable--player:nth-child(2) i[class="ri-trophy-fill"] { color: var(--color-silver); }
+.leaderboardTable__first-page .leaderboardTable--player:nth-child(3) i[class="ri-trophy-fill"] { color: var(--color-bronze); }
 
 .leaderboardTable--player:nth-child(1) td,
 .leaderboardTable--player:nth-child(2) td,
