@@ -131,6 +131,7 @@ func (s *Server) tplMatchSessionStatusTag(locale string, status back.MatchSessio
 	return template.HTML(fmt.Sprintf(`<span class="tag is-medium is-rounded %s">%s</span>`, class, str)) // nolint:gosec
 }
 
+// nolint:gosec
 func tplRanking(v back.LeaderboardEntry) template.HTML {
 	return template.HTML(fmt.Sprintf(
 		`<span title="±%d">%d</span>`,
