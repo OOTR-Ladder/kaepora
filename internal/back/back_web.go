@@ -23,12 +23,26 @@ func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) ([
             SELECT
                 Player.Name AS PlayerName,
                 PlayerRating.Rating AS Rating,
-                PlayerRating.Deviation AS Deviation
+                PlayerRating.Deviation AS Deviation,
+                SUM(CASE WHEN MatchEntry.Outcome = ? THEN 1 ELSE 0 END) AS Wins,
+                SUM(CASE WHEN MatchEntry.Outcome = ? THEN 1 ELSE 0 END) AS Losses,
+                SUM(CASE WHEN MatchEntry.Outcome = ? THEN 1 ELSE 0 END) AS Draws,
+                SUM(CASE WHEN MatchEntry.Status = ? THEN 1 ELSE 0 END) AS Forfeits
             FROM PlayerRating
             INNER JOIN Player ON(PlayerRating.PlayerID = Player.ID)
+            LEFT JOIN MatchEntry ON(PlayerRating.PlayerID = MatchEntry.PlayerID AND MatchEntry.Status != ?)
             WHERE PlayerRating.LeagueID = ? AND PlayerRating.Deviation < ?
+            GROUP BY Player.ID
             ORDER BY PlayerRating.Rating DESC
-        `, league.ID, maxDeviation)
+        `,
+			MatchEntryOutcomeWin,
+			MatchEntryOutcomeLoss,
+			MatchEntryOutcomeDraw,
+			MatchEntryStatusForfeit,
+			MatchEntryStatusInProgress,
+			league.ID,
+			maxDeviation,
+		)
 	}); err != nil {
 		return nil, err
 	}

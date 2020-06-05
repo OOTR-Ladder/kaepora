@@ -19,7 +19,10 @@
                         <tr>
                             <th>{{t .Locale "Rank"}}</th>
                             <th align="center">{{t .Locale "Nickname"}}</th>
-                            <th align="center">{{t .Locale "Skill range"}}</th>
+                            <th align="center">{{t .Locale "Rating"}}</th>
+                            <th align="center">{{t .Locale "Wins"}}</th>
+                            <th align="center">{{t .Locale "Losses"}}</th>
+                            <th align="center">{{t .Locale "Forfeits"}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,6 +37,9 @@
 
                                 <td align="center">{{$v.PlayerName}}</td>
                                 <td align="center">{{$v | ranking}}</td>
+                                <td align="center"><span title="{{percentage $v.Wins $v.Wins $v.Losses $v.Draws}}">{{$v.Wins}}</span></td>
+                                <td align="center"><span title="{{percentage $v.Losses $v.Wins $v.Losses $v.Draws}}">{{$v.Losses}}</span></td>
+                                <td align="center"><span title="{{percentage $v.Forfeits $v.Wins $v.Losses $v.Draws}}">{{$v.Forfeits}}</span></td>
                             </tr>
                         {{- end -}}
 

@@ -86,11 +86,25 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 		"datetime":       util.Datetime,
 		"assetURL":       tplAssetURL,
 		"assetIntegrity": tplAssetIntegrity(baseDir),
+		"percentage":     tplPercentage,
 
 		"add": func(a, b int) int {
 			return a + b
 		},
 	}
+}
+
+func tplPercentage(x int, parts ...int) string {
+	var total int
+	for _, v := range parts {
+		total += v
+	}
+
+	if total == 0 {
+		return "- %"
+	}
+
+	return fmt.Sprintf("%d %%", int(math.Round(float64(x)/float64(total)*100.0)))
 }
 
 func (s *Server) tplMatchSessionStatusTag(locale string, status back.MatchSessionStatus) template.HTML {
@@ -117,14 +131,12 @@ func (s *Server) tplMatchSessionStatusTag(locale string, status back.MatchSessio
 	return template.HTML(fmt.Sprintf(`<span class="tag is-medium is-rounded %s">%s</span>`, class, str)) // nolint:gosec
 }
 
-func tplRanking(v back.LeaderboardEntry) string {
-	// Per Glicko-2, the rating is the interval R±2×RD where we expect the
-	// actual skill level to be with 95% confidence.
-	// This is rounded down to 50 increments for clarity.
-	d := 2.0 * v.Deviation
-	min := int(math.Round((v.Rating-d)/50.0) * 50.0)
-	max := int(math.Round((v.Rating+d)/50.0) * 50.0)
-	return fmt.Sprintf("%d-%d", min, max)
+func tplRanking(v back.LeaderboardEntry) template.HTML {
+	return template.HTML(fmt.Sprintf(
+		`<span title="±%d">%d</span>`,
+		int(math.Round(v.Deviation*2)),
+		int(math.Round(v.Rating)),
+	))
 }
 
 func tplUntil(iface interface{}, trunc string) string {

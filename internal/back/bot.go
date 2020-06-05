@@ -102,6 +102,9 @@ type LeaderboardEntry struct {
 	PlayerName string
 	Rating     float64
 	Deviation  float64
+
+	// Web only, unused in top20 (which is destined to die)
+	Wins, Losses, Draws, Forfeits int
 }
 
 func (b *Back) GetLeaderboardsForDiscordUser(discordID, shortcode string) (

@@ -5,23 +5,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: internal/web/templates.go:85
+#: internal/web/templates.go:114
 msgid "Planned"
 msgstr "Planifiée"
 
-#: internal/web/templates.go:88
+#: internal/web/templates.go:117
 msgid "Joinable"
 msgstr "Inscriptions ouvertes"
 
-#: internal/web/templates.go:91
+#: internal/web/templates.go:120
 msgid "Preparing"
 msgstr "En préparation"
 
-#: internal/web/templates.go:94
+#: internal/web/templates.go:123
 msgid "Race in progress"
 msgstr "Course en cours"
 
-#: internal/web/templates.go:97
+#: internal/web/templates.go:126
 msgid "Closed"
 msgstr "Fermée"
 
@@ -132,8 +132,8 @@ msgid "Ratings distribution"
 msgstr "Distribution du classement"
 
 #: resources/web/templates/includes/stats_ladder.html:62
-msgid "Histogramme de la distribution du classement des joueurs."
-msgstr ""
+msgid "Ratings distribution histogram."
+msgstr "Distribution du classement."
 
 #: resources/web/templates/includes/stats_locations.html:3
 msgid "Items"
@@ -207,6 +207,10 @@ msgstr "Une erreur est survenue pendant le traitement de votre requête."
 msgid "Error %d"
 msgstr "Erreur %d"
 
+#: resources/web/templates/layouts/history.html:9
+msgid "Races history"
+msgstr "Historique des courses"
+
 #: resources/web/templates/layouts/history.html:10
 msgid "Races completed in the last 30 days"
 msgstr "Courses terminées dans les 30 derniers jours"
@@ -231,9 +235,9 @@ msgstr "Prochaines courses"
 msgid "Scheduled races"
 msgstr "Courses planifiées"
 
-#: resources/web/templates/layouts/index.html:33
-msgid "Races history"
-msgstr "Historique des courses"
+#: resources/web/templates/layouts/index.html:41
+msgid "Leaderboard"
+msgstr "Classement"
 
 #: resources/web/templates/layouts/index.html:42
 msgid "Standard league"
@@ -242,10 +246,6 @@ msgstr "Ligue standard"
 #: resources/web/templates/layouts/index.html:56
 msgid "Full leaderboard"
 msgstr "Classement complet"
-
-#: resources/web/templates/layouts/leaderboard.html:7
-msgid "Leaderboard"
-msgstr "Classement"
 
 #: resources/web/templates/layouts/leaderboard.html:8
 msgid "%s league"
@@ -260,8 +260,20 @@ msgid "Nickname"
 msgstr "Pseudonyme"
 
 #: resources/web/templates/layouts/leaderboard.html:22
-msgid "Skill range"
-msgstr "Plage de niveau"
+msgid "Rating"
+msgstr "Score"
+
+#: resources/web/templates/layouts/leaderboard.html:23
+msgid "Wins"
+msgstr "Victoires"
+
+#: resources/web/templates/layouts/leaderboard.html:24
+msgid "Losses"
+msgstr "Défaites"
+
+#: resources/web/templates/layouts/leaderboard.html:25
+msgid "Forfeits"
+msgstr "Forfaits"
 
 #: resources/web/templates/layouts/schedule.html:9
 msgid "Schedule"
