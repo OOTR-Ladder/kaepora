@@ -275,6 +275,10 @@ msgstr ""
 msgid "Forfeits"
 msgstr ""
 
+#: resources/web/templates/layouts/leaderboard.html:64
+msgid "The leaderboard is currently empty."
+msgstr ""
+
 #: resources/web/templates/layouts/schedule.html:9
 msgid "Schedule"
 msgstr ""
