@@ -272,6 +272,17 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(2) td { font-size: 1.5rem; }
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(3) td { font-size: 1.25rem; }
 }
+
+@media only screen and (max-width: 768px){
+    table[class*="leaderboardTable"] tbody td:nth-child(3) {
+        border-top-right-radius: 2em;
+        border-bottom-right-radius: 2em;
+    }
+
+    .leaderboardTable__first-page .leaderboardTable--player:nth-child(1) td { font-size: 1.5rem; }
+    .leaderboardTable__first-page .leaderboardTable--player:nth-child(2) td { font-size: 1.25rem; }
+    .leaderboardTable__first-page .leaderboardTable--player:nth-child(3) td { font-size: 1.1rem; }
+}
 /* }}} Leaderboard */
 
 /* {{{ Schedule */
