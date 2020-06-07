@@ -12,7 +12,7 @@
 }
 body { 
     background-color: var(--body-bg-color);
-    font-family: "Ubuntu", "Noto Sans", Arial, sans-serif;
+    font-family: "Avenir", "Ubuntu", "Noto Sans", "Segoe UI", sans-serif;
 }
 #mainMenu .navbar-item { font-weight: bold; }
 
