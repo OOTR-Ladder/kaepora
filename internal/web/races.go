@@ -4,6 +4,7 @@ import (
 	"kaepora/internal/back"
 	"kaepora/internal/util"
 	"net/http"
+	"reflect"
 	"sort"
 	"time"
 
@@ -121,7 +122,20 @@ func (s *Server) getSchedulesBetween(start, end time.Time) ([]scheduleEntry, err
 
 	sort.Sort(sortByDate(ret))
 
-	return ret, nil
+	// HACK: There's definitely something wrong in the schedule generation as
+	// duplicates are not supposed to happen. TODO
+	deduped := make([]scheduleEntry, 0, len(ret))
+	for _, v := range ret {
+		if len(deduped) > 0 {
+			if reflect.DeepEqual(deduped[len(deduped)-1], v) {
+				continue
+			}
+		}
+
+		deduped = append(deduped, v)
+	}
+
+	return deduped, nil
 }
 
 type scheduleEntry struct {
