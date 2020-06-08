@@ -247,7 +247,6 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
     opacity: .1;
     fill: transparent;
     stroke-linecap: square;
-    stroke-linecap: square;
 
     transform: rotate(10deg) scale(1.2) translate(0, -35%);
     transform-origin: center center;
@@ -268,6 +267,20 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
 }
 
 table[class*="leaderboardTable"] .Ranking { position: relative; }
+
+table[class*="leaderboardTable"] .leaderboardTable--player .leaderboardTable--forfeits { position: relative; }
+table[class*="leaderboardTable"] .leaderboardTable--player .leaderboardTable--forfeits .iconLeaderBoard.noFFReward svg {
+    position: absolute;
+    top: 75%;
+    right: 0;
+    left: inherit;
+    width: 2rem;
+    fill: var(--color-gold);
+    stroke: transparent;
+    opacity: 0;
+    transition: opacity ease-in-out 150ms;
+}
+table[class*="leaderboardTable"] .leaderboardTable--player:hover .leaderboardTable--forfeits .iconLeaderBoard.noFFReward svg { opacity: .1; }
 
 @media only screen and (min-width: 769px){
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(1) td { font-size: 2rem; }
