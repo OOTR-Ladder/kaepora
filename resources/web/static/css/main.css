@@ -267,10 +267,41 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
     stroke: var(--color-bronze);
 }
 
+table[class*="leaderboardTable"] .Ranking { position: relative; }
+
 @media only screen and (min-width: 769px){
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(1) td { font-size: 2rem; }
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(2) td { font-size: 1.5rem; }
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(3) td { font-size: 1.25rem; }
+
+    table[class*="leaderboardTable"] .leaderboardTable--player .leaderboardTable--ranking { text-align: center; }
+
+    table[class*="leaderboardTable"] .leaderboardTable--player:nth-child(-n+3) .Ranking--deviation {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translate(25%, 25%);
+        opacity: 0;
+        transition: opacity ease-in-out 150ms, transform ease-in-out 150ms;
+    }
+    table[class*="leaderboardTable"] .leaderboardTable--player:nth-child(-n+3):hover .Ranking--deviation {
+        transform: translate(0%, 25%);
+        opacity: 1;
+    }
+    table[class*="leaderboardTable"] .leaderboardTable--player:nth-child(n+4) .Ranking--deviation {
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 0;
+        max-width: 0;
+        overflow: hidden;
+        transition: all ease-in-out 150ms;
+    }
+    table[class*="leaderboardTable"] .leaderboardTable--player:nth-child(n+4):hover .Ranking--deviation {
+        padding-left: .75em;
+        padding-right: .75em;
+        margin-left: .5rem;
+        max-width: 100%;
+    }
 }
 
 @media only screen and (max-width: 768px){
@@ -282,6 +313,13 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(1) td { font-size: 1.5rem; }
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(2) td { font-size: 1.25rem; }
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(3) td { font-size: 1.1rem; }
+
+    table[class*="leaderboardTable"] .leaderboardTable--player .Ranking--deviation {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+    }
 }
 /* }}} Leaderboard */
 

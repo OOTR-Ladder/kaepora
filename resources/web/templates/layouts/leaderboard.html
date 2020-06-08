@@ -45,11 +45,11 @@
                                         {{- end -}}
                                     </td>
                                 {{- else -}}
-                                <td>{{add $k 1}}</td>
+                                <td align="center">{{add $k 1}}</td>
                                 {{- end -}}
 
                                 <td>{{$v.PlayerName}}</td>
-                                <td align="center">{{$v | ranking}}</td>
+                                <td class="leaderboardTable--ranking">{{$v | ranking}}</td>
                                 <td align="center" class="is-hidden-mobile"><span title="{{percentage $v.Wins $v.Wins $v.Losses $v.Draws}}">{{$v.Wins}}</span></td>
                                 <td align="center" class="is-hidden-mobile"><span title="{{percentage $v.Losses $v.Wins $v.Losses $v.Draws}}">{{$v.Losses}}</span></td>
                                 <td align="center" class="is-hidden-mobile"><span title="{{percentage $v.Forfeits $v.Wins $v.Losses $v.Draws}}">{{$v.Forfeits}}</span></td>
