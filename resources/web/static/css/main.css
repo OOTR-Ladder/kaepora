@@ -1,5 +1,5 @@
 /* {{{ Global */
-:root{
+:root {
     --color-white: #ffffff;
     --color-body-bg-color: #fdfdff;
     --color-light-gray-blue: rgb(247, 250, 252);
@@ -13,7 +13,8 @@
     --color-bronze-dark: rgb(156, 82, 33);
     --color-bg-bronze: rgb(242, 225, 215);
 }
-body { 
+
+body {
     background-color: var(--body-bg-color);
     font-family: "Avenir", "Ubuntu", "Noto Sans", "Segoe UI", sans-serif;
 }
@@ -219,7 +220,7 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
 
 .leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(1) { color: var(--color-gold-dark); }
 .leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(1) td:first-child { background-color: var(--color-bg-gold); }
-.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(1) td:nth-child(2) { 
+.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(1) td:nth-child(2) {
     background-image: linear-gradient(
         to right,
         rgba(253, 241, 220, 1),
@@ -228,7 +229,7 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
 }
 .leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) { color: var(--color-silver-dark); }
 .leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) td:first-child { background-color: var(--color-bg-silver); }
-.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) td:nth-child(2) { 
+.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) td:nth-child(2) {
     background-image: linear-gradient(
         to right,
         rgba(249, 249, 248, 1),
@@ -237,7 +238,7 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
 }
 .leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(3) { color: var(--color-bronze); }
 .leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(3) td:first-child { background-color: var(--color-bg-bronze); }
-.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(3) td:nth-child(2) { 
+.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(3) td:nth-child(2) {
     background-image: linear-gradient(
         to right,
         rgba(242, 225, 215, 1),
@@ -270,7 +271,7 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
     max-width: 9rem;
     stroke: var(--color-gold-dark);
 }
-.leaderboardTable--player:nth-child(2) .iconLeaderBoard svg { 
+.leaderboardTable--player:nth-child(2) .iconLeaderBoard svg {
     max-width: 7rem;
     stroke: var(--color-silver-dark);
  }
