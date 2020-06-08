@@ -13,38 +13,58 @@
 <section class="section">
     <div class="container">
         <div class="columns is-centered">
-            <div class="column is-two-thirds">
-                <table class="table is-fullwidth is-hoverable leaderboardTable__first-page">
+            <div class="column">
+                {{if .Payload.Leaderboard}}
+                <table class="table is-fullwidth is-striped leaderboardTable__first-page">
                     <thead>
                         <tr>
-                            <th>{{t .Locale "Rank"}}</th>
-                            <th align="center">{{t .Locale "Nickname"}}</th>
+                            <th>&nbsp;</th>
+                            <th align="center">&nbsp;</th>
                             <th align="center">{{t .Locale "Rating"}}</th>
-                            <th align="center">{{t .Locale "Wins"}}</th>
-                            <th align="center">{{t .Locale "Losses"}}</th>
-                            <th align="center">{{t .Locale "Forfeits"}}</th>
+                            <th align="center" class="is-hidden-mobile">{{t .Locale "Wins"}}</th>
+                            <th align="center" class="is-hidden-mobile">{{t .Locale "Losses"}}</th>
+                            <th align="center" class="is-hidden-mobile">{{t .Locale "Forfeits"}}</th>
                         </tr>
                     </thead>
                     <tbody>
 
                         {{- range $k, $v := .Payload.Leaderboard -}}
-                            <tr class="leaderboardTable--player">
-                                {{- if lt $k 3 -}}
-                                <td><span class="icon" title="{{add $k 1}}"><i class="ri-trophy-fill"></i></span></td>
+                        <tr class="leaderboardTable--player">
+                            {{- if lt $k 3 -}}
+                            <td class="podium is-clipped is-relative">
+                                {{- if eq $k 0 -}}
+                                    <div class="iconLeaderBoard"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="none" d="M0 0h24v24H0z"/><path d="M13 16.938V19h5v2H6v-2h5v-2.062A8.001 8.001 0 0 1 4 9V3h16v6a8.001 8.001 0 0 1-7 7.938zM6 5v4a6 6 0 1 0 12 0V5H6zM1 5h2v4H1V5zm20 0h2v4h-2V5z"/></svg></div>
+                                    <div class="has-text-centered">{{add $k 1}}</div>
                                 {{- else -}}
-                                <td>{{add $k 1}}</td>
+                                    <div class="iconLeaderBoard"><svg xmlns="http://www.w3.org/2000/svg" class="medal-line" viewBox="0 0 24 24"><path d="M12 7a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm0 1.5l1.323 2.68 2.957.43-2.14 2.085.505 2.946L12 17.25l-2.645 1.39.505-2.945-2.14-2.086 2.957-.43L12 10.5zM18 2v3l-1.363 1.138A9.935 9.935 0 0 0 13 5.049L13 2 18 2zm-7-.001v3.05a9.935 9.935 0 0 0-3.636 1.088L6 5V2l5-.001z"/></svg></div>
+                                    <div class="has-text-centered">{{add $k 1}}</div>
                                 {{- end -}}
-
-                                <td align="center">{{$v.PlayerName}}</td>
-                                <td align="center">{{$v | ranking}}</td>
-                                <td align="center"><span title="{{percentage $v.Wins $v.Wins $v.Losses $v.Draws}}">{{$v.Wins}}</span></td>
-                                <td align="center"><span title="{{percentage $v.Losses $v.Wins $v.Losses $v.Draws}}">{{$v.Losses}}</span></td>
-                                <td align="center"><span title="{{percentage $v.Forfeits $v.Wins $v.Losses $v.Draws}}">{{$v.Forfeits}}</span></td>
-                            </tr>
+                            </td>
+                            {{- else -}}
+                            <td align="center">{{add $k 1}}</td>
+                            {{- end -}}
+                            <td>{{$v.PlayerName}}</td>
+                            <td align="center" class="leaderboardTable--ranking">{{$v | ranking}}</td>
+                            <td align="center" class="is-hidden-mobile"><span title="{{percentage $v.Wins $v.Wins $v.Losses $v.Draws}}">{{$v.Wins}}</span></td>
+                            <td align="center" class="is-hidden-mobile"><span title="{{percentage $v.Losses $v.Wins $v.Losses $v.Draws}}">{{$v.Losses}}</span></td>
+                            <td align="center" class="leaderboardTable--forfeits is-clipped is-hidden-mobile">
+                                <span title="{{percentage $v.Forfeits $v.Wins $v.Losses $v.Draws}}">{{$v.Forfeits}}</span>
+                                {{- if eq $v.Forfeits 0 -}}
+                                    <div class="iconLeaderBoard noFFReward is-unselectable"><img src="{{assetURL "svg/noFFReward.svg"}}"></div>
+                                {{end}}
+                            </td>
+                        </tr>
                         {{- end -}}
 
                     </tbody>
                 </table>
+                {{else}}
+                <article class="message is-info">
+                    <div class="message-body">
+                        {{t .Locale "The leaderboard is currently empty."}}
+                    </div>
+                </article>
+                {{end}}
             </div>
         </div>
     </div>
