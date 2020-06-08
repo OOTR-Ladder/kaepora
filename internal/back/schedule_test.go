@@ -65,11 +65,11 @@ func TestScheduleStd(t *testing.T) {
 		},
 		{
 			now:      "2020-04-15 00:00:00+02:00",
-			expected: "2020-04-14 21:00:00-04:00",
+			expected: "2020-04-14 20:00:00-04:00",
 		},
 		{
 			now:      "2020-04-15 01:00:00+00:00",
-			expected: "2020-04-14 21:00:00-07:00",
+			expected: "2020-04-14 20:00:00-07:00",
 		},
 		{
 			now:      "2020-05-29 08:00:00+00:00",
@@ -95,7 +95,7 @@ func testSchedule(t *testing.T, s back.Schedule, tests []scheduleTestData) {
 
 		actual := s.NextBetween(now, now.AddDate(0, 0, 7)).Format(format)
 		if actual != v.expected {
-			t.Errorf("expected %s, got %s", v.expected, actual)
+			t.Errorf("now: %s,\texpected %s, got %s", now, v.expected, actual)
 		}
 	}
 }

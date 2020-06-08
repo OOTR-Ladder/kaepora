@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"sort"
 	"strings"
 	"time"
 )
@@ -42,45 +43,35 @@ func (s *Schedule) SetAll(hours []string) {
 }
 
 func (s *Schedule) NextBetween(t time.Time, max time.Time) time.Time {
+	t, max = t.UTC(), max.UTC()
 	if t.After(max) {
 		return time.Time{}
 	}
 
 	min := max
-	for _, v := range s.hoursForWeekday(t.Format("Mon")) {
-		parts := strings.SplitN(v, " ", 2)
-		if len(parts) < 2 {
-			log.Printf("error: ignored schedule, bad format: '%s'", v)
-			continue // HACK, silently ignore misconfiguration
-		}
+	for location, perLoc := range s.prepareTzMap() {
+		local := t.In(location)
+		dow := local.Format("Mon")
 
-		location, err := time.LoadLocation(parts[1])
-		if err != nil {
-			log.Printf("error: ignored schedule, bad location '%s': %v", parts[1], err)
-			continue // HACK, silently ignore misconfiguration
-		}
-		hour, err := time.ParseInLocation("15:04", parts[0], location)
-		if err != nil {
-			log.Printf("error: ignored schedule, can't parse time '%s': %v", parts[0], err)
-			continue // HACK, silently ignore misconfiguration
-		}
+		for _, nextHourStr := range perLoc[dow] {
+			nextHour, err := time.ParseInLocation("15:04", nextHourStr, location)
+			if err != nil {
+				log.Printf("error: ignored schedule, can't parse time '%s': %v", nextHourStr, err)
+				continue // HACK, silently ignore misconfiguration
+			}
 
-		// The date might be the day before. Ugly, but it works.
-		for i := -1; i < 1; i++ {
-			next := time.Date(
-				t.Year(), t.Month(), t.Day()+i,
-				hour.Hour(), hour.Minute(),
+			localNext := time.Date(
+				local.Year(), local.Month(), local.Day(),
+				nextHour.Hour(), nextHour.Minute(),
 				0, 0, location,
 			)
 
-			if next.After(t) && next.Before(min) {
-				min = next
+			if localNext.After(t) && localNext.Before(min) {
+				min = localNext
 			}
 		}
 	}
 
-	// As schedule data may not be ordered, we have to ensure we take the
-	// lowest date, not the first match.
 	if min != max {
 		return min
 	}
@@ -88,6 +79,37 @@ func (s *Schedule) NextBetween(t time.Time, max time.Time) time.Time {
 	// Found nothing, roll over to next day at midnight until max is reached
 	next := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location()).AddDate(0, 0, 1)
 	return s.NextBetween(next, max)
+}
+
+// prepareTzMap parses the per-day schedule into a per-location map.
+func (s *Schedule) prepareTzMap() map[*time.Location]map[string][]string {
+	// tzMap[location][dow] => 15:04
+	tzMap := map[*time.Location]map[string][]string{}
+
+	for _, wd := range []string{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"} {
+		for _, v := range s.hoursForWeekday(wd) {
+			parts := strings.SplitN(v, " ", 2)
+			if len(parts) < 2 {
+				log.Printf("error: ignored schedule, bad format: '%s'", v)
+				continue // HACK, silently ignore misconfiguration
+			}
+
+			location, err := time.LoadLocation(parts[1])
+			if err != nil {
+				log.Printf("error: ignored schedule, bad location '%s': %v", parts[1], err)
+				continue // HACK, silently ignore misconfiguration
+			}
+
+			if _, ok := tzMap[location]; !ok {
+				tzMap[location] = map[string][]string{}
+			}
+
+			tzMap[location][wd] = append(tzMap[location][wd], parts[0])
+			sort.Strings(tzMap[location][wd])
+		}
+	}
+
+	return tzMap
 }
 
 // Returns the next scheduled date in a week span.
