@@ -134,7 +134,7 @@ func (s *Server) tplMatchSessionStatusTag(locale string, status back.MatchSessio
 // nolint:gosec
 func tplRanking(v back.LeaderboardEntry) template.HTML {
 	return template.HTML(fmt.Sprintf(
-		`<div class="Ranking">%d<span class="tag is-rounded Ranking--deviation">±%d</span></div>`,
+		`<div class="Ranking">%d<span class="tag is-rounded is-light Ranking--deviation"><small>±%d</small></span></div>`,
 		int(math.Round(v.Rating)),
 		int(math.Round(v.Deviation*2)),
 	))
