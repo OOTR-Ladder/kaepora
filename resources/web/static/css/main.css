@@ -227,13 +227,13 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
         rgba(253, 241, 220, 0)
     );
 }
-.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) { color: var(--color-silver-dark); }
-.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) td:first-child { background-color: var(--color-bg-silver); }
+.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) { color: var(--color-silver-dark); background-color: white; }
+.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) td:first-child { background-color: rgba(229, 229, 228, 1); }
 .leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) td:nth-child(2) {
     background-image: linear-gradient(
         to right,
-        rgba(249, 249, 248, 1),
-        rgba(249, 249, 248, 0)
+        rgba(229, 229, 228, 1),
+        white
     );
 }
 .leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(3) { color: var(--color-bronze); }
