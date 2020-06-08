@@ -4,10 +4,13 @@
     --color-body-bg-color: #fdfdff;
     --color-light-gray-blue: rgb(247, 250, 252);
     --color-gold: rgb(220, 172, 38);
+    --color-gold-dark: rgb(191, 140, 0);
     --color-bg-gold: rgb(253, 241, 220);
     --color-silver: rgb(200, 200, 196);
+    --color-silver-dark: rgb(145, 145, 145);
     --color-bg-silver: rgb(249, 249, 248);
-    --color-bronze: rgb(156, 82, 33);
+    --color-bronze: rgb(189, 126, 84);
+    --color-bronze-dark: rgb(156, 82, 33);
     --color-bg-bronze: rgb(242, 225, 215);
 }
 body { 
@@ -211,28 +214,40 @@ table[class*="leaderboardTable"] tbody td:last-child {
     border-top-right-radius: 2em;
     border-bottom-right-radius: 2em;
 }
-table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child(even) { background-color: var(--color-white); }
-table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child(odd) { background-color: var(--color-light-gray-blue); }
+table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child(even) { background-color: var(--color-light-gray-blue); }
+table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child(odd) { background-color: var(--color-white); }
 
-.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(1) {
-    color: var(--color-gold);
-    background-color: var(--color-bg-gold);
+.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(1) { color: var(--color-gold-dark); }
+.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(1) td:first-child { background-color: var(--color-bg-gold); }
+.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(1) td:nth-child(2) { 
+    background-image: linear-gradient(
+        to right,
+        rgba(253, 241, 220, 1),
+        rgba(253, 241, 220, 0)
+    );
 }
-/*.leaderboardTable__first-page .leaderboardTable--player:nth-child(1) i[class="ri-trophy-fill"] { color: var(--color-gold); }*/
-.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) {
-    color: var(--color-silver);
-    background-color: var(--color-bg-silver);
+.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) { color: var(--color-silver-dark); }
+.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) td:first-child { background-color: var(--color-bg-silver); }
+.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) td:nth-child(2) { 
+    background-image: linear-gradient(
+        to right,
+        rgba(249, 249, 248, 1),
+        rgba(249, 249, 248, 0)
+    );
 }
-/*.leaderboardTable__first-page .leaderboardTable--player:nth-child(2) i[class="ri-trophy-fill"] { color: var(--color-silver); }*/
-.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(3) {
-    color: var(--color-bronze);
-    background-color: var(--color-bg-bronze);
+.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(3) { color: var(--color-bronze); }
+.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(3) td:first-child { background-color: var(--color-bg-bronze); }
+.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(3) td:nth-child(2) { 
+    background-image: linear-gradient(
+        to right,
+        rgba(242, 225, 215, 1),
+        rgba(242, 225, 215, 0)
+    );
 }
-/*.leaderboardTable__first-page .leaderboardTable--player:nth-child(3) i[class="ri-trophy-fill"] {color: var(--color-bronze); }*/
 
-.leaderboardTable--player:nth-child(1) td,
+.leaderboardTable--player:nth-child(1) td { font-weight: 900; }
 .leaderboardTable--player:nth-child(2) td,
-.leaderboardTable--player:nth-child(3) td { font-weight: bold; }
+.leaderboardTable--player:nth-child(3) td { font-weight: 700; }
 
 .iconLeaderBoard {
     overflow: hidden;
@@ -244,7 +259,7 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
     position: absolute;
     top: 50%;
     left: -1.5rem;
-    opacity: .1;
+    opacity: .15;
     fill: transparent;
     stroke-linecap: square;
 
@@ -253,34 +268,30 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
 }
 .leaderboardTable--player:nth-child(1) .iconLeaderBoard svg {
     max-width: 9rem;
-    stroke: var(--color-gold);
-    /*stroke-dasharray: 83;
-    stroke-dashoffset: 83;*/
+    stroke: var(--color-gold-dark);
 }
 .leaderboardTable--player:nth-child(2) .iconLeaderBoard svg { 
     max-width: 7rem;
-    stroke: var(--color-silver);
+    stroke: var(--color-silver-dark);
  }
 .leaderboardTable--player:nth-child(3) .iconLeaderBoard svg {
     max-width: 6rem;
-    stroke: var(--color-bronze);
+    stroke: var(--color-bronze-dark);
 }
 
 table[class*="leaderboardTable"] .Ranking { position: relative; }
-
 table[class*="leaderboardTable"] .leaderboardTable--player .leaderboardTable--forfeits { position: relative; }
-table[class*="leaderboardTable"] .leaderboardTable--player .leaderboardTable--forfeits .iconLeaderBoard.noFFReward svg {
+table[class*="leaderboardTable"] .leaderboardTable--player .leaderboardTable--forfeits .iconLeaderBoard.noFFReward img {
     position: absolute;
     top: 75%;
     right: 0;
     left: inherit;
     width: 2rem;
-    fill: var(--color-gold);
-    stroke: transparent;
     opacity: 0;
+    transform: rotate(10deg) scale(1.2) translate(0, -35%);
     transition: opacity ease-in-out 150ms;
 }
-table[class*="leaderboardTable"] .leaderboardTable--player:hover .leaderboardTable--forfeits .iconLeaderBoard.noFFReward svg { opacity: .1; }
+table[class*="leaderboardTable"] .leaderboardTable--player:hover .leaderboardTable--forfeits .iconLeaderBoard.noFFReward img { opacity: .2; }
 
 @media only screen and (min-width: 769px){
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(1) td { font-size: 2rem; }
