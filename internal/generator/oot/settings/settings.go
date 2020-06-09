@@ -72,7 +72,7 @@ func int64SeedFromString(str string) int64 {
 // There is an hardcoded maximum iterations count to avoid inifite loops, and
 // and a tolerance for going under or over the cost budget if we reach enough
 // iterations.
-func (s Settings) Shuffle(seedStr string, costMax int) map[string]interface{} {
+func (s Settings) Shuffle(seedStr string, costMax int) map[string]interface{} { // nolint:funlen
 	log.Printf("debug: shuffling for a max cost of %d", costMax)
 	r := rand.New(rand.NewSource(int64SeedFromString(seedStr)))
 	log.Printf("debug: seed %s (%d)", seedStr, int64SeedFromString(seedStr))
