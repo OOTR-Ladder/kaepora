@@ -69,11 +69,9 @@ func int64SeedFromString(str string) int64 {
 // unequal probability sampling plan" algorithm.
 // Biometrika Vol. 69, No. 3 (Dec., 1982), pp. 653-656
 // DOI: 10.2307/2336002
-// The obvious flaw in the algorithm is that since values are iterated on by
-// their definition order, first values will be selected more often.
-// Another important detail, there is an hardcoded maximum iterations count to
-// avoid inifite loops, and there is an tolerance for going under or over the
-// cost budget if we reach enough iterations.
+// There is an hardcoded maximum iterations count to avoid inifite loops, and
+// and a tolerance for going under or over the cost budget if we reach enough
+// iterations.
 func (s Settings) Shuffle(seedStr string, costMax int) map[string]interface{} {
 	log.Printf("debug: shuffling for a max cost of %d", costMax)
 	r := rand.New(rand.NewSource(int64SeedFromString(seedStr)))
@@ -93,6 +91,11 @@ func (s Settings) Shuffle(seedStr string, costMax int) map[string]interface{} {
 
 	// iterate until we matched our budget or we failed to match it
 	for abs(costMax-costSum) > tolerance && iterations < maxIterations {
+		// Shuffle before each step to ensure first items are not picked more than the rest.
+		r.Shuffle(len(keys), func(i, j int) {
+			keys[i], keys[j] = keys[j], keys[i]
+		})
+
 		for _, k := range keys { // iterate over all settings
 			// Already decided on a value for this setting on a previous iteration.
 			if _, ok := ret[k]; ok {
