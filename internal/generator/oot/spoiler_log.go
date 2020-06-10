@@ -34,6 +34,7 @@ const (
 	SpoilerLogItemCategoryBombchu
 	SpoilerLogItemCategorySmallKey
 	SpoilerLogItemCategorySong
+	SpoilerLogItemCategoryTriforce
 
 	SpoilerLogItemCategoryCount // keep this last
 )
@@ -79,6 +80,8 @@ func (i SpoilerLogItem) GetCategory() SpoilerLogItemCategory {
 		return SpoilerLogItemCategoryPoH
 	case "Ice Trap":
 		return SpoilerLogItemCategoryIceTrap
+	case "Triforce Piece":
+		return SpoilerLogItemCategoryTriforce
 	default:
 		return SpoilerLogItemCategoryItem
 	}

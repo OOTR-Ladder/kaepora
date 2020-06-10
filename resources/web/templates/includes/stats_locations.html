@@ -12,6 +12,10 @@
                 <th class="sticky has-text-right is-unselectable">{{t .Locale "% bombchus"}}&nbsp;<span></span></th>
                 <th class="sticky has-text-right is-unselectable">{{t .Locale "% small keys"}}&nbsp;<span></span></th>
                 <th class="sticky has-text-right is-unselectable">{{t .Locale "% boss keys"}}&nbsp;<span></span></th>
+                {{if $.Payload.ExtendedStats}}
+                <th class="sticky has-text-right is-unselectable">{{t .Locale "% songs"}}&nbsp;<span></span></th>
+                <th class="sticky has-text-right is-unselectable">{{t .Locale "% triforce"}}&nbsp;<span></span></th>
+                {{end}}
             </tr>
         </thead>
         <tbody>
@@ -25,6 +29,10 @@
                 <td>{{printf "%.2f" $v.Chus}}</td>
                 <td>{{printf "%.2f" $v.SmallKeys}}</td>
                 <td>{{printf "%.2f" $v.BossKeys}}</td>
+                {{if $.Payload.ExtendedStats}}
+                <td>{{printf "%.2f" $v.Songs}}</td>
+                <td>{{printf "%.2f" $v.Triforces}}</td>
+                {{end}}
             </tr>
             {{- end -}}
         </tbody>

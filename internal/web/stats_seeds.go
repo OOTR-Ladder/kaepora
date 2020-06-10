@@ -14,7 +14,7 @@ type locationPct struct {
 	Name                     string
 	Items, Junk, IceTraps    float64
 	SmallKeys, BossKeys, PoH float64
-	Chus                     float64
+	Triforces, Songs, Chus   float64
 }
 
 func locationPctFromMap(
@@ -32,6 +32,8 @@ func locationPctFromMap(
 			BossKeys:  100.0 * (float64(v[oot.SpoilerLogItemCategoryBossKey]) / total),
 			PoH:       100.0 * (float64(v[oot.SpoilerLogItemCategoryPoH]) / total),
 			Chus:      100.0 * (float64(v[oot.SpoilerLogItemCategoryBombchu]) / total),
+			Songs:     100.0 * (float64(v[oot.SpoilerLogItemCategorySong]) / total),
+			Triforces: 100.0 * (float64(v[oot.SpoilerLogItemCategoryTriforce]) / total),
 		})
 	}
 
