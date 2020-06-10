@@ -11,8 +11,8 @@ type SpoilerLog struct {
 	FileHash       []string `json:"file_hash"`
 	Seed           string   `json:":seed"`
 	SettingsString string   `json:":settings_string"`
-	Settings       json.RawMessage
 
+	Settings      map[string]interface{}                    `json:"settings"`
 	ItemPool      map[string]int                            `json:"item_pool"`
 	Locations     map[string]SpoilerLogItem                 `json:"locations"`
 	WOTHLocations map[string]SpoilerLogItem                 `json:":woth_locations"`
@@ -34,6 +34,7 @@ const (
 	SpoilerLogItemCategoryBombchu
 	SpoilerLogItemCategorySmallKey
 	SpoilerLogItemCategorySong
+	SpoilerLogItemCategoryTriforce
 
 	SpoilerLogItemCategoryCount // keep this last
 )
@@ -79,6 +80,8 @@ func (i SpoilerLogItem) GetCategory() SpoilerLogItemCategory {
 		return SpoilerLogItemCategoryPoH
 	case "Ice Trap":
 		return SpoilerLogItemCategoryIceTrap
+	case "Triforce Piece":
+		return SpoilerLogItemCategoryTriforce
 	default:
 		return SpoilerLogItemCategoryItem
 	}

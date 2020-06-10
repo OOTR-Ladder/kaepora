@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"kaepora/internal/generator/oot"
 	"log"
@@ -14,7 +15,7 @@ type locationPct struct {
 	Name                     string
 	Items, Junk, IceTraps    float64
 	SmallKeys, BossKeys, PoH float64
-	Chus                     float64
+	Triforces, Songs, Chus   float64
 }
 
 func locationPctFromMap(
@@ -32,6 +33,8 @@ func locationPctFromMap(
 			BossKeys:  100.0 * (float64(v[oot.SpoilerLogItemCategoryBossKey]) / total),
 			PoH:       100.0 * (float64(v[oot.SpoilerLogItemCategoryPoH]) / total),
 			Chus:      100.0 * (float64(v[oot.SpoilerLogItemCategoryBombchu]) / total),
+			Songs:     100.0 * (float64(v[oot.SpoilerLogItemCategorySong]) / total),
+			Triforces: 100.0 * (float64(v[oot.SpoilerLogItemCategoryTriforce]) / total),
 		})
 	}
 
@@ -54,6 +57,8 @@ func (a byName) Swap(i, j int) {
 	a[i], a[j] = a[j], a[i]
 }
 
+// TODO: fix funlen.
+// nolint:funlen
 func (s *Server) getSeedStats(shortcode string) (statsSeed, error) {
 	start := time.Now()
 	seedTotal := 0
@@ -61,6 +66,7 @@ func (s *Server) getSeedStats(shortcode string) (statsSeed, error) {
 	wothLocations := map[string]int{}
 	wothItems := map[string]int{}
 	barrenRegions := map[string]int{}
+	settings := map[string]map[string]int{} // name => value => count
 	locationsAcc := map[string]map[oot.SpoilerLogItemCategory]int{}
 
 	if err := s.back.MapSpoilerLogs(shortcode, func(raw io.Reader) error {
@@ -98,6 +104,14 @@ func (s *Server) getSeedStats(shortcode string) (statsSeed, error) {
 			locationsAcc[name][item.GetCategory()]++
 		}
 
+		for name, value := range l.Settings {
+			if _, ok := settings[name]; !ok {
+				settings[name] = map[string]int{}
+			}
+
+			settings[name][fmt.Sprintf("%v", value)]++
+		}
+
 		return nil
 	}); err != nil {
 		return statsSeed{}, err
@@ -109,6 +123,7 @@ func (s *Server) getSeedStats(shortcode string) (statsSeed, error) {
 		WOTH:      namedPctFromMap(wothLocations, seedTotal),
 		WOTHItems: namedPctFromMap(wothItems, seedTotal),
 		Locations: locationPctFromMap(locationsAcc, seedTotal),
+		Settings:  namedPct2DFrom2DMap(settings, seedTotal),
 	}, nil
 }
 
@@ -165,14 +180,39 @@ func namedPctFromMap(m map[string]int, totalInt int) (ret []namedPct) {
 	return ret
 }
 
+func namedPct2DFrom2DMap(m map[string]map[string]int, totalInt int) (ret []namedPct2D) {
+	total := float64(totalInt)
+
+	for name := range m {
+		for value, count := range m[name] {
+			ret = append(ret, namedPct2D{
+				Name:  name,
+				Value: value,
+				Pct:   100.0 * (float64(count) / total),
+			})
+		}
+	}
+
+	sort.Sort(byPct2DDesc(ret))
+
+	return ret
+}
+
 type statsSeed struct {
 	WOTH, WOTHItems, Barren []namedPct
 	Locations               []locationPct
+	Settings                []namedPct2D
 }
 
 type namedPct struct {
 	Name string
 	Pct  float64
+}
+
+type namedPct2D struct {
+	Name  string
+	Value string
+	Pct   float64
 }
 
 type byPctDesc []namedPct
@@ -190,5 +230,23 @@ func (a byPctDesc) Less(i, j int) bool {
 }
 
 func (a byPctDesc) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
+}
+
+type byPct2DDesc []namedPct2D
+
+func (a byPct2DDesc) Len() int {
+	return len([]namedPct2D(a))
+}
+
+func (a byPct2DDesc) Less(i, j int) bool {
+	if a[i].Pct == a[j].Pct {
+		return a[i].Name < a[j].Name
+	}
+
+	return a[i].Pct > a[j].Pct
+}
+
+func (a byPct2DDesc) Swap(i, j int) {
 	a[i], a[j] = a[j], a[i]
 }
