@@ -47,15 +47,19 @@ msgstr "Il n'y a pas de course programmée pour l'instant."
 msgid "Leaderboards"
 msgstr "Classements"
 
-#: resources/web/templates/includes/menu.html:24
+#: resources/web/templates/includes/menu.html:25
+msgid "Stats"
+msgstr "Stats"
+
+#: resources/web/templates/includes/menu.html:34
 msgid "Documentation"
 msgstr "Documentation"
 
-#: resources/web/templates/includes/menu.html:25
+#: resources/web/templates/includes/menu.html:35
 msgid "Rules"
 msgstr "Règles"
 
-#: resources/web/templates/includes/menu.html:32
+#: resources/web/templates/includes/menu.html:42
 msgid "Join the server"
 msgstr "Rejoignez le serveur"
 
@@ -251,27 +255,19 @@ msgstr "Classement complet"
 msgid "%s league"
 msgstr "Ligue %s"
 
-#: resources/web/templates/layouts/leaderboard.html:20
-msgid "Rank"
-msgstr "Rang"
-
-#: resources/web/templates/layouts/leaderboard.html:21
-msgid "Nickname"
-msgstr "Pseudonyme"
-
-#: resources/web/templates/layouts/leaderboard.html:22
+#: resources/web/templates/layouts/leaderboard.html:23
 msgid "Rating"
 msgstr "Score"
 
-#: resources/web/templates/layouts/leaderboard.html:23
+#: resources/web/templates/layouts/leaderboard.html:24
 msgid "Wins"
 msgstr "Victoires"
 
-#: resources/web/templates/layouts/leaderboard.html:24
+#: resources/web/templates/layouts/leaderboard.html:25
 msgid "Losses"
 msgstr "Défaites"
 
-#: resources/web/templates/layouts/leaderboard.html:25
+#: resources/web/templates/layouts/leaderboard.html:26
 msgid "Forfeits"
 msgstr "Forfaits"
 
