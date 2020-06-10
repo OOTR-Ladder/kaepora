@@ -161,7 +161,7 @@
         },
         {
             "Value": "minimal",
-            "Cost": 8,
+            "Cost": 10,
             "Weight": 0.25
         }
     ],
@@ -493,8 +493,8 @@
     "triforce_hunt": [
         {
             "Value": true,
-            "Cost": 8,
-            "Weight": 1
+            "Cost": 6,
+            "Weight": 0.25
         },
         {
             "Value": false,
