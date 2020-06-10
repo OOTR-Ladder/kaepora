@@ -7,24 +7,27 @@ import (
 	"math"
 	"net/http"
 	"time"
+
+	"github.com/go-chi/chi"
 )
 
 func (s *Server) stats(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
-	misc, err := s.back.GetMiscStats()
+	shortcode := chi.URLParam(r, "shortcode")
+	misc, err := s.back.GetMiscStats(shortcode)
 	if err != nil {
 		s.error(w, r, err, http.StatusInternalServerError)
 		return
 	}
 	log.Printf("info: computed misc stats in %s", time.Since(start))
 
-	seed, err := s.getSeedStats()
+	seed, err := s.getSeedStats(shortcode)
 	if err != nil {
 		s.error(w, r, err, http.StatusInternalServerError)
 		return
 	}
 
-	attendance, err := s.getAttendanceStats()
+	attendance, err := s.getAttendanceStats(shortcode)
 	if err != nil {
 		s.error(w, r, err, http.StatusInternalServerError)
 		return
@@ -35,7 +38,8 @@ func (s *Server) stats(w http.ResponseWriter, r *http.Request) {
 		Misc       back.StatsMisc
 		Attendance []attendanceEntry
 		Seed       statsSeed
-	}{misc, attendance, seed})
+		ShortCode  string
+	}{misc, attendance, seed, shortcode})
 }
 
 type attendanceEntry struct {
@@ -46,7 +50,7 @@ type attendanceEntry struct {
 	Counted     [7]int    // sessions counted in this slot
 }
 
-func (s *Server) getAttendanceStats() ([]attendanceEntry, error) {
+func (s *Server) getAttendanceStats(shortcode string) ([]attendanceEntry, error) {
 	start := time.Now()
 	defer func() { log.Printf("info: computed attendance in %s", time.Since(start)) }()
 
@@ -59,7 +63,7 @@ func (s *Server) getAttendanceStats() ([]attendanceEntry, error) {
 	}
 
 	max := math.MinInt64
-	if err := s.back.MapMatchSessions("std", func(m back.MatchSession) error {
+	if err := s.back.MapMatchSessions(shortcode, func(m back.MatchSession) error {
 		players := len(m.PlayerIDs)
 		if players > max {
 			max = players

@@ -54,7 +54,7 @@ func (a byName) Swap(i, j int) {
 	a[i], a[j] = a[j], a[i]
 }
 
-func (s *Server) getSeedStats() (statsSeed, error) {
+func (s *Server) getSeedStats(shortcode string) (statsSeed, error) {
 	start := time.Now()
 	seedTotal := 0
 
@@ -63,7 +63,7 @@ func (s *Server) getSeedStats() (statsSeed, error) {
 	barrenRegions := map[string]int{}
 	locationsAcc := map[string]map[oot.SpoilerLogItemCategory]int{}
 
-	if err := s.back.MapSpoilerLogs("std", func(raw io.Reader) error {
+	if err := s.back.MapSpoilerLogs(shortcode, func(raw io.Reader) error {
 		seedTotal++
 
 		var l oot.SpoilerLog

@@ -7,15 +7,17 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-chi/chi"
 	"github.com/wcharczuk/go-chart"
 	"github.com/wcharczuk/go-chart/drawing"
 )
 
 func (s *Server) statsRatings(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
+	shortcode := chi.URLParam(r, "shortcode")
 	defer func() { log.Printf("info: computed ratings stats in %s", time.Since(start)) }()
 
-	bars, maxValue, err := s.getRatingsStats("std", chart.Style{
+	bars, maxValue, err := s.getRatingsStats(shortcode, chart.Style{
 		FontColor:   drawing.ColorBlack,
 		FillColor:   drawing.ColorFromHex("285577"),
 		StrokeColor: drawing.ColorFromHex("4c7899"),

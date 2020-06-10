@@ -21,6 +21,16 @@
                 </div>
             </div>
 
+            <div class="navbar-item has-dropdown is-hoverable">
+                <span class="navbar-link">{{t .Locale "Stats"}}</span>
+
+                <div class="navbar-dropdown is-boxed">
+                    {{range $v := .Leagues}}
+                        <a href="{{uri $.Locale "stats" $v.ShortCode}}" class="navbar-item has-text-dark">{{$v.Name}}</a>
+                    {{end}}
+                </div>
+            </div>
+
             <a class="navbar-item" href="{{uri .Locale "documentation"}}">{{t .Locale "Documentation"}}</a>
             <a class="navbar-item" href="{{uri .Locale "rules"}}">{{t .Locale "Rules"}}</a>
 

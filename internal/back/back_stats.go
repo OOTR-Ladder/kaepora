@@ -14,9 +14,9 @@ type StatsMisc struct {
 	AveragePlayersPerRace, MostPlayersInARace              int
 }
 
-func (b *Back) GetMiscStats() (misc StatsMisc, _ error) { // nolint:funlen
+func (b *Back) GetMiscStats(shortcode string) (misc StatsMisc, _ error) { // nolint:funlen
 	if err := b.transaction(func(tx *sqlx.Tx) error {
-		std, err := getLeagueByShortCode(tx, "std")
+		league, err := getLeagueByShortCode(tx, shortcode)
 		if err != nil {
 			return err
 		}
@@ -27,24 +27,24 @@ func (b *Back) GetMiscStats() (misc StatsMisc, _ error) { // nolint:funlen
 			Args  []interface{}
 		}{
 			{&misc.RegisteredPlayers, `SELECT COUNT(*) FROM Player`, nil},
-			{&misc.RankedPlayers, `SELECT COUNT(*) FROM PlayerRating WHERE LeagueID = ?`, []interface{}{std.ID}},
+			{&misc.RankedPlayers, `SELECT COUNT(*) FROM PlayerRating WHERE LeagueID = ?`, []interface{}{league.ID}},
 			{
 				&misc.PlayersOnLeaderboard,
 				`SELECT COUNT(*) FROM PlayerRating WHERE LeagueID = ? AND Deviation < ?`,
-				[]interface{}{std.ID, DeviationThreshold},
+				[]interface{}{league.ID, DeviationThreshold},
 			},
 
 			{
 				&misc.SeedsPlayed,
 				`SELECT COUNT(*) FROM Match WHERE LeagueID = ?`,
-				[]interface{}{std.ID},
+				[]interface{}{league.ID},
 			},
 			{
 				&misc.Forfeits,
 				`SELECT COUNT(*) FROM MatchEntry
                 LEFT JOIN Match ON (MatchEntry.MatchID = Match.ID)
                 WHERE Match.LeagueID = ? AND MatchEntry.Status = ?`,
-				[]interface{}{std.ID, MatchEntryStatusForfeit},
+				[]interface{}{league.ID, MatchEntryStatusForfeit},
 			},
 			{
 				&misc.DoubleForfeits,
@@ -52,7 +52,7 @@ func (b *Back) GetMiscStats() (misc StatsMisc, _ error) { // nolint:funlen
                 LEFT JOIN Match ON (MatchEntry.MatchID = Match.ID)
                 WHERE Match.LeagueID = ? AND MatchEntry.Status == ?
                 GROUP BY MatchEntry.MatchID HAVING cnt > 1)`,
-				[]interface{}{std.ID, MatchEntryStatusForfeit},
+				[]interface{}{league.ID, MatchEntryStatusForfeit},
 			},
 
 			{
@@ -60,19 +60,19 @@ func (b *Back) GetMiscStats() (misc StatsMisc, _ error) { // nolint:funlen
 				`SELECT StartDate FROM MatchSession
                 WHERE LeagueID = ?
                 ORDER BY StartDate ASC LIMIT 1`,
-				[]interface{}{std.ID},
+				[]interface{}{league.ID},
 			},
 			{
 				&misc.AveragePlayersPerRace,
 				`SELECT round(avg(json_array_length(PlayerIDs)))
                 FROM MatchSession WHERE LeagueID = ?`,
-				[]interface{}{std.ID},
+				[]interface{}{league.ID},
 			},
 			{
 				&misc.MostPlayersInARace,
 				`SELECT max(json_array_length(PlayerIDs))
                 FROM MatchSession WHERE LeagueID = ?`,
-				[]interface{}{std.ID},
+				[]interface{}{league.ID},
 			},
 		}
 

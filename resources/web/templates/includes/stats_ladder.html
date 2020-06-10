@@ -58,7 +58,7 @@
         <p>{{t .Locale "Ratings distribution"}}</p>
         <img
             width="600" height="300"
-            src="{{uri .Locale "stats" "ratings.svg"}}"
+            src="{{uri .Locale "stats" .Payload.ShortCode "ratings.svg"}}"
             alt="{{t .Locale "Ratings distribution histogram."}}"
         />
     </div>
