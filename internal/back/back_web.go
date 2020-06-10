@@ -31,7 +31,8 @@ func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) ([
             FROM PlayerRating
             INNER JOIN Player ON(PlayerRating.PlayerID = Player.ID)
             LEFT JOIN MatchEntry ON(PlayerRating.PlayerID = MatchEntry.PlayerID AND MatchEntry.Status != ?)
-            WHERE PlayerRating.LeagueID = ? AND PlayerRating.Deviation < ?
+            LEFT JOIN Match ON(Match.ID = MatchEntry.MatchID)
+            WHERE Match.LeagueID = ? AND PlayerRating.LeagueID = ? AND PlayerRating.Deviation < ?
             GROUP BY Player.ID
             ORDER BY PlayerRating.Rating DESC
         `,
@@ -40,7 +41,7 @@ func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) ([
 			MatchEntryOutcomeDraw,
 			MatchEntryStatusForfeit,
 			MatchEntryStatusInProgress,
-			league.ID,
+			league.ID, league.ID,
 			maxDeviation,
 		)
 	}); err != nil {
