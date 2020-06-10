@@ -264,7 +264,7 @@ func (b *Back) sendMatchSeedNotification(
 
 		if !session.StartDate.Time().IsZero() {
 			notif.Printf(
-				"Your race starts in %s, **do not explore the seed before the match starts**.",
+				"Your race starts in %s, **do not explore the seed before the match starts**.\n",
 				time.Until(session.StartDate.Time()).Round(time.Second),
 			)
 		}
