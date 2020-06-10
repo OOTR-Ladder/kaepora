@@ -1,0 +1,25 @@
+{{define "stats_settings"}}
+<div class="stats--long-table-container">
+    <h4 class="title">{{t .Locale "Settings"}}</h4>
+    <table class="table is-fullwidth js-table-sortable">
+        <thead>
+            <tr>
+                <th class="sticky is-unselectable">{{t .Locale "Name"}}&nbsp;<span></span></th>
+                <th class="sticky  has-text-right is-unselectable">{{t .Locale "Value"}}&nbsp;<span></span></th>
+                <th class="sticky  has-text-right is-unselectable">{{t .Locale "%"}}&nbsp;<span></span></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{- range $v := .Payload.Seed.Settings -}}
+            {{if lt $v.Pct 100.0}}
+            <tr>
+                <td>{{$v.Name}}</td>
+                <td>{{$v.Value}}</td>
+                <td>{{printf "%.2f" $v.Pct}}</td>
+            </tr>
+            {{end}}
+            {{- end -}}
+        </tbody>
+    </table>
+</div>
+{{end}}

@@ -35,6 +35,13 @@
                     <li data-target=".js-stats-tab-locations">
                         <a href="#locations" role="tab" aria-controls="stats-locations">{{t .Locale "Locations"}}</a>
                     </li>
+
+                    {{if $.Payload.ExtendedStats}}
+                    <li data-target=".js-stats-tab-settings">
+                        <a href="#settings" role="tab" aria-controls="stats-settings">{{t .Locale "Settings"}}</a>
+                    </li>
+                    {{end}}
+
                 </ul>
             </div>
         </div>
@@ -50,6 +57,12 @@
         <div class="container js-stats-tab-locations is-hidden" role="tabpanel" aria-labelledby="stats-locations">
             {{- template "stats_locations" . -}}
         </div>
+
+        {{if $.Payload.ExtendedStats}}
+        <div class="container js-stats-tab-settings is-hidden" role="tabpanel" aria-labelledby="stats-settings">
+            {{- template "stats_settings" . -}}
+        </div>
+        {{end}}
     </section>
 
 </div> <!-- .stats -->
