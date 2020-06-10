@@ -76,7 +76,6 @@ func int64SeedFromString(str string) int64 {
 // iterations.
 func (s Settings) Shuffle(seedStr string, costMax int) map[string]interface{} { // nolint:funlen
 	r := rand.New(rand.NewSource(int64SeedFromString(seedStr))) // nolint:gosec
-	log.Printf("debug: shuffling seed %s (%d) for a max cost of %d", seedStr, int64SeedFromString(seedStr), costMax)
 
 	var costSum, iterations, tolerance int
 	weightSum := s.weightSum()
