@@ -124,7 +124,7 @@ func (bot *Bot) cmdDevRandomSettings(m *discordgo.Message, args []string, w io.W
 		return err
 	}
 
-	fmt.Fprintf(w, "Generated settings for seed %s and cost %d:\n```\n", seed, cost)
+	fmt.Fprintf(w, "Generated settings for seed `%s` and cost %d:\n```\n", seed, cost)
 	shuffled := s.Shuffle(seed, cost)
 	for k, v := range shuffled {
 		fmt.Fprintf(w, "%s = %v\n", k, v)
