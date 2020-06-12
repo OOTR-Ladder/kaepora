@@ -116,7 +116,7 @@ func (bot *Bot) cmdDevRandomSettings(m *discordgo.Message, args []string, w io.W
 	}
 
 	if len(args) > 1 {
-		seed = args[2]
+		seed = args[1]
 	}
 
 	s, err := settings.Load("resources/oot-randomizer/" + settings.DefaultName)
