@@ -140,15 +140,15 @@ func getMatchByPlayerAndSession(tx *sqlx.Tx, playerID, sessionID util.UUIDAsBlob
 	return match, nil
 }
 
-func getMatchesByPeriod(tx *sqlx.Tx, from, to util.TimeAsTimestamp) ([]Match, error) {
+func getMatchesByPeriod(tx *sqlx.Tx, leagueID util.UUIDAsBlob, from, to util.TimeAsTimestamp) ([]Match, error) {
 	var matches []Match
 	query := `
         SELECT Match.* FROM Match
-        WHERE Match.StartedAt >= ? AND Match.StartedAt < ?
+        WHERE Match.LeagueID = ? AND Match.StartedAt >= ? AND Match.StartedAt < ?
         ORDER BY StartedAt ASC
         `
 
-	if err := tx.Select(&matches, query, from, to); err != nil {
+	if err := tx.Select(&matches, query, leagueID, from, to); err != nil {
 		return nil, fmt.Errorf("could not fetch matches: %w", err)
 	}
 

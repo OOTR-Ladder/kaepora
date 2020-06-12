@@ -27,7 +27,7 @@ func (b *Back) updateLeagueRankings(tx *sqlx.Tx, leagueID util.UUIDAsBlob, now t
 	}
 	log.Printf("debug: got %d ratings from previous period", len(glickoPlayers))
 
-	matches, err := getMatchesByPeriod(tx, currentPeriodStart, nextPeriodStart)
+	matches, err := getMatchesByPeriod(tx, leagueID, currentPeriodStart, nextPeriodStart)
 	if err != nil {
 		return fmt.Errorf("unable to fetch matches for period: %w", err)
 	}
@@ -123,10 +123,17 @@ func previousPeriodStart(t time.Time) time.Time {
 	return currentPeriodStart(t).AddDate(0, 0, -7)
 }
 
-// deleteLeagueRankings removes the ranking history of a given league.
+// deleteLeagueRankings removes the all ranking and ranking history of a given league.
 func deleteLeagueRankings(tx *sqlx.Tx, leagueID util.UUIDAsBlob) error {
 	if _, err := tx.Exec(
 		`DELETE FROM "PlayerRatingHistory" WHERE LeagueID = ?`,
+		leagueID,
+	); err != nil {
+		return err
+	}
+
+	if _, err := tx.Exec(
+		`DELETE FROM "PlayerRating" WHERE LeagueID = ?`,
 		leagueID,
 	); err != nil {
 		return err
