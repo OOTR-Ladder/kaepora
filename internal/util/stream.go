@@ -36,7 +36,10 @@ func NormalizeStreamURL(str string) (string, error) {
 }
 
 func isStreamHostAllowed(host string) bool {
-	allowed := []string{"twitch.tv", "mixer.com"}
+	allowed := []string{
+		"www.twitch.tv",
+		"mixer.com",
+	}
 	for _, v := range allowed {
 		if host == v {
 			return true
