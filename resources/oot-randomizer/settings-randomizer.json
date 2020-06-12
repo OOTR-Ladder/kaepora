@@ -3,7 +3,7 @@
         {
             "Value": true,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": false,
@@ -20,14 +20,14 @@
         {
             "Value": false,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         }
     ],
     "bridge": [
         {
             "Value": "medallions",
             "Cost": 4,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "dungeons",
@@ -37,7 +37,7 @@
         {
             "Value": "open",
             "Cost": 1,
-            "Weight": 0.5
+            "Weight": 0.25
         },
         {
             "Value": "stones",
@@ -52,7 +52,7 @@
         {
             "Value": "vanilla",
             "Cost": 3,
-            "Weight": 1
+            "Weight": 0.75
         }
     ],
     "correct_chest_sizes": [
@@ -64,14 +64,14 @@
         {
             "Value": false,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         }
     ],
     "damage_multiplier": [
         {
             "Value": "normal",
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "double",
@@ -98,7 +98,7 @@
         {
             "Value": "off",
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "dungeons",
@@ -125,7 +125,7 @@
         {
             "Value": "always",
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "none",
@@ -147,7 +147,7 @@
         {
             "Value": "balanced",
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "plentiful",
@@ -174,7 +174,7 @@
         {
             "Value": false,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         }
     ],
     "one_item_per_dungeon": [
@@ -186,14 +186,14 @@
         {
             "Value": false,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         }
     ],
     "open_door_of_time": [
         {
             "Value": true,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": false,
@@ -205,7 +205,7 @@
         {
             "Value": "open",
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "closed_deku",
@@ -222,7 +222,7 @@
         {
             "Value": "off",
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "0",
@@ -232,22 +232,22 @@
         {
             "Value": "1",
             "Cost": 1,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "2",
             "Cost": 2,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "3",
             "Cost": 3,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "4",
             "Cost": 4,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "random",
@@ -264,7 +264,7 @@
         {
             "Value": false,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         }
     ],
     "shuffle_bosskeys": [
@@ -281,7 +281,7 @@
         {
             "Value": "dungeon",
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "keysanity",
@@ -298,14 +298,14 @@
         {
             "Value": false,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         }
     ],
     "shuffle_ganon_bosskey": [
         {
             "Value": "remove",
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "lacs_vanilla",
@@ -322,7 +322,7 @@
         {
             "Value": false,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         }
     ],
     "shuffle_medigoron_carpet_salesman": [
@@ -334,7 +334,7 @@
         {
             "Value": false,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         }
     ],
     "shuffle_ocarinas": [
@@ -346,14 +346,14 @@
         {
             "Value": false,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         }
     ],
     "shuffle_scrubs": [
         {
             "Value": "off",
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "low",
@@ -385,7 +385,7 @@
         {
             "Value": "dungeon",
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "keysanity",
@@ -402,7 +402,7 @@
         {
             "Value": false,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         }
     ],
     "shuffle_weird_egg": [
@@ -414,14 +414,14 @@
         {
             "Value": false,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         }
     ],
     "starting_age": [
         {
             "Value": "child",
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "adult",
@@ -438,7 +438,7 @@
         {
             "Value": "off",
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "dungeons",
@@ -460,7 +460,7 @@
         {
             "Value": "closed",
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "adult",
@@ -482,7 +482,7 @@
         {
             "Value": "fast",
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "open",
@@ -499,7 +499,7 @@
         {
             "Value": false,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         }
     ],
     "free_scarecrow": [
@@ -511,7 +511,7 @@
         {
             "Value": false,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         }
     ],
     "start_with_consumables": [
@@ -523,7 +523,7 @@
         {
             "Value": false,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         }
     ],
     "chicken_count_random": [
@@ -535,7 +535,7 @@
         {
             "Value": false,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         }
     ],
     "shuffle_kokiri_sword": [
@@ -547,7 +547,7 @@
         {
             "Value": false,
             "Cost": 1,
-            "Weight": 1
+            "Weight": 0
         }
     ]
 }
