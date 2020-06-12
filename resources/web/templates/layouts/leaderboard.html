@@ -43,7 +43,13 @@
                             {{- else -}}
                             <td align="center">{{add $k 1}}</td>
                             {{- end -}}
+
+                            {{- if ne "" $v.PlayerStreamURL -}}
+                            <td><a href="{{$v.PlayerStreamURL}}">{{$v.PlayerName}}</a></td>
+                            {{- else -}}
                             <td>{{$v.PlayerName}}</td>
+                            {{- end -}}
+
                             <td align="center" class="leaderboardTable--ranking">{{$v | ranking}}</td>
                             <td align="center" class="is-hidden-mobile"><span title="{{percentage $v.Wins $v.Wins $v.Losses $v.Draws}}">{{$v.Wins}}</span></td>
                             <td align="center" class="is-hidden-mobile"><span title="{{percentage $v.Losses $v.Wins $v.Losses $v.Draws}}">{{$v.Losses}}</span></td>
