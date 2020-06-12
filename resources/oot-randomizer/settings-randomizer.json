@@ -37,7 +37,7 @@
         {
             "Value": "open",
             "Cost": 1,
-            "Weight": 0.5
+            "Weight": 0.25
         },
         {
             "Value": "stones",
@@ -52,7 +52,7 @@
         {
             "Value": "vanilla",
             "Cost": 3,
-            "Weight": 1
+            "Weight": 0.75
         }
     ],
     "correct_chest_sizes": [
@@ -232,22 +232,22 @@
         {
             "Value": "1",
             "Cost": 1,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "2",
             "Cost": 2,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "3",
             "Cost": 3,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "4",
             "Cost": 4,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "random",
