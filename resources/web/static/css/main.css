@@ -280,6 +280,13 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
     stroke: var(--color-bronze-dark);
 }
 
+.leaderboardTable--player a {
+    color: inherit;
+}
+.leaderboardTable--player a:hover {
+    text-decoration: underline;
+}
+
 table[class*="leaderboardTable"] .Ranking { position: relative; }
 table[class*="leaderboardTable"] .leaderboardTable--player .leaderboardTable--forfeits { position: relative; }
 table[class*="leaderboardTable"] .leaderboardTable--player .leaderboardTable--forfeits .iconLeaderBoard.noFFReward img {

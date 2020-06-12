@@ -67,6 +67,7 @@ func New(back *back.Back, token string) (*Bot, error) {
 		"!recap":        bot.cmdRecap,
 		"!register":     bot.cmdRegister,
 		"!rename":       bot.cmdRename,
+		"!setstream":    bot.cmdSetStream,
 		"!seed":         bot.cmdSendSeed,
 		"!spoilers":     bot.cmdSpoilers,
 		"!yes":          bot.cmdAllRight,
@@ -268,6 +269,7 @@ func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
 !register NAME          # same as "!register" but use another name
 !rename NAME            # set your display name to NAME
 !seed SHORTCODE [SEED]  # generate a seed valid for the given league
+!setstream URL          # set your stream URL
 
 # Racing
 !cancel            # cancel joining the next race without penalty until T%[3]s

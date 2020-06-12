@@ -17,6 +17,7 @@ type Player struct {
 	CreatedAt util.TimeAsTimestamp
 	Name      string
 	DiscordID null.String
+	StreamURL string
 
 	Rating PlayerRating `db:"-"`
 }
@@ -53,6 +54,7 @@ func (p *Player) insert(tx *sqlx.Tx) error {
 		"CreatedAt": p.CreatedAt,
 		"Name":      p.Name,
 		"DiscordID": p.DiscordID,
+		"StreamURL": p.StreamURL,
 	}).ToSql()
 	if err != nil {
 		return err
@@ -69,6 +71,7 @@ func (p *Player) Update(tx *sqlx.Tx) error {
 	query, args, err := squirrel.Update("Player").SetMap(squirrel.Eq{
 		"Name":      p.Name,
 		"DiscordID": p.DiscordID,
+		"StreamURL": p.StreamURL,
 	}).Where("Player.ID = ?", p.ID).ToSql()
 	if err != nil {
 		return err
@@ -109,7 +112,7 @@ func (b *Back) UpdateDiscordPlayerName(discordID string, name string) error {
 	return b.transaction(func(tx *sqlx.Tx) error {
 		player, err := getPlayerByDiscordID(tx, discordID)
 		if err != nil {
-			return nil
+			return err
 		}
 
 		if player.Name == name {
@@ -143,4 +146,27 @@ func (b *Back) RegisterDiscordPlayer(discordID, name string) error {
 		player.DiscordID = util.NullString(discordID)
 		return player.insert(tx)
 	})
+}
+
+func (b *Back) UpdateDiscordPlayerStreamURL(discordID, streamURL string) (string, error) {
+	normalizedURL, err := util.NormalizeStreamURL(streamURL)
+	if err != nil {
+		return "", err
+	}
+
+	if err := b.transaction(func(tx *sqlx.Tx) error {
+		player, err := getPlayerByDiscordID(tx, discordID)
+		if err != nil {
+			return err
+		}
+
+		player.StreamURL = normalizedURL
+		// TODO, maybe check if the URL does not 404.
+
+		return player.Update(tx)
+	}); err != nil {
+		return "", err
+	}
+
+	return normalizedURL, nil
 }

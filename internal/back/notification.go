@@ -214,11 +214,15 @@ func (b *Back) sendMatchEndNotification(
 
 	switch selfEntry.Outcome {
 	case MatchEntryOutcomeWin:
-		notif.Print("**You won!**")
+		notif.Print("**You won!**\n")
 	case MatchEntryOutcomeDraw:
-		notif.Print("**The race is a draw.**")
+		notif.Print("**The race is a draw.**\n")
 	case MatchEntryOutcomeLoss:
-		notif.Printf("**%s wins.**", opponent.Name)
+		notif.Printf("**%s wins.**\n", opponent.Name)
+	}
+
+	if opponent.StreamURL != "" {
+		notif.Printf("Your opponent stream: %s\n", opponent.StreamURL)
 	}
 
 	b.notifications <- notif

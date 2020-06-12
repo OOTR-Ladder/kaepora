@@ -99,9 +99,10 @@ func (b *Back) GetPlayerByDiscordID(discordID string) (player Player, _ error) {
 }
 
 type LeaderboardEntry struct {
-	PlayerName string
-	Rating     float64
-	Deviation  float64
+	PlayerName      string
+	PlayerStreamURL string
+	Rating          float64
+	Deviation       float64
 
 	// Web only, unused in top20 (which is destined to die)
 	Wins, Losses, Draws, Forfeits int
@@ -154,6 +155,7 @@ func getTop20(tx *sqlx.Tx, leagueID util.UUIDAsBlob, maxDeviation int) ([]Leader
 	query := `
     SELECT
         Player.Name AS PlayerName,
+        Player.StreamURL AS PlayerStreamURL,
         PlayerRating.Rating AS Rating,
         PlayerRating.Deviation AS Deviation
     FROM PlayerRating
@@ -189,6 +191,7 @@ func getTopAroundPlayer(tx *sqlx.Tx, player Player, leagueID util.UUIDAsBlob) ([
 		query := fmt.Sprintf(`
             SELECT
                 Player.Name AS PlayerName,
+                Player.StreamURL AS PlayerStreamURL,
                 PlayerRating.Rating AS Rating,
                 PlayerRating.Deviation AS Deviation
             FROM PlayerRating

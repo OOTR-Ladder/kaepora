@@ -22,6 +22,7 @@ func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) ([
 		return tx.Select(&ret, `
             SELECT
                 Player.Name AS PlayerName,
+                Player.StreamURL AS PlayerStreamURL,
                 PlayerRating.Rating AS Rating,
                 PlayerRating.Deviation AS Deviation,
                 SUM(CASE WHEN MatchEntry.Outcome = ? THEN 1 ELSE 0 END) AS Wins,
