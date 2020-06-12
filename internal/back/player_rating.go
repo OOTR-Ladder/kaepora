@@ -117,7 +117,7 @@ func (r PlayerRating) upsert(tx *sqlx.Tx) error {
 	return nil
 }
 
-func (r PlayerRating) insertHistory(tx *sqlx.Tx, ratingPeriodStartedAt util.TimeAsTimestamp) error {
+func (r PlayerRating) upsertHistory(tx *sqlx.Tx, ratingPeriodStartedAt util.TimeAsTimestamp) error {
 	query, args, err := squirrel.Insert("PlayerRatingHistory").SetMap(squirrel.Eq{
 		"PlayerID":              r.PlayerID,
 		"LeagueID":              r.LeagueID,
@@ -130,6 +130,14 @@ func (r PlayerRating) insertHistory(tx *sqlx.Tx, ratingPeriodStartedAt util.Time
 	if err != nil {
 		return err
 	}
+
+	query += `
+        ON CONFLICT(PlayerID, LeagueID, RatingPeriodStartedAt)
+        DO UPDATE SET
+            Rating=excluded.Rating,
+            Deviation=excluded.Deviation,
+            Volatility=excluded.Volatility
+    `
 
 	if _, err := tx.Exec(query, args...); err != nil {
 		return err

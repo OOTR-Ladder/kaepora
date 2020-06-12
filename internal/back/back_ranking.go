@@ -37,7 +37,7 @@ func (b *Back) updateLeagueRankings(tx *sqlx.Tx, leagueID util.UUIDAsBlob, now t
 		return err
 	}
 
-	return b.maybeCloseRatingPeriod(tx, currentPeriodStart, nextPeriodStart, leagueID, matches, glickoPlayers)
+	return b.closeRatingPeriod(tx, currentPeriodStart, leagueID, glickoPlayers)
 }
 
 func (b *Back) updateRunningPeriodRatings(
@@ -142,35 +142,26 @@ func deleteLeagueRankings(tx *sqlx.Tx, leagueID util.UUIDAsBlob) error {
 	return nil
 }
 
-func (b *Back) maybeCloseRatingPeriod(
+// closeRatingPeriod writes the current rankings to PlayerRatingHistory, it can
+// be called at any point in a period as rankings are upserted.
+func (b *Back) closeRatingPeriod(
 	tx *sqlx.Tx,
-	currentPeriodStart, nextPeriodStart util.TimeAsTimestamp,
+	currentPeriodStart util.TimeAsTimestamp,
 	leagueID util.UUIDAsBlob,
-	matches []Match,
 	glickoPlayers map[util.UUIDAsBlob]*glicko.Player,
 ) error {
-	league, err := getLeagueByID(tx, leagueID)
-	if err != nil {
-		return err
-	}
+	log.Printf(
+		"debug: closing period starting at %s, upsert history for %d players",
+		currentPeriodStart.Time(),
+		len(glickoPlayers),
+	)
 
-	log.Printf("debug: closing period starting at %s", currentPeriodStart.Time())
-
-	lastMatchStart := matches[len(matches)-1].StartedAt.Time.Time()
-	next := league.Schedule.NextBetween(lastMatchStart, nextPeriodStart.Time())
-	if !next.IsZero() && next.Before(nextPeriodStart.Time()) {
-		// Consider we're closing a period if there's no race planned before
-		// next week.
-		return nil
-	}
-
-	log.Printf("debug: insert history for %d players", len(glickoPlayers))
 	for playerID, glickoPlayer := range glickoPlayers {
 		rating := NewPlayerRating(playerID, leagueID)
 		glickoRating := glickoPlayer.Rating()
 		rating.SetRating(glickoRating)
 
-		if err := rating.insertHistory(tx, currentPeriodStart); err != nil {
+		if err := rating.upsertHistory(tx, currentPeriodStart); err != nil {
 			return fmt.Errorf("unable to insert rating history: %w", err)
 		}
 	}
