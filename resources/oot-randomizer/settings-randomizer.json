@@ -542,12 +542,12 @@
         {
             "Value": true,
             "Cost": 0,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": false,
             "Cost": 1,
-            "Weight": 0
+            "Weight": 1
         }
     ]
 }
