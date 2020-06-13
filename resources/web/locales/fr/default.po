@@ -213,11 +213,11 @@ msgstr "Objet"
 
 #: resources/web/templates/includes/stats_woth_barren.html:38
 msgid "Barren regions"
-msgstr "Régions stériles"
+msgstr "Zones vides"
 
 #: resources/web/templates/includes/stats_woth_barren.html:42
 msgid "Region"
-msgstr "Région"
+msgstr "Zone"
 
 #: resources/web/templates/layouts/error.html:12
 msgid "The page you requested does not exist."
@@ -329,7 +329,7 @@ msgstr "Statistiques du Ladder"
 
 #: resources/web/templates/layouts/stats.html:33
 msgid "WotH and barrens"
-msgstr "Voies et Régions stériles"
+msgstr "Voies et zones vides"
 
 #: resources/web/templates/layouts/stats.html:36
 msgid "Locations"
