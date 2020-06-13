@@ -175,6 +175,26 @@ msgstr ""
 msgid "% boss keys"
 msgstr ""
 
+#: resources/web/templates/includes/stats_locations.html:16
+msgid "% songs"
+msgstr ""
+
+#: resources/web/templates/includes/stats_locations.html:17
+msgid "% triforce"
+msgstr ""
+
+#: resources/web/templates/includes/stats_settings.html:7
+msgid "Name"
+msgstr ""
+
+#: resources/web/templates/includes/stats_settings.html:8
+msgid "Value"
+msgstr ""
+
+#: resources/web/templates/includes/stats_settings.html:9
+msgid "%"
+msgstr ""
+
 #: resources/web/templates/includes/stats_woth_barren.html:4
 msgid "Ways of the Hero"
 msgstr ""
@@ -239,15 +259,11 @@ msgstr ""
 msgid "Scheduled races"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:41
+#: resources/web/templates/layouts/index.html:43
 msgid "Leaderboard"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:42
-msgid "Standard league"
-msgstr ""
-
-#: resources/web/templates/layouts/index.html:56
+#: resources/web/templates/layouts/index.html:58
 msgid "Full leaderboard"
 msgstr ""
 
@@ -271,7 +287,7 @@ msgstr ""
 msgid "Forfeits"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:64
+#: resources/web/templates/layouts/leaderboard.html:70
 msgid "The leaderboard is currently empty."
 msgstr ""
 
@@ -315,4 +331,8 @@ msgstr ""
 
 #: resources/web/templates/layouts/stats.html:36
 msgid "Locations"
+msgstr ""
+
+#: resources/web/templates/layouts/stats.html:41
+msgid "Settings"
 msgstr ""
