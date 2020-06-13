@@ -33,11 +33,6 @@ type nextRacesTemplateData struct {
 }
 
 func (s *Server) getIndexTemplateData() (nextRacesTemplateData, error) {
-	top3, err := s.getStdTop3("std")
-	if err != nil {
-		return nextRacesTemplateData{}, err
-	}
-
 	sessions, leagues, err := s.back.GetMatchSessions(
 		time.Now().Add(-12*time.Hour),
 		time.Now().Add(12*time.Hour),
@@ -49,6 +44,16 @@ func (s *Server) getIndexTemplateData() (nextRacesTemplateData, error) {
 		},
 		`StartDate ASC`,
 	)
+	if err != nil {
+		return nextRacesTemplateData{}, err
+	}
+
+	shortcode := "std"
+	if len(sessions) > 0 {
+		shortcode = leagues[sessions[0].LeagueID].ShortCode
+	}
+
+	top3, err := s.getStdTop3(shortcode)
 	if err != nil {
 		return nextRacesTemplateData{}, err
 	}

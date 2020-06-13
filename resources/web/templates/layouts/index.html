@@ -37,13 +37,15 @@
 
                 </div><!-- column -->
 
+                {{- if len .Payload.MatchSessions -}}
                 <div class="column has-text-centered">
-                    <h2 class="title">{{t .Locale "Leaderboard"}}</h2>
-                    <h3 class="subtitle">{{t .Locale "Standard league"}}</h3>
+                {{- with $id := ((index .Payload.MatchSessions 0).LeagueID) -}}
+                    <h2 class="title">{{t $.Locale "Leaderboard"}}</h2>
+                    <h3 class="subtitle">{{- (index $.Payload.Leagues $id).Name -}}</h3>
 
                     <div class="ldbrd">
                         <div class="ldbrd--players">
-                            {{range $i, $v := .Payload.Top3}}
+                            {{range $i, $v := $.Payload.Top3}}
                             <div class="player">
                                 <span class="icon"><i class="ri-trophy-fill"></i></span> {{$v.PlayerName}}
                             </div>
@@ -51,11 +53,13 @@
                         </div>
                     </div>
 
-                    <a href="{{uri .Locale "leaderboard" "std"}}" class="button is-outlined is-white is-fullwidth is-rounded detailButton">
+                    <a href="{{uri $.Locale "leaderboard" (index $.Payload.Leagues $id).ShortCode}}" class="button is-outlined is-white is-fullwidth is-rounded detailButton">
                         <span class="icon"><i class="ri-trophy-line"></i></span>
-                        <span>{{t .Locale "Full leaderboard"}}</span>
+                        <span>{{t $.Locale "Full leaderboard"}}</span>
                     </a>
+                {{- end -}}
                 </div> <!-- column -->
+                {{- end -}}
 
             </div>
 
