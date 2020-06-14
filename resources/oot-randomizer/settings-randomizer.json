@@ -311,10 +311,7 @@
         {
             "Value": "remove",
             "Cost": 0,
-            "Weight": 0,
-            "Implies": {
-                "triforce_hunt": "false"
-            }
+            "Weight": 0
         },
         {
             "Value": "lacs_vanilla",

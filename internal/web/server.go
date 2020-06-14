@@ -43,6 +43,8 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 
 	r.Get("/favicon.ico", s.favicon(fs))
 
+	r.Get("/dev/settings-relations.svg", s.devSettingsRelations)
+
 	r.With(s.langDetect).Route("/{locale}", func(r chi.Router) {
 		r.Get("/rules", s.markdownContent(baseDir, "rules.md"))
 		r.Get("/documentation", s.markdownContent(baseDir, "documentation.md"))

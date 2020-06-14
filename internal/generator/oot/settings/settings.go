@@ -20,7 +20,7 @@ const DefaultName = "settings-randomizer.json"
 // It is an integer that only has meaning relative to the sum of all
 // probabilities.
 // TODO check "warp_songs" and "spawn_positions" in the fork.
-type Settings map[string]setting // name (json key) => possible values
+type Settings map[string]Setting // name (json key) => possible values
 
 func Load(path string) (Settings, error) {
 	var ret Settings
@@ -144,9 +144,13 @@ func (s Settings) Shuffle(seedStr string, costMax int) map[string]interface{} { 
 	return ret
 }
 
-type setting []possibleSettingValue
+// A Setting is a collection of values that can be given to a setting key.
+type Setting []PossibleSettingValue
 
-type possibleSettingValue struct {
+// A PossibleSettingValue has a cost that represents its impact on routing, a
+// weight to make it appear less or more often, and a list of implied settings
+// k/v to avoid impossible settings combo or force interesting combinations.
+type PossibleSettingValue struct {
 	Value   interface{}
 	Cost    int
 	Weight  float64
