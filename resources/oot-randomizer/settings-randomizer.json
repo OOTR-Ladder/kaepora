@@ -321,7 +321,7 @@
             "Cost": 1,
             "Weight": 0.5,
             "Implies": {
-                "triforce_hunt": "false"
+                "triforce_hunt": false
             }
         }
     ],
