@@ -49,6 +49,56 @@ table.table { background-color: transparent; }
 
 /* }}} Global */
 
+/* {{{ Ladder navigation */
+    .navContainer {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 1rem;
+        z-index: 31;
+        background: linear-gradient(
+            to top,
+            rgba(0, 0, 0, .3),
+            rgba(0, 0, 0, 0)
+        );
+    }
+    .navContainer--navbar {
+        height: 70px;
+    }
+    .ladderNav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        height: 100%;
+        color: var(--color-white);
+        background: #1e2334;
+        border-radius: 20px;
+    }
+    .ladderNav > *[class*="ladderNav--item"] {
+        min-width: 0;
+        flex: 1 1 0px;
+        font-size: .6rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    .ladderNav > *[class*="ladderNav--item"] > a,
+    .ladderNav > *[class*="ladderNav--item"] > span {
+        display: block;
+        height: 100%;
+        text-align: center;
+        color: var(--color-white);
+    }
+    .ladderNav > *[class*="ladderNav--item"] > a > svg,
+    .ladderNav > *[class*="ladderNav--item"] > span > svg {
+        display: block;
+        margin: 0 auto .3rem auto;
+        max-width: 1.5rem;
+        fill: var(--color-white);
+    }
+    /* }}} Ladder navigation */
+
 /* {{{ Homepage */
 .homeHeader {
     background-color: #2a2a72;
