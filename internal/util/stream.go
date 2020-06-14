@@ -21,11 +21,11 @@ func NormalizeStreamURL(str string) (string, error) {
 	}
 
 	u.Scheme = "https"
-	u.Host = strings.ToLower(u.Host)
 	u.RawQuery = ""
 	u.Fragment = ""
-	if !isStreamHostAllowed(u.Host) {
-		return "", ErrPublic(fmt.Sprintf("%s is not a known streaming platform", u.Host))
+
+	if u.Host, err = normalizeStreamHost(u.Host); err != nil {
+		return "", err
 	}
 
 	if u.Path == "" || u.Path == "/" {
@@ -35,16 +35,13 @@ func NormalizeStreamURL(str string) (string, error) {
 	return u.String(), nil
 }
 
-func isStreamHostAllowed(host string) bool {
-	allowed := []string{
-		"www.twitch.tv",
-		"mixer.com",
-	}
-	for _, v := range allowed {
-		if host == v {
-			return true
-		}
+func normalizeStreamHost(host string) (string, error) {
+	switch host {
+	case "www.twitch.tv", "twitch.tv":
+		return "twitch.tv", nil
+	case "mixer.com", "www.mixer.com":
+		return "mixer.com", nil
 	}
 
-	return false
+	return "", ErrPublic(fmt.Sprintf("%s is not a known streaming platform", host))
 }
