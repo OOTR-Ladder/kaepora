@@ -3,6 +3,7 @@ package bot
 import (
 	"fmt"
 	"io"
+	"kaepora/internal/generator/oot"
 	"kaepora/internal/generator/oot/settings"
 	"kaepora/internal/util"
 	"strconv"
@@ -105,7 +106,7 @@ func (bot *Bot) cmdDevAddListen(m *discordgo.Message, _ []string, _ io.Writer) (
 
 // cmdDevRandomSettings is a temporary DEBUG command to demonstrate randomized settings.
 func (bot *Bot) cmdDevRandomSettings(m *discordgo.Message, args []string, w io.Writer) (err error) {
-	cost := 15
+	cost := oot.SettingsCostBudget
 	seed := uuid.New().String()
 
 	if len(args) > 0 {
