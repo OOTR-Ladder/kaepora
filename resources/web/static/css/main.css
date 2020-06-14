@@ -280,12 +280,23 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
     stroke: var(--color-bronze-dark);
 }
 
-.leaderboardTable--player a {
-    color: inherit;
+table[class*="leaderboardTable"] .leaderboardTable--player .leaderboardTable--stream { vertical-align: middle; }
+.leaderboardTable--player .StreamLink {
+    width: 24px;
+    height: 24px;
 }
-.leaderboardTable--player a:hover {
-    text-decoration: underline;
+.leaderboardTable--player .StreamLink::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 24px;
+
+    background-image: url('../svg/live-generic.svg');
+    background-size: 24px 24px;
 }
+.leaderboardTable--player .StreamLink[href*="twitch"]::before { background-image: url('../svg/live-twitch.svg'); }
+.leaderboardTable--player .StreamLink[href*="youtu"]::before { background-image: url('../svg/live-youtube.svg'); }
+.leaderboardTable--player .StreamLink[href*="mixer"]::before { background-image: url('../svg/live-mixer.svg'); }
 
 table[class*="leaderboardTable"] .Ranking { position: relative; }
 table[class*="leaderboardTable"] .leaderboardTable--player .leaderboardTable--forfeits { position: relative; }
@@ -308,19 +319,35 @@ table[class*="leaderboardTable"] .leaderboardTable--player .Ranking--deviation {
 }
 
 @media only screen and (min-width: 769px){
+    .table[class*="leaderboardTable"] td,
+    .table[class*="leaderboardTable"] th {
+        padding: .75rem;
+    }
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(1) td { font-size: 2rem; }
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(2) td { font-size: 1.5rem; }
     .leaderboardTable__first-page .leaderboardTable--player:nth-child(3) td { font-size: 1.25rem; }
 }
 
 @media only screen and (max-width: 768px){
-    table[class*="leaderboardTable"] tbody td:nth-child(3) {
+    .table[class*="leaderboardTable"] td,
+    .table[class*="leaderboardTable"] th {
+        padding: .5rem;
+    }
+    table[class*="leaderboardTable"] tbody td:nth-child(4) {
         border-top-right-radius: 2em;
         border-bottom-right-radius: 2em;
     }
-    .leaderboardTable__first-page .leaderboardTable--player:nth-child(1) td { font-size: 1.5rem; }
-    .leaderboardTable__first-page .leaderboardTable--player:nth-child(2) td { font-size: 1.25rem; }
-    .leaderboardTable__first-page .leaderboardTable--player:nth-child(3) td { font-size: 1.1rem; }
+    .leaderboardTable__first-page .leaderboardTable--player td { font-size: .8rem; }
+    .leaderboardTable__first-page .leaderboardTable--player:nth-child(1) td { font-size: 1.1rem; }
+    .leaderboardTable__first-page .leaderboardTable--player:nth-child(2) td { font-size: 1rem; }
+    .leaderboardTable__first-page .leaderboardTable--player:nth-child(3) td { font-size: .9rem; }
+
+    .leaderboardTable--player .StreamLink::before {
+        width: 20px;
+        height: 20px;
+
+        background-size: 20px 20px;
+    }
 }
 /* }}} Leaderboard */
 

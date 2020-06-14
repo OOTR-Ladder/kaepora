@@ -20,6 +20,7 @@
                         <tr>
                             <th>&nbsp;</th>
                             <th align="center">&nbsp;</th>
+                            <th>&nbsp;</th>
                             <th align="center">{{t .Locale "Rating"}}</th>
                             <th align="center" class="is-hidden-mobile">{{t .Locale "Wins"}}</th>
                             <th align="center" class="is-hidden-mobile">{{t .Locale "Losses"}}</th>
@@ -44,19 +45,24 @@
                             <td align="center">{{add $k 1}}</td>
                             {{- end -}}
 
-                            {{- if ne "" $v.PlayerStreamURL -}}
-                            <td><a href="{{$v.PlayerStreamURL}}">{{$v.PlayerName}}</a></td>
-                            {{- else -}}
                             <td>{{$v.PlayerName}}</td>
-                            {{- end -}}
+
+                            <td align="center" class="leaderboardTable--stream">
+                                {{- if ne "" $v.PlayerStreamURL -}}
+                                    <a class="StreamLink" href="{{$v.PlayerStreamURL}}"></a>
+                                {{- else -}}
+                                    &nbsp;
+                                {{- end -}}
+                            </td>
 
                             <td align="center" class="leaderboardTable--ranking">{{$v | ranking}}</td>
                             <td align="center" class="is-hidden-mobile"><span title="{{percentage $v.Wins $v.Wins $v.Losses $v.Draws}}">{{$v.Wins}}</span></td>
                             <td align="center" class="is-hidden-mobile"><span title="{{percentage $v.Losses $v.Wins $v.Losses $v.Draws}}">{{$v.Losses}}</span></td>
                             <td align="center" class="leaderboardTable--forfeits is-clipped is-hidden-mobile">
                                 <span title="{{percentage $v.Forfeits $v.Wins $v.Losses $v.Draws}}">{{$v.Forfeits}}</span>
+
                                 {{- if eq $v.Forfeits 0 -}}
-                                    <div class="iconLeaderBoard noFFReward is-unselectable"><img src="{{assetURL "svg/noFFReward.svg"}}"></div>
+                                    <div class="iconLeaderBoard noFFReward is-unselectable is-hidden-mobile"><img src="/_/svg/noFFReward.svg"></div>
                                 {{end}}
                             </td>
                         </tr>
