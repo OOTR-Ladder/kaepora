@@ -210,12 +210,18 @@
         {
             "Value": "closed_deku",
             "Cost": 3,
-            "Weight": 1
+            "Weight": 1,
+            "Implies": {
+                "shuffle_kokiri_sword": true
+            }
         },
         {
             "Value": "closed",
             "Cost": 2,
-            "Weight": 0.5
+            "Weight": 0.5,
+            "Implies": {
+                "starting_age": "child"
+            }
         }
     ],
     "shopsanity": [
@@ -305,12 +311,18 @@
         {
             "Value": "remove",
             "Cost": 0,
-            "Weight": 0
+            "Weight": 0,
+            "Implies": {
+                "triforce_hunt": "false"
+            }
         },
         {
             "Value": "lacs_vanilla",
             "Cost": 1,
-            "Weight": 0.5
+            "Weight": 0.5,
+            "Implies": {
+                "triforce_hunt": "false"
+            }
         }
     ],
     "shuffle_gerudo_card": [
@@ -426,12 +438,10 @@
         {
             "Value": "adult",
             "Cost": 1,
-            "Weight": 1
-        },
-        {
-            "Value": "random",
-            "Cost": 1,
-            "Weight": 0
+            "Weight": 1,
+            "Implies": {
+                "open_forest": "open"
+            }
         }
     ],
     "tokensanity": [
@@ -494,7 +504,10 @@
         {
             "Value": true,
             "Cost": 6,
-            "Weight": 0.25
+            "Weight": 0.25,
+            "Implies": {
+                "shuffle_ganon_bosskey": "remove"
+            }
         },
         {
             "Value": false,
@@ -547,7 +560,10 @@
         {
             "Value": false,
             "Cost": 1,
-            "Weight": 1
+            "Weight": 1,
+            "Implies": {
+                "open_forest": "open"
+            }
         }
     ]
 }

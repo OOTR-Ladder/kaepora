@@ -73,9 +73,8 @@ func int64SeedFromString(str string) int64 {
 // and a tolerance for going under or over the cost budget if we reach enough
 // iterations.
 func (s Settings) Shuffle(seedStr string, costMax int) map[string]interface{} { // nolint:funlen
-	log.Printf("debug: shuffling for a max cost of %d", costMax)
 	r := rand.New(rand.NewSource(int64SeedFromString(seedStr)))
-	log.Printf("debug: seed %s (%d)", seedStr, int64SeedFromString(seedStr))
+	log.Printf("debug: shuffling seed %s (%d) for a max cost of %d", seedStr, int64SeedFromString(seedStr), costMax)
 
 	var costSum, iterations, tolerance int
 	weightSum := s.weightSum()
@@ -103,7 +102,7 @@ func (s Settings) Shuffle(seedStr string, costMax int) map[string]interface{} { 
 			}
 
 			for i := range s[k] { // iterate over all possible values
-				if s[k][i].Weight == 0 {
+				if s[k][i].Weight <= 0 {
 					continue
 				}
 
@@ -118,10 +117,15 @@ func (s Settings) Shuffle(seedStr string, costMax int) map[string]interface{} { 
 					continue
 				}
 
-				log.Printf("debug: it#%d, ∑costs: %d, %s = %v\n", iterations, newCost, k, s[k][i].Value)
 				// Selected, set value and update cost.
 				costSum = newCost
 				ret[k] = s[k][i].Value
+
+				// Avoid conflicting settings
+				for impliedKey, impliedValue := range s[k][i].Implies {
+					ret[impliedKey] = impliedValue
+				}
+
 				break
 			}
 		}
@@ -143,7 +147,8 @@ func (s Settings) Shuffle(seedStr string, costMax int) map[string]interface{} { 
 type setting []possibleSettingValue
 
 type possibleSettingValue struct {
-	Value  interface{}
-	Cost   int
-	Weight float64
+	Value   interface{}
+	Cost    int
+	Weight  float64
+	Implies map[string]interface{}
 }
