@@ -8,12 +8,12 @@
 
 @font-face {
     font-family: "remixicon";
-    src: url('../webfonts/remixicon.eot?t=1589222448443'); /* IE9*/
-    src: url('../webfonts/remixicon.eot?t=1589222448443#iefix') format('embedded-opentype'), /* IE6-IE8 */
-    url("../webfonts/remixicon.woff2?t=1589222448443") format("woff2"),
-    url("../webfonts/remixicon.woff?t=1589222448443") format("woff"),
-    url('../webfonts/remixicon.ttf?t=1589222448443') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-    url('../webfonts/remixicon.svg?t=1589222448443#remixicon') format('svg'); /* iOS 4.1- */
+    src: url('../webfonts/remixicon.eot?t=1592047908883'); /* IE9*/
+    src: url('../webfonts/remixicon.eot?t=1592047908883#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url("../webfonts/remixicon.woff2?t=1592047908883") format("woff2"),
+    url("../webfonts/remixicon.woff?t=1592047908883") format("woff"),
+    url('../webfonts/remixicon.ttf?t=1592047908883') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+    url('../webfonts/remixicon.svg?t=1592047908883#remixicon') format('svg'); /* iOS 4.1- */
     font-display: swap;
 }
 
@@ -41,16 +41,21 @@
 .ri-10x { font-size: 10em; }
 .ri-fw { text-align: center; width: 1.25em; }
 
-.ri-trophy-line:before { content: "\f1bd"; }
-.ri-trophy-fill:before { content: "\f1bc"; }
-.ri-history-line:before { content: "\ede2"; }
-.ri-calendar-2-fill:before { content: "\eb1c"; }
-.ri-group-fill:before { content: "\edbb"; }
-.ri-arrow-right-up-line:before { content: "\ea6e"; }
-.ri-arrow-right-down-line:before { content: "\ea68"; }
-.ri-group-line:before { content: "\edbc"; }
-.ri-discord-fill:before { content: "\ec25"; }
-.ri-time-line:before { content: "\f19d"; }
-.ri-vip-crown-2-line:before { content: "\f216"; }
-.ri-vip-crown-2-fill:before { content: "\f215"; }
-.ri-search-2-line:before { content: "\f06b"; }
+.ri-trophy-line:before { content: "\f22f"; }
+.ri-trophy-fill:before { content: "\f22e"; }
+.ri-history-line:before { content: "\ee17"; }
+.ri-calendar-2-fill:before { content: "\eb20"; }
+.ri-group-fill:before { content: "\ede2"; }
+.ri-arrow-right-up-line:before { content: "\ea70"; }
+.ri-arrow-right-down-line:before { content: "\ea6a"; }
+.ri-group-line:before { content: "\ede3"; }
+.ri-discord-fill:before { content: "\ec37"; }
+.ri-time-line:before { content: "\f20f"; }
+.ri-vip-crown-2-line:before { content: "\f28c"; }
+.ri-vip-crown-2-fill:before { content: "\f28b"; }
+.ri-search-2-line:before { content: "\f0cd"; }
+.ri-medal-fill:before { content: "\ef27"; }
+.ri-medal-line:before { content: "\ef28"; }
+.ri-github-fill:before { content: "\edca"; }
+.ri-bar-chart-2-line:before { content: "\ea96"; }
+.ri-play-circle-line:before { content: "\f009"; }
