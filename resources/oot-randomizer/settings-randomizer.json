@@ -162,7 +162,10 @@
         {
             "Value": "minimal",
             "Cost": 10,
-            "Weight": 0.25
+            "Weight": 0.25,
+            "Implies": {
+                "triforce_hunt": false
+            }
         }
     ],
     "mq_dungeons_random": [
@@ -503,7 +506,8 @@
             "Cost": 6,
             "Weight": 0.25,
             "Implies": {
-                "shuffle_ganon_bosskey": "remove"
+                "shuffle_ganon_bosskey": "remove",
+                "item_pool_value": "balanced"
             }
         },
         {
