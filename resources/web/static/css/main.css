@@ -76,12 +76,13 @@ table.table { background-color: transparent; }
         background: #1e2334;
         border-radius: 20px;
     }
+    .ladderNav *[class*="ladderNav--item"] { font-weight: 700; }
     .ladderNav > *[class*="ladderNav--item"] {
         min-width: 0;
         flex: 1 1 0px;
         font-size: .6rem;
-        font-weight: 700;
         text-transform: uppercase;
+        background: #1e2334;
     }
     .ladderNav > *[class*="ladderNav--item"] > a,
     .ladderNav > *[class*="ladderNav--item"] > span {
@@ -96,6 +97,36 @@ table.table { background-color: transparent; }
         margin: 0 auto .3rem auto;
         max-width: 1.5rem;
         fill: var(--color-white);
+    }
+
+    .ladderNav > .ladderNav--item__has-sub .ladderNav--sub {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 1rem;
+        position: absolute;
+        left: 0;
+        bottom: calc(100% - 1rem);
+        width: 100%;
+        background: var(--color-white);
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        z-index: -1;
+        clip-path: circle(0% at 50% 100%);
+        transition: all ease-in-out 150ms;
+    }
+    .ladderNav > .ladderNav--item__has-sub:focus-within .ladderNav--sub,
+    .ladderNav > .ladderNav--item__has-sub:focus .ladderNav--sub,
+    .ladderNav > .ladderNav--item__has-sub:hover .ladderNav--sub { clip-path: circle(100% at 50% 100%); }
+    .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] {
+        min-width: 0;
+        flex: 1 1 0px;
+    }
+    .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] > a {
+        display: block;
+        line-height: 3;
+        text-align: center;
+        color: #1e2334;
     }
     /* }}} Ladder navigation */
 
