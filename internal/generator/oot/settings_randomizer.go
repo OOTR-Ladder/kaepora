@@ -14,7 +14,7 @@ import (
 
 const (
 	SettingsRandomizerName = "oot-settings-randomizer"
-	SettingsCostBudget     = 15
+	SettingsCostBudget     = 20
 )
 
 type SettingsRandomizer struct {
