@@ -295,7 +295,7 @@ func maybeWriteSettingsPatchInfo(w io.Writer, stateJSON []byte) error {
 		return nil
 	}
 
-	doc, err := loadSettingsDocumentation("en") // HARDCODED every bot message is in English.
+	doc, err := LoadSettingsDocumentation("en") // HARDCODED every bot message is in English.
 	if err != nil {
 		return err
 	}
@@ -304,7 +304,7 @@ func maybeWriteSettingsPatchInfo(w io.Writer, stateJSON []byte) error {
 
 	for k, v := range state.SettingsPatch {
 		setting := doc[k]
-		value := setting.getValueEntry(v)
+		value := setting.GetValueEntry(v)
 
 		if setting.Title == "" {
 			log.Printf("warning: no title for setting %s", k)

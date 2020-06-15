@@ -49,6 +49,11 @@
                 <li data-target=".js-spoilers-tab-gossip">
                     <a href="#gossip" role="tab" aria-controls="spoilers-gossip">{{t .Locale "Gossip stones"}}</a>
                 </li>
+                {{- if len .Payload.Settings -}}
+                <li data-target=".js-spoilers-tab-settings">
+                    <a href="#settings" role="tab" aria-controls="spoilers-settings">{{t .Locale "Settings"}}</a>
+                </li>
+                {{- end -}}
             </ul>
         </div>
     </div>
@@ -80,6 +85,20 @@
         </table>
         </ul>
     </div>  <!-- container -->
+
+    {{- if len .Payload.Settings -}}
+    <div class="container js-spoilers-tab-settings" role="tabpanel" aria-labelledby="spoilers-settings">
+        <table class="table">  <!-- container -->
+            {{- range $name, $value := .Payload.Settings -}}
+            <tr>
+                <td>{{$name}}</td>
+                <td>{{$value.Title}}</td>
+                <td>{{$value.Description}}</td>
+            </tr>
+            {{- end -}}
+        </table>
+    </div>  <!-- container -->
+    {{- end -}}
 
     <script src="{{assetURL "js/main.js"}}" integrity="{{assetIntegrity "js/main.js"}}" ></script>
     <script src="{{assetURL "js/spoilers.js"}}" integrity="{{assetIntegrity "js/spoilers.js"}}" ></script>

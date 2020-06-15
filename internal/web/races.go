@@ -114,20 +114,7 @@ func (s *Server) getSpoilerLog(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.URL.Query().Get("raw") == "1" {
-		s.cache(w, "public", 1*time.Hour)
-		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set(
-			"Content-Disposition",
-			fmt.Sprintf(
-				`attachment; filename="%s_%s_%s.spoilers.json"`,
-				league.ShortCode,
-				match.StartedAt.Time.Time().Format("2006-01-02_15h04"),
-				match.Seed,
-			),
-		)
-		if _, err := w.Write(raw); err != nil {
-			log.Printf("warning: %s", err)
-		}
+		s.sendRawSpoilerLog(w, league, match, raw)
 		return
 	}
 
@@ -137,12 +124,69 @@ func (s *Server) getSpoilerLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	settings, err := s.getSettingsDiff(match.GeneratorState, r.Context().Value(ctxKeyLocale).(string))
+	if err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
+	}
+
 	s.cache(w, "public", 1*time.Hour)
 	s.response(w, r, http.StatusOK, "spoilers.html", struct {
-		Match back.Match
-		JSON  string
-		Log   oot.SpoilerLog
-	}{match, string(raw), parsed})
+		Match    back.Match
+		Settings map[string]back.SettingsDocumentationValueEntry
+		JSON     string
+		Log      oot.SpoilerLog
+	}{match, settings, string(raw), parsed})
+}
+
+func (s *Server) sendRawSpoilerLog(w http.ResponseWriter, league back.League, match back.Match, raw []byte) {
+	s.cache(w, "public", 1*time.Hour)
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set(
+		"Content-Disposition",
+		fmt.Sprintf(
+			`attachment; filename="%s_%s_%s.spoilers.json"`,
+			league.ShortCode,
+			match.StartedAt.Time.Time().Format("2006-01-02_15h04"),
+			match.Seed,
+		),
+	)
+
+	if _, err := w.Write(raw); err != nil {
+		log.Printf("warning: %s", err)
+	}
+}
+
+func (s *Server) getSettingsDiff(stateJSON []byte, locale string) (map[string]back.SettingsDocumentationValueEntry, error) {
+	var state oot.State
+	if err := json.Unmarshal(stateJSON, &state); err != nil {
+		return nil, err
+	}
+	if len(state.SettingsPatch) == 0 {
+		return nil, nil
+	}
+
+	doc, err := back.LoadSettingsDocumentation(locale)
+	if err != nil {
+		return nil, err
+	}
+
+	ret := make(map[string]back.SettingsDocumentationValueEntry, len(state.SettingsPatch))
+	for k, v := range state.SettingsPatch {
+		setting := doc[k]
+		value := setting.GetValueEntry(v)
+
+		if setting.Title == "" {
+			continue
+		}
+		if value.Title == "" {
+			continue
+		}
+
+		ret[setting.Title] = value
+	}
+
+	return ret, nil
 }
 
 func (s *Server) leaderboard(w http.ResponseWriter, r *http.Request) {

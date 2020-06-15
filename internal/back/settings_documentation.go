@@ -7,29 +7,29 @@ import (
 	"os"
 )
 
-type settingsDocumentation map[string]settingsDocumentationEntry
+type SettingsDocumentation map[string]SettingsDocumentationEntry
 
-type settingsDocumentationEntry struct {
+type SettingsDocumentationEntry struct {
 	Title  string
-	Values []settingsDocumentationValueEntry
+	Values []SettingsDocumentationValueEntry
 }
 
-func (e *settingsDocumentationEntry) getValueEntry(value interface{}) settingsDocumentationValueEntry {
+func (e *SettingsDocumentationEntry) GetValueEntry(value interface{}) SettingsDocumentationValueEntry {
 	for _, entry := range e.Values {
 		if value == entry.Value {
 			return entry
 		}
 	}
 
-	return settingsDocumentationValueEntry{}
+	return SettingsDocumentationValueEntry{}
 }
 
-type settingsDocumentationValueEntry struct {
+type SettingsDocumentationValueEntry struct {
 	Value              interface{}
 	Title, Description string
 }
 
-func loadSettingsDocumentation(locale string) (settingsDocumentation, error) {
+func LoadSettingsDocumentation(locale string) (SettingsDocumentation, error) {
 	dir, err := oot.GetBaseDir()
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func loadSettingsDocumentation(locale string) (settingsDocumentation, error) {
 	}
 	defer f.Close()
 
-	var doc settingsDocumentation
+	var doc SettingsDocumentation
 	dec := json.NewDecoder(f)
 	if err := dec.Decode(&doc); err != nil {
 		return nil, err

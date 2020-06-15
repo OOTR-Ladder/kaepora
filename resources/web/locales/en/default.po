@@ -5,39 +5,39 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: internal/web/templates.go:117
+#: internal/web/templates.go:119
 msgid "Planned"
 msgstr ""
 
-#: internal/web/templates.go:120
+#: internal/web/templates.go:122
 msgid "Joinable"
 msgstr ""
 
-#: internal/web/templates.go:123
+#: internal/web/templates.go:125
 msgid "Preparing"
 msgstr ""
 
-#: internal/web/templates.go:126
+#: internal/web/templates.go:128
 msgid "Race in progress"
 msgstr ""
 
-#: internal/web/templates.go:129
+#: internal/web/templates.go:131
 msgid "Closed"
 msgstr ""
 
-#: internal/web/templates.go:170
+#: internal/web/templates.go:172
 msgid "not started"
 msgstr ""
 
-#: internal/web/templates.go:172
+#: internal/web/templates.go:174
 msgid "in progress"
 msgstr ""
 
-#: internal/web/templates.go:176
+#: internal/web/templates.go:178
 msgid "before start"
 msgstr ""
 
-#: internal/web/templates.go:181
+#: internal/web/templates.go:183
 msgid "forfeit (%s)"
 msgstr ""
 
@@ -91,10 +91,6 @@ msgstr ""
 
 #: resources/web/templates/includes/spoilers_woths_barrens.html:4
 msgid "Ways of the Hero"
-msgstr ""
-
-#: resources/web/templates/includes/spoilers_woths_barrens.html:8
-msgid "Location"
 msgstr ""
 
 #: resources/web/templates/includes/spoilers_woths_barrens.html:9
@@ -269,16 +265,16 @@ msgstr ""
 msgid "Scheduled races"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:33
-msgid "Races history"
+#: resources/web/templates/layouts/index.html:58
+msgid "Full leaderboard"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:43
+#: resources/web/templates/layouts/leaderboard.html:7
 msgid "Leaderboard"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:58
-msgid "Full leaderboard"
+#: resources/web/templates/layouts/leaderboard.html:8
+msgid "%s league"
 msgstr ""
 
 #: resources/web/templates/layouts/leaderboard.html:22
@@ -299,10 +295,6 @@ msgstr ""
 
 #: resources/web/templates/layouts/leaderboard.html:72
 msgid "The leaderboard is currently empty."
-msgstr ""
-
-#: resources/web/templates/layouts/one_session.html:9
-msgid "%s league"
 msgstr ""
 
 #: resources/web/templates/layouts/one_session.html:10
@@ -345,6 +337,10 @@ msgstr ""
 msgid "in"
 msgstr ""
 
+#: resources/web/templates/layouts/sessions.html:9
+msgid "Races history"
+msgstr ""
+
 #: resources/web/templates/layouts/sessions.html:10
 msgid "Races completed in the last 30 days"
 msgstr ""
@@ -377,8 +373,16 @@ msgstr ""
 msgid "Spheres & Locations"
 msgstr ""
 
-#: resources/web/templates/layouts/spoilers.html:47
-msgid "WotH & barrens"
+#: resources/web/templates/layouts/spoilers.html:50
+msgid "Gossip stones"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:73
+msgid "Location"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:74
+msgid "Gossip"
 msgstr ""
 
 #: resources/web/templates/layouts/stats.html:9
@@ -387,6 +391,10 @@ msgstr ""
 
 #: resources/web/templates/layouts/stats.html:21
 msgid "Ladder stats"
+msgstr ""
+
+#: resources/web/templates/layouts/stats.html:24
+msgid "WotH & barrens"
 msgstr ""
 
 #: resources/web/templates/layouts/stats.html:27
