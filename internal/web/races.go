@@ -157,7 +157,10 @@ func (s *Server) sendRawSpoilerLog(w http.ResponseWriter, league back.League, ma
 	}
 }
 
-func (s *Server) getSettingsDiff(stateJSON []byte, locale string) (map[string]back.SettingsDocumentationValueEntry, error) {
+func (s *Server) getSettingsDiff(
+	stateJSON []byte,
+	locale string,
+) (map[string]back.SettingsDocumentationValueEntry, error) {
 	var state oot.State
 	if err := json.Unmarshal(stateJSON, &state); err != nil {
 		return nil, err
