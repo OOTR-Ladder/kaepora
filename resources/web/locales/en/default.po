@@ -301,20 +301,24 @@ msgstr ""
 msgid "Race started at %s"
 msgstr ""
 
-#: resources/web/templates/layouts/one_session.html:20
+#: resources/web/templates/layouts/one_session.html:22
 msgid "Winner"
 msgstr ""
 
-#: resources/web/templates/layouts/one_session.html:21
+#: resources/web/templates/layouts/one_session.html:23
 msgid "Loser"
 msgstr ""
 
-#: resources/web/templates/layouts/one_session.html:22
+#: resources/web/templates/layouts/one_session.html:24
 msgid "Seed"
 msgstr ""
 
-#: resources/web/templates/layouts/one_session.html:33
+#: resources/web/templates/layouts/one_session.html:35
 msgid "spoiler log"
+msgstr ""
+
+#: resources/web/templates/layouts/one_session.html:43
+msgid "Not enough players joined this session."
 msgstr ""
 
 #: resources/web/templates/layouts/schedule.html:9

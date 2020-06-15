@@ -14,6 +14,8 @@
 
 <section class="section">
     <div class="container">
+
+{{- if len .Payload.Matches -}}
         <table class="table">
             <thead>
                 <tr>
@@ -35,6 +37,15 @@
                 {{- end -}}
             </tbody>
         </table>
+{{else}}
+        <article class="message is-info">
+            <div class="message-body">
+                {{t .Locale "Not enough players joined this session."}}
+            </div>
+        </article>
+{{end}}
+
     </div>
 </section>
+
 {{end}}

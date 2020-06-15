@@ -303,21 +303,25 @@ msgstr "Le classement est actuellement vide."
 msgid "Race started at %s"
 msgstr "Session du %s"
 
-#: resources/web/templates/layouts/one_session.html:20
+#: resources/web/templates/layouts/one_session.html:22
 msgid "Winner"
 msgstr "Gagnant"
 
-#: resources/web/templates/layouts/one_session.html:21
+#: resources/web/templates/layouts/one_session.html:23
 msgid "Loser"
 msgstr "Perdant"
 
-#: resources/web/templates/layouts/one_session.html:22
+#: resources/web/templates/layouts/one_session.html:24
 msgid "Seed"
 msgstr "Seed"
 
-#: resources/web/templates/layouts/one_session.html:33
+#: resources/web/templates/layouts/one_session.html:35
 msgid "spoiler log"
 msgstr "solution"
+
+#: resources/web/templates/layouts/one_session.html:43
+msgid "Not enough players joined this session."
+msgstr "Il n'y avait pas assez de joueurs pour démarrer cette session."
 
 #: resources/web/templates/layouts/schedule.html:9
 msgid "Schedule"

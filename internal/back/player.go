@@ -176,6 +176,11 @@ func getPlayersByMatches(tx *sqlx.Tx, matches []Match) (map[util.UUIDAsBlob]Play
 	for k := range matches {
 		ids = append(ids, matches[k].Entries[0].PlayerID, matches[k].Entries[1].PlayerID)
 	}
+
+	if len(ids) == 0 {
+		return map[util.UUIDAsBlob]Player{}, nil
+	}
+
 	query, args, err := sqlx.In(`SELECT * FROM Player WHERE ID IN(?)`, ids)
 	if err != nil {
 		return nil, err
