@@ -18,7 +18,7 @@ func (s *Server) history(w http.ResponseWriter, r *http.Request) {
 		[]back.MatchSessionStatus{
 			back.MatchSessionStatusClosed,
 		},
-		`StartDate DESC`,
+		`DATETIME(StartDate) DESC`,
 	)
 	if err != nil {
 		s.error(w, r, err, http.StatusInternalServerError)
