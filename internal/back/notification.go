@@ -490,12 +490,12 @@ func writeResultsTable(
 
 	for _, match := range matches {
 		if scope != RecapScopeAdmin {
-			if !match.Entries[0].hasEnded() && !match.Entries[1].hasEnded() {
+			if !match.Entries[0].HasEnded() && !match.Entries[1].HasEnded() {
 				unknown++
 				continue
 			}
 
-			if scope == RecapScopePublic && (!match.Entries[0].hasEnded() || !match.Entries[1].hasEnded()) {
+			if scope == RecapScopePublic && (!match.Entries[0].HasEnded() || !match.Entries[1].HasEnded()) {
 				unknown++
 				continue
 			}

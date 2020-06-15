@@ -248,7 +248,7 @@ func (b *Back) SendSeedSpoilerLog(player Player, seed string, isAdmin bool) erro
 			return err
 		}
 
-		if !isAdmin && !match.hasEnded() {
+		if !isAdmin && !match.HasEnded() {
 			return util.ErrPublic(fmt.Sprintf("The race for seed %s is still in progress.", seed))
 		}
 

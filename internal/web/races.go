@@ -1,9 +1,11 @@
 package web
 
 import (
+	"errors"
 	"io"
 	"kaepora/internal/back"
 	"kaepora/internal/util"
+	"log"
 	"net/http"
 	"reflect"
 	"sort"
@@ -37,7 +39,7 @@ func (s *Server) getAllMatchSession(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// getMatchSession shows the details of one MatchSession
+// getMatchSession shows the details of one MatchSession.
 func (s *Server) getOneMatchSession(w http.ResponseWriter, r *http.Request) {
 	id, err := urlID(r, "id")
 	if err != nil {
@@ -49,6 +51,13 @@ func (s *Server) getOneMatchSession(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		s.error(w, r, err, http.StatusInternalServerError)
 		return
+	}
+
+	for k := range matches {
+		if !matches[k].HasEnded() {
+			s.error(w, r, errors.New("this session is still in progress"), http.StatusForbidden)
+			return
+		}
 	}
 
 	league, err := s.back.GetLeague(session.LeagueID)
@@ -84,9 +93,16 @@ func (s *Server) getSpoilerLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !match.HasEnded() {
+		s.error(w, r, errors.New("match has not ended"), http.StatusForbidden)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	s.cache(w, "public", 1*time.Hour)
-	io.Copy(w, match.SpoilerLog.Uncompressed())
+	if _, err := io.Copy(w, match.SpoilerLog.Uncompressed()); err != nil {
+		log.Printf("warning: %s", err)
+	}
 }
 
 func (s *Server) leaderboard(w http.ResponseWriter, r *http.Request) {

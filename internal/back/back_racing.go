@@ -125,7 +125,7 @@ func (b *Back) CompleteActiveMatch(player Player) (Match, error) {
 	}
 	b.sendSpoilerLogNotification(player, ret.Seed, ret.SpoilerLog)
 
-	if ret.hasEnded() {
+	if ret.HasEnded() {
 		go func() {
 			if err := b.maybeUnlockSpoilerLogs(ret); err != nil {
 				log.Printf("error: unable to unlock spoiler log: %s", err)
@@ -215,7 +215,7 @@ func (b *Back) ForfeitActiveMatch(player Player) (Match, error) {
 	}
 	b.sendSpoilerLogNotification(player, ret.Seed, ret.SpoilerLog)
 
-	if ret.hasEnded() {
+	if ret.HasEnded() {
 		go func() {
 			if err := b.maybeUnlockSpoilerLogs(ret); err != nil {
 				log.Printf("error: unable to unlock spoiler log: %s", err)
@@ -233,7 +233,7 @@ func (b *Back) maybeSendMatchEndNotifications(
 	selfEntry MatchEntry, againstEntry MatchEntry,
 	opponentID util.UUIDAsBlob,
 ) error {
-	if !match.hasEnded() {
+	if !match.HasEnded() {
 		return nil
 	}
 

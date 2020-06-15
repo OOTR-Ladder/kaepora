@@ -71,7 +71,7 @@ func (m *Match) end() {
 	m.EndedAt = util.NewNullTimeAsTimestamp(time.Now())
 }
 
-func (m *Match) hasEnded() bool {
+func (m *Match) HasEnded() bool {
 	return m.EndedAt.Valid
 }
 

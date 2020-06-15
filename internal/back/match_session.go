@@ -124,7 +124,7 @@ func getPlayerActiveSession(tx *sqlx.Tx, playerID util.UUIDAsBlob) (MatchSession
 		if err != nil {
 			return MatchSession{}, err
 		}
-		if !self.hasEnded() {
+		if !self.HasEnded() {
 			return v, nil
 		}
 	}

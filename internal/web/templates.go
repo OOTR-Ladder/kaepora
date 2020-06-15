@@ -145,7 +145,6 @@ func tplRanking(v back.LeaderboardEntry) template.HTML {
 	))
 }
 
-// nolint:gosec
 func (s *Server) tplMatchSeedURL(m back.Match) string {
 	if len(m.GeneratorState) == 0 {
 		return "#"
