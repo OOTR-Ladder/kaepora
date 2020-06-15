@@ -37,6 +37,14 @@ body {
     position: absolute;
 }
 
+.long-table-container .sticky {
+    position: sticky;
+    top: 0px;
+    background-color: white;
+    border-bottom: 1px grey solid;
+    padding-bottom: 4px;
+}
+
 /* }}} Global */
 
 /* {{{ Homepage */
@@ -389,12 +397,18 @@ table.stats--attendance {
 table.table.stats--attendance td {
     border: none;
 }
-
-.stats--long-table-container .sticky {
-    position: sticky;
-    top: 0px;
-    background-color: white;
-    border-bottom: 1px grey solid;
-    padding-bottom: 4px;
-}
 /* }}} Stats */
+
+/* {{{ Spoilers */
+ul.spoilers--hash {
+    padding-top: 10px;
+}
+
+ul.spoilers--hash li {
+    display: inline;
+}
+
+.spoilers--tabs {
+    margin-bottom: 20px;
+}
+/* }}} Spoilers */

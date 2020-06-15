@@ -29,7 +29,7 @@
                     <td>{{ matchEntryStatus $.Locale $match.WinningEntry }}</td>
                     <td>{{ (index $.Payload.Players ($match.LosingEntry).PlayerID).Name }}</td>
                     <td>{{ matchEntryStatus $.Locale $match.LosingEntry }}</td>
-                    <td><a href="{{ $match | matchSeedURL }}"><code>{{ $match.Seed }}</code></a></td>
+                    <td><code>{{ $match.Seed }}</code></td>
                     <td><a href="{{uri $.Locale "matches" $match.ID.String "spoilers"}}">{{t $.Locale "spoiler log"}}</a></td>
                 </tr>
                 {{- end -}}

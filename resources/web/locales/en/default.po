@@ -25,19 +25,19 @@ msgstr ""
 msgid "Closed"
 msgstr ""
 
-#: internal/web/templates.go:171
+#: internal/web/templates.go:170
 msgid "not started"
 msgstr ""
 
-#: internal/web/templates.go:173
+#: internal/web/templates.go:172
 msgid "in progress"
 msgstr ""
 
-#: internal/web/templates.go:177
+#: internal/web/templates.go:176
 msgid "before start"
 msgstr ""
 
-#: internal/web/templates.go:182
+#: internal/web/templates.go:181
 msgid "forfeit (%s)"
 msgstr ""
 
@@ -77,6 +77,36 @@ msgstr ""
 
 #: resources/web/templates/includes/menu.html:42
 msgid "Join the server"
+msgstr ""
+
+#: resources/web/templates/includes/noscript.html:7
+msgid ""
+"Enabling JavaScript is required for this page to function properly. I hate "
+"it as much as you do."
+msgstr ""
+
+#: resources/web/templates/includes/spoilers_spheres_locations.html:13
+msgid "Sphere #%d"
+msgstr ""
+
+#: resources/web/templates/includes/spoilers_woths_barrens.html:4
+msgid "Ways of the Hero"
+msgstr ""
+
+#: resources/web/templates/includes/spoilers_woths_barrens.html:8
+msgid "Location"
+msgstr ""
+
+#: resources/web/templates/includes/spoilers_woths_barrens.html:9
+msgid "Item"
+msgstr ""
+
+#: resources/web/templates/includes/spoilers_woths_barrens.html:24
+msgid "Barren regions"
+msgstr ""
+
+#: resources/web/templates/includes/spoilers_woths_barrens.html:28
+msgid "Region"
 msgstr ""
 
 #: resources/web/templates/includes/stats_ladder.html:5
@@ -159,10 +189,6 @@ msgstr ""
 msgid "Items"
 msgstr ""
 
-#: resources/web/templates/includes/stats_locations.html:7
-msgid "Location"
-msgstr ""
-
 #: resources/web/templates/includes/stats_locations.html:8
 msgid "% items"
 msgstr ""
@@ -211,10 +237,6 @@ msgstr ""
 msgid "%"
 msgstr ""
 
-#: resources/web/templates/includes/stats_woth_barren.html:4
-msgid "Ways of the Hero"
-msgstr ""
-
 #: resources/web/templates/includes/stats_woth_barren.html:9
 msgid "% of seeds"
 msgstr ""
@@ -223,27 +245,19 @@ msgstr ""
 msgid "WoTH items"
 msgstr ""
 
-#: resources/web/templates/includes/stats_woth_barren.html:25
-msgid "Item"
-msgstr ""
-
-#: resources/web/templates/includes/stats_woth_barren.html:38
-msgid "Barren regions"
-msgstr ""
-
-#: resources/web/templates/includes/stats_woth_barren.html:42
-msgid "Region"
-msgstr ""
-
 #: resources/web/templates/layouts/error.html:12
 msgid "The page you requested does not exist."
 msgstr ""
 
 #: resources/web/templates/layouts/error.html:14
-msgid "An internal error occured."
+msgid "This page his not available yet."
 msgstr ""
 
 #: resources/web/templates/layouts/error.html:16
+msgid "An internal error occured."
+msgstr ""
+
+#: resources/web/templates/layouts/error.html:18
 msgid "Error %d"
 msgstr ""
 
@@ -300,18 +314,14 @@ msgid "Winner"
 msgstr ""
 
 #: resources/web/templates/layouts/one_session.html:21
-msgid "Time"
-msgstr ""
-
-#: resources/web/templates/layouts/one_session.html:22
 msgid "Loser"
 msgstr ""
 
-#: resources/web/templates/layouts/one_session.html:24
+#: resources/web/templates/layouts/one_session.html:22
 msgid "Seed"
 msgstr ""
 
-#: resources/web/templates/layouts/one_session.html:36
+#: resources/web/templates/layouts/one_session.html:33
 msgid "spoiler log"
 msgstr ""
 
@@ -351,28 +361,38 @@ msgstr ""
 msgid "Players"
 msgstr ""
 
+#: resources/web/templates/layouts/spoilers.html:11
+msgid "Spoiler Log for seed `%s`"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:27
+msgid "Download / Patch"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:28
+msgid "Download raw JSON"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:44
+msgid "Spheres & Locations"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:47
+msgid "WotH & barrens"
+msgstr ""
+
 #: resources/web/templates/layouts/stats.html:9
 msgid "Ladder & Seed statistics"
 msgstr ""
 
-#: resources/web/templates/layouts/stats.html:19
-msgid ""
-"Enabling JavaScript is required for this page to function properly. I hate "
-"it as much as you do."
-msgstr ""
-
-#: resources/web/templates/layouts/stats.html:31
+#: resources/web/templates/layouts/stats.html:21
 msgid "Ladder stats"
 msgstr ""
 
-#: resources/web/templates/layouts/stats.html:33
-msgid "WotH and barrens"
-msgstr ""
-
-#: resources/web/templates/layouts/stats.html:36
+#: resources/web/templates/layouts/stats.html:27
 msgid "Locations"
 msgstr ""
 
-#: resources/web/templates/layouts/stats.html:41
+#: resources/web/templates/layouts/stats.html:32
 msgid "Settings"
 msgstr ""

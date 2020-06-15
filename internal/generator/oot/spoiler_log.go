@@ -21,6 +21,20 @@ type SpoilerLog struct {
 	Playthrough   map[json.Number]map[string]SpoilerLogItem `json:":playthrough"`
 }
 
+// Spheres returns the playthrough as an ordered slice. The playthrough is
+// returned as a map with numeric keys a string which makes iterating over it
+// in order impossible.
+func (s SpoilerLog) Spheres() []map[string]SpoilerLogItem {
+	ret := make([]map[string]SpoilerLogItem, len(s.Playthrough))
+
+	for k := range s.Playthrough {
+		iK, _ := k.Int64()
+		ret[iK-1] = s.Playthrough[k]
+	}
+
+	return ret
+}
+
 type SpoilerLogItem string
 type SpoilerLogItemCategory int
 
@@ -105,16 +119,7 @@ func (i *SpoilerLogItem) UnmarshalJSON(raw []byte) error {
 	return fmt.Errorf("unable to parse item: %s", string(raw))
 }
 
-type SpoilerLogGossip string
-
-func (g *SpoilerLogGossip) UnmarshalJSON(raw []byte) error {
-	var stone struct {
-		Text string `json:"text"`
-	}
-	if err := json.Unmarshal(raw, &stone); err == nil {
-		*g = SpoilerLogGossip(stone.Text)
-		return nil
-	}
-
-	return fmt.Errorf("unable to parse gossip: %s", string(raw))
+type SpoilerLogGossip struct {
+	Text   string   `json:"text"`
+	Colors []string `json:"colors"`
 }

@@ -1,0 +1,39 @@
+{{define "spoilers_woths_barrens"}}
+<div class="columns is-centered long-table-container">
+    <div class="column is-half">
+        <h4 class="title sticky">{{t .Locale "Ways of the Hero"}}</h4>
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th>{{t .Locale "Location"}}</th>
+                    <th>{{t .Locale "Item"}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{- range $location, $item := .Payload.Log.WOTHLocations -}}
+                <tr>
+                    <td>{{$location}}</td>
+                    <td>{{$item}}</td>
+                </tr>
+                {{- end -}}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="column is-half">
+        <h4 class="title sticky">{{t .Locale "Barren regions"}}</h4>
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th>{{t .Locale "Region"}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{- range $v := .Payload.Log.BarrenRegions -}}
+                <tr><td>{{$v}}</td></tr>
+                {{- end -}}
+            </tbody>
+        </table>
+    </div>
+</div> <!-- columns -->
+{{end}}

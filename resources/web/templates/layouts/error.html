@@ -10,6 +10,8 @@
                 <div class="message-body">
                     {{if eq .Payload.HTTPCode 404}}
                         {{t .Locale "The page you requested does not exist."}}
+                    {{else if eq .Payload.HTTPCode 403}}
+                        {{t .Locale "This page his not available yet."}}
                     {{else if eq .Payload.HTTPCode 500}}
                         {{t .Locale "An internal error occured."}}
                     {{else}}

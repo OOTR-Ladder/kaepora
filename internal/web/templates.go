@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"io"
 	"kaepora/internal/back"
+	"kaepora/internal/generator/oot"
 	"kaepora/internal/global"
 	"kaepora/internal/util"
 	"log"
@@ -79,17 +80,18 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 			return strconv.Itoa(i)
 		},
 
+		"matchEntryStatus":      s.tplMatchEntryStatus,
+		"matchSeedURL":          s.tplMatchSeedURL,
 		"matchSessionStatusTag": s.tplMatchSessionStatusTag,
 
-		"ranking":          tplRanking,
-		"matchEntryStatus": s.tplMatchEntryStatus,
-		"matchSeedURL":     s.tplMatchSeedURL,
-		"until":            tplUntil,
-		"future":           tplFuture,
-		"datetime":         util.Datetime,
-		"assetURL":         tplAssetURL,
-		"assetIntegrity":   tplAssetIntegrity(baseDir),
-		"percentage":       tplPercentage,
+		"assetIntegrity": tplAssetIntegrity(baseDir),
+		"gossipText":     tplGossipText,
+		"assetURL":       tplAssetURL,
+		"datetime":       util.Datetime,
+		"future":         tplFuture,
+		"percentage":     tplPercentage,
+		"ranking":        tplRanking,
+		"until":          tplUntil,
 
 		"add": func(a, b int) int {
 			return a + b
@@ -223,6 +225,39 @@ func tplFuture(iface interface{}) bool {
 	}
 
 	return t.After(time.Now())
+}
+
+// nolint:gosec
+func tplGossipText(gossip oot.SpoilerLogGossip) template.HTML {
+	str := gossip.Text
+
+	var i int
+	for strings.Contains(str, "#") {
+		str = strings.Replace(
+			str, "#",
+			fmt.Sprintf(`<span style="color: %s">`, gossipColorToCSSColor(gossip.Colors[i])),
+			1,
+		)
+		str = strings.Replace(str, "#", `</span>`, 1)
+		i++
+	}
+
+	return template.HTML(str)
+}
+
+func gossipColorToCSSColor(color string) string {
+	switch color { // DO NOT USE HEX COLORS, the # char is a canary in tplGossipText
+	case "Green":
+		return "green"
+	case "Red":
+		return "red"
+	case "Light Blue":
+		return "blue"
+	case "Pink":
+		return "rgb(255, 0, 255)"
+	default:
+		return "grey"
+	}
 }
 
 func tplAssetURL(name string) string {

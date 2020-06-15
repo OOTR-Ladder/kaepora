@@ -1,9 +1,12 @@
 package web
 
 import (
+	"encoding/json"
 	"errors"
-	"io"
+	"fmt"
+	"io/ioutil"
 	"kaepora/internal/back"
+	"kaepora/internal/generator/oot"
 	"kaepora/internal/util"
 	"log"
 	"net/http"
@@ -93,16 +96,53 @@ func (s *Server) getSpoilerLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	league, err := s.back.GetLeague(match.LeagueID)
+	if err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
+	}
+
 	if !match.HasEnded() {
 		s.error(w, r, errors.New("match has not ended"), http.StatusForbidden)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	s.cache(w, "public", 1*time.Hour)
-	if _, err := io.Copy(w, match.SpoilerLog.Uncompressed()); err != nil {
-		log.Printf("warning: %s", err)
+	raw, err := ioutil.ReadAll(match.SpoilerLog.Uncompressed())
+	if err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
 	}
+
+	if r.URL.Query().Get("raw") == "1" {
+		s.cache(w, "public", 1*time.Hour)
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set(
+			"Content-Disposition",
+			fmt.Sprintf(
+				`attachment; filename="%s_%s_%s.spoilers.json"`,
+				league.ShortCode,
+				match.StartedAt.Time.Time().Format("2006-01-02_15h04"),
+				match.Seed,
+			),
+		)
+		if _, err := w.Write(raw); err != nil {
+			log.Printf("warning: %s", err)
+		}
+		return
+	}
+
+	var parsed oot.SpoilerLog
+	if err := json.Unmarshal(raw, &parsed); err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
+	}
+
+	s.cache(w, "public", 1*time.Hour)
+	s.response(w, r, http.StatusOK, "spoilers.html", struct {
+		Match back.Match
+		JSON  string
+		Log   oot.SpoilerLog
+	}{match, string(raw), parsed})
 }
 
 func (s *Server) leaderboard(w http.ResponseWriter, r *http.Request) {

@@ -472,6 +472,8 @@ func (b *Back) sendSessionRecapNotification(
 	if unknown > 0 {
 		notif.Printf("There are still %d race(s) in progress.\n", unknown)
 		notif.Printf("You can get an up to date recap with `!recap %s`.", league.ShortCode)
+	} else {
+		notif.Printf("Get the seeds and spoiler logs on https://ootrladder.com/en/sessions/%s", session.ID)
 	}
 
 	b.notifications <- notif

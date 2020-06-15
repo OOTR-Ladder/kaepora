@@ -1,0 +1,87 @@
+{{define "content"}}
+<section class="hero is-dark homeHeader">
+    <div class="hero-head">
+        {{- template "menu" . -}}
+    </div>
+
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                <h1 class="title">{{tmd .Locale "Spoiler Log for seed `%s`" .Payload.Match.Seed}}</h1>
+                <h2 class="subtitle">
+                    <ul class="spoilers--hash">
+                    {{- range $item := .Payload.Log.FileHash -}}
+                    <li><img
+                        height="64" width="64"
+                        src="/_/img/items/{{$item}}.png"
+                        title="{{$item}}" alt="{{$item}}"
+                    /></li>
+                    {{- end -}}
+                    </ul>
+                </h2>
+                </div>
+
+                <div class="column is-one-fifth">
+                    <p>
+                        <a class="button is-info" href="{{.Payload.Match | matchSeedURL }}">{{t .Locale "Download / Patch"}}</a>
+                        <a class="button is-info" href="?raw=1">{{t .Locale "Download raw JSON"}}</a>
+                        <span class="tag">{{.Payload.Log.Version}}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{- template "noscript" . -}}
+
+<section class="section">
+    <div class="container">
+        <div class="tabs spoilers--tabs">
+            <ul class="js-spoilers-tabs" role="tablist">
+                <li data-target=".js-spoilers-tab-spheres" class="is-active">
+                    <a href="#spheres" role="tab" aria-controls="spoilers-spheres">{{t .Locale "Spheres & Locations"}}</a>
+                </li>
+                <li data-target=".js-spoilers-tab-woths">
+                    <a href="#woths" role="tab" aria-controls="spoilers-woths">{{t .Locale "WotH & barrens"}}</a>
+                </li>
+                <li data-target=".js-spoilers-tab-gossip">
+                    <a href="#gossip" role="tab" aria-controls="spoilers-gossip">{{t .Locale "Gossip stones"}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container js-spoilers-tab-spheres" role="tabpanel" aria-selected="true" aria-labelledby="spoilers-spheres">
+        {{- template "spoilers_spheres_locations" . -}}
+    </div>  <!-- container -->
+
+    <div class="container js-spoilers-tab-woths" role="tabpanel" aria-labelledby="spoilers-woths">
+        {{- template "spoilers_woths_barrens" . -}}
+    </div>  <!-- container -->
+
+    <div class="container js-spoilers-tab-gossip" role="tabpanel" aria-labelledby="spoilers-gossip">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{{t .Locale "Location"}}</th>
+                    <th>{{t .Locale "Gossip"}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{- range $location, $gossip := .Payload.Log.GossipStones -}}
+                <tr>
+                    <td>{{$location}}</td>
+                    <td>{{$gossip | gossipText}}</td>
+                </tr>
+                {{- end -}}
+            </tbody>
+        </table>
+        </ul>
+    </div>  <!-- container -->
+
+    <script src="{{assetURL "js/main.js"}}" integrity="{{assetIntegrity "js/main.js"}}" ></script>
+    <script src="{{assetURL "js/spoilers.js"}}" integrity="{{assetIntegrity "js/spoilers.js"}}" ></script>
+</section>
+{{end}}
