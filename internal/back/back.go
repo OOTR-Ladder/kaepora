@@ -3,6 +3,7 @@ package back
 
 import (
 	"fmt"
+	"kaepora/internal/generator"
 	"kaepora/internal/generator/factory"
 	"kaepora/internal/util"
 	"kaepora/pkg/ootrapi"
@@ -47,6 +48,10 @@ func New(sqlDriver, sqlDSN, ootrAPIKey string) (*Back, error) {
 		countingDown:     map[util.UUIDAsBlob]struct{}{},
 		generatorFactory: factory.New(ootrapi.New(ootrAPIKey)),
 	}, nil
+}
+
+func (b *Back) GetGenerator(name string) (generator.Generator, error) {
+	return b.generatorFactory.NewGenerator(name)
 }
 
 // GetNotificationsChan returns the channel on which the Back sends the textual

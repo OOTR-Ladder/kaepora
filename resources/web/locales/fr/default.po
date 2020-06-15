@@ -5,25 +5,41 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: internal/web/templates.go:114
+#: internal/web/templates.go:119
 msgid "Planned"
 msgstr "Planifiée"
 
-#: internal/web/templates.go:117
+#: internal/web/templates.go:122
 msgid "Joinable"
 msgstr "Inscriptions ouvertes"
 
-#: internal/web/templates.go:120
+#: internal/web/templates.go:125
 msgid "Preparing"
 msgstr "En préparation"
 
-#: internal/web/templates.go:123
+#: internal/web/templates.go:128
 msgid "Race in progress"
 msgstr "Course en cours"
 
-#: internal/web/templates.go:126
+#: internal/web/templates.go:131
 msgid "Closed"
 msgstr "Fermée"
+
+#: internal/web/templates.go:172
+msgid "not started"
+msgstr "pas commencé"
+
+#: internal/web/templates.go:174
+msgid "in progress"
+msgstr "en cours"
+
+#: internal/web/templates.go:178
+msgid "before start"
+msgstr "avant départ"
+
+#: internal/web/templates.go:183
+msgid "forfeit (%s)"
+msgstr "forfait (%s)"
 
 #: resources/web/templates/includes/base.html:9
 msgid "The Legend of Zelda: Ocarina of Time Randomizer racing leagues."
@@ -62,6 +78,34 @@ msgstr "Règles"
 #: resources/web/templates/includes/menu.html:42
 msgid "Join the server"
 msgstr "Rejoignez le serveur"
+
+#: resources/web/templates/includes/noscript.html:7
+msgid ""
+"Enabling JavaScript is required for this page to function properly. I hate "
+"it as much as you do."
+msgstr ""
+"Activer JavaScript est nécessaire pour que cette page fonctionne "
+"correctement. Ce n'est pas par plaisir."
+
+#: resources/web/templates/includes/spoilers_spheres_locations.html:13
+msgid "Sphere #%d"
+msgstr "Sphère №%d"
+
+#: resources/web/templates/includes/spoilers_woths_barrens.html:4
+msgid "Ways of the Hero"
+msgstr "Voies du Héros"
+
+#: resources/web/templates/includes/spoilers_woths_barrens.html:9
+msgid "Item"
+msgstr "Objet"
+
+#: resources/web/templates/includes/spoilers_woths_barrens.html:24
+msgid "Barren regions"
+msgstr "Zones vides"
+
+#: resources/web/templates/includes/spoilers_woths_barrens.html:28
+msgid "Region"
+msgstr "Zone"
 
 #: resources/web/templates/includes/stats_ladder.html:5
 msgid "Registered players: %d"
@@ -143,10 +187,6 @@ msgstr "Distribution du classement."
 msgid "Items"
 msgstr "Objets"
 
-#: resources/web/templates/includes/stats_locations.html:7
-msgid "Location"
-msgstr "Emplacement"
-
 #: resources/web/templates/includes/stats_locations.html:8
 msgid "% items"
 msgstr "% d'objets"
@@ -195,10 +235,6 @@ msgstr "Valeur"
 msgid "%"
 msgstr "%"
 
-#: resources/web/templates/includes/stats_woth_barren.html:4
-msgid "Ways of the Hero"
-msgstr "Voies du Héros"
-
 #: resources/web/templates/includes/stats_woth_barren.html:9
 msgid "% of seeds"
 msgstr "% des seeds"
@@ -207,49 +243,21 @@ msgstr "% des seeds"
 msgid "WoTH items"
 msgstr "Objets sur voies"
 
-#: resources/web/templates/includes/stats_woth_barren.html:25
-msgid "Item"
-msgstr "Objet"
-
-#: resources/web/templates/includes/stats_woth_barren.html:38
-msgid "Barren regions"
-msgstr "Zones vides"
-
-#: resources/web/templates/includes/stats_woth_barren.html:42
-msgid "Region"
-msgstr "Zone"
-
 #: resources/web/templates/layouts/error.html:12
 msgid "The page you requested does not exist."
 msgstr "La page que vous avez demandé n'existe pas."
 
 #: resources/web/templates/layouts/error.html:14
+msgid "This page his not available yet."
+msgstr "Cette page n'est pas disponible pour l'instant."
+
+#: resources/web/templates/layouts/error.html:16
 msgid "An internal error occured."
 msgstr "Une erreur est survenue pendant le traitement de votre requête."
 
-#: resources/web/templates/layouts/error.html:16
+#: resources/web/templates/layouts/error.html:18
 msgid "Error %d"
 msgstr "Erreur %d"
-
-#: resources/web/templates/layouts/history.html:9
-msgid "Races history"
-msgstr "Historique des courses"
-
-#: resources/web/templates/layouts/history.html:10
-msgid "Races completed in the last 30 days"
-msgstr "Courses terminées dans les 30 derniers jours"
-
-#: resources/web/templates/layouts/history.html:21
-msgid "League"
-msgstr "Ligue"
-
-#: resources/web/templates/layouts/history.html:22
-msgid "Date"
-msgstr "Date"
-
-#: resources/web/templates/layouts/history.html:23
-msgid "Players"
-msgstr "Joueurs"
 
 #: resources/web/templates/layouts/index.html:12
 msgid "Next races"
@@ -259,37 +267,57 @@ msgstr "Prochaines courses"
 msgid "Scheduled races"
 msgstr "Courses planifiées"
 
-#: resources/web/templates/layouts/index.html:43
-msgid "Leaderboard"
-msgstr "Classement"
-
 #: resources/web/templates/layouts/index.html:58
 msgid "Full leaderboard"
 msgstr "Classement complet"
+
+#: resources/web/templates/layouts/leaderboard.html:7
+msgid "Leaderboard"
+msgstr "Classement"
 
 #: resources/web/templates/layouts/leaderboard.html:8
 msgid "%s league"
 msgstr "Ligue %s"
 
-#: resources/web/templates/layouts/leaderboard.html:23
+#: resources/web/templates/layouts/leaderboard.html:22
 msgid "Rating"
 msgstr "Score"
 
-#: resources/web/templates/layouts/leaderboard.html:24
+#: resources/web/templates/layouts/leaderboard.html:23
 msgid "Wins"
 msgstr "Victoires"
 
-#: resources/web/templates/layouts/leaderboard.html:25
+#: resources/web/templates/layouts/leaderboard.html:24
 msgid "Losses"
 msgstr "Défaites"
 
-#: resources/web/templates/layouts/leaderboard.html:26
+#: resources/web/templates/layouts/leaderboard.html:25
 msgid "Forfeits"
 msgstr "Forfaits"
 
-#: resources/web/templates/layouts/leaderboard.html:70
+#: resources/web/templates/layouts/leaderboard.html:72
 msgid "The leaderboard is currently empty."
 msgstr "Le classement est actuellement vide."
+
+#: resources/web/templates/layouts/one_session.html:10
+msgid "Race started at %s"
+msgstr "Session du %s"
+
+#: resources/web/templates/layouts/one_session.html:20
+msgid "Winner"
+msgstr "Gagnant"
+
+#: resources/web/templates/layouts/one_session.html:21
+msgid "Loser"
+msgstr "Perdant"
+
+#: resources/web/templates/layouts/one_session.html:22
+msgid "Seed"
+msgstr "Seed"
+
+#: resources/web/templates/layouts/one_session.html:33
+msgid "spoiler log"
+msgstr "solution"
 
 #: resources/web/templates/layouts/schedule.html:9
 msgid "Schedule"
@@ -311,30 +339,70 @@ msgstr "Prochaines courses planifiées"
 msgid "in"
 msgstr "dans"
 
+#: resources/web/templates/layouts/sessions.html:9
+msgid "Races history"
+msgstr "Historique des courses"
+
+#: resources/web/templates/layouts/sessions.html:10
+msgid "Races completed in the last 30 days"
+msgstr "Courses terminées dans les 30 derniers jours"
+
+#: resources/web/templates/layouts/sessions.html:21
+msgid "League"
+msgstr "Ligue"
+
+#: resources/web/templates/layouts/sessions.html:22
+msgid "Date"
+msgstr "Date"
+
+#: resources/web/templates/layouts/sessions.html:23
+msgid "Players"
+msgstr "Joueurs"
+
+#: resources/web/templates/layouts/spoilers.html:11
+msgid "Spoiler Log for seed `%s`"
+msgstr "Solution pour la seed `%s`"
+
+#: resources/web/templates/layouts/spoilers.html:27
+msgid "Download / Patch"
+msgstr "Télécharger / Patcher"
+
+#: resources/web/templates/layouts/spoilers.html:28
+msgid "Download raw JSON"
+msgstr "Télécharger le JSON brut"
+
+#: resources/web/templates/layouts/spoilers.html:44
+msgid "Spheres & Locations"
+msgstr "Sphères et Emplacements"
+
+#: resources/web/templates/layouts/spoilers.html:50
+msgid "Gossip stones"
+msgstr "Pierres à Potins"
+
+#: resources/web/templates/layouts/spoilers.html:73
+msgid "Location"
+msgstr "Emplacement"
+
+#: resources/web/templates/layouts/spoilers.html:74
+msgid "Gossip"
+msgstr "Potin"
+
 #: resources/web/templates/layouts/stats.html:9
 msgid "Ladder & Seed statistics"
 msgstr "Statistiques du Ladder et des seeds"
 
-#: resources/web/templates/layouts/stats.html:19
-msgid ""
-"Enabling JavaScript is required for this page to function properly. I hate "
-"it as much as you do."
-msgstr ""
-"Activer JavaScript est nécessaire pour que cette page fonctionne "
-"correctement. Ce n'est pas par plaisir."
-
-#: resources/web/templates/layouts/stats.html:31
+#: resources/web/templates/layouts/stats.html:21
 msgid "Ladder stats"
 msgstr "Statistiques du Ladder"
 
-#: resources/web/templates/layouts/stats.html:33
-msgid "WotH and barrens"
+#: resources/web/templates/layouts/stats.html:24
+msgid "WotH & barrens"
 msgstr "Voies et zones vides"
 
-#: resources/web/templates/layouts/stats.html:36
+#: resources/web/templates/layouts/stats.html:27
 msgid "Locations"
 msgstr "Emplacements"
 
-#: resources/web/templates/layouts/stats.html:41
+#: resources/web/templates/layouts/stats.html:32
 msgid "Settings"
 msgstr "Paramètres"

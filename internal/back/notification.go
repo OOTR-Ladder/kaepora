@@ -295,7 +295,7 @@ func maybeWriteSettingsPatchInfo(w io.Writer, stateJSON []byte) error {
 		return nil
 	}
 
-	doc, err := loadSettingsDocumentation("en") // HARDCODED every bot message is in English.
+	doc, err := LoadSettingsDocumentation("en") // HARDCODED every bot message is in English.
 	if err != nil {
 		return err
 	}
@@ -304,7 +304,7 @@ func maybeWriteSettingsPatchInfo(w io.Writer, stateJSON []byte) error {
 
 	for k, v := range state.SettingsPatch {
 		setting := doc[k]
-		value := setting.getValueEntry(v)
+		value := setting.GetValueEntry(v)
 
 		if setting.Title == "" {
 			log.Printf("warning: no title for setting %s", k)
@@ -472,6 +472,8 @@ func (b *Back) sendSessionRecapNotification(
 	if unknown > 0 {
 		notif.Printf("There are still %d race(s) in progress.\n", unknown)
 		notif.Printf("You can get an up to date recap with `!recap %s`.", league.ShortCode)
+	} else {
+		notif.Printf("Get the seeds and spoiler logs on https://ootrladder.com/en/sessions/%s", session.ID)
 	}
 
 	b.notifications <- notif
@@ -490,12 +492,12 @@ func writeResultsTable(
 
 	for _, match := range matches {
 		if scope != RecapScopeAdmin {
-			if !match.Entries[0].hasEnded() && !match.Entries[1].hasEnded() {
+			if !match.Entries[0].HasEnded() && !match.Entries[1].HasEnded() {
 				unknown++
 				continue
 			}
 
-			if scope == RecapScopePublic && (!match.Entries[0].hasEnded() || !match.Entries[1].hasEnded()) {
+			if scope == RecapScopePublic && (!match.Entries[0].HasEnded() || !match.Entries[1].HasEnded()) {
 				unknown++
 				continue
 			}
@@ -517,7 +519,7 @@ func writeResultsTable(
 
 // entryDetails is a formatting helper for sendSessionRecapNotification.
 func entryDetails(tx *sqlx.Tx, entry MatchEntry) (wrap string, name string, duration string) {
-	if entry.Outcome == MatchEntryOutcomeWin {
+	if entry.HasWon() {
 		wrap = "*"
 	}
 

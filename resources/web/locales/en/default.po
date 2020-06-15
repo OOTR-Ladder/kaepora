@@ -5,24 +5,40 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: internal/web/templates.go:114
+#: internal/web/templates.go:119
 msgid "Planned"
 msgstr ""
 
-#: internal/web/templates.go:117
+#: internal/web/templates.go:122
 msgid "Joinable"
 msgstr ""
 
-#: internal/web/templates.go:120
+#: internal/web/templates.go:125
 msgid "Preparing"
 msgstr ""
 
-#: internal/web/templates.go:123
+#: internal/web/templates.go:128
 msgid "Race in progress"
 msgstr ""
 
-#: internal/web/templates.go:126
+#: internal/web/templates.go:131
 msgid "Closed"
+msgstr ""
+
+#: internal/web/templates.go:172
+msgid "not started"
+msgstr ""
+
+#: internal/web/templates.go:174
+msgid "in progress"
+msgstr ""
+
+#: internal/web/templates.go:178
+msgid "before start"
+msgstr ""
+
+#: internal/web/templates.go:183
+msgid "forfeit (%s)"
 msgstr ""
 
 #: resources/web/templates/includes/base.html:9
@@ -61,6 +77,32 @@ msgstr ""
 
 #: resources/web/templates/includes/menu.html:42
 msgid "Join the server"
+msgstr ""
+
+#: resources/web/templates/includes/noscript.html:7
+msgid ""
+"Enabling JavaScript is required for this page to function properly. I hate "
+"it as much as you do."
+msgstr ""
+
+#: resources/web/templates/includes/spoilers_spheres_locations.html:13
+msgid "Sphere #%d"
+msgstr ""
+
+#: resources/web/templates/includes/spoilers_woths_barrens.html:4
+msgid "Ways of the Hero"
+msgstr ""
+
+#: resources/web/templates/includes/spoilers_woths_barrens.html:9
+msgid "Item"
+msgstr ""
+
+#: resources/web/templates/includes/spoilers_woths_barrens.html:24
+msgid "Barren regions"
+msgstr ""
+
+#: resources/web/templates/includes/spoilers_woths_barrens.html:28
+msgid "Region"
 msgstr ""
 
 #: resources/web/templates/includes/stats_ladder.html:5
@@ -143,10 +185,6 @@ msgstr ""
 msgid "Items"
 msgstr ""
 
-#: resources/web/templates/includes/stats_locations.html:7
-msgid "Location"
-msgstr ""
-
 #: resources/web/templates/includes/stats_locations.html:8
 msgid "% items"
 msgstr ""
@@ -195,10 +233,6 @@ msgstr ""
 msgid "%"
 msgstr ""
 
-#: resources/web/templates/includes/stats_woth_barren.html:4
-msgid "Ways of the Hero"
-msgstr ""
-
 #: resources/web/templates/includes/stats_woth_barren.html:9
 msgid "% of seeds"
 msgstr ""
@@ -207,48 +241,20 @@ msgstr ""
 msgid "WoTH items"
 msgstr ""
 
-#: resources/web/templates/includes/stats_woth_barren.html:25
-msgid "Item"
-msgstr ""
-
-#: resources/web/templates/includes/stats_woth_barren.html:38
-msgid "Barren regions"
-msgstr ""
-
-#: resources/web/templates/includes/stats_woth_barren.html:42
-msgid "Region"
-msgstr ""
-
 #: resources/web/templates/layouts/error.html:12
 msgid "The page you requested does not exist."
 msgstr ""
 
 #: resources/web/templates/layouts/error.html:14
-msgid "An internal error occured."
+msgid "This page his not available yet."
 msgstr ""
 
 #: resources/web/templates/layouts/error.html:16
+msgid "An internal error occured."
+msgstr ""
+
+#: resources/web/templates/layouts/error.html:18
 msgid "Error %d"
-msgstr ""
-
-#: resources/web/templates/layouts/history.html:9
-msgid "Races history"
-msgstr ""
-
-#: resources/web/templates/layouts/history.html:10
-msgid "Races completed in the last 30 days"
-msgstr ""
-
-#: resources/web/templates/layouts/history.html:21
-msgid "League"
-msgstr ""
-
-#: resources/web/templates/layouts/history.html:22
-msgid "Date"
-msgstr ""
-
-#: resources/web/templates/layouts/history.html:23
-msgid "Players"
 msgstr ""
 
 #: resources/web/templates/layouts/index.html:12
@@ -259,36 +265,56 @@ msgstr ""
 msgid "Scheduled races"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:43
-msgid "Leaderboard"
-msgstr ""
-
 #: resources/web/templates/layouts/index.html:58
 msgid "Full leaderboard"
+msgstr ""
+
+#: resources/web/templates/layouts/leaderboard.html:7
+msgid "Leaderboard"
 msgstr ""
 
 #: resources/web/templates/layouts/leaderboard.html:8
 msgid "%s league"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:23
+#: resources/web/templates/layouts/leaderboard.html:22
 msgid "Rating"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:24
+#: resources/web/templates/layouts/leaderboard.html:23
 msgid "Wins"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:25
+#: resources/web/templates/layouts/leaderboard.html:24
 msgid "Losses"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:26
+#: resources/web/templates/layouts/leaderboard.html:25
 msgid "Forfeits"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:70
+#: resources/web/templates/layouts/leaderboard.html:72
 msgid "The leaderboard is currently empty."
+msgstr ""
+
+#: resources/web/templates/layouts/one_session.html:10
+msgid "Race started at %s"
+msgstr ""
+
+#: resources/web/templates/layouts/one_session.html:20
+msgid "Winner"
+msgstr ""
+
+#: resources/web/templates/layouts/one_session.html:21
+msgid "Loser"
+msgstr ""
+
+#: resources/web/templates/layouts/one_session.html:22
+msgid "Seed"
+msgstr ""
+
+#: resources/web/templates/layouts/one_session.html:33
+msgid "spoiler log"
 msgstr ""
 
 #: resources/web/templates/layouts/schedule.html:9
@@ -311,28 +337,70 @@ msgstr ""
 msgid "in"
 msgstr ""
 
+#: resources/web/templates/layouts/sessions.html:9
+msgid "Races history"
+msgstr ""
+
+#: resources/web/templates/layouts/sessions.html:10
+msgid "Races completed in the last 30 days"
+msgstr ""
+
+#: resources/web/templates/layouts/sessions.html:21
+msgid "League"
+msgstr ""
+
+#: resources/web/templates/layouts/sessions.html:22
+msgid "Date"
+msgstr ""
+
+#: resources/web/templates/layouts/sessions.html:23
+msgid "Players"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:11
+msgid "Spoiler Log for seed `%s`"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:27
+msgid "Download / Patch"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:28
+msgid "Download raw JSON"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:44
+msgid "Spheres & Locations"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:50
+msgid "Gossip stones"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:73
+msgid "Location"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:74
+msgid "Gossip"
+msgstr ""
+
 #: resources/web/templates/layouts/stats.html:9
 msgid "Ladder & Seed statistics"
 msgstr ""
 
-#: resources/web/templates/layouts/stats.html:19
-msgid ""
-"Enabling JavaScript is required for this page to function properly. I hate "
-"it as much as you do."
-msgstr ""
-
-#: resources/web/templates/layouts/stats.html:31
+#: resources/web/templates/layouts/stats.html:21
 msgid "Ladder stats"
 msgstr ""
 
-#: resources/web/templates/layouts/stats.html:33
-msgid "WotH and barrens"
+#: resources/web/templates/layouts/stats.html:24
+msgid "WotH & barrens"
 msgstr ""
 
-#: resources/web/templates/layouts/stats.html:36
+#: resources/web/templates/layouts/stats.html:27
 msgid "Locations"
 msgstr ""
 
-#: resources/web/templates/layouts/stats.html:41
+#: resources/web/templates/layouts/stats.html:32
 msgid "Settings"
 msgstr ""

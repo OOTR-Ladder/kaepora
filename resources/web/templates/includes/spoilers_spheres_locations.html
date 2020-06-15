@@ -1,0 +1,45 @@
+{{define "spoilers_spheres_locations"}}
+<div class="columns">
+    <div class="column">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{{t .Locale "Location"}}</th>
+                    <th>{{t .Locale "Item"}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{- range $id, $pool := .Payload.Log.Spheres -}}
+                <tr><td class="subtitle has-text-centered" colspan="2">{{t $.Locale "Sphere #%d" (add $id 1)}}</td></tr>
+                    {{- range $location, $item := $pool -}}
+                    <tr>
+                        <td>{{$location}}</td>
+                        <td>{{$item}}</td>
+                    </tr>
+                    {{- end -}}
+                {{- end -}}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="column">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{{t .Locale "Location"}}</th>
+                    <th>{{t .Locale "Item"}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{- range $location, $item := .Payload.Log.Locations -}}
+                <tr>
+                    <td>{{$location}}</td>
+                    <td>{{$item}}</td>
+                </tr>
+                {{- end -}}
+            </tbody>
+        </table>
+    </div>
+
+</div> <!-- columns -->
+{{end}}

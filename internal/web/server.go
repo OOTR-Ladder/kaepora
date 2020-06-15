@@ -8,6 +8,7 @@ import (
 	"html/template"
 	"io/ioutil"
 	"kaepora/internal/back"
+	"kaepora/internal/util"
 	"log"
 	"net/http"
 	"os"
@@ -18,6 +19,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/google/uuid"
 	"github.com/leonelquinteros/gotext"
 	"github.com/russross/blackfriday/v2"
 	"golang.org/x/text/language"
@@ -50,10 +52,20 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 		r.Get("/documentation", s.markdownContent(baseDir, "documentation.md"))
 
 		r.Get("/leaderboard/{shortcode}", s.leaderboard)
-		r.Get("/history", s.history)
+
+		r.Get("/sessions", s.getAllMatchSession)
+		r.Get("/sessions/{id}", s.getOneMatchSession)
+		r.Get("/matches/{id}/spoilers", s.getSpoilerLog)
+
 		r.Get("/schedule", s.schedule)
 		r.Get("/stats/{shortcode}/ratings.svg", s.statsRatings)
 		r.Get("/stats/{shortcode}", s.stats)
+
+		// TODO Remove this at some point.
+		r.Get("/history", func(w http.ResponseWriter, r *http.Request) {
+			http.Redirect(w, r, "/"+chi.URLParam(r, "locale")+"/sessions", http.StatusPermanentRedirect)
+		})
+
 		r.Get("/", s.index)
 
 		r.NotFound(s.notFound)
@@ -300,4 +312,19 @@ func getMarkdownTitle(mdPath string) string {
 func (s *Server) redirectToLocale(w http.ResponseWriter, r *http.Request) {
 	locale := chooseLocale(r.Header.Get("Accept-Language"))
 	http.Redirect(w, r, "/"+locale, http.StatusTemporaryRedirect)
+}
+
+// urlID parses an URL parameter as an UUID.
+func urlID(r *http.Request, name string) (util.UUIDAsBlob, error) {
+	str := chi.URLParam(r, "id")
+	if str == "" {
+		return util.UUIDAsBlob{}, fmt.Errorf("empty ID in URL param %s", name)
+	}
+
+	uid, err := uuid.Parse(str)
+	if err != nil {
+		return util.UUIDAsBlob{}, err
+	}
+
+	return util.UUIDAsBlob(uid), nil
 }

@@ -170,3 +170,27 @@ func (b *Back) UpdateDiscordPlayerStreamURL(discordID, streamURL string) (string
 
 	return normalizedURL, nil
 }
+
+func getPlayersByMatches(tx *sqlx.Tx, matches []Match) (map[util.UUIDAsBlob]Player, error) {
+	ids := make([]util.UUIDAsBlob, 0, len(matches)*2)
+	for k := range matches {
+		ids = append(ids, matches[k].Entries[0].PlayerID, matches[k].Entries[1].PlayerID)
+	}
+	query, args, err := sqlx.In(`SELECT * FROM Player WHERE ID IN(?)`, ids)
+	if err != nil {
+		return nil, err
+	}
+	query = tx.Rebind(query)
+
+	players := make([]Player, 0, len(ids))
+	if err := tx.Select(&players, query, args...); err != nil {
+		return nil, err
+	}
+
+	ret := make(map[util.UUIDAsBlob]Player, len(players))
+	for k := range players {
+		ret[players[k].ID] = players[k]
+	}
+
+	return ret, nil
+}

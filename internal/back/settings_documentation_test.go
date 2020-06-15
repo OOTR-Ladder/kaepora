@@ -10,7 +10,7 @@ func TestSettingsDocumentation(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	doc, err := loadSettingsDocumentation("en")
+	doc, err := LoadSettingsDocumentation("en")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -20,7 +20,7 @@ func TestSettingsDocumentation(t *testing.T) {
 	}
 
 	s := doc["starting_age"]
-	v := s.getValueEntry("adult")
+	v := s.GetValueEntry("adult")
 
 	if s.Title != "Starting age" {
 		t.Errorf("expected 'Starting Age' got '%s'", s.Title)
@@ -30,7 +30,7 @@ func TestSettingsDocumentation(t *testing.T) {
 	}
 
 	s = doc["shopsanity"]
-	v = s.getValueEntry("4")
+	v = s.GetValueEntry("4")
 
 	if s.Title != "Shopsanity" {
 		t.Errorf("expected 'Shopsanity' got '%s'", s.Title)
@@ -38,7 +38,7 @@ func TestSettingsDocumentation(t *testing.T) {
 	if v.Title != "4" {
 		t.Errorf("expected '4' got '%s'", v.Title)
 	}
-	if s.getValueEntry(4).Title != "" {
+	if s.GetValueEntry(4).Title != "" {
 		t.Errorf("bad type int for shopsanity should have no value")
 	}
 }

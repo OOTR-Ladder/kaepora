@@ -7,7 +7,7 @@
         <div class="hero-body">
             <div class="container">
                 <h1 class="title">{{t .Locale "Races history"}}</h1>
-                <h1 class="subtitle">{{t .Locale "Races completed in the last 30 days"}}</h1>
+                <h2 class="subtitle">{{t .Locale "Races completed in the last 30 days"}}</h2>
             </div>
         </div>
     </section>
@@ -21,16 +21,14 @@
                             <th>{{t .Locale "League"}}</th>
                             <th>{{t .Locale "Date"}}</th>
                             <th align="right">{{t .Locale "Players"}}</th>
-                            <!-- TODO details <th><th> -->
                         </thead>
                         <tbody>
 
                             {{- range $v := .Payload.MatchSessions -}}
                             <tr class="pastRacesTables--race">
-                                <td>{{(index $.Payload.Leagues $v.LeagueID).Name}}</td>
-                                <td>{{$v.StartDate | datetime}}</td>
+                                <td><a href="{{uri $.Locale "sessions" $v.ID.String}}">{{(index $.Payload.Leagues $v.LeagueID).Name}}</a></td>
+                                <td><a href="{{uri $.Locale "sessions" $v.ID.String}}">{{$v.StartDate | datetime}}</a></td>
                                 <td align="right">{{len $v.PlayerIDs}}</td>
-                                <!-- TODO  <td class="pastRacesTables--race__detail"></td> -->
                             </tr>
                             {{- end -}}
 

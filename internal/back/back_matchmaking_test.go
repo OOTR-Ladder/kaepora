@@ -219,7 +219,7 @@ func haveZeldaForfeit(back *Back) error {
 	if err != nil {
 		return fmt.Errorf("can't forfeit: %s", err)
 	}
-	if match.hasEnded() {
+	if match.HasEnded() {
 		return errors.New("match should not have ended")
 	}
 
@@ -241,7 +241,7 @@ func haveZeldaForfeit(back *Back) error {
 		return errors.New("match has not started, opponent should not have been able to complete")
 	}
 
-	if match.hasEnded() {
+	if match.HasEnded() {
 		return errors.New("the match should not have ended")
 	}
 

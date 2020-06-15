@@ -66,8 +66,15 @@ func (b *Back) GetLeagueByShortcode(shortcode string) (ret League, _ error) {
 	})
 }
 
-// GetMatchSessions returns session in a timeframe that have the given statuses
-// ordered by the given SQL clause.
+func (b *Back) GetLeague(id util.UUIDAsBlob) (ret League, _ error) {
+	return ret, b.transaction(func(tx *sqlx.Tx) (err error) {
+		ret, err = getLeagueByID(tx, id)
+		return err
+	})
+}
+
+// GetMatchSessions returns sessions in a timeframe that have the given
+// statuses ordered by the given SQL clause.
 // The leagues the sessions belong to are returned indexed by their ID.
 func (b *Back) GetMatchSessions(
 	fromDate, toDate time.Time,
@@ -143,4 +150,50 @@ func (b *Back) GetPlayerRatings(shortcode string) (ret []PlayerRating, _ error) 
 
 		return nil
 	})
+}
+
+// GetMatchSession returns a single session and all its matches and players indexed by their ID.
+func (b *Back) GetMatchSession(id util.UUIDAsBlob) (
+	session MatchSession,
+	matches []Match,
+	players map[util.UUIDAsBlob]Player,
+	_ error,
+) {
+	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
+		session, err = getMatchSessionByID(tx, id)
+		if err != nil {
+			return err
+		}
+
+		matches, err = getMatchesBySessionID(tx, id)
+		if err != nil {
+			return err
+		}
+
+		players, err = getPlayersByMatches(tx, matches)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return MatchSession{}, nil, nil, err
+	}
+
+	return session, matches, players, nil
+}
+
+func (b *Back) GetMatch(id util.UUIDAsBlob) (match Match, _ error) {
+	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
+		match, err = getMatchByID(tx, id)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return Match{}, err
+	}
+
+	return match, nil
 }

@@ -23,9 +23,13 @@ type MatchEntry struct {
 	Comment string
 }
 
-func (m MatchEntry) hasEnded() bool {
+func (m MatchEntry) HasEnded() bool {
 	return m.Status == MatchEntryStatusFinished ||
 		m.Status == MatchEntryStatusForfeit
+}
+
+func (m MatchEntry) HasWon() bool {
+	return m.Outcome == MatchEntryOutcomeWin
 }
 
 type MatchEntryStatus int
