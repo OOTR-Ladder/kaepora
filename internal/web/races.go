@@ -1,6 +1,7 @@
 package web
 
 import (
+	"io"
 	"kaepora/internal/back"
 	"kaepora/internal/util"
 	"net/http"
@@ -36,7 +37,7 @@ func (s *Server) getAllMatchSession(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// getMatchSession shows the details of one MatchSession.
+// getMatchSession shows the details of one MatchSession
 func (s *Server) getOneMatchSession(w http.ResponseWriter, r *http.Request) {
 	id, err := urlID(r, "id")
 	if err != nil {
@@ -68,6 +69,24 @@ func (s *Server) getOneMatchSession(w http.ResponseWriter, r *http.Request) {
 		Matches:      matches,
 		Players:      players,
 	})
+}
+
+func (s *Server) getSpoilerLog(w http.ResponseWriter, r *http.Request) {
+	id, err := urlID(r, "id")
+	if err != nil {
+		s.error(w, r, err, http.StatusNotFound)
+		return
+	}
+
+	match, err := s.back.GetMatch(id)
+	if err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	s.cache(w, "public", 1*time.Hour)
+	io.Copy(w, match.SpoilerLog.Uncompressed())
 }
 
 func (s *Server) leaderboard(w http.ResponseWriter, r *http.Request) {

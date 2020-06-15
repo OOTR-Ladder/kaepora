@@ -182,3 +182,18 @@ func (b *Back) GetMatchSession(id util.UUIDAsBlob) (
 
 	return session, matches, players, nil
 }
+
+func (b *Back) GetMatch(id util.UUIDAsBlob) (match Match, _ error) {
+	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
+		match, err = getMatchByID(tx, id)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return Match{}, err
+	}
+
+	return match, nil
+}

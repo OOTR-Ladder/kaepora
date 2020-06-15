@@ -188,7 +188,7 @@ func injectEntries(tx *sqlx.Tx, match *Match) error {
 
 func getMatchBySeed(tx *sqlx.Tx, seed string) (Match, error) {
 	var match Match
-	query := `SELECT Match.* FROM Match WHERE Match.Seed = ?  LIMIT 1`
+	query := `SELECT Match.* FROM Match WHERE Match.Seed = ? LIMIT 1`
 	if err := tx.Get(&match, query, seed); err != nil {
 		return Match{}, fmt.Errorf("could not fetch match: %w", err)
 	}
@@ -243,4 +243,18 @@ func getFirstMatchStartOfLeague(tx *sqlx.Tx, leagueID util.UUIDAsBlob) (util.Tim
 	}
 
 	return ret.Time, nil
+}
+
+func getMatchByID(tx *sqlx.Tx, id util.UUIDAsBlob) (Match, error) {
+	var match Match
+	query := `SELECT * FROM Match WHERE Match.ID = ? LIMIT 1`
+	if err := tx.Get(&match, query, id); err != nil {
+		return Match{}, fmt.Errorf("could not fetch match: %w", err)
+	}
+
+	if err := injectEntries(tx, &match); err != nil {
+		return Match{}, err
+	}
+
+	return match, nil
 }
