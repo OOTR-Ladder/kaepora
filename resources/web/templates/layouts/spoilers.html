@@ -62,11 +62,11 @@
         {{- template "spoilers_spheres_locations" . -}}
     </div>  <!-- container -->
 
-    <div class="container js-spoilers-tab-woths" role="tabpanel" aria-labelledby="spoilers-woths">
+    <div class="container js-spoilers-tab-woths is-hidden" role="tabpanel" aria-labelledby="spoilers-woths">
         {{- template "spoilers_woths_barrens" . -}}
     </div>  <!-- container -->
 
-    <div class="container js-spoilers-tab-gossip" role="tabpanel" aria-labelledby="spoilers-gossip">
+    <div class="container js-spoilers-tab-gossip is-hidden" role="tabpanel" aria-labelledby="spoilers-gossip">
         <table class="table">
             <thead>
                 <tr>
@@ -87,7 +87,7 @@
     </div>  <!-- container -->
 
     {{- if len .Payload.Settings -}}
-    <div class="container js-spoilers-tab-settings" role="tabpanel" aria-labelledby="spoilers-settings">
+    <div class="container js-spoilers-tab-settings is-hidden" role="tabpanel" aria-labelledby="spoilers-settings">
         <table class="table">  <!-- container -->
             {{- range $name, $value := .Payload.Settings -}}
             <tr>
