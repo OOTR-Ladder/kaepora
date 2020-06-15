@@ -11,7 +11,8 @@ import (
 	"github.com/go-chi/chi"
 )
 
-func (s *Server) history(w http.ResponseWriter, r *http.Request) {
+// getAllMatchSession shows a shortened recap of previous races.
+func (s *Server) getAllMatchSession(w http.ResponseWriter, r *http.Request) {
 	sessions, leagues, err := s.back.GetMatchSessions(
 		time.Now().Add(-30*24*time.Hour),
 		time.Now(),
@@ -26,12 +27,46 @@ func (s *Server) history(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s.cache(w, "public", 1*time.Hour)
-	s.response(w, r, http.StatusOK, "history.html", struct {
+	s.response(w, r, http.StatusOK, "sessions.html", struct {
 		MatchSessions []back.MatchSession
 		Leagues       map[util.UUIDAsBlob]back.League
 	}{
 		sessions,
 		leagues,
+	})
+}
+
+// getMatchSession shows the details of one MatchSession.
+func (s *Server) getOneMatchSession(w http.ResponseWriter, r *http.Request) {
+	id, err := urlID(r, "id")
+	if err != nil {
+		s.error(w, r, err, http.StatusNotFound)
+		return
+	}
+
+	session, matches, players, err := s.back.GetMatchSession(id)
+	if err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
+	}
+
+	league, err := s.back.GetLeague(session.LeagueID)
+	if err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
+	}
+
+	s.cache(w, "public", 1*time.Hour)
+	s.response(w, r, http.StatusOK, "one_session.html", struct {
+		MatchSession back.MatchSession
+		League       back.League
+		Matches      []back.Match
+		Players      map[util.UUIDAsBlob]back.Player
+	}{
+		MatchSession: session,
+		League:       league,
+		Matches:      matches,
+		Players:      players,
 	})
 }
 

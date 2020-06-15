@@ -51,6 +51,22 @@ func NewMatch(tx *sqlx.Tx, session MatchSession, seed string) (Match, error) {
 	}, nil
 }
 
+func (m *Match) WinningEntry() MatchEntry {
+	if m.Entries[1].HasWon() {
+		return m.Entries[1]
+	}
+
+	return m.Entries[0]
+}
+
+func (m *Match) LosingEntry() MatchEntry {
+	if m.Entries[1].HasWon() {
+		return m.Entries[0]
+	}
+
+	return m.Entries[1]
+}
+
 func (m *Match) end() {
 	m.EndedAt = util.NewNullTimeAsTimestamp(time.Now())
 }

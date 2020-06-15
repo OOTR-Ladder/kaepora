@@ -28,6 +28,10 @@ func (m MatchEntry) hasEnded() bool {
 		m.Status == MatchEntryStatusForfeit
 }
 
+func (m MatchEntry) HasWon() bool {
+	return m.Outcome == MatchEntryOutcomeWin
+}
+
 type MatchEntryStatus int
 
 const ( // this is stored in DB, don't change values

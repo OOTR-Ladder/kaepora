@@ -5,24 +5,40 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: internal/web/templates.go:114
+#: internal/web/templates.go:117
 msgid "Planned"
 msgstr ""
 
-#: internal/web/templates.go:117
+#: internal/web/templates.go:120
 msgid "Joinable"
 msgstr ""
 
-#: internal/web/templates.go:120
+#: internal/web/templates.go:123
 msgid "Preparing"
 msgstr ""
 
-#: internal/web/templates.go:123
+#: internal/web/templates.go:126
 msgid "Race in progress"
 msgstr ""
 
-#: internal/web/templates.go:126
+#: internal/web/templates.go:129
 msgid "Closed"
+msgstr ""
+
+#: internal/web/templates.go:171
+msgid "not started"
+msgstr ""
+
+#: internal/web/templates.go:173
+msgid "in progress"
+msgstr ""
+
+#: internal/web/templates.go:177
+msgid "before start"
+msgstr ""
+
+#: internal/web/templates.go:182
+msgid "forfeit (%s)"
 msgstr ""
 
 #: resources/web/templates/includes/base.html:9
@@ -231,32 +247,16 @@ msgstr ""
 msgid "Error %d"
 msgstr ""
 
-#: resources/web/templates/layouts/history.html:9
-msgid "Races history"
-msgstr ""
-
-#: resources/web/templates/layouts/history.html:10
-msgid "Races completed in the last 30 days"
-msgstr ""
-
-#: resources/web/templates/layouts/history.html:21
-msgid "League"
-msgstr ""
-
-#: resources/web/templates/layouts/history.html:22
-msgid "Date"
-msgstr ""
-
-#: resources/web/templates/layouts/history.html:23
-msgid "Players"
-msgstr ""
-
 #: resources/web/templates/layouts/index.html:12
 msgid "Next races"
 msgstr ""
 
 #: resources/web/templates/layouts/index.html:23
 msgid "Scheduled races"
+msgstr ""
+
+#: resources/web/templates/layouts/index.html:33
+msgid "Races history"
 msgstr ""
 
 #: resources/web/templates/layouts/index.html:43
@@ -267,28 +267,52 @@ msgstr ""
 msgid "Full leaderboard"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:8
-msgid "%s league"
-msgstr ""
-
-#: resources/web/templates/layouts/leaderboard.html:23
+#: resources/web/templates/layouts/leaderboard.html:22
 msgid "Rating"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:24
+#: resources/web/templates/layouts/leaderboard.html:23
 msgid "Wins"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:25
+#: resources/web/templates/layouts/leaderboard.html:24
 msgid "Losses"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:26
+#: resources/web/templates/layouts/leaderboard.html:25
 msgid "Forfeits"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:70
+#: resources/web/templates/layouts/leaderboard.html:72
 msgid "The leaderboard is currently empty."
+msgstr ""
+
+#: resources/web/templates/layouts/one_session.html:9
+msgid "%s league"
+msgstr ""
+
+#: resources/web/templates/layouts/one_session.html:10
+msgid "Race started at %s"
+msgstr ""
+
+#: resources/web/templates/layouts/one_session.html:20
+msgid "Winner"
+msgstr ""
+
+#: resources/web/templates/layouts/one_session.html:21
+msgid "Time"
+msgstr ""
+
+#: resources/web/templates/layouts/one_session.html:22
+msgid "Loser"
+msgstr ""
+
+#: resources/web/templates/layouts/one_session.html:24
+msgid "Seed"
+msgstr ""
+
+#: resources/web/templates/layouts/one_session.html:36
+msgid "spoiler log"
 msgstr ""
 
 #: resources/web/templates/layouts/schedule.html:9
@@ -309,6 +333,22 @@ msgstr ""
 
 #: resources/web/templates/layouts/schedule.html:45
 msgid "in"
+msgstr ""
+
+#: resources/web/templates/layouts/sessions.html:10
+msgid "Races completed in the last 30 days"
+msgstr ""
+
+#: resources/web/templates/layouts/sessions.html:21
+msgid "League"
+msgstr ""
+
+#: resources/web/templates/layouts/sessions.html:22
+msgid "Date"
+msgstr ""
+
+#: resources/web/templates/layouts/sessions.html:23
+msgid "Players"
 msgstr ""
 
 #: resources/web/templates/layouts/stats.html:9

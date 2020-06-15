@@ -517,7 +517,7 @@ func writeResultsTable(
 
 // entryDetails is a formatting helper for sendSessionRecapNotification.
 func entryDetails(tx *sqlx.Tx, entry MatchEntry) (wrap string, name string, duration string) {
-	if entry.Outcome == MatchEntryOutcomeWin {
+	if entry.HasWon() {
 		wrap = "*"
 	}
 

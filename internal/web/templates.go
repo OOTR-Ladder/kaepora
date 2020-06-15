@@ -9,6 +9,7 @@ import (
 	"kaepora/internal/back"
 	"kaepora/internal/global"
 	"kaepora/internal/util"
+	"log"
 	"math"
 	"os"
 	"path/filepath"
@@ -80,13 +81,15 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 
 		"matchSessionStatusTag": s.tplMatchSessionStatusTag,
 
-		"ranking":        tplRanking,
-		"until":          tplUntil,
-		"future":         tplFuture,
-		"datetime":       util.Datetime,
-		"assetURL":       tplAssetURL,
-		"assetIntegrity": tplAssetIntegrity(baseDir),
-		"percentage":     tplPercentage,
+		"ranking":          tplRanking,
+		"matchEntryStatus": s.tplMatchEntryStatus,
+		"matchSeedURL":     s.tplMatchSeedURL,
+		"until":            tplUntil,
+		"future":           tplFuture,
+		"datetime":         util.Datetime,
+		"assetURL":         tplAssetURL,
+		"assetIntegrity":   tplAssetIntegrity(baseDir),
+		"percentage":       tplPercentage,
 
 		"add": func(a, b int) int {
 			return a + b
@@ -134,10 +137,54 @@ func (s *Server) tplMatchSessionStatusTag(locale string, status back.MatchSessio
 // nolint:gosec
 func tplRanking(v back.LeaderboardEntry) template.HTML {
 	return template.HTML(fmt.Sprintf(
-		`<div class="Ranking">%d<span class="tag is-rounded is-light is-hidden-mobile Ranking--deviation"><small>±%d</small></span></div>`,
+		`<div class="Ranking">%d`+
+			`<span class="tag is-rounded is-light is-hidden-mobile Ranking--deviation">`+
+			`<small>±%d</small></span></div>`,
 		int(math.Round(v.Rating)),
 		int(math.Round(v.Deviation*2)),
 	))
+}
+
+// nolint:gosec
+func (s *Server) tplMatchSeedURL(m back.Match) string {
+	if len(m.GeneratorState) == 0 {
+		return "#"
+	}
+
+	gen, err := s.back.GetGenerator(m.Generator)
+	if err != nil {
+		log.Printf("warning: %s", err)
+		return "#"
+	}
+
+	url := gen.GetDownloadURL(m.GeneratorState)
+	if url == "" {
+		return "#"
+	}
+
+	return url
+}
+
+func (s *Server) tplMatchEntryStatus(locale string, e back.MatchEntry) string {
+	switch e.Status {
+	case back.MatchEntryStatusWaiting:
+		return s.locales[locale].Get("not started")
+	case back.MatchEntryStatusInProgress:
+		return s.locales[locale].Get("in progress")
+	case back.MatchEntryStatusForfeit:
+		var duration string
+		if e.StartedAt.Time.Time().IsZero() {
+			duration = s.locales[locale].Get("before start")
+		} else {
+			duration = e.EndedAt.Time.Time().Sub(e.StartedAt.Time.Time()).Round(time.Second).String()
+		}
+
+		return fmt.Sprintf(s.locales[locale].Get("forfeit (%s)"), duration)
+	case back.MatchEntryStatusFinished:
+		return e.EndedAt.Time.Time().Sub(e.StartedAt.Time.Time()).Round(time.Second).String()
+	default:
+		return "n/a"
+	}
 }
 
 func tplUntil(iface interface{}, trunc string) string {

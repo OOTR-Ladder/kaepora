@@ -5,25 +5,41 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: internal/web/templates.go:114
+#: internal/web/templates.go:117
 msgid "Planned"
 msgstr "Planifiée"
 
-#: internal/web/templates.go:117
+#: internal/web/templates.go:120
 msgid "Joinable"
 msgstr "Inscriptions ouvertes"
 
-#: internal/web/templates.go:120
+#: internal/web/templates.go:123
 msgid "Preparing"
 msgstr "En préparation"
 
-#: internal/web/templates.go:123
+#: internal/web/templates.go:126
 msgid "Race in progress"
 msgstr "Course en cours"
 
-#: internal/web/templates.go:126
+#: internal/web/templates.go:129
 msgid "Closed"
 msgstr "Fermée"
+
+#: internal/web/templates.go:171
+msgid "not started"
+msgstr "pas commencé"
+
+#: internal/web/templates.go:173
+msgid "in progress"
+msgstr "en cours"
+
+#: internal/web/templates.go:177
+msgid "before start"
+msgstr "avant départ"
+
+#: internal/web/templates.go:182
+msgid "forfeit (%s)"
+msgstr "forfait (%s)"
 
 #: resources/web/templates/includes/base.html:9
 msgid "The Legend of Zelda: Ocarina of Time Randomizer racing leagues."
@@ -231,26 +247,6 @@ msgstr "Une erreur est survenue pendant le traitement de votre requête."
 msgid "Error %d"
 msgstr "Erreur %d"
 
-#: resources/web/templates/layouts/history.html:9
-msgid "Races history"
-msgstr "Historique des courses"
-
-#: resources/web/templates/layouts/history.html:10
-msgid "Races completed in the last 30 days"
-msgstr "Courses terminées dans les 30 derniers jours"
-
-#: resources/web/templates/layouts/history.html:21
-msgid "League"
-msgstr "Ligue"
-
-#: resources/web/templates/layouts/history.html:22
-msgid "Date"
-msgstr "Date"
-
-#: resources/web/templates/layouts/history.html:23
-msgid "Players"
-msgstr "Joueurs"
-
 #: resources/web/templates/layouts/index.html:12
 msgid "Next races"
 msgstr "Prochaines courses"
@@ -258,6 +254,10 @@ msgstr "Prochaines courses"
 #: resources/web/templates/layouts/index.html:23
 msgid "Scheduled races"
 msgstr "Courses planifiées"
+
+#: resources/web/templates/layouts/index.html:33
+msgid "Races history"
+msgstr "Historique des courses"
 
 #: resources/web/templates/layouts/index.html:43
 msgid "Leaderboard"
@@ -267,29 +267,53 @@ msgstr "Classement"
 msgid "Full leaderboard"
 msgstr "Classement complet"
 
-#: resources/web/templates/layouts/leaderboard.html:8
-msgid "%s league"
-msgstr "Ligue %s"
-
-#: resources/web/templates/layouts/leaderboard.html:23
+#: resources/web/templates/layouts/leaderboard.html:22
 msgid "Rating"
 msgstr "Score"
 
-#: resources/web/templates/layouts/leaderboard.html:24
+#: resources/web/templates/layouts/leaderboard.html:23
 msgid "Wins"
 msgstr "Victoires"
 
-#: resources/web/templates/layouts/leaderboard.html:25
+#: resources/web/templates/layouts/leaderboard.html:24
 msgid "Losses"
 msgstr "Défaites"
 
-#: resources/web/templates/layouts/leaderboard.html:26
+#: resources/web/templates/layouts/leaderboard.html:25
 msgid "Forfeits"
 msgstr "Forfaits"
 
-#: resources/web/templates/layouts/leaderboard.html:70
+#: resources/web/templates/layouts/leaderboard.html:72
 msgid "The leaderboard is currently empty."
 msgstr "Le classement est actuellement vide."
+
+#: resources/web/templates/layouts/one_session.html:9
+msgid "%s league"
+msgstr "Ligue %s"
+
+#: resources/web/templates/layouts/one_session.html:10
+msgid "Race started at %s"
+msgstr "Session du %s"
+
+#: resources/web/templates/layouts/one_session.html:20
+msgid "Winner"
+msgstr "Gagnant"
+
+#: resources/web/templates/layouts/one_session.html:21
+msgid "Time"
+msgstr "Temps"
+
+#: resources/web/templates/layouts/one_session.html:22
+msgid "Loser"
+msgstr "Perdant"
+
+#: resources/web/templates/layouts/one_session.html:24
+msgid "Seed"
+msgstr "Seed"
+
+#: resources/web/templates/layouts/one_session.html:36
+msgid "spoiler log"
+msgstr "spoiler log"
 
 #: resources/web/templates/layouts/schedule.html:9
 msgid "Schedule"
@@ -310,6 +334,22 @@ msgstr "Prochaines courses planifiées"
 #: resources/web/templates/layouts/schedule.html:45
 msgid "in"
 msgstr "dans"
+
+#: resources/web/templates/layouts/sessions.html:10
+msgid "Races completed in the last 30 days"
+msgstr "Courses terminées dans les 30 derniers jours"
+
+#: resources/web/templates/layouts/sessions.html:21
+msgid "League"
+msgstr "Ligue"
+
+#: resources/web/templates/layouts/sessions.html:22
+msgid "Date"
+msgstr "Date"
+
+#: resources/web/templates/layouts/sessions.html:23
+msgid "Players"
+msgstr "Joueurs"
 
 #: resources/web/templates/layouts/stats.html:9
 msgid "Ladder & Seed statistics"
