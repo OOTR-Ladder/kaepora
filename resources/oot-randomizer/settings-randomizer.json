@@ -284,7 +284,7 @@
         },
         {
             "Value": "remove",
-            "Cost": -2,
+            "Cost": 2,
             "Weight": 0.5
         },
         {
