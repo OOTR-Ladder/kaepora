@@ -5,18 +5,14 @@ import (
 	"fmt"
 	"kaepora/internal/back"
 	"kaepora/internal/bot"
-	"kaepora/internal/generator/factory"
-	"kaepora/internal/generator/oot"
 	"kaepora/internal/global"
 	"kaepora/internal/web"
 	"log"
 	"os"
 	"os/signal"
-	"path/filepath"
 	"sync"
 	"syscall"
 
-	"github.com/google/uuid"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -30,11 +26,6 @@ func main() {
 		return
 	case "help":
 		fmt.Fprint(os.Stdout, help())
-		return
-	case "spoilers":
-		if err := generateSpoilerLogs(); err != nil {
-			log.Fatal(err)
-		}
 		return
 	}
 
@@ -77,7 +68,6 @@ COMMANDS
     fixtures    create default data for quick testing during development
     help        display this help
     serve       start the Discord bot
-    spoilers    generate a spoiler log in $cwd/spoilers
     version     display the current version
 
     rerank SHORTCODE  recompute all rankings in a league
@@ -115,35 +105,4 @@ func serve(b *back.Back) error {
 	log.Print("info: shutdown complete")
 
 	return nil
-}
-
-func generateSpoilerLogs() error {
-	factory := factory.New(nil)
-	g, err := factory.NewGenerator(oot.RandomizerName + ":5.2.13")
-	if err != nil {
-		return err
-	}
-
-	seed := uuid.New().String()
-	out, err := g.Generate("s3.json", seed)
-	if err != nil {
-		return err
-	}
-
-	dir := filepath.Join("spoilers", seed[0:2], seed[2:4])
-	if err := os.MkdirAll(dir, 0o775); err != nil {
-		return err
-	}
-
-	f, err := os.OpenFile(filepath.Join(dir, seed+".json"), os.O_RDWR|os.O_CREATE, 0o664)
-	if err != nil {
-		return err
-	}
-
-	if _, err := f.Write(out.SpoilerLog); err != nil {
-		f.Close()
-		return err
-	}
-
-	return f.Close()
 }
