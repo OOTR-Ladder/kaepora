@@ -161,7 +161,7 @@
         },
         {
             "Value": "minimal",
-            "Cost": 10,
+            "Cost": 15,
             "Weight": 0.25,
             "Implies": {
                 "triforce_hunt": false
@@ -221,9 +221,10 @@
         {
             "Value": "closed",
             "Cost": 2,
-            "Weight": 0.5,
+            "Weight": 0.7,
             "Implies": {
-                "starting_age": "child"
+                "starting_age": "child",
+                "shuffle_kokiri_sword": true
             }
         }
     ],
@@ -401,8 +402,8 @@
         },
         {
             "Value": "keysanity",
-            "Cost": 15,
-            "Weight": 1
+            "Cost": 18,
+            "Weight": 0.2
         }
     ],
     "shuffle_song_items": [
@@ -462,8 +463,8 @@
         },
         {
             "Value": "all",
-            "Cost": 15,
-            "Weight": 0.75
+            "Cost": 18,
+            "Weight": 0.2
         }
     ],
     "zora_fountain": [
