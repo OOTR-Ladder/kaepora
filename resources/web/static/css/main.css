@@ -438,7 +438,7 @@ table.table.stats--attendance td {
 }
 .SessionBox--layer img {
     position: absolute;
-    right: 1.5rem;
+    right: 50%;
     top: 50%;
     transform: translate(50%, -50%);
 }
@@ -449,6 +449,23 @@ table.table.stats--attendance td {
 .SessionBox__no-match .SessionBox--league,
 .SessionBox__no-match .SessionBox--players span { font-size: 1.5rem; }
 .SessionBox__no-match .SessionBox--players { bottom: .5rem; }
+
+@media only screen and (max-width: 768px) {
+    .SessionBox--league,
+    .SessionBox--players span { font-size: 1.5rem; }
+    .SessionBox--datetime,
+    .SessionBox--players { font-size: .8rem; }
+
+    .SessionBox--players { right: 3.25rem; }
+
+    .SessionBox--layer {
+        max-width: 2rem;
+        clip-path: circle(100% at 210% 50%);
+    }
+
+    .SessionBox__no-match .SessionBox--league,
+    .SessionBox__no-match .SessionBox--players span { font-size: 1.2rem; }
+}
 /* }}} History */
 
 /* {{{ Spoilers */
