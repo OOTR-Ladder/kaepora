@@ -17,7 +17,7 @@
             <div class="columns is-multiline is-variable is-8">
                     {{- range $v := .Payload.MatchSessions -}}
                         {{$x := len $v.PlayerIDs}}
-                        <div class="column is-half">
+                        <div class="column is-full">
                             {{if gt $x 1}}
                             <a href="{{uri $.Locale "sessions" $v.ID.String}}" class="box is-clipped SessionBox">
                             {{else}}
@@ -27,7 +27,7 @@
                                 <div class="SessionBox--datetime">{{$v.StartDate | datetime}}</div>
                                 <div class="SessionBox--players"><span>{{$x}}</span>{{tn $.Locale "player" "players" (len $v.PlayerIDs)}}</div>
                                 {{if gt $x 1}}
-                                <div class="SessionBox--layer">
+                                <div class="SessionBox--layer Layer">
                                     <img src="/_/svg/arrow-right-line.svg" alt="Détails" />
                                 </div>
                                 {{end}}
