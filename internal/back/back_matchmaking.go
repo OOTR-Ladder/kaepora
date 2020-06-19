@@ -243,14 +243,15 @@ func clamp(v, min, max int) int {
 }
 
 // getMaxDelta calculates the max distance between opponents for a given
-// session size.  This reduces the probability of smaller sessions producing
+// session size. This reduces the probability of smaller sessions producing
 // completely arbitrary pairings.
 func getMaxDelta(sessionSize int) int {
-	if sessionSize <= 8 {
+	switch {
+	case sessionSize <= 8:
 		return 1
-	} else if sessionSize <= 16 {
+	case sessionSize <= 16:
 		return 2
-	} else {
+	default:
 		return 3
 	}
 }
