@@ -242,6 +242,20 @@ func clamp(v, min, max int) int {
 	return v
 }
 
+// getMaxDelta calculates the max distance between opponents for a given
+// session size. This reduces the probability of smaller sessions producing
+// completely arbitrary pairings.
+func getMaxDelta(sessionSize int) int {
+	switch {
+	case sessionSize <= 8:
+		return 1
+	case sessionSize <= 16:
+		return 2
+	default:
+		return 3
+	}
+}
+
 // pairPlayers randomly pairs close players together.
 // It takes a list of players sorted by their rank and matches two players
 // close enough in the list until there is no player left.
@@ -255,7 +269,7 @@ func pairPlayers(players []Player) []pair {
 	}
 
 	pairs := make([]pair, 0, len(players)/2)
-	maxDelta := 3
+	maxDelta := getMaxDelta(len(players))
 
 	for len(players) > 0 {
 		i1 := randomIndex(len(players))
