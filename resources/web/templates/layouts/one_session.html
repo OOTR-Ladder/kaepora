@@ -14,9 +14,41 @@
 
 <section class="section">
     <div class="container">
+        {{- if len .Payload.Matches -}}
+            <div class="MatchList">
+                {{- range $match := .Payload.Matches -}}
+                    <div class="MatchList--match Match columns is-gapless is-vcentered">
+                        <div class="Match--players columns column is-two-thirds is-mobile">
+                            <div class="column is-half-mobile is-half">
+                                <div class="Player__winner">
+                                    <div class="Player--name">{{ (index $.Payload.Players ($match.WinningEntry).PlayerID).Name }}</div>
+                                    <div class="Player--time">{{ matchEntryStatus $.Locale $match.WinningEntry }}</div>
+                                </div>
+                            </div>
+                            <div class="column is-half-mobile is-half">
+                                <div class="Player__loser">
+                                    <div class="Player--name">{{ (index $.Payload.Players ($match.LosingEntry).PlayerID).Name }}</div>
+                                    <div class="Player--time">{{ matchEntryStatus $.Locale $match.LosingEntry }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Match--seed Seed column is-third">
+                            <span class="tag is-rounded Seed--number">Seed :<code>{{ $match.Seed }}</code></span>
+                            <a class="button Seed--spoiler" href="{{uri $.Locale "matches" $match.ID.String "spoilers"}}">{{t $.Locale "spoiler log"}}</a>
+                        </div>
+                    </div>
+                {{- end -}}
+            </div>
+        {{else}}
+        <article class="message is-info">
+            <div class="message-body">
+                {{t .Locale "Not enough players joined this session."}}
+            </div>
+        </article>
+        {{end}}
 
 {{- if len .Payload.Matches -}}
-        <table class="table">
+        <table class="table is-hidden">
             <thead>
                 <tr>
                     <th colspan="2">{{t .Locale "Winner"}}</th>
