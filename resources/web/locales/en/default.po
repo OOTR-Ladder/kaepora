@@ -49,7 +49,7 @@ msgstr ""
 msgid "Starts in %s"
 msgstr ""
 
-#: resources/web/templates/includes/current_races.html:34
+#: resources/web/templates/includes/current_races.html:34 resources/web/templates/layouts/sessions.html:28
 msgid "player"
 msgid_plural "players"
 msgstr[0] ""

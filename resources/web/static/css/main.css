@@ -1,7 +1,7 @@
 /* {{{ Global */
 :root {
     --color-white: #ffffff;
-    --color-body-bg-color: #fdfdff;
+    --color-body-bg-color: #f7f7ff;
     --color-light-gray-blue: rgb(247, 250, 252);
     --color-gold: rgb(220, 172, 38);
     --color-gold-dark: rgb(191, 140, 0);
@@ -14,10 +14,8 @@
     --color-bg-bronze: rgb(242, 225, 215);
 }
 
-body {
-    background-color: var(--body-bg-color);
-    font-family: "Avenir", "Ubuntu", "Noto Sans", "Segoe UI", sans-serif;
-}
+html { background-color: var(--color-body-bg-color); }
+body { font-family: "Avenir", "Ubuntu", "Noto Sans", "Segoe UI", sans-serif; }
 #mainMenu .navbar-item { font-weight: bold; }
 
 /* Fix uglyness */
@@ -467,6 +465,18 @@ table.table.stats--attendance td {
     .SessionBox__no-match .SessionBox--players span { font-size: 1.2rem; }
 }
 /* }}} History */
+
+/*{{{ Session recap */
+.Match--players.columns {
+    margin: 0;
+    background: var(--color-white);
+    border-radius: 20px;
+}
+.Match--players .Player__loser { text-align: right; }
+.Match--players .Player--name { font-size: 1.1rem; }
+.MatchList--match:not([class*="__doubleFF"]) .Match--players .Player__winner .Player--name { color: var(--color-gold-dark); }
+.Match--players .Player--time { font-size: .8rem; }
+/*}}} Session recap */
 
 /* {{{ Spoilers */
 ul.spoilers--hash {
