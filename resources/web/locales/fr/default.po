@@ -49,12 +49,6 @@ msgstr "Compétitions de Randomizer sur The Legend of Zelda: Ocarina of Time."
 msgid "Starts in %s"
 msgstr "Commence dans %s"
 
-#: resources/web/templates/includes/current_races.html:34
-msgid "player"
-msgid_plural "players"
-msgstr[0] "joueur"
-msgstr[1] "joueurs"
-
 #: resources/web/templates/includes/current_races.html:45
 msgid "There is no scheduled race right now."
 msgstr "Il n'y a pas de course programmée pour l'instant."
@@ -307,15 +301,15 @@ msgstr "Récapitulatif de session"
 msgid "Race started at %s"
 msgstr "Session du %s"
 
-#: resources/web/templates/layouts/one_session.html:43
+#: resources/web/templates/layouts/one_session.html:42
 msgid "Check the spoiler log"
 msgstr "Voir la solution"
 
-#: resources/web/templates/layouts/one_session.html:44
+#: resources/web/templates/layouts/one_session.html:43
 msgid "Get the seed"
 msgstr "Télécharger la seed"
 
-#: resources/web/templates/layouts/one_session.html:53
+#: resources/web/templates/layouts/one_session.html:52
 msgid "Not enough players joined this session."
 msgstr "Il n'y avait pas assez de joueurs pour démarrer cette session."
 
@@ -347,17 +341,11 @@ msgstr "Historique des courses"
 msgid "Races completed in the last 30 days"
 msgstr "Courses terminées dans les 30 derniers jours"
 
-#: resources/web/templates/layouts/sessions.html:21
-msgid "League"
-msgstr "Ligue"
-
-#: resources/web/templates/layouts/sessions.html:22
-msgid "Date"
-msgstr "Date"
-
-#: resources/web/templates/layouts/sessions.html:23
-msgid "Players"
-msgstr "Joueurs"
+#: resources/web/templates/layouts/sessions.html:28
+msgid "player"
+msgid_plural "players"
+msgstr[0] "joueur"
+msgstr[1] "joueurs"
 
 #: resources/web/templates/layouts/spoilers.html:11
 msgid "Spoiler Log for seed `%s`"
