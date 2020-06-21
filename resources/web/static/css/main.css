@@ -14,6 +14,7 @@
     --color-bg-bronze: rgb(242, 225, 215);
 
     --color-box: #fcfcff;
+    --color-forfeit: #c71f37;
 }
 
 html { background-color: var(--color-body-bg-color); }
@@ -487,7 +488,9 @@ div.Match--players.columns.is-gapless { margin-bottom: 0; }
 .Seed--number code { background: var(--color-box); }
 .Match--players .Player__loser { text-align: right; }
 .MatchList--match:not([class*="__doubleFF"]) .Match--players .Player__winner .Player--name { color: var(--color-gold-dark); }
-.MatchList--match__doubleFF .Match--players .Player--name { color: red; }
+
+.MatchList--match__doubleFF .Match--players .Player--name { color: var(--color-forfeit); }
+.MatchList--match__doubleFF .Match--players .Player--time { opacity: .5; }
 
 @media only screen and (max-width: 768px){
     div[class*="MatchList--match"]:not(:last-child) {
