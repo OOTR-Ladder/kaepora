@@ -568,5 +568,17 @@
                 "open_forest": "open"
             }
         }
+    ],
+    "trials": [
+        {
+            "Value": 1,
+            "Cost": 2,
+            "Weight": 0.75
+        },
+        {
+            "Value": 2,
+            "Cost": 4,
+            "Weight": 0.75
+        }
     ]
 }

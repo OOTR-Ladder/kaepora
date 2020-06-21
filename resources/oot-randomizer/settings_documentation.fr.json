@@ -418,5 +418,20 @@
                 "Description": "L'épée Kokiri est à son endroit d'origine."
             }
         ]
+    },
+    "trials": {
+        "Title": "Épreuves de Ganon",
+        "Values": [
+            {
+                "Value": 1,
+                "Title": "1",
+                "Description": "Une des épreuves à l'intérieur du Château de Ganon est activée et doit être terminée pour ouvrir l'accès à la tour de Ganon."
+            },
+            {
+                "Value": 2,
+                "Title": "2",
+                "Description": "Deux des épreuves à l'intérieur du Château de Ganon sont activées et doivent être terminées pour ouvrir l'accès à la tour de Ganon."
+            }
+        ]
     }
 }
