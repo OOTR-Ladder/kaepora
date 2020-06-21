@@ -6,8 +6,7 @@
 
     <div class="hero-body">
         <div class="container">
-            <h1 class="title">{{t .Locale "%s league" .Payload.League.Name}}</h1>
-            <h2 class="subtitle">{{t .Locale "Race started at %s" (.Payload.MatchSession.StartDate | datetime)}}</h2>
+            <h1 class="title">{{t .Locale "Session recap"}}</h1>
         </div>
     </div>
 </section>
@@ -16,8 +15,8 @@
     <div class="container">
         <div class="columns">
             <div class="column">
-                <h1 class="title">{{t .Locale "%s league" .Payload.League.Name}}</h1>
-                <h2 class="subtitle">{{t .Locale "Race started at %s" (.Payload.MatchSession.StartDate | datetime)}}</h2>
+                <h2 class="title">{{t .Locale "%s league" .Payload.League.Name}}</h2>
+                <h2 class="subtitle">{{t .Locale "Race started at %s" (.Payload.MatchSession.StartDate | datetime)}}</h3>
             </div>
             {{- if len .Payload.Matches -}}
             <div class="MatchList column is-two-thirds">
@@ -40,8 +39,8 @@
                         <div class="Match--seed Seed column is-third has-text-centered is-relative">
                             <span class="tag is-rounded Seed--number">Seed :<code>{{ $match.Seed }}</code></span>
                             <div class="Seed--links Link">
-                                <a href="#" class="Link--seed button is-rounded is-small is-success">{{t $.Locale "Get the seed"}}</a>
-                                <a href="{{uri $.Locale "matches" $match.ID.String "spoilers"}}" class="Link--spoiler button is-rounded is-small is-outlined is-info is-light">{{t $.Locale "Spoiler log"}}</a>
+                                <a href="{{uri $.Locale "matches" $match.ID.String "spoilers"}}" class="Link--seed button is-rounded is-small is-success">{{t $.Locale "Check the spoiler log"}}</a>
+                                <a href="#" class="Link--spoiler button is-rounded is-small is-outlined is-info is-light">{{t $.Locale "Get the seed"}}</a>
                             </div>
                         </div>
                     </div>
