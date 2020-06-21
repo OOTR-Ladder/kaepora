@@ -40,7 +40,7 @@
                             <span class="tag is-rounded Seed--number is-hidden-mobile">Seed :<code>{{ $match.Seed }}</code></span>
                             <div class="Seed--links Link">
                                 <a href="{{uri $.Locale "matches" $match.ID.String "spoilers"}}" class="Link--spoiler button is-rounded is-small is-success">{{t $.Locale "Check the spoiler log"}}</a>
-                                <a href="#" class="Link--seed button is-rounded is-small is-outlined is-info is-light is-hidden-mobile">{{t $.Locale "Get the seed"}}</a>
+                                <a href="{{$match | matchSeedURL }}" class="Link--seed button is-rounded is-small is-outlined is-info is-light is-hidden-mobile">{{t $.Locale "Get the seed"}}</a>
                             </div>
                         </div>
                     </div>
