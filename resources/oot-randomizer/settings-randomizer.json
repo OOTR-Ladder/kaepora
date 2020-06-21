@@ -161,10 +161,11 @@
         },
         {
             "Value": "minimal",
-            "Cost": 15,
+            "Cost": 10,
             "Weight": 0.25,
             "Implies": {
-                "triforce_hunt": false
+                "triforce_hunt": false,
+                "damage_multiplier": normal
             }
         }
     ],
