@@ -130,7 +130,7 @@
         {
             "Value": "none",
             "Cost": 13,
-            "Weight": 0.25
+            "Weight": 0
         },
         {
             "Value": "mask",
@@ -140,7 +140,7 @@
         {
             "Value": "agony",
             "Cost": 5,
-            "Weight": 0.25
+            "Weight": 0
         }
     ],
     "item_pool_value": [
@@ -151,7 +151,7 @@
         },
         {
             "Value": "plentiful",
-            "Cost": -3,
+            "Cost": 2,
             "Weight": 0.25
         },
         {
@@ -161,10 +161,11 @@
         },
         {
             "Value": "minimal",
-            "Cost": 15,
+            "Cost": 10,
             "Weight": 0.25,
             "Implies": {
-                "triforce_hunt": false
+                "triforce_hunt": false,
+                "damage_multiplier": "normal"
             }
         }
     ],
@@ -566,6 +567,18 @@
             "Implies": {
                 "open_forest": "open"
             }
+        }
+    ],
+    "trials": [
+        {
+            "Value": 1,
+            "Cost": 2,
+            "Weight": 0.75
+        },
+        {
+            "Value": 2,
+            "Cost": 4,
+            "Weight": 0.75
         }
     ]
 }

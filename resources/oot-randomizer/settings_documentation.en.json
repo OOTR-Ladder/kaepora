@@ -418,5 +418,20 @@
                 "Description": "The Kokiri Sword is at its vanilla location."
             }
         ]
+    },
+    "trials": {
+        "Title": "Trials",
+        "Values": [
+            {
+                "Value": 1,
+                "Title": "1",
+                "Description": "One random trial in Ganon's Castle is active and need to be completed to reach Ganon's Tower."
+            },
+            {
+                "Value": 2,
+                "Title": "2",
+                "Description": "Two random trials in Ganon's Castle are active and need to be completed to reach Ganon's Tower."
+            }
+        ]
     }
 }
