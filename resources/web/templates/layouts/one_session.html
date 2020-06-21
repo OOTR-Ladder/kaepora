@@ -6,46 +6,54 @@
 
     <div class="hero-body">
         <div class="container">
-            <h1 class="title">{{t .Locale "%s league" .Payload.League.Name}}</h1>
-            <h2 class="subtitle">{{t .Locale "Race started at %s" (.Payload.MatchSession.StartDate | datetime)}}</h2>
+            <h1 class="title">{{t .Locale "Session recap"}}</h1>
         </div>
     </div>
 </section>
 
 <section class="section">
     <div class="container">
-
-{{- if len .Payload.Matches -}}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th colspan="2">{{t .Locale "Winner"}}</th>
-                    <th colspan="2">{{t .Locale "Loser"}}</th>
-                    <th colspan="2">{{t .Locale "Seed"}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{- range $match := .Payload.Matches -}}
-                <tr>
-                    <td>{{ (index $.Payload.Players ($match.WinningEntry).PlayerID).Name }}</td>
-                    <td>{{ matchEntryStatus $.Locale $match.WinningEntry }}</td>
-                    <td>{{ (index $.Payload.Players ($match.LosingEntry).PlayerID).Name }}</td>
-                    <td>{{ matchEntryStatus $.Locale $match.LosingEntry }}</td>
-                    <td><code>{{ $match.Seed }}</code></td>
-                    <td><a href="{{uri $.Locale "matches" $match.ID.String "spoilers"}}">{{t $.Locale "spoiler log"}}</a></td>
-                </tr>
-                {{- end -}}
-            </tbody>
-        </table>
-{{else}}
-        <article class="message is-info">
-            <div class="message-body">
-                {{t .Locale "Not enough players joined this session."}}
+        <div class="columns is-multiline">
+            <div class="column">
+                <h2 class="title">{{t .Locale "%s league" .Payload.League.Name}}</h2>
+                <h3 class="subtitle">{{t .Locale "Race started at %s" (.Payload.MatchSession.StartDate | datetime)}}</h3>
             </div>
-        </article>
-{{end}}
-
+            {{- if len .Payload.Matches -}}
+            <div class="MatchList column is-full-tablet is-two-thirds-widescreen">
+                {{- range $match := .Payload.Matches -}}
+                    <div class="MatchList--match{{if $match.IsDoubleForfeit}}__doubleFF{{end}} Match columns is-relative is-vcentered">
+                        <div class="Match--players columns column is-three-fifths is-mobile is-gapless">
+                            <div class="column is-half-mobile is-half is-relative">
+                                <div class="Player__winner">
+                                    <div class="Player--name">{{ (index $.Payload.Players ($match.WinningEntry).PlayerID).Name }}</div>
+                                    <div class="Player--time">{{ matchEntryStatus $.Locale $match.WinningEntry }}</div>
+                                </div>
+                            </div>
+                            <div class="column is-half-mobile is-half">
+                                <div class="Player__loser">
+                                    <div class="Player--name">{{ (index $.Payload.Players ($match.LosingEntry).PlayerID).Name }}</div>
+                                    <div class="Player--time">{{ matchEntryStatus $.Locale $match.LosingEntry }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Match--seed Seed column is-third has-text-centered is-relative">
+                            <span class="tag is-rounded Seed--number is-hidden-mobile">Seed :<code>{{ $match.Seed }}</code></span>
+                            <div class="Seed--links Link">
+                                <a href="{{uri $.Locale "matches" $match.ID.String "spoilers"}}" class="Link--spoiler button is-rounded is-small is-success">{{t $.Locale "Check the spoiler log"}}</a>
+                                <a href="{{$match | matchSeedURL }}" class="Link--seed button is-rounded is-small is-outlined is-info is-light is-hidden-mobile">{{t $.Locale "Get the seed"}}</a>
+                            </div>
+                        </div>
+                    </div>
+                {{- end -}}
+            </div>
+            {{else}}
+            <article class="message is-info">
+                <div class="message-body">
+                    {{t .Locale "Not enough players joined this session."}}
+                </div>
+            </article>
+            {{end}}
+        </div>
     </div>
 </section>
-
 {{end}}

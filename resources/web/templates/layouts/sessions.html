@@ -14,27 +14,30 @@
 
     <section class="section">
         <div class="container">
-            <div class="columns is-centered">
-                <div class="column is-two-thirds">
-                    <table class="table is-fullwidth is-hoverable pastRacesTables">
-                        <thead>
-                            <th>{{t .Locale "League"}}</th>
-                            <th>{{t .Locale "Date"}}</th>
-                            <th align="right">{{t .Locale "Players"}}</th>
-                        </thead>
-                        <tbody>
-
-                            {{- range $v := .Payload.MatchSessions -}}
-                            <tr class="pastRacesTables--race">
-                                <td><a href="{{uri $.Locale "sessions" $v.ID.String}}">{{(index $.Payload.Leagues $v.LeagueID).Name}}</a></td>
-                                <td><a href="{{uri $.Locale "sessions" $v.ID.String}}">{{$v.StartDate | datetime}}</a></td>
-                                <td align="right">{{len $v.PlayerIDs}}</td>
-                            </tr>
-                            {{- end -}}
-
-                        </tbody>
-                    </table>
-                </div>
+            <div class="columns is-multiline">
+                {{- range $v := .Payload.MatchSessions -}}
+                    {{$x := len $v.PlayerIDs}}
+                    <div class="column is-full">
+                        {{if gt $x 1}}
+                        <a href="{{uri $.Locale "sessions" $v.ID.String}}" class="box is-clipped SessionBox">
+                        {{else}}
+                        <div class="box is-clipped SessionBox__no-match is-unselectable">
+                        {{end}}
+                            <div class="SessionBox--league">{{(index $.Payload.Leagues $v.LeagueID).Name}}</div>
+                            <div class="SessionBox--datetime">{{$v.StartDate | datetime}}</div>
+                            <div class="SessionBox--players"><span>{{$x}}</span>{{tn $.Locale "player" "players" (len $v.PlayerIDs)}}</div>
+                            {{if gt $x 1}}
+                            <div class="SessionBox--layer Layer">
+                                <img src="/_/svg/arrow-right-line.svg" alt="Détails" />
+                            </div>
+                            {{end}}
+                        {{if gt $x 1}}
+                        </a>
+                        {{else}}
+                        </div>
+                        {{end}}
+                    </div>
+                {{- end -}}
             </div>
         </div>
     </section>

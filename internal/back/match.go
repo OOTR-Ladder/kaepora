@@ -51,6 +51,11 @@ func NewMatch(tx *sqlx.Tx, session MatchSession, seed string) (Match, error) {
 	}, nil
 }
 
+func (m *Match) IsDoubleForfeit() bool {
+	return m.Entries[0].Status == MatchEntryStatusForfeit &&
+		m.Entries[1].Status == MatchEntryStatusForfeit
+}
+
 func (m *Match) WinningEntry() MatchEntry {
 	if m.Entries[1].HasWon() {
 		return m.Entries[1]
