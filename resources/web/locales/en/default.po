@@ -314,7 +314,7 @@ msgid "Seed"
 msgstr ""
 
 #: resources/web/templates/layouts/one_session.html:35
-msgid "spoiler log"
+msgid "Spoiler log"
 msgstr ""
 
 #: resources/web/templates/layouts/one_session.html:43
