@@ -488,7 +488,6 @@ div.Match--players.columns.is-gapless { margin-bottom: 0; }
 .Seed--number code { background: var(--color-box); }
 .Match--players .Player__loser { text-align: right; }
 .MatchList--match:not([class*="__doubleFF"]) .Match--players .Player__winner .Player--name { color: var(--color-gold-dark); }
-
 .MatchList--match__doubleFF .Match--players .Player--name { color: var(--color-forfeit); }
 .MatchList--match__doubleFF .Match--players .Player--time { opacity: .5; }
 
