@@ -151,7 +151,7 @@
         },
         {
             "Value": "plentiful",
-            "Cost": -3,
+            "Cost": 2,
             "Weight": 0.25
         },
         {
