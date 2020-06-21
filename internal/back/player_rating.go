@@ -28,6 +28,13 @@ type PlayerRating struct {
 	Volatility float64
 }
 
+// Range returns the range in which we believe the true player rating is
+// with 95 % accuracy.
+func (r PlayerRating) Range() (int, int) {
+	return int(r.Rating - (2.0 * r.Deviation)),
+		int(r.Rating + (2.0 * r.Deviation))
+}
+
 func (r PlayerRating) GlickoRating() *glicko.Rating {
 	return glicko.NewRating(r.Rating, r.Deviation, r.Volatility)
 }

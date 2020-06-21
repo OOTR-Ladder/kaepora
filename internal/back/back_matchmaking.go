@@ -10,7 +10,6 @@ import (
 	"log"
 	"math/big"
 	"runtime"
-	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -184,7 +183,7 @@ type pair struct {
 }
 
 // matchMakeSession takes a session, pairs registered players, and creates the
-// resulting matches. The actual MM algorithm is in the pairPlayers function.
+// resulting matches. The actual MM algorithm is in the player pairing function.
 func (b *Back) matchMakeSession(tx *sqlx.Tx, session MatchSession) error {
 	if session.Status != MatchSessionStatusPreparing {
 		log.Printf("warning: attempted to matchmake session %s at status %d", session.ID, session.Status)
@@ -199,12 +198,12 @@ func (b *Back) matchMakeSession(tx *sqlx.Tx, session MatchSession) error {
 		return nil
 	}
 
-	players, err := getSessionPlayersSortedByRating(tx, session)
+	players, err := getSessionPlayers(tx, session)
 	if err != nil {
 		return err
 	}
 
-	pairs := orderedRandomPairPlayers(players)
+	pairs := rangedPairPlayers(players)
 	log.Printf("debug: got %d players in the pool (%d pairs)", len(players), len(pairs))
 
 	for k := range pairs {
@@ -242,7 +241,7 @@ func clamp(v, min, max int) int {
 	return v
 }
 
-func getSessionPlayersSortedByRating(tx *sqlx.Tx, session MatchSession) ([]Player, error) {
+func getSessionPlayers(tx *sqlx.Tx, session MatchSession) ([]Player, error) {
 	ids := session.GetPlayerIDs()
 	players := make([]Player, 0, len(ids))
 
@@ -259,7 +258,6 @@ func getSessionPlayersSortedByRating(tx *sqlx.Tx, session MatchSession) ([]Playe
 		players = append(players, player)
 	}
 
-	sort.Sort(byRating(players))
 	return players, nil
 }
 
