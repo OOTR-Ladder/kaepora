@@ -13,15 +13,15 @@
 
 <section class="section">
     <div class="container">
-        <div class="columns">
+        <div class="columns is-multiline">
             <div class="column">
                 <h2 class="title">{{t .Locale "%s league" .Payload.League.Name}}</h2>
-                <h2 class="subtitle">{{t .Locale "Race started at %s" (.Payload.MatchSession.StartDate | datetime)}}</h3>
+                <h3 class="subtitle">{{t .Locale "Race started at %s" (.Payload.MatchSession.StartDate | datetime)}}</h3>
             </div>
             {{- if len .Payload.Matches -}}
-            <div class="MatchList column is-two-thirds">
+            <div class="MatchList column is-full-tablet is-two-thirds-widescreen">
                 {{- range $match := .Payload.Matches -}}
-                    <div class="MatchList--match Match columns is-vcentered is-clipped">
+                    <div class="MatchList--match Match columns is-relative is-vcentered">
                         <div class="Match--players columns column is-three-fifths is-mobile is-gapless">
                             <div class="column is-half-mobile is-half is-relative">
                                 <div class="Player__winner">
@@ -37,10 +37,10 @@
                             </div>
                         </div>
                         <div class="Match--seed Seed column is-third has-text-centered is-relative">
-                            <span class="tag is-rounded Seed--number">Seed :<code>{{ $match.Seed }}</code></span>
+                            <span class="tag is-rounded Seed--number is-hidden-mobile">Seed :<code>{{ $match.Seed }}</code></span>
                             <div class="Seed--links Link">
-                                <a href="{{uri $.Locale "matches" $match.ID.String "spoilers"}}" class="Link--seed button is-rounded is-small is-success">{{t $.Locale "Check the spoiler log"}}</a>
-                                <a href="#" class="Link--spoiler button is-rounded is-small is-outlined is-info is-light">{{t $.Locale "Get the seed"}}</a>
+                                <a href="{{uri $.Locale "matches" $match.ID.String "spoilers"}}" class="Link--spoiler button is-rounded is-small is-success">{{t $.Locale "Check the spoiler log"}}</a>
+                                <a href="#" class="Link--seed button is-rounded is-small is-outlined is-info is-light is-hidden-mobile">{{t $.Locale "Get the seed"}}</a>
                             </div>
                         </div>
                     </div>
