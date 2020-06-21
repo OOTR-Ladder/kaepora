@@ -470,17 +470,11 @@ table.table.stats--attendance td {
 /* }}} History */
 
 /*{{{ Session recap */
-div[class*="MatchList--match"] {
-    border: 2px solid var(--color-box);
-    border-radius: 20px;
-}
-div[class*="MatchList--match"]:not(:last-child) { margin-bottom: 1.5rem; }
+div[class*="MatchList--match"] { margin-top: 0; }
 div.Match--players.columns.is-gapless { margin-bottom: 0; }
 .Match--players.columns {
     margin: 0;
     background: var(--color-box);
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
 }
 .Seed {
     padding-top: 0;
@@ -496,10 +490,33 @@ div.Match--players.columns.is-gapless { margin-bottom: 0; }
 .MatchList--match__doubleFF .Match--players .Player--name { color: red; }
 
 @media only screen and (max-width: 768px){
+    div[class*="MatchList--match"]:not(:last-child) {
+        margin-bottom: 2.5rem;
+    }
     .Match--players .Player--name { font-size: 1.1rem; }
     .Match--players .Player--time { font-size: .8rem; }
+
+    .Link--spoiler {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 50%);
+    }
+    .Match--players.columns { border-radius: 20px; }
 }
 @media only screen and (min-width: 769px){
+    div[class*="MatchList--match"]:not(:last-child) {
+        margin-bottom: 1.5rem;
+    }
+    div[class*="MatchList--match"] {
+        overflow: hidden;
+        border: 2px solid var(--color-box);
+        border-radius: 20px;
+    }
+    .Match--players.columns {
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
     .Match--players .Player--name { font-size: 1.5rem; }
 }
 /*}}} Session recap */
