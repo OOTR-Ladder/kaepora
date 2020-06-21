@@ -21,7 +21,7 @@
             {{- if len .Payload.Matches -}}
             <div class="MatchList column is-full-tablet is-two-thirds-widescreen">
                 {{- range $match := .Payload.Matches -}}
-                    <div class="MatchList--match Match columns is-relative is-vcentered">
+                    <div class="MatchList--match{{if $match.IsDoubleForfeit}}__doubleFF{{end}} Match columns is-relative is-vcentered">
                         <div class="Match--players columns column is-three-fifths is-mobile is-gapless">
                             <div class="column is-half-mobile is-half is-relative">
                                 <div class="Player__winner">
