@@ -82,6 +82,18 @@ This system has a few particularities:
 
 [1]: https://en.wikipedia.org/wiki/Glicko_rating_system
 
+## Matchmaking
+The matchmaking algorithm pairs players with overlapping skill ranges (`R±2×RD`
+in the Glicko-2 system) with a bias for pairing players with their closest
+neighbour.  
+It is guaranteed to be fair _overall_ but there is always the possibility of an
+unpairable outlier that will get matched up against someone with a greatly
+lower skill. This is _unavoidable_ unless players are kicked out of the race.
+
+If your are matched up against a better opponent, you can either watch his VoD
+and understand how and where to improve, or come and complain about how unfair
+matchmaking is. Be the better player, _git gud_.
+
 ## Leagues
 ### Standard (`std`)
 The _Standard_ league is the default league where all players, good and bad,

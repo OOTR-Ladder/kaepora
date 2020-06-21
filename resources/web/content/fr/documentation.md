@@ -90,6 +90,21 @@ Ce système a quelques particularité :
 
 [1]: https://fr.wikipedia.org/wiki/Classement_Glicko
 
+## Matchmaking
+L'algorithme de matchmaking sélectionne des joueurs avec des plages de niveau
+qui se chevauchent (`R±2×RD` dans le système Glicko-2) en préférant les joueurs
+ayant la plus petite différence de niveau.  
+Cette méthode garanti un matchmaking _globalement_ juste mais il y a toujours
+la possibilité qu'un joueur de très haut niveau soit incompatible avec tous les
+autres joueurs d'une session et se retrouve contre un joueur qui sera en fort
+désavantage. Cette situation est _inévitable_ à moins de retirer des joueurs de
+la session.
+
+Si vous vous retrouvez contre un adversaire bien meilleur que vous, vous pouvez
+soit regarder ses vidéos pour comprendre où et comment vous améliorer, soit
+venir vous plaindre de combien le matchmaking est injuste. Soyez le meilleur
+joueur, _git gud_.
+
 ## Ligues
 ### Standard (`std`)
 La ligue standard est la ligue par défaut que tous les joueurs de tous les
