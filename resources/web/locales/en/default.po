@@ -73,6 +73,10 @@ msgstr ""
 msgid "Join the server"
 msgstr ""
 
+#: resources/web/templates/includes/menu.html:55
+msgid "Races"
+msgstr ""
+
 #: resources/web/templates/includes/noscript.html:7
 msgid ""
 "Enabling JavaScript is required for this page to function properly. I hate "
