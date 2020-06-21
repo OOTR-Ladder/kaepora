@@ -130,7 +130,7 @@
         {
             "Value": "none",
             "Cost": 13,
-            "Weight": 0.25
+            "Weight": 0
         },
         {
             "Value": "mask",
@@ -140,7 +140,7 @@
         {
             "Value": "agony",
             "Cost": 5,
-            "Weight": 0.25
+            "Weight": 0
         }
     ],
     "item_pool_value": [
