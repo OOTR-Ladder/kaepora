@@ -12,10 +12,13 @@
     --color-bronze: rgb(189, 126, 84);
     --color-bronze-dark: rgb(156, 82, 33);
     --color-bg-bronze: rgb(242, 225, 215);
+
+    --color-box: #fcfcff;
 }
 
 html { background-color: var(--color-body-bg-color); }
 body { font-family: "Avenir", "Ubuntu", "Noto Sans", "Segoe UI", sans-serif; }
+table.table { background-color: transparent; }
 #mainMenu .navbar-item { font-weight: bold; }
 
 /* Fix uglyness */
@@ -467,15 +470,38 @@ table.table.stats--attendance td {
 /* }}} History */
 
 /*{{{ Session recap */
-.Match--players.columns {
-    margin: 0;
-    background: var(--color-white);
+div[class*="MatchList--match"] {
+    border: 2px solid var(--color-box);
     border-radius: 20px;
 }
+div[class*="MatchList--match"]:not(:last-child) { margin-bottom: 1.5rem; }
+div.Match--players.columns.is-gapless { margin-bottom: 0; }
+.Match--players.columns {
+    margin: 0;
+    background: var(--color-box);
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+.Seed {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.Seed--number.tag {
+    margin-bottom: .5rem;
+    background-color: var(--color-box);
+}
+.Seed--number code { background: var(--color-box); }
 .Match--players .Player__loser { text-align: right; }
-.Match--players .Player--name { font-size: 1.1rem; }
 .MatchList--match:not([class*="__doubleFF"]) .Match--players .Player__winner .Player--name { color: var(--color-gold-dark); }
-.Match--players .Player--time { font-size: .8rem; }
+.MatchList--match__doubleFF .Match--players .Player--name { color: red; }
+
+@media only screen and (max-width: 768px){
+    .Match--players .Player--name { font-size: 1.1rem; }
+    .Match--players .Player--time { font-size: .8rem; }
+}
+@media only screen and (min-width: 769px){
+    .Match--players .Player--name { font-size: 1.5rem; }
+}
 /*}}} Session recap */
 
 /* {{{ Spoilers */
