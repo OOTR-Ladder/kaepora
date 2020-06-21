@@ -19,7 +19,7 @@
                 <h1 class="title">{{t .Locale "%s league" .Payload.League.Name}}</h1>
                 <h2 class="subtitle">{{t .Locale "Race started at %s" (.Payload.MatchSession.StartDate | datetime)}}</h2>
             </div>
-        {{- if len .Payload.Matches -}}
+            {{- if len .Payload.Matches -}}
             <div class="MatchList column is-two-thirds">
                 {{- range $match := .Payload.Matches -}}
                     <div class="MatchList--match Match columns is-vcentered is-clipped">
@@ -47,45 +47,14 @@
                     </div>
                 {{- end -}}
             </div>
-        {{else}}
-        <article class="message is-info">
-            <div class="message-body">
-                {{t .Locale "Not enough players joined this session."}}
-            </div>
-        </article>
-        {{end}}
+            {{else}}
+            <article class="message is-info">
+                <div class="message-body">
+                    {{t .Locale "Not enough players joined this session."}}
+                </div>
+            </article>
+            {{end}}
         </div>
-
-{{- if len .Payload.Matches -}}
-        <table class="table is-hidden">
-            <thead>
-                <tr>
-                    <th colspan="2">{{t .Locale "Winner"}}</th>
-                    <th colspan="2">{{t .Locale "Loser"}}</th>
-                    <th colspan="2">{{t .Locale "Seed"}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{- range $match := .Payload.Matches -}}
-                <tr>
-                    <td>{{ (index $.Payload.Players ($match.WinningEntry).PlayerID).Name }}</td>
-                    <td>{{ matchEntryStatus $.Locale $match.WinningEntry }}</td>
-                    <td>{{ (index $.Payload.Players ($match.LosingEntry).PlayerID).Name }}</td>
-                    <td>{{ matchEntryStatus $.Locale $match.LosingEntry }}</td>
-                    <td><code>{{ $match.Seed }}</code></td>
-                    <td><a href="{{uri $.Locale "matches" $match.ID.String "spoilers"}}">{{t $.Locale "spoiler log"}}</a></td>
-                </tr>
-                {{- end -}}
-            </tbody>
-        </table>
-{{else}}
-        <article class="message is-info">
-            <div class="message-body">
-                {{t .Locale "Not enough players joined this session."}}
-            </div>
-        </article>
-{{end}}
-
     </div>
 </section>
 
