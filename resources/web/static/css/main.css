@@ -1,7 +1,7 @@
 /* {{{ Global */
 :root {
     --color-white: #ffffff;
-    --color-body-bg-color: #fdfdff;
+    --color-body-bg-color: #f7f7ff;
     --color-light-gray-blue: rgb(247, 250, 252);
     --color-gold: rgb(220, 172, 38);
     --color-gold-dark: rgb(191, 140, 0);
@@ -12,12 +12,14 @@
     --color-bronze: rgb(189, 126, 84);
     --color-bronze-dark: rgb(156, 82, 33);
     --color-bg-bronze: rgb(242, 225, 215);
+
+    --color-box: #fcfcff;
+    --color-forfeit: #c71f37;
 }
 
-body {
-    background-color: var(--body-bg-color);
-    font-family: "Avenir", "Ubuntu", "Noto Sans", "Segoe UI", sans-serif;
-}
+html { background-color: var(--color-body-bg-color); }
+body { font-family: "Avenir", "Ubuntu", "Noto Sans", "Segoe UI", sans-serif; }
+table.table { background-color: transparent; }
 #mainMenu .navbar-item { font-weight: bold; }
 
 /* Fix uglyness */
@@ -398,6 +400,128 @@ table.table.stats--attendance td {
     border: none;
 }
 /* }}} Stats */
+
+/* {{{ History */
+.box[class*="SessionBox"] { position: relative; }
+.SessionBox--league {
+    font-size: 2rem;
+    font-weight: lighter;
+}
+.SessionBox--datetime {
+    line-height: 1;
+    opacity: .7;
+}
+.SessionBox--players {
+    position: absolute;
+    bottom: 1.25rem;
+    right: 4.25rem;
+    font-size: 1rem;
+    font-weight: lighter;
+    line-height: 1;
+    text-align: right;
+    text-transform: uppercase;
+    color: rgb(0, 159, 253);
+}
+.SessionBox__no-match .SessionBox--players { right: 1.25rem; }
+.SessionBox--players span {
+    display: block;
+    font-size: 2rem;
+    font-weight: lighter;
+}
+.SessionBox--layer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 3rem;
+    background: rgba(0, 159, 253, 1);
+    clip-path: circle(100% at 170% 50%);
+}
+.SessionBox--layer img {
+    position: absolute;
+    right: 50%;
+    top: 50%;
+    transform: translate(50%, -50%);
+}
+.SessionBox__no-match {
+    padding: .5rem 1.25rem;
+    opacity: .4;
+}
+.SessionBox__no-match .SessionBox--league,
+.SessionBox__no-match .SessionBox--players span { font-size: 1.5rem; }
+.SessionBox__no-match .SessionBox--players { bottom: .5rem; }
+
+@media only screen and (max-width: 768px) {
+    .SessionBox--league,
+    .SessionBox--players span { font-size: 1.5rem; }
+    .SessionBox--datetime,
+    .SessionBox--players { font-size: .8rem; }
+
+    .SessionBox--players { right: 3.25rem; }
+
+    .SessionBox--layer {
+        max-width: 2rem;
+        clip-path: circle(100% at 210% 50%);
+    }
+
+    .SessionBox__no-match .SessionBox--league,
+    .SessionBox__no-match .SessionBox--players span { font-size: 1.2rem; }
+}
+/* }}} History */
+
+/*{{{ Session recap */
+div[class*="MatchList--match"] { margin-top: 0; }
+div.Match--players.columns.is-gapless { margin-bottom: 0; }
+.Match--players.columns {
+    margin: 0;
+    background: var(--color-box);
+}
+.Seed {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.Seed--number.tag {
+    margin-bottom: .5rem;
+    background-color: var(--color-box);
+}
+.Seed--number code { background: var(--color-box); }
+.Match--players .Player__loser { text-align: right; }
+.MatchList--match:not([class*="__doubleFF"]) .Match--players .Player__winner .Player--name { color: var(--color-gold-dark); }
+.MatchList--match__doubleFF .Match--players .Player--name { color: var(--color-forfeit); }
+.MatchList--match__doubleFF .Match--players .Player--time { opacity: .5; }
+
+@media only screen and (max-width: 768px){
+    div[class*="MatchList--match"]:not(:last-child) {
+        margin-bottom: 2.5rem;
+    }
+    .Match--players .Player--name { font-size: 1.1rem; }
+    .Match--players .Player--time { font-size: .8rem; }
+
+    .Link--spoiler {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 50%);
+    }
+    .Match--players.columns { border-radius: 20px; }
+}
+@media only screen and (min-width: 769px){
+    div[class*="MatchList--match"]:not(:last-child) {
+        margin-bottom: 1.5rem;
+    }
+    div[class*="MatchList--match"] {
+        overflow: hidden;
+        border: 2px solid var(--color-box);
+        border-radius: 20px;
+    }
+    .Match--players.columns {
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+    .Match--players .Player--name { font-size: 1.5rem; }
+}
+/*}}} Session recap */
 
 /* {{{ Spoilers */
 ul.spoilers--hash {
