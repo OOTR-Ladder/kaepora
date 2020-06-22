@@ -39,8 +39,6 @@ func normalizeStreamHost(host string) (string, error) {
 	switch host {
 	case "www.twitch.tv", "twitch.tv":
 		return "twitch.tv", nil
-	case "mixer.com", "www.mixer.com":
-		return "mixer.com", nil
 	}
 
 	return "", ErrPublic(fmt.Sprintf("%s is not a known streaming platform", host))
