@@ -25,12 +25,12 @@
             {
                 "Value": "medallions",
                 "Title": "médaillons",
-                "Description": "Le pont donnant accès au château de Ganon apparait une fois les 6 médaillons obtenus."
+                "Description": "Le pont donnant accès au château de Ganon apparait une fois les six médaillons obtenus."
             },
             {
                 "Value": "dungeons",
                 "Title": "donjons",
-                "Description": "Le pont donnant accès au château de Ganon apparait une fois les 6 médaillons et les 3 pierres ancestrales obtenus."
+                "Description": "Le pont donnant accès au château de Ganon apparait une fois les six médaillons et les trois pierres ancestrales obtenus."
             },
             {
                 "Value": "open",
@@ -40,7 +40,7 @@
             {
                 "Value": "stones",
                 "Title": "pierres",
-                "Description": "Le pont donnant accès au château de Ganon apparait une fois les 3 pierres ancestrales obtenues."
+                "Description": "Le pont donnant accès au château de Ganon apparait une fois les trois pierres ancestrales obtenues."
             },
             {
                 "Value": "vanilla",
@@ -115,7 +115,7 @@
             {
                 "Value": "plentiful",
                 "Title": "en abondance",
-                "Description": "Les items importants sont disponibles en abondance."
+                "Description": "Les objets importants sont disponibles en abondance."
             },
             {
                 "Value": "scarce",
@@ -190,7 +190,7 @@
             {
                 "Value": "random",
                 "Title": "random",
-                "Description": "Les boutiques vendent un nombre d'objets aléatoire, de 0 à 4. Ces objets seront toujours sur le côté gauche."
+                "Description": "Chaque boutique vend entre 0 et 4 objets aléatoires. Ces objets seront toujours sur le côté gauche."
             }
         ]
     },
@@ -200,7 +200,7 @@
             {
                 "Value": true,
                 "Title": "oui",
-                "Description": "Un pack de 10 haricots magiques est trouvable, et le vendeur de Haricots vend un unique item pour 60 rubis."
+                "Description": "Un pack de 10 haricots magiques est trouvable, et le vendeur de Haricots vend un unique objet pour 60 rubis."
             }
         ]
     },
@@ -220,7 +220,7 @@
             {
                 "Value": "keysanity",
                 "Title": "partout",
-                "Description": "Les clefs de Boss peuvent être partout"
+                "Description": "Les clefs de Boss peuvent être n'importe où des objets sont obtenables"
             }
         ]
     },
@@ -250,7 +250,7 @@
             {
                 "Value": true,
                 "Title": "oui",
-                "Description": "La carte Gerudo peut se trouver partout."
+                "Description": "La carte Gerudo peut se trouver n'importe où des objets sont obtenables."
             }
         ]
     },
@@ -260,7 +260,7 @@
             {
                 "Value": true,
                 "Title": "oui",
-                "Description": "Les deux ocarinas peuvent se trouver partout."
+                "Description": "Les deux ocarinas peuvent se trouver n'importe où des objets sont obtenables."
             }
         ]
     },
@@ -270,7 +270,7 @@
             {
                 "Value": "low",
                 "Title": "abordable",
-                "Description": "Toutes les Pestes Mojo vendent un item pour 10 rubis."
+                "Description": "Toutes les Pestes Mojo vendent un objet aléatoire pour 10 rubis."
             }
         ]
     },
@@ -290,7 +290,7 @@
             {
                 "Value": "keysanity",
                 "Title": "partout",
-                "Description": "Les petites clefs peuvent être partout."
+                "Description": "Les petites clefs peuvent être n'importe où des objets sont obtenables."
             }
         ]
     },
@@ -300,7 +300,7 @@
             {
                 "Value": true,
                 "Title": "oui",
-                "Description": "Les chants peuvent être partout."
+                "Description": "Les chants peuvent être n'importe où des objets sont obtenables."
             }
         ]
     },
@@ -310,7 +310,7 @@
             {
                 "Value": true,
                 "Title": "oui",
-                "Description": "L'œuf curieux donné par Malon peut être partout."
+                "Description": "L'œuf curieux donné par Malon peut être n'importe où des objets sont obtenables."
             }
         ]
     },
@@ -330,17 +330,17 @@
             {
                 "Value": "dungeons",
                 "Title": "donjons",
-                "Description": "Les skulltula d'or des donjons peuvent être des objets."
+                "Description": "Les Skulltulas d'Or des donjons peuvent être des objets."
             },
             {
                 "Value": "overworld",
                 "Title": "extérieur",
-                "Description": "Les skulltula d'or hors des dojons peuvent être des objets."
+                "Description": "Les Skulltulas d'Or hors des donjons peuvent être des objets."
             },
             {
                 "Value": "all",
                 "Title": "toutes",
-                "Description": "Toutes les skulltula d'or peuvent être des objets."
+                "Description": "Toutes les Skulltula d'Or peuvent être des objets."
             }
         ]
     },
@@ -350,12 +350,12 @@
             {
                 "Value": "adult",
                 "Title": "ouverte en adulte",
-                "Description": "Le roi Zora est déplacé et la fontaine Zora toujours accessible depuis le domaine Zora uniquement en adulte."
+                "Description": "Le roi Zora est déplacé et la Fontaine Zora toujours accessible depuis le Domaine Zora uniquement en adulte."
             },
             {
                 "Value": "open",
                 "Title": "toujours ouverte",
-                "Description": "Le roi Zora est déplacé et la fontaine Zora toujours accessible depuis le domaine Zora."
+                "Description": "Le roi Zora est déplacé et la Fontaine Zora toujours accessible depuis le Domaine Zora."
             }
         ]
     },
@@ -365,7 +365,7 @@
             {
                 "Value": "open",
                 "Title": "ouverte",
-                "Description": "Le pont menant à la vallée Gerudo en adulte est déjà reconstruit."
+                "Description": "Le pont menant à la Vallée Gerudo en adulte est déjà reconstruit."
             }
         ]
     },
@@ -375,7 +375,7 @@
             {
                 "Value": true,
                 "Title": "oui",
-                "Description": "La Triforce a été brisée par Ganon et répartie dans tout Hyrule. Trouvez 20 morceaux pour finir le jeu !"
+                "Description": "La Triforce a été brisée par Ganon et répartie dans tout Hyrule. Trouvez 20 morceaux pour finir le jeu !"
             }
         ]
     },
@@ -385,17 +385,17 @@
             {
                 "Value": true,
                 "Title": "oui",
-                "Description": "Sortir l'Ocarina aux endroit où Pierre l'épouvantail peut apparaitre, le fera apparaitre sans avoir besoin de jouer le chant."
+                "Description": "Sortir votre Ocarina suffira à faire apparaître Pierre. Pas besoin de créer son chant en enfant."
             }
         ]
     },
     "start_with_consumables": {
-        "Title": "Démarrer avec batons et noix",
+        "Title": "Démarrer avec bâtons et noix",
         "Values": [
             {
                 "Value": true,
                 "Title": "oui",
-                "Description": "Le jeu commence avec 10 bâtons et 20 noix."
+                "Description": "Vous commencez le jeu avec 10 bâtons et 20 noix."
             }
         ]
     },

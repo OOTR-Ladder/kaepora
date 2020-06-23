@@ -5,7 +5,7 @@
             {
                 "Value": false,
                 "Title": "no",
-                "Description": "Only required items and locations to beat the game will be guaranteed reachable."
+                "Description": "Only the required items and locations to beat the game will be guaranteed to be reachable in logic."
             }
         ]
     },
@@ -25,27 +25,27 @@
             {
                 "Value": "medallions",
                 "Title": "medallions",
-                "Description": "Bridge to Ganon's Castle appears when all 6 medaillons are obtained."
+                "Description": "The bridge to Ganon's Castle appears after all six medaillons are obtained."
             },
             {
                 "Value": "dungeons",
                 "Title": "dungeons",
-                "Description": "Bridge to Ganon's Castle appears when all 6 medaillons and all 3 Spiritual Stones are obtained."
+                "Description": "The bridge to Ganon's Castle appears after all six medaillons and all three Spiritual Stones are obtained."
             },
             {
                 "Value": "open",
                 "Title": "open",
-                "Description": "Bridge to Ganon's Castle is always there."
+                "Description": "The bridge to Ganon's Castle is there from the start of the game."
             },
             {
                 "Value": "stones",
                 "Title": "stones",
-                "Description": "Bridge to Ganon's Castle appears when all 3 Spiritual Stones are obtained."
+                "Description": "The bridge to Ganon's Castle appears after all three Spiritual Stones are obtained."
             },
             {
                 "Value": "vanilla",
                 "Title": "vanilla",
-                "Description": "Bridge to Ganon's Castle appears when Shadow Medaillon, Spirit Medaillon and Light Arrows are obtained."
+                "Description": "The bridge to Ganon's Castle appears after the Shadow Medaillon, Spirit Medaillon and Light Arrows are obtained."
             }
         ]
     },
@@ -85,7 +85,7 @@
             {
                 "Value": "dungeons",
                 "Title": "dungeons",
-                "Description": "Dungeon entrances are shuffled with each other, including Bottom of the Well, Ice Cavern, and Gerudo Training Grounds."
+                "Description": "Dungeon entrances are shuffled with eachother, including Bottom of the Well, Ice Cavern, and Gerudo Training Grounds."
             },
             {
                 "Value": "simple-indoors",
@@ -135,7 +135,7 @@
             {
                 "Value": true,
                 "Title": "yes",
-                "Description": "Dungeons have exactly one major item except Spirit Temple which has TWO items to match vanilla distribution."
+                "Description": "Dungeons have exactly one major item except Spirit Temple which has _two_ items to match vanilla distribution."
             }
         ]
     },
@@ -170,7 +170,7 @@
             {
                 "Value": "1",
                 "Title": "1",
-                "Description": "Shops have 1 random non-shop item. They will always be on the left side."
+                "Description": "Shops have 1 random non-shop item. It will always be on the left side."
             },
             {
                 "Value": "2",
@@ -190,7 +190,7 @@
             {
                 "Value": "random",
                 "Title": "random",
-                "Description": "Each shop will have a random number of non-shop items up to a maximum of 4."
+                "Description": "Every shop will have a random number of non-shop items up to a maximum of 4."
             }
         ]
     },
@@ -365,7 +365,7 @@
             {
                 "Value": "open",
                 "Title": "open",
-                "Description": "The bridge in Gerudo Valley is already rebuild."
+                "Description": "The bridge in Gerudo Valley is already rebuilt."
             }
         ]
     },
@@ -375,7 +375,7 @@
             {
                 "Value": true,
                 "Title": "yes",
-                "Description": "Pieces of the Triforce have been scattered around the world. Find 20 of them to finish the game !"
+                "Description": "Pieces of the Triforce have been scattered around the world. Find 20 of them to finish the game!"
             }
         ]
     },
