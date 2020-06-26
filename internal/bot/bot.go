@@ -73,7 +73,6 @@ func New(back *back.Back, token string) (*Bot, error) {
 		"!rename":       bot.cmdRename,
 		"!setstream":    bot.cmdSetStream,
 		"!seed":         bot.cmdSendSeed,
-		"!spoilers":     bot.cmdSpoilers,
 		"!yes":          bot.cmdAllRight,
 
 		"!cancel":   bot.cmdCancel,
@@ -82,8 +81,6 @@ func New(back *back.Back, token string) (*Bot, error) {
 		"!done":     bot.cmdComplete,
 		"!forfeit":  bot.cmdForfeit,
 		"!join":     bot.cmdJoin,
-
-		"!rando": bot.cmdDevRandomSettings, // DEBUG
 	}
 
 	return bot, nil
@@ -280,7 +277,6 @@ func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
 !done              # stop your race timer and register your final time
 !forfeit           # forfeit (and thus lose) the current race
 !join SHORTCODE    # join the next race of the given league (see !leagues)
-!spoilers SEED     # send the spoiler log for the given seed (if the corresponding race has finished)
 %[1]s
 
 **Racing**:

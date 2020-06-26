@@ -3,15 +3,11 @@ package bot
 import (
 	"fmt"
 	"io"
-	"kaepora/internal/generator/oot"
-	"kaepora/internal/generator/oot/settings"
 	"kaepora/internal/util"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/google/uuid"
 )
 
 func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error {
@@ -102,37 +98,6 @@ func (bot *Bot) cmdDevAddListen(m *discordgo.Message, _ []string, _ io.Writer) (
 
 	bot.config.DiscordListenIDs = append(bot.config.DiscordListenIDs, m.ChannelID)
 	return bot.config.Write()
-}
-
-// cmdDevRandomSettings is a temporary DEBUG command to demonstrate randomized settings.
-func (bot *Bot) cmdDevRandomSettings(m *discordgo.Message, args []string, w io.Writer) (err error) {
-	cost := oot.SettingsCostBudget
-	seed := uuid.New().String()
-
-	if len(args) > 0 {
-		cost, err = strconv.Atoi(args[0])
-		if err != nil {
-			return util.ErrPublic(err.Error())
-		}
-	}
-
-	if len(args) > 1 {
-		seed = args[1]
-	}
-
-	s, err := settings.Load("resources/oot-randomizer/" + settings.DefaultName)
-	if err != nil {
-		return err
-	}
-
-	fmt.Fprintf(w, "Generated settings for seed `%s` and cost %d:\n```\n", seed, cost)
-	shuffled := s.Shuffle(seed, cost)
-	for k, v := range shuffled {
-		fmt.Fprintf(w, "%s = %v\n", k, v)
-	}
-	fmt.Fprint(w, "\n```")
-
-	return nil
 }
 
 func (bot *Bot) cmdDevRerank(_ *discordgo.Message, args []string, _ io.Writer) error {
