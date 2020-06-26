@@ -18,6 +18,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/google/uuid"
+	"golang.org/x/time/rate"
 )
 
 type commandHandler func(m *discordgo.Message, args []string, w io.Writer) error
@@ -26,6 +27,8 @@ type commandHandler func(m *discordgo.Message, args []string, w io.Writer) error
 type Bot struct {
 	back   *back.Back
 	config *config.Config
+
+	manualSeedgenLimiter *rate.Limiter
 
 	startedAt time.Time
 	token     string
@@ -47,12 +50,13 @@ func New(back *back.Back, token string) (*Bot, error) {
 	}
 
 	bot := &Bot{
-		back:          back,
-		config:        conf,
-		token:         token,
-		dg:            dg,
-		startedAt:     time.Now(),
-		notifications: back.GetNotificationsChan(),
+		back:                 back,
+		config:               conf,
+		token:                token,
+		dg:                   dg,
+		startedAt:            time.Now(),
+		notifications:        back.GetNotificationsChan(),
+		manualSeedgenLimiter: rate.NewLimiter(4.0/60.0, 1), // allow four seeds / minute
 	}
 
 	dg.AddHandler(bot.handleMessage)
@@ -307,6 +311,11 @@ func (bot *Bot) cmdAllRight(m *discordgo.Message, _ []string, w io.Writer) error
 func (bot *Bot) cmdSendSeed(m *discordgo.Message, args []string, w io.Writer) error {
 	if len(args) < 1 || len(args) > 2 {
 		return util.ErrPublic("expected 1 or 2 arguments: SHORTCODE [SEED]")
+	}
+
+	if !bot.manualSeedgenLimiter.Allow() {
+		fmt.Fprintf(w, "Too many seeds are being generated right now\nTry again in 20 seconds.")
+		return nil
 	}
 
 	seed := uuid.New().String()
