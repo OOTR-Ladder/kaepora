@@ -241,6 +241,16 @@
                 "Value": "lacs_vanilla",
                 "Title": "vanilla Light Arrow custcene",
                 "Description": "Ganon's Castle Boss Key is on the Light Arrow cutscene which unlocks when you get both Shadow and Spirit medallions."
+            },
+            {
+                "Value": "dungeon",
+                "Title": "dungeon",
+                "Description": "Ganon's Castle Boss Key can only appear inside Ganon's Castle."
+            },
+            {
+                "Value": "keysanity",
+                "Title": "anywhere",
+                "Description": "Ganon's Castle Boss Key can appear anywhere in the world."
             }
         ]
     },
