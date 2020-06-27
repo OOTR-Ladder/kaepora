@@ -321,10 +321,20 @@
         {
             "Value": "lacs_vanilla",
             "Cost": 1,
-            "Weight": 0.5,
+            "Weight": 0,
             "Implies": {
                 "triforce_hunt": false
             }
+        },    
+        {
+            "Value": "dungeon",
+            "Cost": 2,
+            "Weight": 1
+        },
+        {
+            "Value": "keysanity",
+            "Cost": 4,
+            "Weight": 0.5
         }
     ],
     "shuffle_gerudo_card": [
