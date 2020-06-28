@@ -15,6 +15,9 @@ type Config struct {
 
 	// Who is allowed to use `!dev` commands.
 	DiscordAdminUserIDs []string
+
+	// Who is not allowed to do anything.
+	DiscordBannedUserIDs []string
 }
 
 func NewFromUserConfigDir() (*Config, error) {

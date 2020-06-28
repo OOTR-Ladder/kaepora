@@ -98,6 +98,18 @@ func (bot *Bot) isAdmin(discordID string) bool {
 	return false
 }
 
+// isBanned returns true if the given Discord user ID is a banned from the
+// ladder, meaning he can't even talk to the bot.
+func (bot *Bot) isBanned(discordID string) bool {
+	for _, v := range bot.config.DiscordBannedUserIDs {
+		if discordID == v {
+			return true
+		}
+	}
+
+	return false
+}
+
 // Serve runs the Discord bot until the done channel is closed.
 func (bot *Bot) Serve(wg *sync.WaitGroup, done <-chan struct{}) {
 	log.Println("info: starting Discord bot")
@@ -225,6 +237,10 @@ func (bot *Bot) dispatch(m *discordgo.Message, w *channelWriter) error {
 			log.Printf("%s", debug.Stack())
 		}
 	}()
+
+	if bot.isBanned(m.Author.ID) {
+		return util.ErrPublic("your account has been banned")
+	}
 
 	command, args := parseCommand(m.Content)
 	handler, ok := bot.handlers[command]
