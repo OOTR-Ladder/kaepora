@@ -42,7 +42,7 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 			out,
 			"https://discordapp.com/api/oauth2/authorize?client_id=%s&scope=bot&permissions=%d",
 			bot.dg.State.User.ID,
-			discordgo.PermissionReadMessages|discordgo.PermissionSendMessages|
+			discordgo.PermissionViewChannel|discordgo.PermissionSendMessages|
 				discordgo.PermissionEmbedLinks|discordgo.PermissionAttachFiles|
 				discordgo.PermissionManageMessages|discordgo.PermissionMentionEveryone,
 		)
