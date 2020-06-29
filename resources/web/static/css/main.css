@@ -358,6 +358,7 @@ div[class^="nextRace--contextual--"] > i {
 /* {{{ Leaderboard */
 table[class*="leaderboardTable"] thead th,
 table[class*="leaderboardTable"] tbody td { border-width: 0; }
+table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child(2n) { background-color: transparent; }
 table[class*="leaderboardTable"] tbody td:first-child {
     border-top-left-radius: 2em;
     border-bottom-left-radius: 2em;
@@ -366,8 +367,8 @@ table[class*="leaderboardTable"] tbody td:last-child {
     border-top-right-radius: 2em;
     border-bottom-right-radius: 2em;
 }
-table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child(even) { background-color: var(--color-light-gray-blue); }
-table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child(odd) { background-color: var(--color-white); }
+table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child(even) td { background-color: var(--color-light-gray-blue); }
+table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child(odd) td { background-color: var(--color-white); }
 
 .leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(1) { color: var(--color-gold-dark); }
 .leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(1) td:first-child { background-color: var(--color-bg-gold); }
@@ -378,7 +379,8 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
         rgba(253, 241, 220, 0)
     );
 }
-.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) { color: var(--color-silver-dark); background-color: white; }
+.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) { color: var(--color-silver-dark); }
+.leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) td { background-color: var(--color-white); }
 .leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) td:first-child { background-color: rgba(229, 229, 228, 1); }
 .leaderboardTable__first-page.is-striped tbody tr.leaderboardTable--player:not(.is-selected):nth-child(2) td:nth-child(2) {
     background-image: linear-gradient(
