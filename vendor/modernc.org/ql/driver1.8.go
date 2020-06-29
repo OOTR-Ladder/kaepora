@@ -4,13 +4,48 @@ package ql // import "modernc.org/ql"
 
 import (
 	"context"
+	"database/sql"
 	"database/sql/driver"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
 )
 
 const prefix = "$"
+
+var (
+	_ driver.ExecerContext      = (*driverConn)(nil)
+	_ driver.QueryerContext     = (*driverConn)(nil)
+	_ driver.ConnBeginTx        = (*driverConn)(nil)
+	_ driver.ConnPrepareContext = (*driverConn)(nil)
+)
+
+// BeginTx implements driver.ConnBeginTx.
+func (c *driverConn) BeginTx(ctx context.Context, opts driver.TxOptions) (driver.Tx, error) {
+	// Check the transaction level. If the transaction level is non-default
+	// then return an error here as the BeginTx driver value is not supported.
+	if sql.IsolationLevel(opts.Isolation) != sql.LevelDefault {
+		return nil, errors.New("ql: driver does not support non-default isolation level")
+	}
+
+	// If a read-only transaction is requested return an error as the
+	// BeginTx driver value is not supported.
+	if opts.ReadOnly {
+		return nil, errors.New("ql: driver does not support read-only transactions")
+	}
+
+	if c.ctx == nil {
+		c.ctx = NewRWCtx()
+	}
+
+	if _, _, err := c.db.db.Execute(c.ctx, txBegin); err != nil {
+		return nil, err
+	}
+
+	c.tnl++
+	return c, nil
+}
 
 func (c *driverConn) ExecContext(ctx context.Context, query string, args []driver.NamedValue) (driver.Result, error) {
 	query, vals, err := replaceNamed(query, args)

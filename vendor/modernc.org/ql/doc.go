@@ -281,7 +281,7 @@
 // Identifiers
 //
 // Identifiers name entities such as tables or record set columns.
-// There are two kinds of identifioers, normal idententifiers and quoted
+// There are two kinds of identifiers, normal idententifiers and quoted
 // identifiers.
 //
 //  indentifier = normal_identifier | quoted_identifier.

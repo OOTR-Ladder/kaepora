@@ -26,6 +26,7 @@ package firebirdsql
 import (
 	"bytes"
 	"container/list"
+	"crypto/sha1"
 	"encoding/binary"
 	"math/big"
 	"strconv"
@@ -42,6 +43,20 @@ func int32_to_bytes(i32 int32) []byte {
 		byte(i32 >> 8 & 0xFF),
 		byte(i32 >> 16 & 0xFF),
 		byte(i32 >> 24 & 0xFF),
+	}
+	return bs
+}
+
+func bint64_to_bytes(i64 int64) []byte {
+	bs := []byte{
+		byte(i64 >> 56 & 0xFF),
+		byte(i64 >> 48 & 0xFF),
+		byte(i64 >> 40 & 0xFF),
+		byte(i64 >> 32 & 0xFF),
+		byte(i64 >> 24 & 0xFF),
+		byte(i64 >> 16 & 0xFF),
+		byte(i64 >> 8 & 0xFF),
+		byte(i64 & 0xFF),
 	}
 	return bs
 }
@@ -91,19 +106,19 @@ func bytes_to_int64(b []byte) int64 {
 	return int64(binary.LittleEndian.Uint64(b))
 }
 
-func bigFromHexString(s string) *big.Int {
+func bigIntFromHexString(s string) *big.Int {
 	ret := new(big.Int)
 	ret.SetString(s, 16)
 	return ret
 }
 
-func bigFromString(s string) *big.Int {
+func bigIntFromString(s string) *big.Int {
 	ret := new(big.Int)
 	ret.SetString(s, 10)
 	return ret
 }
 
-func bigToBytes(v *big.Int) []byte {
+func bigIntToBytes(v *big.Int) []byte {
 	buf := pad(v)
 	for i, _ := range buf {
 		if buf[i] != 0 {
@@ -114,7 +129,7 @@ func bigToBytes(v *big.Int) []byte {
 	return buf[:1] // 0
 }
 
-func bytesToBig(v []byte) (r *big.Int) {
+func bytesToBigInt(v []byte) (r *big.Int) {
 	m := new(big.Int)
 	m.SetInt64(256)
 	a := new(big.Int)
@@ -125,6 +140,13 @@ func bytesToBig(v []byte) (r *big.Int) {
 		r = r.Add(r, a.SetInt64(int64(b)))
 	}
 	return r
+}
+
+func bigIntToSha1(n *big.Int) []byte {
+	sha1 := sha1.New()
+	sha1.Write(n.Bytes())
+
+	return sha1.Sum(nil)
 }
 
 func flattenBytes(l *list.List) []byte {
@@ -168,6 +190,15 @@ func xdrString(s string) []byte {
 	// XDR encoding string
 	bs := bytes.NewBufferString(s).Bytes()
 	return xdrBytes(bs)
+}
+
+func _int64ToBlr(i64 int64) ([]byte, []byte) {
+	v := bytes.Join([][]byte{
+		bint64_to_bytes(i64),
+	}, nil)
+	blr := []byte{16, 0}
+
+	return blr, v
 }
 
 func _int32ToBlr(i32 int32) ([]byte, []byte) {

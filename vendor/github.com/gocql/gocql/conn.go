@@ -31,6 +31,7 @@ var (
 		"io.aiven.cassandra.auth.AivenAuthenticator",
 		"com.ericsson.bss.cassandra.ecaudit.auth.AuditPasswordAuthenticator",
 		"com.amazon.helenus.auth.HelenusAuthenticator",
+		"com.ericsson.bss.cassandra.ecaudit.auth.AuditAuthenticator",
 	}
 )
 
@@ -211,7 +212,6 @@ func (s *Session) dialWithoutObserver(ctx context.Context, host *HostInfo, cfg *
 		}
 		dialer = d
 	}
-
 
 	conn, err := dialer.DialContext(ctx, "tcp", host.HostnameAndPort())
 	if err != nil {
