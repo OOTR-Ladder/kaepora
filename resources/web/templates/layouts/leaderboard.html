@@ -43,7 +43,7 @@
                             <td align="center">{{add $k 1}}</td>
                             {{- end -}}
 
-                            <td>{{$v.PlayerName}}</td>
+                            <td><a href="{{uri $.Locale "player" $v.PlayerName}}">{{$v.PlayerName}}</a></td>
 
                             <td align="center" class="leaderboardTable--stream">
                                 {{- if ne "" $v.PlayerStreamURL -}}
