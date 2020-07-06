@@ -113,7 +113,6 @@ func (b *Back) GetLeaderboardsForDiscordUser(discordID, shortcode string) (
 	[]LeaderboardEntry, // top around player, might be nil
 	error,
 ) {
-
 	var (
 		top    []LeaderboardEntry
 		around []LeaderboardEntry

@@ -2,6 +2,7 @@ package web
 
 import (
 	"kaepora/internal/back"
+	"kaepora/internal/util"
 	"net/http"
 	"time"
 
@@ -16,10 +17,26 @@ func (s *Server) getOnePlayer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	stats, err := s.back.GetPlayerStats(player.ID)
+	if err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
+	}
+
+	leagues, err := s.back.GetLeaguesMap()
+	if err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
+	}
+
 	s.cache(w, "public", 1*time.Hour)
 	s.response(w, r, http.StatusOK, "one_player.html", struct {
-		Player back.Player
+		Player      back.Player
+		PlayerStats back.PlayerStats
+		Leagues     map[util.UUIDAsBlob]back.League
 	}{
-		Player: player,
+		Player:      player,
+		PlayerStats: stats,
+		Leagues:     leagues,
 	})
 }
