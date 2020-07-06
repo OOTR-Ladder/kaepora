@@ -47,7 +47,7 @@ table.table { background-color: transparent; }
 .long-table-container .sticky {
     position: sticky;
     top: 0px;
-    background-color: white;
+    background-color: var(--color-body-bg-color);
     border-bottom: 1px grey solid;
     padding-bottom: 4px;
 }
