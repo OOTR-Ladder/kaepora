@@ -56,15 +56,11 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 		r.Get("/sessions", s.getAllMatchSession)
 		r.Get("/sessions/{id}", s.getOneMatchSession)
 		r.Get("/matches/{id}/spoilers", s.getSpoilerLog)
+		r.Get("/player/{name}", s.getOnePlayer)
 
 		r.Get("/schedule", s.schedule)
 		r.Get("/stats/{shortcode}/ratings.svg", s.statsRatings)
 		r.Get("/stats/{shortcode}", s.stats)
-
-		// TODO Remove this at some point.
-		r.Get("/history", func(w http.ResponseWriter, r *http.Request) {
-			http.Redirect(w, r, "/"+chi.URLParam(r, "locale")+"/sessions", http.StatusPermanentRedirect)
-		})
 
 		r.Get("/", s.index)
 

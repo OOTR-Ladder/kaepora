@@ -5,39 +5,39 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: internal/web/templates.go:119
+#: internal/web/templates.go:120
 msgid "Planned"
 msgstr ""
 
-#: internal/web/templates.go:122
+#: internal/web/templates.go:123
 msgid "Joinable"
 msgstr ""
 
-#: internal/web/templates.go:125
+#: internal/web/templates.go:126
 msgid "Preparing"
 msgstr ""
 
-#: internal/web/templates.go:128
+#: internal/web/templates.go:129
 msgid "Race in progress"
 msgstr ""
 
-#: internal/web/templates.go:131
+#: internal/web/templates.go:132
 msgid "Closed"
 msgstr ""
 
-#: internal/web/templates.go:172
+#: internal/web/templates.go:173
 msgid "not started"
 msgstr ""
 
-#: internal/web/templates.go:174
+#: internal/web/templates.go:175
 msgid "in progress"
 msgstr ""
 
-#: internal/web/templates.go:178
+#: internal/web/templates.go:179
 msgid "before start"
 msgstr ""
 
-#: internal/web/templates.go:183
+#: internal/web/templates.go:184
 msgid "forfeit (%s)"
 msgstr ""
 
@@ -297,6 +297,10 @@ msgstr ""
 
 #: resources/web/templates/layouts/leaderboard.html:72
 msgid "The leaderboard is currently empty."
+msgstr ""
+
+#: resources/web/templates/layouts/one_player.html:10
+msgid "Climbing the ladder since %s"
 msgstr ""
 
 #: resources/web/templates/layouts/one_session.html:9

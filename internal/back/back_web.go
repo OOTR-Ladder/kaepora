@@ -225,3 +225,18 @@ func (b *Back) GetMatch(id util.UUIDAsBlob) (match Match, _ error) {
 
 	return match, nil
 }
+
+func (b *Back) GetPlayerByName(name string) (player Player, _ error) {
+	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
+		player, err = getPlayerByName(tx, name)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return Player{}, err
+	}
+
+	return player, nil
+}

@@ -88,6 +88,7 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 		"gossipText":     tplGossipText,
 		"assetURL":       tplAssetURL,
 		"datetime":       util.Datetime,
+		"date":           util.Date,
 		"future":         tplFuture,
 		"percentage":     tplPercentage,
 		"ranking":        tplRanking,

@@ -1,0 +1,19 @@
+{{define "content"}}
+<section class="hero is-dark homeHeader">
+    <div class="hero-head">
+        {{- template "menu" . -}}
+    </div>
+
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title">{{ .Payload.Player.Name }}</h1>
+            <h2 class="subtitle">{{ t .Locale "Climbing the ladder since %s" (date .Payload.Player.CreatedAt) }}</h2>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+    </div>
+</section>
+{{end}}
