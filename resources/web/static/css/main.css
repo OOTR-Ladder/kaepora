@@ -89,7 +89,7 @@ table.table { background-color: transparent; }
 .ladderNav > .ladderNav--item__has-sub .ladderNav--sub {
     display: flex;
     position: absolute;
-    background: var(--color-white);
+    background: var(--color-bg-dark);
     z-index: -1;
     transition: all ease-in-out 150ms;
 }
@@ -99,8 +99,10 @@ table.table { background-color: transparent; }
 }
 .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] > a {
     display: block;
-    color: #1e2334;
+    color: var(--color-white);
 }
+.ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] > a:hover,
+.ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] > a:active { color: rgb(0, 159, 253); }
 
 @media only screen and (max-width: 768px){
     .navContainer {
