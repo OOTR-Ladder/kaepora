@@ -65,8 +65,8 @@ msgstr "Classements"
 msgid "Stats"
 msgstr "Stats"
 
-#: resources/web/templates/includes/menu.html:34
-msgid "Ressources"
+#: resources/web/templates/includes/menu.html:59
+msgid "Resources"
 msgstr "Ressources"
 
 #: resources/web/templates/includes/menu.html:64
