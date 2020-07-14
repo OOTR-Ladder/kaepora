@@ -53,25 +53,33 @@ msgstr "Commence dans %s"
 msgid "There is no scheduled race right now."
 msgstr "Il n'y a pas de course programmée pour l'instant."
 
-#: resources/web/templates/includes/menu.html:15
-msgid "Leaderboards"
+#: resources/web/templates/includes/menu.html:16
+msgid "Races"
+msgstr "Courses"
+
+#: resources/web/templates/includes/menu.html:31
+msgid "Rankings"
 msgstr "Classements"
 
-#: resources/web/templates/includes/menu.html:25
+#: resources/web/templates/includes/menu.html:45
 msgid "Stats"
 msgstr "Stats"
 
 #: resources/web/templates/includes/menu.html:34
+msgid "Ressources"
+msgstr "Ressources"
+
+#: resources/web/templates/includes/menu.html:64
 msgid "Documentation"
 msgstr "Documentation"
 
-#: resources/web/templates/includes/menu.html:35
+#: resources/web/templates/includes/menu.html:67
 msgid "Rules"
 msgstr "Règles"
 
-#: resources/web/templates/includes/menu.html:42
-msgid "Join the server"
-msgstr "Rejoignez le serveur"
+#: resources/web/templates/includes/menu.html:74
+msgid "Discord"
+msgstr "Discord"
 
 #: resources/web/templates/includes/noscript.html:7
 msgid ""
