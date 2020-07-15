@@ -12,7 +12,7 @@ import (
 
 // TODO seems like an OK cutoff right now, but will need to be change
 // later I've seen a RD of 50 being the average for active players.
-const DeviationThreshold = 180
+const DeviationThreshold = 200
 
 type PlayerRating struct {
 	PlayerID  util.UUIDAsBlob
