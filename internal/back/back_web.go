@@ -19,7 +19,7 @@ func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) ([
 			return err
 		}
 
-		return tx.Select(&ret, `
+		query, args, err := sqlx.In(`
             SELECT
                 Player.Name AS PlayerName,
                 Player.StreamURL AS PlayerStreamURL,
@@ -33,7 +33,11 @@ func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) ([
             INNER JOIN Player ON(PlayerRating.PlayerID = Player.ID)
             LEFT JOIN MatchEntry ON(PlayerRating.PlayerID = MatchEntry.PlayerID AND MatchEntry.Status != ?)
             LEFT JOIN Match ON(Match.ID = MatchEntry.MatchID)
-            WHERE Match.LeagueID = ? AND PlayerRating.LeagueID = ? AND PlayerRating.Deviation < ?
+            WHERE
+                Match.LeagueID = ?
+                AND PlayerRating.LeagueID = ?
+                AND PlayerRating.Deviation < ?
+                AND (Player.DiscordID NOT IN(?) OR Player.DiscordID IS NULL)
             GROUP BY Player.ID
             ORDER BY PlayerRating.Rating DESC
         `,
@@ -44,7 +48,14 @@ func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) ([
 			MatchEntryStatusInProgress,
 			league.ID, league.ID,
 			maxDeviation,
+			b.config.DiscordBannedUserIDs,
 		)
+		if err != nil {
+			return err
+		}
+
+		query = tx.Rebind(query)
+		return tx.Select(&ret, query, args...)
 	}); err != nil {
 		return nil, err
 	}

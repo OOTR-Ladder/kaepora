@@ -38,20 +38,15 @@ type Bot struct {
 	notifications <-chan back.Notification
 }
 
-func New(back *back.Back, token string) (*Bot, error) {
+func New(back *back.Back, token string, config *config.Config) (*Bot, error) {
 	dg, err := discordgo.New("Bot " + token)
-	if err != nil {
-		return nil, err
-	}
-
-	conf, err := config.NewFromUserConfigDir()
 	if err != nil {
 		return nil, err
 	}
 
 	bot := &Bot{
 		back:                 back,
-		config:               conf,
+		config:               config,
 		token:                token,
 		dg:                   dg,
 		startedAt:            time.Now(),

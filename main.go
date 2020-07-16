@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"kaepora/internal/back"
 	"kaepora/internal/bot"
+	"kaepora/internal/config"
 	"kaepora/internal/global"
 	"kaepora/internal/web"
 	"log"
@@ -29,10 +30,16 @@ func main() {
 		return
 	}
 
+	conf, err := config.NewFromUserConfigDir()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	log.Printf("info: Starting Kaepora %s", global.Version)
 	back, err := back.New(
 		"sqlite3", "./kaepora.db",
 		os.Getenv("KAEPORA_OOTR_API_KEY"),
+		conf,
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -44,7 +51,7 @@ func main() {
 			log.Fatal(err)
 		}
 	case "serve":
-		if err := serve(back); err != nil {
+		if err := serve(back, conf); err != nil {
 			log.Fatal(err)
 		}
 	case "rerank":
@@ -76,12 +83,12 @@ COMMANDS
 	)
 }
 
-func serve(b *back.Back) error {
+func serve(b *back.Back, conf *config.Config) error {
 	done := make(chan struct{})
 	signaled := make(chan os.Signal, 1)
 	signal.Notify(signaled, syscall.SIGINT, syscall.SIGTERM)
 
-	bot, err := bot.New(b, os.Getenv("KAEPORA_DISCORD_TOKEN"))
+	bot, err := bot.New(b, os.Getenv("KAEPORA_DISCORD_TOKEN"), conf)
 	if err != nil {
 		return err
 	}
