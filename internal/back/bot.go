@@ -113,6 +113,7 @@ func (b *Back) GetLeaderboardsForDiscordUser(discordID, shortcode string) (
 	[]LeaderboardEntry, // top around player, might be nil
 	error,
 ) {
+
 	var (
 		top    []LeaderboardEntry
 		around []LeaderboardEntry
@@ -127,7 +128,7 @@ func (b *Back) GetLeaderboardsForDiscordUser(discordID, shortcode string) (
 			return err
 		}
 
-		top, err = getTop20(tx, league.ID, DeviationThreshold)
+		top, err = b.getLeaderboardForShortcode(tx, shortcode, DeviationThreshold)
 		if err != nil {
 			return err
 		}
@@ -137,7 +138,7 @@ func (b *Back) GetLeaderboardsForDiscordUser(discordID, shortcode string) (
 			player.ID = util.UUIDAsBlob{} // zero value as canary
 		}
 		if !player.ID.IsZero() {
-			around, err = getTopAroundPlayer(tx, player, league.ID)
+			around, err = b.getTopAroundPlayer(tx, player, league.ID)
 			if err != nil {
 				return err
 			}
@@ -148,32 +149,15 @@ func (b *Back) GetLeaderboardsForDiscordUser(discordID, shortcode string) (
 		return nil, nil, err
 	}
 
-	return top, around, nil
-}
-
-func getTop20(tx *sqlx.Tx, leagueID util.UUIDAsBlob, maxDeviation int) ([]LeaderboardEntry, error) {
-	query := `
-    SELECT
-        Player.Name AS PlayerName,
-        Player.StreamURL AS PlayerStreamURL,
-        PlayerRating.Rating AS Rating,
-        PlayerRating.Deviation AS Deviation
-    FROM PlayerRating
-    INNER JOIN Player ON(PlayerRating.PlayerID = Player.ID)
-    WHERE PlayerRating.LeagueID = ? AND PlayerRating.Deviation < ?
-    ORDER BY PlayerRating.Rating DESC
-    LIMIT 20`
-
-	var ret []LeaderboardEntry
-	if err := tx.Select(&ret, query, leagueID, maxDeviation); err != nil {
-		return nil, err
-	}
-
-	return ret, nil
+	return top[:20], around, nil
 }
 
 // nolint:funlen
-func getTopAroundPlayer(tx *sqlx.Tx, player Player, leagueID util.UUIDAsBlob) ([]LeaderboardEntry, error) {
+func (b *Back) getTopAroundPlayer(
+	tx *sqlx.Tx,
+	player Player,
+	leagueID util.UUIDAsBlob,
+) ([]LeaderboardEntry, error) {
 	rating, err := getPlayerRating(tx, player.ID, leagueID)
 	if err != nil {
 		return nil, err
@@ -187,6 +171,11 @@ func getTopAroundPlayer(tx *sqlx.Tx, player Player, leagueID util.UUIDAsBlob) ([
 			dir = "DESC"
 		}
 
+		bans := b.config.DiscordBannedUserIDs
+		if len(bans) == 0 {
+			bans = []string{"0"}
+		}
+
 		// nolint:gosec
 		query := fmt.Sprintf(`
             SELECT
@@ -198,14 +187,22 @@ func getTopAroundPlayer(tx *sqlx.Tx, player Player, leagueID util.UUIDAsBlob) ([
             INNER JOIN Player ON (PlayerRating.PlayerID = Player.ID)
             WHERE
                 PlayerRating.LeagueID = ?
-                AND PlayerRating.Rating %[1]s ?  AND Player.ID != ?
+                AND PlayerRating.Rating %[1]s ?
+                AND Player.ID != ?
+                AND Player.DiscordID NOT IN(?)
             ORDER BY PlayerRating.Rating %[2]s
             LIMIT 5`,
 			op, dir,
 		)
 
+		query, args, err := sqlx.In(query, leagueID, rating, player.ID, bans)
+		if err != nil {
+			return nil, err
+		}
+		query = tx.Rebind(query)
+
 		var ret []LeaderboardEntry
-		if err := tx.Select(&ret, query, leagueID, rating, player.ID); err != nil {
+		if err := tx.Select(&ret, query, args...); err != nil {
 			return nil, err
 		}
 

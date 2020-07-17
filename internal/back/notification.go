@@ -413,10 +413,11 @@ func (b *Back) sendLeaderboardUpdateNotification(
 		Type:          NotificationTypeLeagueLeaderboardUpdate,
 	}
 
-	top, err := getTop20(tx, league.ID, DeviationThreshold)
+	top, err := b.getLeaderboardForShortcode(tx, league.ShortCode, DeviationThreshold)
 	if err != nil {
 		return err
 	}
+	top = top[:20]
 
 	if len(top) == 0 {
 		return nil

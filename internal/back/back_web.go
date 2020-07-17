@@ -10,16 +10,33 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) ([]LeaderboardEntry, error) {
-	var ret []LeaderboardEntry
-
+func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) (out []LeaderboardEntry, _ error) {
 	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
-		league, err := getLeagueByShortCode(tx, shortcode)
-		if err != nil {
-			return err
-		}
+		out, err = b.getLeaderboardForShortcode(tx, shortcode, maxDeviation)
+		return err
+	}); err != nil {
+		return nil, err
+	}
 
-		query, args, err := sqlx.In(`
+	return out, nil
+}
+
+func (b *Back) getLeaderboardForShortcode(
+	tx *sqlx.Tx,
+	shortcode string,
+	maxDeviation int,
+) ([]LeaderboardEntry, error) {
+	league, err := getLeagueByShortCode(tx, shortcode)
+	if err != nil {
+		return nil, err
+	}
+
+	bans := b.config.DiscordBannedUserIDs
+	if len(bans) == 0 {
+		bans = []string{"0"}
+	}
+
+	query, args, err := sqlx.In(`
             SELECT
                 Player.Name AS PlayerName,
                 Player.StreamURL AS PlayerStreamURL,
@@ -41,22 +58,22 @@ func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) ([
             GROUP BY Player.ID
             ORDER BY PlayerRating.Rating DESC
         `,
-			MatchEntryOutcomeWin,
-			MatchEntryOutcomeLoss,
-			MatchEntryOutcomeDraw,
-			MatchEntryStatusForfeit,
-			MatchEntryStatusInProgress,
-			league.ID, league.ID,
-			maxDeviation,
-			b.config.DiscordBannedUserIDs,
-		)
-		if err != nil {
-			return err
-		}
+		MatchEntryOutcomeWin,
+		MatchEntryOutcomeLoss,
+		MatchEntryOutcomeDraw,
+		MatchEntryStatusForfeit,
+		MatchEntryStatusInProgress,
+		league.ID, league.ID,
+		maxDeviation,
+		bans,
+	)
+	if err != nil {
+		return nil, err
+	}
 
-		query = tx.Rebind(query)
-		return tx.Select(&ret, query, args...)
-	}); err != nil {
+	query = tx.Rebind(query)
+	var ret []LeaderboardEntry
+	if err := tx.Select(&ret, query, args...); err != nil {
 		return nil, err
 	}
 
