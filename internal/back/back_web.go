@@ -56,7 +56,7 @@ func (b *Back) getLeaderboardForShortcode(
                 AND PlayerRating.Deviation < ?
                 AND (Player.DiscordID NOT IN(?) OR Player.DiscordID IS NULL)
             GROUP BY Player.ID
-            ORDER BY PlayerRating.Rating DESC
+            ORDER BY (PlayerRating.Rating - (2*PlayerRating.Deviation)) DESC
         `,
 		MatchEntryOutcomeWin,
 		MatchEntryOutcomeLoss,
