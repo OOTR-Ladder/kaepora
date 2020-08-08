@@ -11,21 +11,16 @@ require (
 	github.com/Masterminds/squirrel v1.4.0
 	github.com/aws/aws-sdk-go v1.32.11 // indirect
 	github.com/blend/go-sdk v1.1.1 // indirect
-	github.com/bombsimon/wsl/v3 v3.1.0 // indirect
 	github.com/bwmarrin/discordgo v0.21.1
 	github.com/cockroachdb/cockroach-go v2.0.1+incompatible // indirect
 	github.com/denisenkom/go-mssqldb v0.0.0-20200620013148-b91950f658ec // indirect
 	github.com/edsrzf/mmap-go v1.0.0 // indirect
 	github.com/evanphx/json-patch v4.5.0+incompatible
-	github.com/fatih/color v1.9.0 // indirect
-	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-chi/chi v4.1.2+incompatible
-	github.com/go-critic/go-critic v0.5.0 // indirect
 	github.com/gocql/gocql v0.0.0-20200624222514-34081eda590e // indirect
 	github.com/golang-migrate/migrate/v4 v4.11.0
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
-	github.com/golangci/gocyclo v0.0.0-20180528144436-0a533e8fa43d // indirect
-	github.com/golangci/golangci-lint v1.27.0
+	github.com/golangci/golangci-lint v1.30.0
 	github.com/golangci/misspell v0.3.5 // indirect
 	github.com/golangci/revgrep v0.0.0-20180812185044-276a5c0a1039 // indirect
 	github.com/google/uuid v1.1.1
@@ -37,7 +32,6 @@ require (
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/leonelquinteros/gotext v1.4.0
 	github.com/lib/pq v1.7.0 // indirect
-	github.com/mattn/go-colorable v0.1.7 // indirect
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/mitchellh/mapstructure v1.3.2 // indirect
 	github.com/nakagami/firebirdsql v0.0.0-20200626040341-92e5c5093743 // indirect
@@ -46,16 +40,10 @@ require (
 	github.com/quasilyte/regex/syntax v0.0.0-20200419152657-af9db7f4a3ab // indirect
 	github.com/russross/blackfriday/v2 v2.0.1
 	github.com/shopspring/decimal v1.2.0 // indirect
-	github.com/sirupsen/logrus v1.6.0 // indirect
-	github.com/sourcegraph/go-diff v0.5.3 // indirect
 	github.com/spf13/afero v1.3.1 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
-	github.com/spf13/cobra v1.0.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
-	github.com/spf13/viper v1.7.0 // indirect
-	github.com/stretchr/testify v1.6.1 // indirect
 	github.com/tdakkota/asciicheck v0.0.0-20200416200610-e657995f937b // indirect
-	github.com/tetafro/godot v0.3.8 // indirect
 	github.com/timakin/bodyclose v0.0.0-20200424151742-cb6215831a94 // indirect
 	github.com/wcharczuk/go-chart v2.0.2-0.20191206192251-962b9abdec2b+incompatible
 	github.com/xanzy/go-gitlab v0.32.1 // indirect
@@ -63,12 +51,9 @@ require (
 	go.mongodb.org/mongo-driver v1.3.4 // indirect
 	go.opencensus.io v0.22.4 // indirect
 	golang.org/x/image v0.0.0-20200618115811-c13761719519 // indirect
-	golang.org/x/net v0.0.0-20200625001655-4c5254603344 // indirect
-	golang.org/x/sync v0.0.0-20200625203802-6e8e738ad208 // indirect
 	golang.org/x/sys v0.0.0-20200625212154-ddb9806d33ae // indirect
 	golang.org/x/text v0.3.3
 	golang.org/x/time v0.0.0-20200416051211-89c76fbcd5d1
-	golang.org/x/tools v0.0.0-20200626171337-aa94e735be7f // indirect
 	google.golang.org/genproto v0.0.0-20200626011028-ee7919e894b5 // indirect
 	google.golang.org/grpc v1.30.0 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
