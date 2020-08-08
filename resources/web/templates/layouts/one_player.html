@@ -1,0 +1,25 @@
+{{define "content"}}
+<section class="hero is-dark homeHeader">
+    <div class="hero-head">
+        {{- template "menu" . -}}
+    </div>
+
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title">{{ .Payload.Player.Name }}</h1>
+            <span class="subtitle">{{ t .Locale "Climbing the ladder since %s" (date .Payload.Player.CreatedAt) }}</span>
+        </div>
+    </div>
+</section>
+
+<section class="container">
+    {{ range $v := .Payload.PlayerStats.Performances }}
+    <h2 class="title">{{ (index $.Payload.Leagues $v.LeagueID).Name }}</h2>
+    <div class="columns">
+        <div class="column">{{ $v.RRDChart }}</div>
+        <div class="column">{{ $v.WLChart }}</div>
+    </div>
+    {{end}}
+</section>
+
+{{end}}

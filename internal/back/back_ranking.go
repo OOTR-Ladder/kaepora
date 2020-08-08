@@ -77,6 +77,11 @@ func computePeriod(
 	}
 
 	period := glicko.NewRatingPeriod()
+	// Add players so Glicko-2 know to ensure inactive players decay.
+	for k := range glickoPlayers {
+		period.AddPlayer(glickoPlayers[k])
+	}
+
 	for k := range matches {
 		p1 := getGlickoPlayer(matches[k].Entries[0].PlayerID, leagueID)
 		p2 := getGlickoPlayer(matches[k].Entries[1].PlayerID, leagueID)

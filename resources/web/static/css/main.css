@@ -47,7 +47,7 @@ table.table { background-color: transparent; }
 .long-table-container .sticky {
     position: sticky;
     top: 0px;
-    background-color: white;
+    background-color: var(--color-body-bg-color);
     border-bottom: 1px grey solid;
     padding-bottom: 4px;
 }
@@ -409,6 +409,13 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
 .leaderboardTable--player:nth-child(2) td,
 .leaderboardTable--player:nth-child(3) td { font-weight: 700; }
 
+.leaderboardTable--player a {
+    color: inherit;
+}
+.leaderboardTable--player a:hover {
+    text-decoration: underline;
+}
+
 .iconLeaderBoard {
     overflow: hidden;
     width: 100%;
@@ -639,6 +646,13 @@ div.Match--players.columns.is-gapless { margin-bottom: 0; }
 .MatchList--match:not([class*="__doubleFF"]) .Match--players .Player__winner .Player--name { color: var(--color-gold-dark); }
 .MatchList--match__doubleFF .Match--players .Player--name { color: var(--color-forfeit); }
 .MatchList--match__doubleFF .Match--players .Player--time { opacity: .5; }
+
+.Player--name a {
+    color: inherit;
+}
+.Player--name a:hover {
+    text-decoration: underline;
+}
 
 @media only screen and (max-width: 768px){
     div[class*="MatchList--match"]:not(:last-child) {

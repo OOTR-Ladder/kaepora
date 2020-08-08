@@ -88,10 +88,14 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 		"gossipText":     tplGossipText,
 		"assetURL":       tplAssetURL,
 		"datetime":       util.Datetime,
+		"date":           util.Date,
 		"future":         tplFuture,
 		"percentage":     tplPercentage,
 		"ranking":        tplRanking,
 		"until":          tplUntil,
+		"unsafe": func(v string) template.HTML {
+			return template.HTML(v) // nolint:gosec
+		},
 
 		"add": func(a, b int) int {
 			return a + b
@@ -137,13 +141,22 @@ func (s *Server) tplMatchSessionStatusTag(locale string, status back.MatchSessio
 }
 
 // nolint:gosec
-func tplRanking(v back.LeaderboardEntry) template.HTML {
+func tplRanking(v interface{}) template.HTML {
+	var rating, deviation float64
+
+	switch iface := v.(type) { // HACK: Damn this is ugly. A Ranked interface maybe?
+	case back.LeaderboardEntry:
+		rating, deviation = iface.Rating, iface.Deviation
+	case back.PlayerRating:
+		rating, deviation = iface.Rating, iface.Deviation
+	}
+
 	return template.HTML(fmt.Sprintf(
 		`<div class="Ranking">%d`+
 			`<span class="tag is-rounded is-light is-hidden-mobile Ranking--deviation">`+
 			`<small>±%d</small></span></div>`,
-		int(math.Round(v.Rating)),
-		int(math.Round(v.Deviation*2)),
+		int(math.Round(rating)),
+		int(math.Round(deviation*2)),
 	))
 }
 
