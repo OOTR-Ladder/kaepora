@@ -421,7 +421,9 @@ func (b *Back) sendLeaderboardUpdateNotification(
 	if err != nil {
 		return err
 	}
-	top = top[:20]
+	if len(top) > 20 {
+		top = top[:20]
+	}
 
 	if len(top) == 0 {
 		return nil
