@@ -81,18 +81,22 @@ func NotificationTypeName(typ NotificationType) string {
 	switch typ {
 	case NotificationTypeMatchSessionStatusUpdate:
 		return "MatchSessionStatusUpdate"
-	case NotificationTypeMatchSessionEmpty:
-		return "MatchSessionEmpty"
+	case NotificationTypeLeagueLeaderboardUpdate:
+		return "TypeLeagueLeaderboardUpdate"
+	case NotificationTypeMatchSessionCountdown:
+		return "TypeMatchSessionCountdown:"
 	case NotificationTypeMatchSessionOddKick:
 		return "MatchSessionOddKick"
+	case NotificationTypeMatchSessionEmpty:
+		return "MatchSessionEmpty"
 	case NotificationTypeMatchSessionRecap:
 		return "MatchSessionRecap"
+	case NotificationTypeSpoilerLog:
+		return "SpoilerLog"
 	case NotificationTypeMatchSeed:
 		return "MatchSeed"
 	case NotificationTypeMatchEnd:
 		return "MatchEnd"
-	case NotificationTypeSpoilerLog:
-		return "SpoilerLog"
 	default:
 		return "invalid"
 	}

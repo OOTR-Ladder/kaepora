@@ -13,9 +13,9 @@ import (
 )
 
 const (
-	// joinable after T+offset (mind the negative offsets)
+	// joinable after T+offset (mind the negative offsets).
 	MatchSessionJoinableAfterOffset = -1 * time.Hour
-	// player receive seeds at T+offset and can no longer join/cancel
+	// player receive seeds at T+offset and can no longer join/cancel.
 	MatchSessionPreparationOffset = -15 * time.Minute
 )
 
@@ -359,6 +359,7 @@ func (b *Back) MapMatchSessions(
 		if err != nil {
 			return err
 		}
+		defer rows.Close()
 
 		for rows.Next() {
 			var m MatchSession

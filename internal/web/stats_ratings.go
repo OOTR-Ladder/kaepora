@@ -23,7 +23,6 @@ func (s *Server) statsRatings(w http.ResponseWriter, r *http.Request) {
 		StrokeColor: drawing.ColorFromHex("4c7899"),
 		StrokeWidth: 1,
 	})
-
 	if err != nil {
 		s.error(w, r, err, http.StatusInternalServerError)
 		return

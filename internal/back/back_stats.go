@@ -108,6 +108,7 @@ func (b *Back) MapSpoilerLogs(
 		if err != nil {
 			return err
 		}
+		defer rows.Close()
 
 		var buf util.ZLIBBlob
 		for rows.Next() {

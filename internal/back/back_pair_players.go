@@ -175,9 +175,11 @@ type byLen []playerRange
 func (a byLen) Len() int {
 	return len(a)
 }
+
 func (a byLen) Less(i, j int) bool {
 	return len(a[i].entries) < len(a[j].entries)
 }
+
 func (a byLen) Swap(i, j int) {
 	a[i], a[j] = a[j], a[i]
 }

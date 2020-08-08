@@ -175,7 +175,6 @@ func (b *Back) getTopAroundPlayer(
 			bans = []string{"0"}
 		}
 
-		// nolint:gosec
 		query := fmt.Sprintf(`
             SELECT
                 Player.Name AS PlayerName,

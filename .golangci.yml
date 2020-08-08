@@ -3,6 +3,7 @@ linters:
   enable-all: true
   disable:
     - godox
-    - gomnd
-    - wsl
     - goerr113
+    - gomnd
+    - nlreturn
+    - wsl

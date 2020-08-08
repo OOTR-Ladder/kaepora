@@ -35,8 +35,10 @@ func (s SpoilerLog) Spheres() []map[string]SpoilerLogItem {
 	return ret
 }
 
-type SpoilerLogItem string
-type SpoilerLogItemCategory int
+type (
+	SpoilerLogItem         string
+	SpoilerLogItemCategory int
+)
 
 const (
 	SpoilerLogItemCategoryItem SpoilerLogItemCategory = iota

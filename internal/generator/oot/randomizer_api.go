@@ -86,8 +86,9 @@ func (g *RandomizerAPI) waitForSeedgen(id string) error {
 		case ootrapi.SeedStatusGenerating: // NOP
 		case ootrapi.SeedStatusDone, ootrapi.SeedStatusDoneWithLink:
 			return nil
+		case ootrapi.SeedStatusInvalid:
 		case ootrapi.SeedStatusFailed:
-			return errors.New("API error: seed failed to generate, got SeedStatusFailed")
+			return fmt.Errorf("API error: seed failed to generate, got status %v", status)
 		}
 
 		if time.Now().After(timeout) {

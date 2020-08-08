@@ -74,7 +74,7 @@ func (api *API) CreateSeed(version string, settings map[string]interface{}) (str
 		"version": {version},
 		"locked":  {"1"},
 	})
-	request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(body))
+	request, err := http.NewRequestWithContext(context.Background(), http.MethodPost, url, bytes.NewBuffer(body))
 	if err != nil {
 		return "", err
 	}
@@ -105,7 +105,7 @@ func (api *API) GetSeedStatus(id string) (SeedStatus, error) {
 	log.Printf("debug: fetching API seed status for ID  %s", id)
 
 	url := api.getURL("/seed/status", url.Values{"id": {id}})
-	request, err := http.NewRequest(http.MethodGet, url, nil)
+	request, err := http.NewRequestWithContext(context.Background(), http.MethodGet, url, nil)
 	if err != nil {
 		return SeedStatusInvalid, err
 	}
@@ -132,7 +132,7 @@ func (api *API) GetSeedSpoilerLog(id string) ([]byte, error) {
 	log.Printf("debug: fetching API seed spoiler log for ID  %s", id)
 
 	url := api.getURL("/seed/details", url.Values{"id": {id}})
-	request, err := http.NewRequest(http.MethodGet, url, nil)
+	request, err := http.NewRequestWithContext(context.Background(), http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -151,7 +151,8 @@ func (api *API) GetSeedPatch(id string) ([]byte, error) {
 	log.Printf("debug: fetching API seed patch for ID  %s", id)
 
 	url := api.getURL("/seed/patch", url.Values{"id": {id}})
-	request, err := http.NewRequest(http.MethodGet, url, nil)
+
+	request, err := http.NewRequestWithContext(context.Background(), http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -168,7 +169,7 @@ func (api *API) UnlockSeedSpoilerLog(id string) error {
 	log.Printf("debug: unlocking API seed spoiler logs for ID  %s", id)
 
 	url := api.getURL("/seed/unlock", url.Values{"id": {id}})
-	request, err := http.NewRequest(http.MethodPost, url, nil)
+	request, err := http.NewRequestWithContext(context.Background(), http.MethodPost, url, nil)
 	if err != nil {
 		return err
 	}
