@@ -263,10 +263,11 @@ func (b *Back) GetPlayerByName(name string) (player Player, _ error) {
 
 // PlayerPerformance is the overall performance of a single Player on a single League.
 type PlayerPerformance struct {
-	LeagueID util.UUIDAsBlob
-	Rating   PlayerRating
-	WLChart  template.HTML // Win/Losses pie chart, SVG
-	RRDChart template.HTML // Rating/Rating Deviation graph, SVG
+	LeagueID      util.UUIDAsBlob
+	Rating        PlayerRating
+	WLChart       template.HTML // Win/Losses pie chart, SVG
+	RRDChart      template.HTML // Rating/Rating Deviation graph, SVG
+	SeedTimeChart template.HTML // Seed time distribution, SVG
 
 	Wins, Losses, Draws, Forfeits int
 }
@@ -276,6 +277,7 @@ type PlayerStats struct {
 	Performances []PlayerPerformance
 }
 
+// nolint:funlen
 func (b *Back) GetPlayerStats(playerID util.UUIDAsBlob) (stats PlayerStats, _ error) {
 	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
 		if err := tx.Select(
@@ -317,6 +319,11 @@ func (b *Back) GetPlayerStats(playerID util.UUIDAsBlob) (stats PlayerStats, _ er
 			}
 
 			stats.Performances[k].RRDChart, err = generateRRDChart(tx, playerID, stats.Performances[k].LeagueID)
+			if err != nil {
+				return err
+			}
+
+			stats.Performances[k].SeedTimeChart, err = generateSeedTimeChart(tx, playerID, stats.Performances[k].LeagueID)
 			if err != nil {
 				return err
 			}
@@ -470,4 +477,73 @@ func (b *Back) GetPlayerMatches(playerID util.UUIDAsBlob) ([]Match, map[util.UUI
 	}
 
 	return matches, players, nil
+}
+
+// nolint:funlen
+func generateSeedTimeChart(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) (template.HTML, error) {
+	var times []int
+	if err := tx.Select(
+		&times,
+		`SELECT (MatchEntry.EndedAt-MatchEntry.StartedAt) AS time
+        FROM MatchEntry
+        INNER JOIN Match ON(Match.ID = MatchEntry.MatchID)
+        INNER JOIN MatchSession ON(MatchSession.ID = Match.MatchSessionID)
+        WHERE
+            MatchEntry.PlayerID = ?
+            AND Match.LeagueID = ?
+            AND MatchEntry.Status = ?
+            AND MatchSession.Status = ?
+        `,
+		playerID, leagueID,
+		MatchEntryStatusFinished, MatchSessionStatusClosed,
+	); err != nil {
+		return template.HTML(""), err
+	}
+
+	style := chart.Style{
+		FontColor:   drawing.ColorBlack,
+		FillColor:   drawing.ColorFromHex("285577"),
+		StrokeColor: drawing.ColorFromHex("4c7899"),
+		StrokeWidth: 1,
+	}
+
+	bars := []chart.Value{
+		{Style: style, Label: "< 2:00"},
+		{Style: style, Label: "2:00"},
+		{Style: style, Label: "2:30"},
+		{Style: style, Label: "3:00"},
+		{Style: style, Label: "3:30"},
+		{Style: style, Label: "4:00"},
+		{Style: style, Label: "4:30"},
+		{Style: style, Label: "≥ 5:00"},
+	}
+
+	for _, v := range times {
+		i := ((v - (2 * 3600)) / (30 * 60)) + 1
+		if i < 0 {
+			i = 0
+		}
+		if i >= len(bars) {
+			i = len(bars) - 1
+		}
+
+		bars[i].Value++
+	}
+
+	graph := chart.BarChart{
+		Width:      800,
+		Height:     200,
+		Canvas:     chart.Style{FillColor: chart.ColorTransparent},
+		Background: chart.Style{FillColor: chart.ColorTransparent},
+		Bars:       bars,
+	}
+
+	graph.BarWidth = (graph.Width - (len(bars) * graph.BarSpacing)) / len(bars)
+
+	var buf bytes.Buffer
+	if err := graph.Render(chart.SVG, &buf); err != nil {
+		return template.HTML(""), err
+	}
+
+	return template.HTML(buf.Bytes()), nil // nolint:gosec
 }
