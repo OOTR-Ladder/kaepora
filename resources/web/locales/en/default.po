@@ -77,7 +77,11 @@ msgstr ""
 msgid "Rules"
 msgstr ""
 
-#: resources/web/templates/includes/menu.html:74
+#: resources/web/templates/includes/menu.html:70
+msgid "Shuffled Settings"
+msgstr ""
+
+#: resources/web/templates/includes/menu.html:77
 msgid "Discord"
 msgstr ""
 
@@ -360,6 +364,10 @@ msgid "player"
 msgid_plural "players"
 msgstr[0] ""
 msgstr[1] ""
+
+#: resources/web/templates/layouts/shuffled-settings.html:9
+msgid "Shuffled Settings documentation"
+msgstr ""
 
 #: resources/web/templates/layouts/spoilers.html:11
 msgid "Spoiler Log for seed `%s`"
