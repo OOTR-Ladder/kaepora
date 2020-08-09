@@ -351,6 +351,13 @@ div[class^="nextRace--contextual--"] > i {
     line-height: normal;
 }
 
+.ldbrd--players a {
+    color: inherit;
+}
+.ldbrd--players a:hover {
+    text-decoration: underline;
+}
+
 .ldbrd--players .player:nth-child(1) { font-size: 2.5rem; }
 .ldbrd--players .player:nth-child(2) { font-size: 1.75rem; }
 .ldbrd--players .player:nth-child(3) { font-size: 1.5rem; }

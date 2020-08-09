@@ -47,7 +47,8 @@
                         <div class="ldbrd--players">
                             {{range $i, $v := $.Payload.Top3}}
                             <div class="player">
-                                <span class="icon"><i class="ri-trophy-fill"></i></span> {{$v.PlayerName}}
+                                <span class="icon"><i class="ri-trophy-fill"></i></span>
+                                <a href="{{uri $.Locale "player" $v.PlayerName}}">{{$v.PlayerName}}</a>
                             </div>
                             {{end}}
                         </div>
