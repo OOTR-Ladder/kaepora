@@ -5,39 +5,39 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: internal/web/templates.go:123
+#: internal/web/templates.go:125
 msgid "Planned"
 msgstr "Planifiée"
 
-#: internal/web/templates.go:126
+#: internal/web/templates.go:128
 msgid "Joinable"
 msgstr "Inscriptions ouvertes"
 
-#: internal/web/templates.go:129
+#: internal/web/templates.go:131
 msgid "Preparing"
 msgstr "En préparation"
 
-#: internal/web/templates.go:132
+#: internal/web/templates.go:134
 msgid "Race in progress"
 msgstr "Course en cours"
 
-#: internal/web/templates.go:135
+#: internal/web/templates.go:137
 msgid "Closed"
 msgstr "Fermée"
 
-#: internal/web/templates.go:185
+#: internal/web/templates.go:187
 msgid "not started"
 msgstr "pas commencé"
 
-#: internal/web/templates.go:187
+#: internal/web/templates.go:189
 msgid "in progress"
 msgstr "en cours"
 
-#: internal/web/templates.go:191
+#: internal/web/templates.go:193
 msgid "before start"
 msgstr "avant départ"
 
-#: internal/web/templates.go:196
+#: internal/web/templates.go:198
 msgid "forfeit (%s)"
 msgstr "forfait (%s)"
 
@@ -88,6 +88,18 @@ msgid ""
 msgstr ""
 "Activer JavaScript est nécessaire pour que cette page fonctionne "
 "correctement. Ce n'est pas par plaisir."
+
+#: resources/web/templates/includes/past_matches.html:24
+msgid "Check the spoiler log"
+msgstr "Voir la solution"
+
+#: resources/web/templates/includes/past_matches.html:25
+msgid "Get the seed"
+msgstr "Télécharger la seed"
+
+#: resources/web/templates/includes/past_matches.html:34
+msgid "Not enough players joined this session."
+msgstr "Il n'y avait pas assez de joueurs pour démarrer cette session."
 
 #: resources/web/templates/includes/spoilers_spheres_locations.html:13
 msgid "Sphere #%d"
@@ -277,7 +289,7 @@ msgstr "Historique des courses"
 msgid "Leaderboard"
 msgstr "Classement"
 
-#: resources/web/templates/layouts/index.html:58
+#: resources/web/templates/layouts/index.html:59
 msgid "Full leaderboard"
 msgstr "Classement complet"
 
@@ -305,6 +317,10 @@ msgstr "Le classement est actuellement vide."
 msgid "Climbing the ladder since %s"
 msgstr "Participe au ladder depuis le %s"
 
+#: resources/web/templates/layouts/one_player.html:26
+msgid "Past races"
+msgstr "Courses passées"
+
 #: resources/web/templates/layouts/one_session.html:9
 msgid "Session recap"
 msgstr "Récapitulatif de session"
@@ -316,18 +332,6 @@ msgstr "Ligue %s"
 #: resources/web/templates/layouts/one_session.html:19
 msgid "Race started at %s"
 msgstr "Session du %s"
-
-#: resources/web/templates/layouts/one_session.html:42
-msgid "Check the spoiler log"
-msgstr "Voir la solution"
-
-#: resources/web/templates/layouts/one_session.html:43
-msgid "Get the seed"
-msgstr "Télécharger la seed"
-
-#: resources/web/templates/layouts/one_session.html:52
-msgid "Not enough players joined this session."
-msgstr "Il n'y avait pas assez de joueurs pour démarrer cette session."
 
 #: resources/web/templates/layouts/schedule.html:9
 msgid "Schedule"

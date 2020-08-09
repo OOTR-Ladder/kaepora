@@ -1,8 +1,10 @@
 package web
 
 import (
+	"crypto/md5" // nolint:gosec,gci
 	"crypto/sha512"
 	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"html/template"
 	"io"
@@ -86,7 +88,7 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 
 		"assetIntegrity": tplAssetIntegrity(baseDir),
 		"gossipText":     tplGossipText,
-		"assetURL":       tplAssetURL,
+		"assetURL":       tplAssetURL(baseDir),
 		"datetime":       util.Datetime,
 		"date":           util.Date,
 		"future":         tplFuture,
@@ -273,8 +275,33 @@ func gossipColorToCSSColor(color string) string {
 	}
 }
 
-func tplAssetURL(name string) string {
-	return "/_/" + name + "?" + global.Version
+// tplAssetURL returns the path to an asset with a cache buster appended.
+func tplAssetURL(baseDir string) func(string) string {
+	hashCache := map[string]string{}
+
+	return func(name string) string {
+		base := "/_/" + name + "?"
+
+		if h, ok := hashCache[name]; ok {
+			return base + h
+		}
+
+		f, err := os.Open(filepath.Join(baseDir, "static", name))
+		if err != nil {
+			log.Printf("warning: unable to open %s for checksumming", name)
+			return base + global.Version
+		}
+		defer f.Close()
+
+		h := md5.New() // nolint:gosec
+		if _, err := io.Copy(h, f); err != nil {
+			log.Printf("warning: unable to checksum %s", name)
+			return base + global.Version
+		}
+
+		hashCache[name] = hex.EncodeToString(h.Sum(nil))
+		return base + hashCache[name]
+	}
 }
 
 func tplAssetIntegrity(baseDir string) func(name string) (string, error) {

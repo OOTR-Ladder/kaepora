@@ -22,4 +22,13 @@
     {{end}}
 </section>
 
+<section class="container">
+    <h2 class="title">{{t .Locale "Past races"}}</h2>
+    <div class="container">
+        <div class="columns is-multiline">
+            {{template "past_matches" .}}
+        </div>
+    </div>
+</section>
+
 {{end}}
