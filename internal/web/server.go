@@ -50,6 +50,7 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 	r.With(s.langDetect).Route("/{locale}", func(r chi.Router) {
 		r.Get("/rules", s.markdownContent(baseDir, "rules.md"))
 		r.Get("/documentation", s.markdownContent(baseDir, "documentation.md"))
+		r.Get("/shuffled-settings", s.shuffledSettings)
 
 		r.Get("/leaderboard/{shortcode}", s.leaderboard)
 
@@ -323,4 +324,20 @@ func urlID(r *http.Request, name string) (util.UUIDAsBlob, error) {
 	}
 
 	return util.UUIDAsBlob(uid), nil
+}
+
+func (s *Server) shuffledSettings(w http.ResponseWriter, r *http.Request) {
+	locale := chi.URLParam(r, "locale")
+	doc, err := back.LoadSettingsDocumentation(locale)
+	if err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
+	}
+
+	s.cache(w, "public", 1*time.Hour)
+	s.response(w, r, http.StatusOK, "shuffled-settings.html", struct {
+		Doc back.SettingsDocumentation
+	}{
+		Doc: doc,
+	})
 }

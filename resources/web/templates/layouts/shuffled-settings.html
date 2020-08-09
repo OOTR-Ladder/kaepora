@@ -1,0 +1,33 @@
+{{define "content"}}
+<section class="hero is-dark homeHeader">
+    <div class="hero-head">
+        {{- template "menu" . -}}
+    </div>
+
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title">{{t .Locale "Shuffled Settings documentation"}}</h1>
+        </div>
+    </div>
+</section>
+
+<section class="container shuffled-doc">
+    <ul>
+        {{- range $name, $entry := .Payload.Doc -}}
+        <li>
+            <span title="{{$name}}"><strong>{{$entry.Title}}</strong></span>
+            <ul>
+
+                {{- range $value := $entry.Values -}}
+                    <li>
+                        <strong><span title="{{$value.Value}}">{{$value.Title}}</span></strong>
+                        {{$value.Description}}
+                    </li>
+                {{- end -}}
+
+            </ul>
+        </li>
+        {{- end -}}
+    </ul>
+</section>
+{{end}}

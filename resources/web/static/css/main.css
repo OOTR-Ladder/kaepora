@@ -706,3 +706,9 @@ ul.spoilers--hash li {
     margin-bottom: 20px;
 }
 /* }}} Spoilers */
+
+/* {{{ Shuffled Settings Doc */
+.shuffled-doc ul li {
+    margin-left: 3rem;
+}
+/* }}} Shuffled Settings Doc */
