@@ -77,8 +77,7 @@ This system has a few particularities:
    the skill gap between the two players.
  - You need to complete a few races to lower your _rating deviation_ and reach
    the required threshold to appear in the leaderboards.
- - Not racing for a week will slightly decrease your rating and increase your
-   _rating deviation_.
+ - Not racing for a week will slightly increase your _rating deviation_.
 
 [1]: https://en.wikipedia.org/wiki/Glicko_rating_system
 

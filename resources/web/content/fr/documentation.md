@@ -85,8 +85,7 @@ Ce système a quelques particularité :
  - Vous devez finir plusieurs matches pour faire baisser votre _déviation de
    niveau_ et atteindre le palier nécessaire pour apparaître sur le tableau des
    scores.
- - Ne pas faire de match pendant une semaine fera baisser légèrement votre
-   niveau et augmentera votre _déviation de niveau_.
+ - Ne pas faire de match pendant une semaine augmentera votre _déviation de niveau_.
 
 [1]: https://fr.wikipedia.org/wiki/Classement_Glicko
 
