@@ -29,14 +29,24 @@ func (s *Server) getOnePlayer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	matches, players, err := s.back.GetPlayerMatches(player.ID)
+	if err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
+	}
+
 	s.cache(w, "public", 1*time.Hour)
 	s.response(w, r, http.StatusOK, "one_player.html", struct {
 		Player      back.Player
 		PlayerStats back.PlayerStats
 		Leagues     map[util.UUIDAsBlob]back.League
+		Matches     []back.Match
+		Players     map[util.UUIDAsBlob]back.Player
 	}{
 		Player:      player,
 		PlayerStats: stats,
 		Leagues:     leagues,
+		Matches:     matches,
+		Players:     players,
 	})
 }

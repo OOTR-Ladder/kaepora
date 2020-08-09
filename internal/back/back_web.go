@@ -425,3 +425,49 @@ func generateRRDChart(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) (template
 
 	return template.HTML(buf.Bytes()), nil // nolint:gosec
 }
+
+func (b *Back) GetPlayerMatches(playerID util.UUIDAsBlob) ([]Match, map[util.UUIDAsBlob]Player, error) {
+	var matches []Match
+	players := make(map[util.UUIDAsBlob]Player)
+
+	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
+		if err := tx.Select(&matches, `
+            SELECT Match.* FROM Match
+            INNER JOIN MatchEntry ON (MatchEntry.MatchID = Match.ID)
+            WHERE MatchEntry.PlayerID = ?
+            ORDER BY Match.CreatedAt DESC
+        `, playerID,
+		); err != nil {
+			return err
+		}
+
+		self, err := getPlayerByID(tx, playerID)
+		if err != nil {
+			return err
+		}
+		players[playerID] = self
+
+		for k := range matches {
+			if err := injectEntries(tx, &matches[k]); err != nil {
+				return err
+			}
+
+			_, entry, err := matches[k].getPlayerAndOpponentEntries(playerID)
+			if err != nil {
+				return err
+			}
+
+			opponent, err := getPlayerByID(tx, entry.PlayerID)
+			if err != nil {
+				return err
+			}
+			players[entry.PlayerID] = opponent
+		}
+
+		return nil
+	}); err != nil {
+		return nil, nil, err
+	}
+
+	return matches, players, nil
+}
