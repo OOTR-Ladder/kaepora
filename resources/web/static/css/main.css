@@ -71,12 +71,12 @@ table.table { background-color: transparent; }
     text-transform: uppercase;
     background: var(--color-box);
 }
-ul.ladderNav > *[class*="ladderNav--item"] > a:not(.button):not(.dropdown-item):not(.tag):not(.pagination-link.is-current) {
+.ladderNav > *[class*="ladderNav--item"] > a {
     display: block;
     padding: 1rem 0;
     height: 100%;
     text-align: center;
-    color: var(--color-bg-dark);
+    color: var(--color-bg-dark)!important;
     cursor: pointer;
 }
 .ladderNav > *[class*="ladderNav--item"] > a > svg,
