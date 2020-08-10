@@ -100,9 +100,9 @@ func innerTestMatchMaking(t *testing.T, back *Back) {
 		NotificationTypeMatchSessionOddKick:      1, // that one unlucky runner
 		NotificationTypeMatchSessionRecap:        7, // 1 in announce channel + 1 per joined player
 		// NotificationTypeLeagueLeaderboardUpdate:  1, // not enough races to warrant a leaderboard update
-		NotificationTypeMatchSeed:  6, // 1 per joined player
-		NotificationTypeMatchEnd:   6, // 1 per joined player
-		NotificationTypeSpoilerLog: 6, // 1 per joined player
+		NotificationTypeMatchSeed:  6,     // 1 per joined player
+		NotificationTypeMatchEnd:   6 + 3, // 1 per joined player, plus one for those who finish first
+		NotificationTypeSpoilerLog: 6,     // 1 per joined player
 	}
 	close(notifsDone)
 	if !reflect.DeepEqual(expected, notifs) {

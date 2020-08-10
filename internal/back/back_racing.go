@@ -109,7 +109,7 @@ func (b *Back) CompleteActiveMatch(player Player) (Match, error) {
 			self.update(tx),
 			against.update(tx),
 			match.update(tx),
-			b.maybeSendMatchEndNotifications(tx, match, player, self, against, against.PlayerID),
+			b.maybeSendMatchEndNotifications(tx, player, self, against, against.PlayerID),
 		}); err != nil {
 			return err
 		}
@@ -199,7 +199,7 @@ func (b *Back) ForfeitActiveMatch(player Player) (Match, error) {
 			self.update(tx),
 			against.update(tx),
 			match.update(tx),
-			b.maybeSendMatchEndNotifications(tx, match, player, self, against, against.PlayerID),
+			b.maybeSendMatchEndNotifications(tx, player, self, against, against.PlayerID),
 		}); err != nil {
 			return err
 		}
@@ -228,26 +228,25 @@ func (b *Back) ForfeitActiveMatch(player Player) (Match, error) {
 
 func (b *Back) maybeSendMatchEndNotifications(
 	tx *sqlx.Tx,
-	match Match,
 	player Player,
 	selfEntry MatchEntry, againstEntry MatchEntry,
 	opponentID util.UUIDAsBlob,
 ) error {
-	if !match.HasEnded() {
-		return nil
+	if selfEntry.HasEnded() {
+		if err := b.sendMatchEndNotification(tx, selfEntry, againstEntry, player); err != nil {
+			return err
+		}
 	}
 
-	opponent, err := getPlayerByID(tx, opponentID)
-	if err != nil {
-		return err
-	}
+	if againstEntry.HasEnded() {
+		opponent, err := getPlayerByID(tx, opponentID)
+		if err != nil {
+			return err
+		}
 
-	if err := b.sendMatchEndNotification(tx, selfEntry, againstEntry, player); err != nil {
-		return err
-	}
-
-	if err := b.sendMatchEndNotification(tx, againstEntry, selfEntry, opponent); err != nil {
-		return err
+		if err := b.sendMatchEndNotification(tx, againstEntry, selfEntry, opponent); err != nil {
+			return err
+		}
 	}
 
 	return nil

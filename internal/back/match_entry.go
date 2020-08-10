@@ -88,6 +88,7 @@ func (m *MatchEntry) forfeit(against *MatchEntry, match *Match) {
 
 	switch against.Status {
 	case MatchEntryStatusWaiting:
+		fallthrough // forfeit during preparation
 	case MatchEntryStatusInProgress:
 		m.Outcome = MatchEntryOutcomeLoss
 		against.Outcome = MatchEntryOutcomeWin

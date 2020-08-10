@@ -76,8 +76,6 @@ func (bot *Bot) cmdComplete(m *discordgo.Message, _ []string, w io.Writer) error
 		return err
 	}
 
-	fmt.Fprint(w, `You have completed your race! You will receive the results as soon as your opponent ends their race.`)
-
 	return nil
 }
 
@@ -90,9 +88,6 @@ func (bot *Bot) cmdForfeit(m *discordgo.Message, _ []string, w io.Writer) error 
 	if _, err := bot.back.ForfeitActiveMatch(player); err != nil {
 		return err
 	}
-
-	fmt.Fprint(w, `You have forfeited your current race.
-If your opponent completes the race you will receive a loss, if your opponent also forfeits the race will be a draw.`)
 
 	return nil
 }

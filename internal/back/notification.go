@@ -173,6 +173,7 @@ func (b *Back) sendMatchSessionEmptyNotification(tx *sqlx.Tx, session MatchSessi
 	return nil
 }
 
+// nolint:funlen
 func (b *Back) sendMatchEndNotification(
 	tx *sqlx.Tx,
 	selfEntry MatchEntry,
@@ -192,37 +193,50 @@ func (b *Back) sendMatchEndNotification(
 
 	notif.Printf("%s, your race against %s has ended.\n", player.Name, opponent.Name)
 
-	start, end := selfEntry.StartedAt.Time.Time(), selfEntry.EndedAt.Time.Time()
-	if !start.IsZero() {
-		delta := end.Sub(start).Round(time.Second)
-		if selfEntry.Status == MatchEntryStatusForfeit {
-			notif.Printf("You forfeited your race after %s.\n", delta)
-		} else if selfEntry.Status == MatchEntryStatusFinished {
-			notif.Printf("You completed your race in %s.\n", delta)
+	if selfEntry.HasEnded() { // nolint:nestif
+		start, end := selfEntry.StartedAt.Time.Time(), selfEntry.EndedAt.Time.Time()
+		if !start.IsZero() {
+			delta := end.Sub(start).Round(time.Second)
+			if selfEntry.Status == MatchEntryStatusForfeit {
+				notif.Printf("You forfeited your race after %s.\n", delta)
+			} else if selfEntry.Status == MatchEntryStatusFinished {
+				notif.Printf("You completed your race in %s.\n", delta)
+			}
+		} else if selfEntry.Status == MatchEntryStatusForfeit {
+			notif.Print("You forfeited before the race started.\n")
 		}
-	} else if selfEntry.Status == MatchEntryStatusForfeit {
-		notif.Print("You forfeited before the race started.\n")
+	} else {
+		log.Print("error: unreachable self entry not ended")
+		notif.Printf("You are still running and should _never_ see this message.")
 	}
 
-	start, end = opponentEntry.StartedAt.Time.Time(), opponentEntry.EndedAt.Time.Time()
-	if !start.IsZero() {
-		delta := end.Sub(start).Round(time.Second)
-		if opponentEntry.Status == MatchEntryStatusForfeit {
-			notif.Printf("%s forfeited after %s.\n", opponent.Name, delta)
-		} else if opponentEntry.Status == MatchEntryStatusFinished {
-			notif.Printf("%s completed their race in %s.\n", opponent.Name, delta)
+	if opponentEntry.HasEnded() { // nolint:nestif
+		start, end := opponentEntry.StartedAt.Time.Time(), opponentEntry.EndedAt.Time.Time()
+		if !start.IsZero() {
+			delta := end.Sub(start).Round(time.Second)
+			if opponentEntry.Status == MatchEntryStatusForfeit {
+				notif.Printf("%s forfeited after %s.\n", opponent.Name, delta)
+			} else if opponentEntry.Status == MatchEntryStatusFinished {
+				notif.Printf("%s completed their race in %s.\n", opponent.Name, delta)
+			}
+		} else if opponentEntry.Status == MatchEntryStatusForfeit {
+			notif.Printf("%s forfeited before the race started.\n", opponent.Name)
 		}
-	} else if opponentEntry.Status == MatchEntryStatusForfeit {
-		notif.Printf("%s forfeited before the race started.\n", opponent.Name)
+	} else {
+		notif.Printf("%s is still running.\n", opponent.Name)
 	}
 
-	switch selfEntry.Outcome {
-	case MatchEntryOutcomeWin:
+	if selfEntry.Outcome == MatchEntryOutcomeWin { // nolint:gocritic
 		notif.Print("**You won!**\n")
-	case MatchEntryOutcomeDraw:
-		notif.Print("**The race is a draw.**\n")
-	case MatchEntryOutcomeLoss:
-		notif.Printf("**%s wins.**\n", opponent.Name)
+	} else if opponentEntry.HasEnded() {
+		if selfEntry.Outcome == MatchEntryOutcomeDraw {
+			notif.Print("**The race is a draw.**\n")
+		} else if selfEntry.Outcome == MatchEntryOutcomeLoss {
+			notif.Printf("**%s wins.**\n", opponent.Name)
+		}
+	} else {
+		// If we're here it means we forfeited and the opponent is still running.
+		notif.Printf("You can only hope your opponent forfeits now.")
 	}
 
 	if opponent.StreamURL != "" {
