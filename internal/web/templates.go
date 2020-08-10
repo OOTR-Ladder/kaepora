@@ -154,11 +154,10 @@ func tplRanking(v interface{}) template.HTML {
 	}
 
 	return template.HTML(fmt.Sprintf(
-		`<div class="Ranking">%d`+
-			`<span class="tag is-rounded is-light is-hidden-mobile Ranking--deviation">`+
-			`<small>±%d</small></span></div>`,
+		`<div class="Ranking"><span title="%d±%d">%d</span></div>`,
 		int(math.Round(rating)),
 		int(math.Round(deviation*2)),
+		int(math.Round(rating-deviation*2)),
 	))
 }
 
