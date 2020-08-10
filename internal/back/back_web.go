@@ -439,11 +439,13 @@ func (b *Back) GetPlayerMatches(playerID util.UUIDAsBlob) ([]Match, map[util.UUI
 
 	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
 		if err := tx.Select(&matches, `
-            SELECT Match.* FROM Match
+            SELECT Match.*
+            FROM Match
+            INNER JOIN MatchSession ON (Match.MatchSessionID = MatchSession.ID)
             INNER JOIN MatchEntry ON (MatchEntry.MatchID = Match.ID)
-            WHERE MatchEntry.PlayerID = ?
+            WHERE MatchEntry.PlayerID = ? AND MatchSession.Status = ?
             ORDER BY Match.CreatedAt DESC
-        `, playerID,
+        `, playerID, MatchSessionStatusClosed,
 		); err != nil {
 			return err
 		}
