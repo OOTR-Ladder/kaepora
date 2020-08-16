@@ -319,7 +319,11 @@ func (b *Back) GetPlayerStats(playerID util.UUIDAsBlob) (stats PlayerStats, _ er
 				return err
 			}
 
-			stats.Performances[k].SeedTimesGraph, err = generatePlayerSeedTimesGraph(tx, playerID, stats.Performances[k].LeagueID)
+			stats.Performances[k].SeedTimesGraph, err = generatePlayerSeedTimesGraph(
+				tx,
+				playerID,
+				stats.Performances[k].LeagueID,
+			)
 			if err != nil {
 				return err
 			}
