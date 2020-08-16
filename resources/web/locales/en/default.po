@@ -195,11 +195,7 @@ msgstr ""
 msgid "Ratings distribution"
 msgstr ""
 
-#: resources/web/templates/includes/stats_league.html:62
-msgid "Ratings distribution histogram."
-msgstr ""
-
-#: resources/web/templates/includes/stats_league.html:69
+#: resources/web/templates/includes/stats_league.html:65
 msgid "Seed completion time"
 msgstr ""
 
@@ -304,7 +300,7 @@ msgid "Rating"
 msgstr ""
 
 #: resources/web/templates/layouts/leaderboard.html:23
-msgid "Wins"
+msgid "Victories"
 msgstr ""
 
 #: resources/web/templates/layouts/leaderboard.html:24

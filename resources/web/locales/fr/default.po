@@ -197,11 +197,7 @@ msgstr "Dimanche"
 msgid "Ratings distribution"
 msgstr "Distribution du classement"
 
-#: resources/web/templates/includes/stats_league.html:62
-msgid "Ratings distribution histogram."
-msgstr "Distribution du classement."
-
-#: resources/web/templates/includes/stats_league.html:69
+#: resources/web/templates/includes/stats_league.html:65
 msgid "Seed completion time"
 msgstr "Temps de complétion"
 
@@ -306,7 +302,7 @@ msgid "Rating"
 msgstr "Score"
 
 #: resources/web/templates/layouts/leaderboard.html:23
-msgid "Wins"
+msgid "Victories"
 msgstr "Victoires"
 
 #: resources/web/templates/layouts/leaderboard.html:24

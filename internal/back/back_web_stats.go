@@ -25,7 +25,6 @@ func (b *Back) GetRatingsDistributionGraph(shortcode string) (template.HTML, err
 		StrokeColor: drawing.ColorFromHex("4c7899"),
 		StrokeWidth: 1,
 	})
-
 	if err != nil {
 		return template.HTML(""), err
 	}
@@ -239,7 +238,7 @@ func generateWLGraph(wins, losses float64) (template.HTML, error) {
 		Values: []chart.Value{
 			{
 				Value: wins,
-				Label: fmt.Sprintf("Wins (%.0f %%)", (wins/(losses+wins))*100.0),
+				Label: fmt.Sprintf("Victories (%.0f %%)", (wins/(losses+wins))*100.0),
 				Style: chart.Style{FillColor: drawing.ColorFromHex("FDF1DC")},
 			},
 			{
