@@ -86,6 +86,9 @@ Ce système a quelques particularité :
    niveau_ et atteindre le palier nécessaire pour apparaître sur le tableau des
    scores.
  - Ne pas faire de match pendant une semaine augmentera votre _déviation de niveau_.
+ - Le classement est obtenu à partir des limites basses des intervalles de
+   niveau, cela signifie qu'il faut jouer régulièrement pour conserver sa place
+   au classement.
 
 [1]: https://fr.wikipedia.org/wiki/Classement_Glicko
 

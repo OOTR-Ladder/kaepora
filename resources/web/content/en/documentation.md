@@ -78,6 +78,8 @@ This system has a few particularities:
  - You need to complete a few races to lower your _rating deviation_ and reach
    the required threshold to appear in the leaderboards.
  - Not racing for a week will slightly increase your _rating deviation_.
+ - Your rank and displayed rating uses the lower bound of your rating interval,
+   this means you need to keep playing to keep your rank.
 
 [1]: https://en.wikipedia.org/wiki/Glicko_rating_system
 

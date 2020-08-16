@@ -22,11 +22,13 @@ Non-goals and out of scope:
 Located at: `$XDG_CONFIG_HOME/kaepora/config.json`
 ```
 {
-	"DiscordAdminUserIDs": ["<discord user id>"]
+    "DiscordAdminUserIDs": ["<discord user id>"],
+    "DiscordListenIDs": ["<channel ID, set using !dev commands>"],
+    "DiscordBannedUserIDs": ["<discord user id, manually inserted>"]
 }
 ```
 
-Having at least one user ID is mandatory to make the bot listen to a channel
+Having at least one admin ID is mandatory to make the bot listen to a channel
 and not only to PMs.
 
 ## Build and run
