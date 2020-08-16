@@ -25,6 +25,7 @@ func (b *Back) GetRatingsDistributionGraph(shortcode string) (template.HTML, err
 		StrokeColor: drawing.ColorFromHex("4c7899"),
 		StrokeWidth: 1,
 	})
+
 	if err != nil {
 		return template.HTML(""), err
 	}
@@ -188,6 +189,7 @@ func generateSeedTimesGraph(times []int) (template.HTML, error) {
 		{Style: style, Label: "≥ 5:00"},
 	}
 
+	var hasValue bool
 	for _, v := range times {
 		i := ((v - (2 * 3600)) / (30 * 60)) + 1
 		if i < 0 {
@@ -198,6 +200,12 @@ func generateSeedTimesGraph(times []int) (template.HTML, error) {
 		}
 
 		bars[i].Value++
+		hasValue = true
+	}
+
+	if !hasValue {
+		// go-chart does not like it when all values are 0
+		return template.HTML(""), nil
 	}
 
 	graph := chart.BarChart{
