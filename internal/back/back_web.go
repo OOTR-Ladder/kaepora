@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"html/template"
 	"kaepora/internal/util"
+	"log"
 	"time"
 
 	"github.com/jmoiron/sqlx"
@@ -263,11 +264,11 @@ func (b *Back) GetPlayerByName(name string) (player Player, _ error) {
 
 // PlayerPerformance is the overall performance of a single Player on a single League.
 type PlayerPerformance struct {
-	LeagueID      util.UUIDAsBlob
-	Rating        PlayerRating
-	WLChart       template.HTML // Win/Losses pie chart, SVG
-	RRDChart      template.HTML // Rating/Rating Deviation graph, SVG
-	SeedTimeChart template.HTML // Seed time distribution, SVG
+	LeagueID       util.UUIDAsBlob
+	Rating         PlayerRating
+	WLChart        template.HTML // Win/Losses pie chart, SVG
+	RRDChart       template.HTML // Rating/Rating Deviation graph, SVG
+	SeedTimesChart template.HTML // Seed time distribution, SVG
 
 	Wins, Losses, Draws, Forfeits int
 }
@@ -323,7 +324,7 @@ func (b *Back) GetPlayerStats(playerID util.UUIDAsBlob) (stats PlayerStats, _ er
 				return err
 			}
 
-			stats.Performances[k].SeedTimeChart, err = generateSeedTimeChart(tx, playerID, stats.Performances[k].LeagueID)
+			stats.Performances[k].SeedTimesChart, err = generatePlayerSeedTimesChart(tx, playerID, stats.Performances[k].LeagueID)
 			if err != nil {
 				return err
 			}
@@ -481,8 +482,7 @@ func (b *Back) GetPlayerMatches(playerID util.UUIDAsBlob) ([]Match, map[util.UUI
 	return matches, players, nil
 }
 
-// nolint:funlen
-func generateSeedTimeChart(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) (template.HTML, error) {
+func generatePlayerSeedTimesChart(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) (template.HTML, error) {
 	var times []int
 	if err := tx.Select(
 		&times,
@@ -502,6 +502,55 @@ func generateSeedTimeChart(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) (tem
 		return template.HTML(""), err
 	}
 
+	return generateSeedTimesChart(times)
+}
+
+func (b *Back) GetLeagueSeedTimes(shortcode string) (ret template.HTML, _ error) {
+	start := time.Now()
+	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
+		league, err := getLeagueByShortCode(tx, shortcode)
+		if err != nil {
+			return err
+		}
+
+		ret, err = generateLeagueSeedTimesChart(tx, league.ID)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return template.HTML(""), err
+	}
+
+	log.Printf("info: computed seed completion stats in %s", time.Since(start))
+
+	return ret, nil
+}
+
+func generateLeagueSeedTimesChart(tx *sqlx.Tx, leagueID util.UUIDAsBlob) (template.HTML, error) {
+	var times []int
+	if err := tx.Select(
+		&times,
+		`SELECT (MatchEntry.EndedAt-MatchEntry.StartedAt) AS time
+        FROM MatchEntry
+        INNER JOIN Match ON(Match.ID = MatchEntry.MatchID)
+        INNER JOIN MatchSession ON(MatchSession.ID = Match.MatchSessionID)
+        WHERE
+            Match.LeagueID = ?
+            AND MatchEntry.Status = ?
+            AND MatchSession.Status = ?
+        `,
+		leagueID,
+		MatchEntryStatusFinished, MatchSessionStatusClosed,
+	); err != nil {
+		return template.HTML(""), err
+	}
+
+	return generateSeedTimesChart(times)
+}
+
+func generateSeedTimesChart(times []int) (template.HTML, error) {
 	style := chart.Style{
 		FontColor:   drawing.ColorBlack,
 		FillColor:   drawing.ColorFromHex("285577"),

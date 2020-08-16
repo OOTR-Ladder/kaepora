@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/hex"
+	"html/template"
 	"kaepora/internal/back"
 	"log"
 	"math"
@@ -33,6 +34,12 @@ func (s *Server) stats(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	seedTime, err := s.back.GetLeagueSeedTimes(shortcode)
+	if err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
+	}
+
 	s.cache(w, "public", 1*time.Hour)
 	s.response(w, r, http.StatusOK, "stats.html", struct {
 		Misc          back.StatsMisc
@@ -40,7 +47,8 @@ func (s *Server) stats(w http.ResponseWriter, r *http.Request) {
 		Seed          statsSeed
 		ShortCode     string
 		ExtendedStats bool
-	}{misc, attendance, seed, shortcode, shortcode == "shu"})
+		SeedTimes     template.HTML
+	}{misc, attendance, seed, shortcode, shortcode == "shu", seedTime})
 }
 
 type attendanceEntry struct {
