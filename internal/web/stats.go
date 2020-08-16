@@ -34,7 +34,13 @@ func (s *Server) stats(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	seedTime, err := s.back.GetLeagueSeedTimes(shortcode)
+	seedTime, err := s.back.GetLeagueSeedTimesGraph(shortcode)
+	if err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
+	}
+
+	ratings, err := s.back.GetRatingsDistributionGraph(shortcode)
 	if err != nil {
 		s.error(w, r, err, http.StatusInternalServerError)
 		return
@@ -42,13 +48,13 @@ func (s *Server) stats(w http.ResponseWriter, r *http.Request) {
 
 	s.cache(w, "public", 1*time.Hour)
 	s.response(w, r, http.StatusOK, "stats.html", struct {
-		Misc          back.StatsMisc
-		Attendance    []attendanceEntry
-		Seed          statsSeed
-		ShortCode     string
-		ExtendedStats bool
-		SeedTimes     template.HTML
-	}{misc, attendance, seed, shortcode, shortcode == "shu", seedTime})
+		Misc                           back.StatsMisc
+		Attendance                     []attendanceEntry
+		Seed                           statsSeed
+		ShortCode                      string
+		ExtendedStats                  bool
+		SeedTimes, RatingsDistribution template.HTML
+	}{misc, attendance, seed, shortcode, shortcode == "shu", seedTime, ratings})
 }
 
 type attendanceEntry struct {

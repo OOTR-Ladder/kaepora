@@ -16,11 +16,11 @@
     {{ range $v := .Payload.PlayerStats.Performances }}
     <h2 class="title">{{ (index $.Payload.Leagues $v.LeagueID).Name }}</h2>
     <div class="columns">
-        <div class="column">{{ $v.RRDChart }}</div>
-        <div class="column">{{ $v.WLChart }}</div>
+        <div class="column">{{ $v.RRDGraph }}</div>
+        <div class="column">{{ $v.WLGraph }}</div>
     </div>
     <div class="columns">
-        <div class="column">{{ $v.SeedTimeChart }}</div>
+        <div class="column">{{ $v.SeedTimesGraph }}</div>
     </div>
     {{end}}
 </section>

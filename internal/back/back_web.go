@@ -4,16 +4,11 @@ package back
 // Please do not call them outside of the webserver.
 
 import (
-	"bytes"
-	"fmt"
 	"html/template"
 	"kaepora/internal/util"
-	"log"
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/wcharczuk/go-chart"
-	"github.com/wcharczuk/go-chart/drawing"
 )
 
 func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) (out []LeaderboardEntry, _ error) {
@@ -266,9 +261,9 @@ func (b *Back) GetPlayerByName(name string) (player Player, _ error) {
 type PlayerPerformance struct {
 	LeagueID       util.UUIDAsBlob
 	Rating         PlayerRating
-	WLChart        template.HTML // Win/Losses pie chart, SVG
-	RRDChart       template.HTML // Rating/Rating Deviation graph, SVG
-	SeedTimesChart template.HTML // Seed time distribution, SVG
+	WLGraph        template.HTML // Win/Losses pie chart, SVG
+	RRDGraph       template.HTML // Rating/Rating Deviation graph, SVG
+	SeedTimesGraph template.HTML // Seed time distribution, SVG
 
 	Wins, Losses, Draws, Forfeits int
 }
@@ -311,7 +306,7 @@ func (b *Back) GetPlayerStats(playerID util.UUIDAsBlob) (stats PlayerStats, _ er
 		}
 
 		for k := range stats.Performances {
-			stats.Performances[k].WLChart, err = generateWLChart(
+			stats.Performances[k].WLGraph, err = generateWLGraph(
 				float64(stats.Performances[k].Wins),
 				float64(stats.Performances[k].Losses),
 			)
@@ -319,12 +314,12 @@ func (b *Back) GetPlayerStats(playerID util.UUIDAsBlob) (stats PlayerStats, _ er
 				return err
 			}
 
-			stats.Performances[k].RRDChart, err = generateRRDChart(tx, playerID, stats.Performances[k].LeagueID)
+			stats.Performances[k].RRDGraph, err = generateRRDGraph(tx, playerID, stats.Performances[k].LeagueID)
 			if err != nil {
 				return err
 			}
 
-			stats.Performances[k].SeedTimesChart, err = generatePlayerSeedTimesChart(tx, playerID, stats.Performances[k].LeagueID)
+			stats.Performances[k].SeedTimesGraph, err = generatePlayerSeedTimesGraph(tx, playerID, stats.Performances[k].LeagueID)
 			if err != nil {
 				return err
 			}
@@ -342,96 +337,6 @@ func (b *Back) GetPlayerStats(playerID util.UUIDAsBlob) (stats PlayerStats, _ er
 	}
 
 	return stats, nil
-}
-
-func generateWLChart(wins, losses float64) (template.HTML, error) {
-	pie := chart.PieChart{
-		Width:      200,
-		Height:     200,
-		Canvas:     chart.Style{FillColor: chart.ColorTransparent},
-		Background: chart.Style{FillColor: chart.ColorTransparent},
-		Values: []chart.Value{
-			{
-				Value: wins,
-				Label: fmt.Sprintf("Wins (%.0f %%)", (wins/(losses+wins))*100.0),
-				Style: chart.Style{FillColor: drawing.ColorFromHex("FDF1DC")},
-			},
-			{
-				Value: losses,
-				Label: fmt.Sprintf("Losses (%.0f %%)", (losses/(losses+wins))*100.0),
-				Style: chart.Style{FillColor: drawing.ColorFromHex("F2E1D7")},
-			},
-		},
-	}
-
-	var buf bytes.Buffer
-	if err := pie.Render(chart.SVG, &buf); err != nil {
-		return template.HTML(""), err
-	}
-
-	return template.HTML(buf.Bytes()), nil // nolint:gosec
-}
-
-func generateRRDChart(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) (template.HTML, error) {
-	var history []struct {
-		RatingPeriodStartedAt int64
-		Rating, Deviation     float64
-	}
-	if err := tx.Select(&history, `
-        SELECT RatingPeriodStartedAt, Rating, Deviation FROM PlayerRatingHistory
-        WHERE PlayerID = ? AND LeagueID = ? ORDER BY RatingPeriodStartedAt ASC`,
-		playerID, leagueID,
-	); err != nil {
-		return template.HTML(""), err
-	}
-
-	r := make([]float64, len(history))
-	rd := make([]float64, len(history))
-	period := make([]float64, len(history))
-
-	for i := range history {
-		period[i] = float64(history[i].RatingPeriodStartedAt)
-		r[i] = history[i].Rating
-		rd[i] = history[i].Deviation
-	}
-
-	graph := chart.Chart{
-		Width:      864,
-		Height:     256,
-		Canvas:     chart.Style{FillColor: chart.ColorTransparent},
-		Background: chart.Style{FillColor: chart.ColorTransparent},
-		XAxis: chart.XAxis{
-			TickPosition: chart.TickPositionBetweenTicks,
-			ValueFormatter: func(v interface{}) string {
-				y, w := time.Unix(int64(v.(float64)), 0).ISOWeek()
-				return fmt.Sprintf("%d w%d", y, w)
-			},
-		},
-		Series: []chart.Series{
-			chart.ContinuousSeries{
-				Name:    "Rating",
-				XValues: period,
-				YValues: r,
-			},
-			chart.ContinuousSeries{
-				Name:    "Deviation",
-				YAxis:   chart.YAxisSecondary,
-				XValues: period,
-				YValues: rd,
-			},
-		},
-	}
-
-	graph.Elements = []chart.Renderable{
-		chart.LegendLeft(&graph),
-	}
-
-	var buf bytes.Buffer
-	if err := graph.Render(chart.SVG, &buf); err != nil {
-		return template.HTML(""), err
-	}
-
-	return template.HTML(buf.Bytes()), nil // nolint:gosec
 }
 
 func (b *Back) GetPlayerMatches(playerID util.UUIDAsBlob) ([]Match, map[util.UUIDAsBlob]Player, error) {
@@ -480,121 +385,4 @@ func (b *Back) GetPlayerMatches(playerID util.UUIDAsBlob) ([]Match, map[util.UUI
 	}
 
 	return matches, players, nil
-}
-
-func generatePlayerSeedTimesChart(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) (template.HTML, error) {
-	var times []int
-	if err := tx.Select(
-		&times,
-		`SELECT (MatchEntry.EndedAt-MatchEntry.StartedAt) AS time
-        FROM MatchEntry
-        INNER JOIN Match ON(Match.ID = MatchEntry.MatchID)
-        INNER JOIN MatchSession ON(MatchSession.ID = Match.MatchSessionID)
-        WHERE
-            MatchEntry.PlayerID = ?
-            AND Match.LeagueID = ?
-            AND MatchEntry.Status = ?
-            AND MatchSession.Status = ?
-        `,
-		playerID, leagueID,
-		MatchEntryStatusFinished, MatchSessionStatusClosed,
-	); err != nil {
-		return template.HTML(""), err
-	}
-
-	return generateSeedTimesChart(times)
-}
-
-func (b *Back) GetLeagueSeedTimes(shortcode string) (ret template.HTML, _ error) {
-	start := time.Now()
-	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
-		league, err := getLeagueByShortCode(tx, shortcode)
-		if err != nil {
-			return err
-		}
-
-		ret, err = generateLeagueSeedTimesChart(tx, league.ID)
-		if err != nil {
-			return err
-		}
-
-		return nil
-	}); err != nil {
-		return template.HTML(""), err
-	}
-
-	log.Printf("info: computed seed completion stats in %s", time.Since(start))
-
-	return ret, nil
-}
-
-func generateLeagueSeedTimesChart(tx *sqlx.Tx, leagueID util.UUIDAsBlob) (template.HTML, error) {
-	var times []int
-	if err := tx.Select(
-		&times,
-		`SELECT (MatchEntry.EndedAt-MatchEntry.StartedAt) AS time
-        FROM MatchEntry
-        INNER JOIN Match ON(Match.ID = MatchEntry.MatchID)
-        INNER JOIN MatchSession ON(MatchSession.ID = Match.MatchSessionID)
-        WHERE
-            Match.LeagueID = ?
-            AND MatchEntry.Status = ?
-            AND MatchSession.Status = ?
-        `,
-		leagueID,
-		MatchEntryStatusFinished, MatchSessionStatusClosed,
-	); err != nil {
-		return template.HTML(""), err
-	}
-
-	return generateSeedTimesChart(times)
-}
-
-func generateSeedTimesChart(times []int) (template.HTML, error) {
-	style := chart.Style{
-		FontColor:   drawing.ColorBlack,
-		FillColor:   drawing.ColorFromHex("285577"),
-		StrokeColor: drawing.ColorFromHex("4c7899"),
-		StrokeWidth: 1,
-	}
-
-	bars := []chart.Value{
-		{Style: style, Label: "< 2:00"},
-		{Style: style, Label: "2:00"},
-		{Style: style, Label: "2:30"},
-		{Style: style, Label: "3:00"},
-		{Style: style, Label: "3:30"},
-		{Style: style, Label: "4:00"},
-		{Style: style, Label: "4:30"},
-		{Style: style, Label: "≥ 5:00"},
-	}
-
-	for _, v := range times {
-		i := ((v - (2 * 3600)) / (30 * 60)) + 1
-		if i < 0 {
-			i = 0
-		}
-		if i >= len(bars) {
-			i = len(bars) - 1
-		}
-
-		bars[i].Value++
-	}
-
-	graph := chart.BarChart{
-		Width:      800,
-		Height:     200,
-		Canvas:     chart.Style{FillColor: chart.ColorTransparent},
-		Background: chart.Style{FillColor: chart.ColorTransparent},
-		Bars:       bars,
-	}
-
-	graph.BarWidth = (graph.Width - (len(bars) * graph.BarSpacing)) / len(bars)
-
-	var buf bytes.Buffer
-	if err := graph.Render(chart.SVG, &buf); err != nil {
-		return template.HTML(""), err
-	}
-
-	return template.HTML(buf.Bytes()), nil // nolint:gosec
 }

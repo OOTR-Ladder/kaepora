@@ -56,11 +56,7 @@
     </div>
     <div class="column is-half has-text-centered">
         <p>{{t .Locale "Ratings distribution"}}</p>
-        <img
-            width="600" height="300"
-            src="{{uri .Locale "stats" .Payload.ShortCode "ratings.svg"}}"
-            alt="{{t .Locale "Ratings distribution histogram."}}"
-        />
+        {{ .Payload.RatingsDistribution }}
     </div>
 </div>
 
