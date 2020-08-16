@@ -2,12 +2,15 @@
 1. **Le Ladder OOTR est pour tout le monde, soyez sympa et rappelez vous que
    vous parlez à des êtres humains.**
 2. Vous devez diffuser vos matches en _live-stream_, les enregistrements de ces
-   matches doivent être publics (ex. pas d'enregistrements réservés aux _subs_).
+   matches doivent être publics (ex. pas d'enregistrements réservés aux _subs_).  
+   Si votre plateforme de streaming n'est pas disponible, vous pouvez fournir
+   un enregistrement local de votre course.
 3. **Toute forme de triche sera punie par un bannissement définitif**, incluant
    (liste non exhaustive) :
-    1. Toute tentative de deviner ou de regarder le _stream_ de votre adversaire.
+    1. Obtenir des informations sur votre adversaire ou consulter son live-stream.
     2. Explorer le jeu avant le début officiel d'un match.
     3. Obtenir des informations sur votre _seed_.
+    4. Débridage d'émulateur.
 4. **Vous êtes responsable du chat de votre live-steam**.
     1. Vous pouvez discuter de votre _routing_ avec votre chat.
     2. Vous ne pouvez en aucun cas prendre des suggestions ou des rappels de votre chat.
@@ -21,8 +24,9 @@
    commence.
 8. **Il est interdit de modifier le Patch/WAD/ROM** de quelque manière que ce
    soit après son obtention sur [ootrandomizer.com][1].
-9. Si vous enfreignez une règle, l'équipe de modération du Ladder peut
-   appliquer une ou plusieurs des sanctions suivantes :
+9. Si vous enfreignez une règle ou tentez d'en exploiter une éventuelle faille,
+   l'équipe de modération du Ladder peut appliquer une ou plusieurs des
+   sanctions suivantes :
     1. Avertissement.
     2. Défaite forcée.
     3. Bannissement temporaire du Ladder ou de sa catégorie sur Discord.
