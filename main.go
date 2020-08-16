@@ -13,6 +13,7 @@ import (
 	"os/signal"
 	"sync"
 	"syscall"
+	_ "time/tzdata"
 
 	_ "github.com/mattn/go-sqlite3"
 )
