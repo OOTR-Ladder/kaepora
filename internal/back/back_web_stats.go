@@ -227,6 +227,10 @@ func generateSeedTimesGraph(times []int) (template.HTML, error) {
 }
 
 func generateWLGraph(wins, losses float64) (template.HTML, error) {
+	if wins == 0 && losses == 0 {
+		return template.HTML(""), nil
+	}
+
 	graph := chart.PieChart{
 		Width:      200,
 		Height:     200,
