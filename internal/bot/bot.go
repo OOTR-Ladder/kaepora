@@ -271,14 +271,16 @@ func (bot *Bot) cmdHelp(m *discordgo.Message, _ []string, w io.Writer) error {
 
 	// nolint:lll
 	fmt.Fprintf(w, `**Available commands**:
+
+Brackets indicate optional arguments.
+
 %[1]s
 # Management
 !help                   # display this help message
 !leaderboard SHORTCODE  # show leaderboards for the given league
 !leagues                # list leagues
-!recap SHORTCODE        # show the 1v1 results for the current session
-!register               # create your account and link it to your Discord account
-!register NAME          # same as "!register" but use another name
+!recap [SHORTCODE]      # show the 1v1 results for the current session
+!register [NAME]        # create your account and link it to your Discord account
 !rename NAME            # set your display name to NAME
 !seed SHORTCODE [SEED]  # generate a seed valid for the given league
 !setstream URL          # set your stream URL

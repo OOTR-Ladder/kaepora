@@ -257,28 +257,49 @@ func (b *Back) SendSeedSpoilerLog(player Player, seed string, isAdmin bool) erro
 	return nil
 }
 
+// SendRecaps sends a notification containing the recap of every race of a
+// league, or every race of every league if shortcode is empty.
 func (b *Back) SendRecaps(toUserID string, shortcode string, scope RecapScope) error {
 	return b.transaction(func(tx *sqlx.Tx) error {
-		league, err := getLeagueByShortCode(tx, shortcode)
+		if shortcode != "" {
+			return b.sendLeagueRecap(tx, toUserID, shortcode, scope)
+		}
+
+		leagues, err := getLeagues(tx)
 		if err != nil {
 			return err
 		}
 
-		sessions, err := getActiveSessionsForLeagueID(tx, league.ID)
-		if err != nil {
-			return err
-		}
-
-		for k := range sessions {
-			matches, err := getMatchesBySessionID(tx, sessions[k].ID)
-			if err != nil {
-				return err
-			}
-			if err := b.sendSessionRecapNotification(tx, sessions[k], matches, scope, &toUserID); err != nil {
+		for k := range leagues {
+			if err := b.sendLeagueRecap(tx, toUserID, leagues[k].ShortCode, scope); err != nil {
 				return err
 			}
 		}
 
 		return nil
 	})
+}
+
+func (b *Back) sendLeagueRecap(tx *sqlx.Tx, toUserID string, shortcode string, scope RecapScope) error {
+	league, err := getLeagueByShortCode(tx, shortcode)
+	if err != nil {
+		return err
+	}
+
+	sessions, err := getActiveSessionsForLeagueID(tx, league.ID)
+	if err != nil {
+		return err
+	}
+
+	for k := range sessions {
+		matches, err := getMatchesBySessionID(tx, sessions[k].ID)
+		if err != nil {
+			return err
+		}
+		if err := b.sendSessionRecapNotification(tx, sessions[k], matches, scope, &toUserID); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
