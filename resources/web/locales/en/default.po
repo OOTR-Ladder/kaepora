@@ -315,6 +315,10 @@ msgstr ""
 msgid "The leaderboard is currently empty."
 msgstr ""
 
+#: resources/web/templates/layouts/one_player.html:9
+msgid "Profile page of %s"
+msgstr ""
+
 #: resources/web/templates/layouts/one_player.html:10
 msgid "Climbing the ladder since %s"
 msgstr ""

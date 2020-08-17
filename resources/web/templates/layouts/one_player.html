@@ -6,32 +6,57 @@
 
     <div class="hero-body">
         <div class="container">
-            <h1 class="title">{{ .Payload.Player.Name }}</h1>
-            <span class="subtitle">{{ t .Locale "Climbing the ladder since %s" (date .Payload.Player.CreatedAt) }}</span>
+            <div class="level">
+                <div class="level-left">
+                    <div class="level-item">
+                        <h1 class="title">{{ t .Locale "Profile page of %s" (.Payload.Player.Name) }}</h1>
+                    </div>
+                </div>
+                <div class="level-right">
+                    <p>{{ t .Locale "Climbing the ladder since %s" (date .Payload.Player.CreatedAt) }}</p>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<section class="container">
-    {{ range $v := .Payload.PlayerStats.Performances }}
-    <h2 class="title">{{ (index $.Payload.Leagues $v.LeagueID).Name }}</h2>
-    <div class="columns">
-        <div class="column">{{ $v.RRDGraph }}</div>
-        <div class="column">{{ $v.WLGraph }}</div>
-    </div>
-    <div class="columns">
-        <div class="column">{{ $v.SeedTimesGraph }}</div>
-    </div>
-    {{end}}
-</section>
-
-<section class="container">
-    <h2 class="title">{{t .Locale "Past races"}}</h2>
+<section class="section">
     <div class="container">
-        <div class="columns is-multiline">
-            {{template "past_matches" .}}
+        <div class="columns">
+            <div class="column is-half">
+                <h2 class="title">{{t .Locale "Stats"}}</h2>
+                {{ range $v := .Payload.PlayerStats.Performances }}
+                <div class="box is-shadowless">
+                    <h3 class="title is-4">{{ (index $.Payload.Leagues $v.LeagueID).Name }}</h2>
+
+                    <progress class="WLRatio progress is-small is-success" value="50" max="100">50%</progress>
+                    <div class="level is-mobile">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <p class="has-text-success">50% win</p>
+                            </div>
+                        </div>
+                        <div class="level-right">
+                            <div class="level-item">
+                                <p class="has-text-danger">50% losses</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="RatingVariation">{{ $v.RRDGraph }}</div>
+                    <div class="SeedDurations">{{ $v.SeedTimesGraph }}</div>
+                </div>
+                {{end}}
+            </div>
+
+            <div class="column">
+                <h2 class="title">{{t .Locale "Past races"}}</h2>
+
+                <div class="columns is-multiline">
+                    {{template "player_matches" .}}
+                </div>
+            </div>
         </div>
     </div>
 </section>
-
 {{end}}

@@ -204,7 +204,7 @@ func generateSeedTimesGraph(times []int) (template.HTML, error) {
 	}
 
 	graph := chart.BarChart{
-		Width:      800,
+		Width:      620,
 		Height:     200,
 		Canvas:     chart.Style{FillColor: chart.ColorTransparent},
 		Background: chart.Style{FillColor: chart.ColorTransparent},
@@ -272,8 +272,8 @@ func generateRRDGraph(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) (template
 	}
 
 	graph := chart.Chart{
-		Width:      864,
-		Height:     256,
+		Width:      620,
+		Height:     180,
 		Canvas:     chart.Style{FillColor: chart.ColorTransparent},
 		Background: chart.Style{FillColor: chart.ColorTransparent},
 		XAxis: chart.XAxis{

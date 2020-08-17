@@ -317,6 +317,10 @@ msgstr "Forfaits"
 msgid "The leaderboard is currently empty."
 msgstr "Le classement est actuellement vide."
 
+#: resources/web/templates/layouts/one_player.html:9
+msgid "Profile page of %s"
+msgstr "Page de profil de %s"
+
 #: resources/web/templates/layouts/one_player.html:10
 msgid "Climbing the ladder since %s"
 msgstr "Participe au ladder depuis le %s"
