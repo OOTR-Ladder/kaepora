@@ -83,7 +83,9 @@ func (l *League) update(tx *sqlx.Tx) error {
 
 func getLeagues(tx *sqlx.Tx) ([]League, error) {
 	var ret []League
-	if err := tx.Select(&ret, "SELECT * FROM League ORDER BY League.Name ASC"); err != nil {
+	// HACK, order is DESC to show Standard first, custom ordering should be
+	// implemented if there's more than two leagues.
+	if err := tx.Select(&ret, "SELECT * FROM League ORDER BY League.Name DESC"); err != nil {
 		return nil, err
 	}
 
