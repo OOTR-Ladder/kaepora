@@ -43,10 +43,41 @@
 <section class="container">
     <h2 class="title">{{t .Locale "Past races"}}</h2>
     <div class="container">
-        <div class="columns is-multiline">
-            {{template "past_matches" .}}
+        <div class="columns">
+            <div class="column is-half">
+                <h2 class="title">{{t .Locale "Stats"}}</h2>
+                {{ range $v := .Payload.PlayerStats.Performances }}
+                <div class="box is-shadowless">
+                    <h3 class="title is-4">{{ (index $.Payload.Leagues $v.LeagueID).Name }}</h2>
+
+                    <progress class="WLRatio progress is-small is-success" value="50" max="100">50%</progress>
+                    <div class="level is-mobile">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <p class="has-text-success">50% win</p>
+                            </div>
+                        </div>
+                        <div class="level-right">
+                            <div class="level-item">
+                                <p class="has-text-danger">50% losses</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="RatingVariation">{{ $v.RRDGraph }}</div>
+                    <div class="SeedDurations">{{ $v.SeedTimesGraph }}</div>
+                </div>
+                {{end}}
+            </div>
+
+            <div class="column">
+                <h2 class="title">{{t .Locale "Past races"}}</h2>
+
+                <div class="columns is-multiline">
+                    {{template "player_matches" .}}
+                </div>
+            </div>
         </div>
     </div>
 </section>
-
 {{end}}
