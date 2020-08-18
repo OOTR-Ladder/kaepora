@@ -16,7 +16,7 @@
         <div class="columns is-multiline">
             <div class="column">
                 <h2 class="title">{{t .Locale "%s league" .Payload.League.Name}}</h2>
-                <h3 class="subtitle">{{t .Locale "Race started at %s" (.Payload.MatchSession.StartDate | datetime)}}</h3>
+                <h3 class="subtitle">{{t .Locale "Race started at %s" (.Payload.MatchSession.StartDate | datetime) | unsafe}}</h3>
             </div>
 
             {{template "past_matches" .}}
