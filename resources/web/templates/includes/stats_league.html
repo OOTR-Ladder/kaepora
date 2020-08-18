@@ -16,7 +16,7 @@
     </div>
     <div class="column is-one-third">
         <ul>
-            <li>{{t .Locale "First ladder race: %s" (.Payload.Misc.FirstLadderRace | datetime)}}</li>
+            <li>{{t .Locale "First ladder race: %s" (.Payload.Misc.FirstLadderRace | datetime) | unsafe}}</li>
             <li>{{t .Locale "Average players per race: %d" .Payload.Misc.AveragePlayersPerRace}}</li>
             <li>{{t .Locale "Most players in a race: %d" .Payload.Misc.MostPlayersInARace}}</li>
         </ul>
