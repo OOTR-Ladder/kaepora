@@ -69,9 +69,13 @@ window.Kaepora = {
         const els = document.querySelectorAll('.js-local-datetime');
         for (let el of els) {
             const date = new Date(el.dataset.timestamp * 1000);
-            const d = date.toLocaleDateString();
-            const t = date.toLocaleTimeString();
-            el.innerHTML = d + " " + t;
+            el.innerHTML = date.toLocaleTimeString(undefined, {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+            });
         }
     },
 };
