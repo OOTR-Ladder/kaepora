@@ -89,7 +89,7 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 		"assetIntegrity": tplAssetIntegrity(baseDir),
 		"gossipText":     tplGossipText,
 		"assetURL":       tplAssetURL(baseDir),
-		"datetime":       util.Datetime,
+		"datetime":       tplLocalDateTime,
 		"date":           util.Date,
 		"future":         tplFuture,
 		"percentage":     tplPercentage,
@@ -103,6 +103,15 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 			return a + b
 		},
 	}
+}
+
+func tplLocalDateTime(iface interface{}) template.HTML {
+	// nolint:gosec
+	return template.HTML(fmt.Sprintf(
+		`<span class="js-local-datetime" data-timestamp="%d">%s</span>`,
+		util.Timestamp(iface),
+		util.Datetime(iface),
+	))
 }
 
 func tplPercentage(x int, parts ...int) string {

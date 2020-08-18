@@ -64,4 +64,21 @@ window.Kaepora = {
             selectOne(tab);
         }
     },
+
+    updateLocalDatetimes() {
+        const els = document.querySelectorAll('.js-local-datetime');
+        for (let el of els) {
+            const date = new Date(el.dataset.timestamp * 1000);
+            const d = date.toLocaleDateString();
+            const t = date.toLocaleTimeString();
+            el.innerHTML = d + " " + t;
+        }
+    },
 };
+
+
+(function (){
+    document.addEventListener('DOMContentLoaded', () => {
+        window.Kaepora.updateLocalDatetimes();
+    });
+})();
