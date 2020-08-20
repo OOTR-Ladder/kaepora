@@ -270,6 +270,11 @@ func generateRRDGraph(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) (template
 		return template.HTML(""), err
 	}
 
+	if len(history) < 2 {
+		// Not enough data, return nothing.
+		return template.HTML(""), nil
+	}
+
 	r := make([]float64, len(history))
 	rd := make([]float64, len(history))
 	period := make([]float64, len(history))

@@ -4,6 +4,7 @@ package back
 // Please do not call them outside of the webserver.
 
 import (
+	"fmt"
 	"html/template"
 	"kaepora/internal/util"
 	"time"
@@ -311,12 +312,12 @@ func (b *Back) GetPlayerStats(playerID util.UUIDAsBlob) (stats PlayerStats, _ er
 				float64(stats.Performances[k].Losses),
 			)
 			if err != nil {
-				return err
+				return fmt.Errorf("WLGraph: %s", err)
 			}
 
 			stats.Performances[k].RRDGraph, err = generateRRDGraph(tx, playerID, stats.Performances[k].LeagueID)
 			if err != nil {
-				return err
+				return fmt.Errorf("RRDGraph: %s", err)
 			}
 
 			stats.Performances[k].SeedTimesGraph, err = generatePlayerSeedTimesGraph(
@@ -325,7 +326,7 @@ func (b *Back) GetPlayerStats(playerID util.UUIDAsBlob) (stats PlayerStats, _ er
 				stats.Performances[k].LeagueID,
 			)
 			if err != nil {
-				return err
+				return fmt.Errorf("SeedTimesGraph: %s", err)
 			}
 
 			for l := range ratings {
