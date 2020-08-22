@@ -21,6 +21,7 @@ func (c *Config) SignURL(str string, d time.Duration) (string, error) {
 		return "", fmt.Errorf("unable to parse URL: %w", err)
 	}
 
+	u.Scheme = "https"
 	q := u.Query()
 	q.Del("t")
 	q.Set("td", strconv.FormatInt(time.Now().Add(d).Unix(), 10))
@@ -44,6 +45,7 @@ func (c *Config) CheckURL(str string) error {
 		return fmt.Errorf("unable to parse URL: %w", err)
 	}
 
+	u.Scheme = "https"
 	q := u.Query()
 	td, err := strconv.ParseInt(q.Get("td"), 10, 64)
 	if err != nil {

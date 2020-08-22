@@ -67,3 +67,19 @@ func TestSignURLBadToken(t *testing.T) {
 		t.Fatal("expected bad token")
 	}
 }
+
+func TestSignURLHTTPS(t *testing.T) {
+	c := config.Config{WebToken: "00000000000000000000000000000000"}
+	str, err := c.SignURL("http://ootrandomizer.com?u=Gaebora", 1*time.Hour)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	u, _ := url.Parse(str)
+	u.Scheme = "http"
+	str = u.String()
+
+	if err := c.CheckURL(str); err != nil {
+		t.Fatal(err)
+	}
+}
