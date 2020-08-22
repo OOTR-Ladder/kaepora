@@ -11,6 +11,9 @@ import (
 	"time"
 )
 
+// ErrTokenExpired means the token is valid, but expired.
+var ErrTokenExpired = errors.New("token expired")
+
 // SignURL adds a signed token query parameter to an URL, valid for the given duration.
 func (c *Config) SignURL(str string, d time.Duration) (string, error) {
 	u, err := url.Parse(str)
@@ -46,9 +49,6 @@ func (c *Config) CheckURL(str string) error {
 	if err != nil {
 		return err
 	}
-	if time.Unix(td, 0).Before(time.Now()) {
-		return errors.New("token has expired")
-	}
 
 	inputToken := q.Get("t")
 	q.Del("t")
@@ -61,6 +61,11 @@ func (c *Config) CheckURL(str string) error {
 
 	if token != inputToken {
 		return errors.New("invalid token")
+	}
+
+	// Keep this last, this error must be returned _only_ if the token is valid.
+	if time.Unix(td, 0).Before(time.Now()) {
+		return ErrTokenExpired
 	}
 
 	return nil

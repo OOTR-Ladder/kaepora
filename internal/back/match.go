@@ -191,20 +191,6 @@ func injectEntries(tx *sqlx.Tx, match *Match) error {
 	return nil
 }
 
-func getMatchBySeed(tx *sqlx.Tx, seed string) (Match, error) {
-	var match Match
-	query := `SELECT Match.* FROM Match WHERE Match.Seed = ? LIMIT 1`
-	if err := tx.Get(&match, query, seed); err != nil {
-		return Match{}, fmt.Errorf("could not fetch match: %w", err)
-	}
-
-	if err := injectEntries(tx, &match); err != nil {
-		return Match{}, err
-	}
-
-	return match, nil
-}
-
 func getMatchesBySessionID(tx *sqlx.Tx, sessionID util.UUIDAsBlob) ([]Match, error) {
 	var matches []Match
 	query := `SELECT Match.* FROM Match WHERE Match.MatchSessionID = ?`

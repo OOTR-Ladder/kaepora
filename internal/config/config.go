@@ -20,6 +20,8 @@ type Config struct {
 	DiscordBannedUserIDs []string
 
 	DiscordToken, WebToken, OOTRAPIKey string
+
+	Domain string
 }
 
 func (c *Config) IsDiscordIDBanned(id string) bool {

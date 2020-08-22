@@ -235,28 +235,6 @@ func (b *Back) getTopAroundPlayer(
 	return ret, nil
 }
 
-func (b *Back) SendSeedSpoilerLog(player Player, seed string, isAdmin bool) error {
-	var match Match
-	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
-		match, err = getMatchBySeed(tx, seed)
-		if err != nil {
-			return err
-		}
-
-		if !isAdmin && !match.HasEnded() {
-			return util.ErrPublic(fmt.Sprintf("The race for seed %s is still in progress.", seed))
-		}
-
-		return nil
-	}); err != nil {
-		return err
-	}
-
-	b.sendSpoilerLogNotification(player, seed, match.SpoilerLog)
-
-	return nil
-}
-
 // SendRecaps sends a notification containing the recap of every race of a
 // league, or every race of every league if shortcode is empty.
 func (b *Back) SendRecaps(toUserID string, shortcode string, scope RecapScope) error {

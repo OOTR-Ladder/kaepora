@@ -413,7 +413,10 @@ func createFixturedTestBack(t *testing.T) *Back {
 	}
 	migrator.Close()
 
-	back, err := New("sqlite3", path, &config.Config{})
+	back, err := New("sqlite3", path, &config.Config{
+		WebToken: "00000000000000000000000000000000",
+		Domain:   "localhost:3000",
+	})
 	if err != nil {
 		t.Fatal(err)
 	}

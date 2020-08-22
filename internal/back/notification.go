@@ -9,6 +9,7 @@ import (
 	"kaepora/internal/generator/oot"
 	"kaepora/internal/util"
 	"log"
+	"net/url"
 	"text/tabwriter"
 	"time"
 
@@ -568,7 +569,7 @@ func entryDetails(tx *sqlx.Tx, entry MatchEntry) (wrap string, name string, dura
 	return
 }
 
-func (b *Back) sendSpoilerLogNotification(player Player, seed string, spoilerLog util.ZLIBBlob) {
+func (b *Back) sendRawSpoilerLogNotification(player Player, seed string, spoilerLog util.ZLIBBlob) {
 	notif := Notification{
 		RecipientType: NotificationRecipientTypeDiscordUser,
 		Recipient:     player.DiscordID.String,
@@ -585,6 +586,29 @@ func (b *Back) sendSpoilerLogNotification(player Player, seed string, spoilerLog
 		}}
 		notif.Printf("Here is the spoiler log for seed `%s`.", seed)
 	}
+
+	b.notifications <- notif
+}
+
+func (b *Back) sendSpoilerLogNotification(player Player, matchID util.UUIDAsBlob) {
+	notif := Notification{
+		RecipientType: NotificationRecipientTypeDiscordUser,
+		Recipient:     player.DiscordID.String,
+		Type:          NotificationTypeSpoilerLog,
+	}
+
+	u, _ := url.Parse(fmt.Sprintf("https://%s/en/matches/%s/spoilers", b.config.Domain, matchID))
+	q := u.Query()
+	q.Set("u", player.Name)
+	u.RawQuery = q.Encode()
+
+	signed, err := b.config.SignURL(u.String(), 24*time.Hour)
+	if err != nil {
+		log.Printf("error: unable to sign URL: %s", err)
+		return
+	}
+
+	notif.Printf("Here is the spoiler log for your seed: %s", signed)
 
 	b.notifications <- notif
 }

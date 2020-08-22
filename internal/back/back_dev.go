@@ -45,7 +45,7 @@ func (b *Back) SendDevSeed(
 			gen.GetDownloadURL(out.State), out,
 			player, Player{},
 		)
-		b.sendSpoilerLogNotification(player, seed, zlibLog)
+		b.sendRawSpoilerLogNotification(player, seed, zlibLog)
 
 		return nil
 	})

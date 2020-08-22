@@ -135,7 +135,7 @@ func (b *Back) endActiveMatch(player Player, forfeit bool) (Match, error) {
 	if err := b.sendPrivateRecapForSessionID(ret.MatchSessionID, player); err != nil {
 		return Match{}, err
 	}
-	b.sendSpoilerLogNotification(player, ret.Seed, ret.SpoilerLog)
+	b.sendSpoilerLogNotification(player, ret.ID)
 
 	if ret.HasEnded() {
 		go func() {
