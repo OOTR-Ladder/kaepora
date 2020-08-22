@@ -31,15 +31,14 @@ type Bot struct {
 	manualSeedgenLimiter *rate.Limiter
 
 	startedAt time.Time
-	token     string
 	dg        *discordgo.Session
 
 	handlers      map[string]commandHandler
 	notifications <-chan back.Notification
 }
 
-func New(back *back.Back, token string, config *config.Config) (*Bot, error) {
-	dg, err := discordgo.New("Bot " + token)
+func New(back *back.Back, config *config.Config) (*Bot, error) {
+	dg, err := discordgo.New("Bot " + config.DiscordToken)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +46,6 @@ func New(back *back.Back, token string, config *config.Config) (*Bot, error) {
 	bot := &Bot{
 		back:                 back,
 		config:               config,
-		token:                token,
 		dg:                   dg,
 		startedAt:            time.Now(),
 		notifications:        back.GetNotificationsChan(),
@@ -111,8 +109,8 @@ func (bot *Bot) Serve(wg *sync.WaitGroup, done <-chan struct{}) {
 	wg.Add(1)
 	defer wg.Done()
 
-	if bot.token == "" {
-		log.Println("warning: missing KAEPORA_DISCORD_TOKEN, not running the bot")
+	if bot.config.DiscordToken == "" {
+		log.Println("warning: missing Discord token, not running the bot")
 		bot.idle(done)
 		return
 	}

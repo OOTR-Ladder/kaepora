@@ -191,20 +191,6 @@ func injectEntries(tx *sqlx.Tx, match *Match) error {
 	return nil
 }
 
-func getMatchBySeed(tx *sqlx.Tx, seed string) (Match, error) {
-	var match Match
-	query := `SELECT Match.* FROM Match WHERE Match.Seed = ? LIMIT 1`
-	if err := tx.Get(&match, query, seed); err != nil {
-		return Match{}, fmt.Errorf("could not fetch match: %w", err)
-	}
-
-	if err := injectEntries(tx, &match); err != nil {
-		return Match{}, err
-	}
-
-	return match, nil
-}
-
 func getMatchesBySessionID(tx *sqlx.Tx, sessionID util.UUIDAsBlob) ([]Match, error) {
 	var matches []Match
 	query := `SELECT Match.* FROM Match WHERE Match.MatchSessionID = ?`
@@ -221,7 +207,7 @@ func getMatchesBySessionID(tx *sqlx.Tx, sessionID util.UUIDAsBlob) ([]Match, err
 	return matches, nil
 }
 
-func (m *Match) getPlayerAndOpponentEntries(playerID util.UUIDAsBlob) (MatchEntry, MatchEntry, error) {
+func (m *Match) GetPlayerAndOpponentEntries(playerID util.UUIDAsBlob) (MatchEntry, MatchEntry, error) {
 	if len(m.Entries) != 2 {
 		return MatchEntry{}, MatchEntry{}, fmt.Errorf("invalid Match %s: not exactly 2 MatchEntry", m.ID)
 	}

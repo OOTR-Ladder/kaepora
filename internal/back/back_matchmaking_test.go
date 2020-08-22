@@ -224,7 +224,7 @@ func haveZeldaForfeit(back *Back) error {
 
 	var opponent Player
 	if err := back.transaction(func(tx *sqlx.Tx) (err error) {
-		_, against, err := match.getPlayerAndOpponentEntries(player.ID)
+		_, against, err := match.GetPlayerAndOpponentEntries(player.ID)
 		if err != nil {
 			return fmt.Errorf("cannot get MatchEntry: %s", err)
 		}
@@ -413,7 +413,10 @@ func createFixturedTestBack(t *testing.T) *Back {
 	}
 	migrator.Close()
 
-	back, err := New("sqlite3", path, "", &config.Config{})
+	back, err := New("sqlite3", path, &config.Config{
+		WebToken: "00000000000000000000000000000000",
+		Domain:   "localhost:3000",
+	})
 	if err != nil {
 		t.Fatal(err)
 	}

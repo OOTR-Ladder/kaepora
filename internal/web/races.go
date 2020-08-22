@@ -103,8 +103,10 @@ func (s *Server) getSpoilerLog(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !match.HasEnded() {
-		s.error(w, r, errors.New("match has not ended"), http.StatusForbidden)
-		return
+		if err := s.canSignedPlayerSeeSpoilerLog(r, match); err != nil {
+			s.error(w, r, err, http.StatusInternalServerError)
+			return
+		}
 	}
 
 	raw, err := ioutil.ReadAll(match.SpoilerLog.Uncompressed())
@@ -137,6 +139,33 @@ func (s *Server) getSpoilerLog(w http.ResponseWriter, r *http.Request) {
 		JSON     string
 		Log      oot.SpoilerLog
 	}{match, settings, string(raw), parsed})
+}
+
+func (s *Server) canSignedPlayerSeeSpoilerLog(r *http.Request, match back.Match) error {
+	if match.HasEnded() {
+		return nil
+	}
+
+	player, err := s.getSignedPlayer(r)
+	if err != nil {
+		return err
+	}
+	if player == nil {
+		return errors.New("match has not ended")
+	}
+	if s.config.IsDiscordIDAdmin(player.DiscordID.String) {
+		return nil
+	}
+
+	entry, _, err := match.GetPlayerAndOpponentEntries(player.ID)
+	if err != nil {
+		return err
+	}
+	if !entry.HasEnded() {
+		return errors.New("match has not ended")
+	}
+
+	return nil
 }
 
 func (s *Server) sendRawSpoilerLog(w http.ResponseWriter, league back.League, match back.Match, raw []byte) {

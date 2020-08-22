@@ -14,17 +14,17 @@ Side-goals:
 Non-goals and out of scope:
   - Providing a generic tournament bot.
 
-## Configuration (env vars)
-  - `KAEPORA_DISCORD_TOKEN`, can be omitted if you don't want to run the bot.
-  - `KAEPORA_OOTR_API_KEY`, can be omitted if you don't use remote seedgen.
-
 ## Configuration file
 Located at: `$XDG_CONFIG_HOME/kaepora/config.json`
 ```
 {
     "DiscordAdminUserIDs": ["<discord user id>"],
     "DiscordListenIDs": ["<channel ID, set using !dev commands>"],
-    "DiscordBannedUserIDs": ["<discord user id, manually inserted>"]
+    "DiscordBannedUserIDs": ["<discord user id, manually inserted>"],
+
+    "WebToken": "<secure random string>", // overriden by KAEPORA_WEB_TOKEN
+    "DiscordToken": "<optional (no bot)>", // overriden by KAEPORA_DISCORD_TOKEN
+    "OOTRAPIKey": "<optional (no remote seedgen)>" // overriden by KAEPORA_OOTR_API_KEY
 }
 ```
 
