@@ -92,6 +92,14 @@ func ensurePlayerHasNoActiveMatch(tx *sqlx.Tx, playerID util.UUIDAsBlob) error {
 }
 
 func (b *Back) CompleteActiveMatch(player Player) (Match, error) {
+	return b.endActiveMatch(player, false)
+}
+
+func (b *Back) ForfeitActiveMatch(player Player) (Match, error) {
+	return b.endActiveMatch(player, true)
+}
+
+func (b *Back) endActiveMatch(player Player, forfeit bool) (Match, error) {
 	var ret Match
 	if err := b.transaction(func(tx *sqlx.Tx) error {
 		match, self, against, err := getActiveMatchAndEntriesForPlayer(tx, player)
@@ -99,11 +107,15 @@ func (b *Back) CompleteActiveMatch(player Player) (Match, error) {
 			return err
 		}
 
-		if self.Status != MatchEntryStatusInProgress {
-			return util.ErrPublic("you can't complete a race that has not started")
-		}
+		if forfeit {
+			self.forfeit(&against, &match)
+		} else {
+			if self.Status != MatchEntryStatusInProgress {
+				return util.ErrPublic("you can't complete a race that has not started")
+			}
 
-		self.complete(&against, &match)
+			self.complete(&against, &match)
+		}
 
 		if err := util.ConcatErrors([]error{
 			self.update(tx),
@@ -180,47 +192,6 @@ func (b *Back) CancelActiveMatchSession(player Player) (MatchSession, error) {
 		return nil
 	}); err != nil {
 		return MatchSession{}, err
-	}
-
-	return ret, nil
-}
-
-func (b *Back) ForfeitActiveMatch(player Player) (Match, error) {
-	var ret Match
-	if err := b.transaction(func(tx *sqlx.Tx) error {
-		match, self, against, err := getActiveMatchAndEntriesForPlayer(tx, player)
-		if err != nil {
-			return err
-		}
-
-		self.forfeit(&against, &match)
-
-		if err := util.ConcatErrors([]error{
-			self.update(tx),
-			against.update(tx),
-			match.update(tx),
-			b.maybeSendMatchEndNotifications(tx, player, self, against, against.PlayerID),
-		}); err != nil {
-			return err
-		}
-
-		ret = match
-		return nil
-	}); err != nil {
-		return Match{}, err
-	}
-
-	if err := b.sendPrivateRecapForSessionID(ret.MatchSessionID, player); err != nil {
-		return Match{}, err
-	}
-	b.sendSpoilerLogNotification(player, ret.Seed, ret.SpoilerLog)
-
-	if ret.HasEnded() {
-		go func() {
-			if err := b.maybeUnlockSpoilerLogs(ret); err != nil {
-				log.Printf("error: unable to unlock spoiler log: %s", err)
-			}
-		}()
 	}
 
 	return ret, nil
