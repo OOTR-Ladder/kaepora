@@ -240,7 +240,7 @@ func (bot *Bot) dispatch(m *discordgo.Message, w *channelWriter) error {
 	}
 
 	command, args := parseCommand(m.Content)
-	handler, ok := bot.handlers[command]
+	handler, ok := bot.handlers[strings.ToLower(command)]
 	if !ok {
 		return util.ErrPublic(fmt.Sprintf("invalid command: %v", m.Content))
 	}
