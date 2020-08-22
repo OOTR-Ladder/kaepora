@@ -18,6 +18,8 @@ type Config struct {
 
 	// Who is not allowed to do anything.
 	DiscordBannedUserIDs []string
+
+	DiscordToken, WebToken, OOTRAPIKey string
 }
 
 func NewFromUserConfigDir() (*Config, error) {
@@ -29,7 +31,26 @@ func NewFromUserConfigDir() (*Config, error) {
 	return c, nil
 }
 
+func (c *Config) expandFromEnv() {
+	vars := []struct {
+		src string
+		dst *string
+	}{
+		{"KAEPORA_OOTR_API_KEY", &c.OOTRAPIKey},
+		{"KAEPORA_DISCORD_TOKEN", &c.DiscordToken},
+		{"KAEPORA_WEB_TOKEN", &c.WebToken},
+	}
+
+	for _, v := range vars {
+		if str := os.Getenv(v.src); str != "" {
+			*v.dst = str
+		}
+	}
+}
+
 func (c *Config) ReloadFromUserConfigDir() error {
+	defer c.expandFromEnv()
+
 	path, err := getOrCreateUserConfigPath()
 	if err != nil {
 		return err

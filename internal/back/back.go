@@ -31,7 +31,7 @@ type Back struct {
 	countingDown map[util.UUIDAsBlob]struct{}
 }
 
-func New(sqlDriver, sqlDSN, ootrAPIKey string, config *config.Config) (*Back, error) {
+func New(sqlDriver, sqlDSN string, config *config.Config) (*Back, error) {
 	// Why even bother converting names? A single greppable string across all
 	// your source code is better than any odd conversion scheme you could ever
 	// come up with.
@@ -49,7 +49,7 @@ func New(sqlDriver, sqlDSN, ootrAPIKey string, config *config.Config) (*Back, er
 		config:           config,
 		notifications:    make(chan Notification, 32),
 		countingDown:     map[util.UUIDAsBlob]struct{}{},
-		generatorFactory: factory.New(ootrapi.New(ootrAPIKey)),
+		generatorFactory: factory.New(ootrapi.New(config.OOTRAPIKey)),
 	}, nil
 }
 

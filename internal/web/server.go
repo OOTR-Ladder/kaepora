@@ -8,6 +8,7 @@ import (
 	"html/template"
 	"io/ioutil"
 	"kaepora/internal/back"
+	"kaepora/internal/config"
 	"kaepora/internal/util"
 	"log"
 	"net/http"
@@ -122,20 +123,19 @@ type Server struct {
 	tpl     map[string]*template.Template // Indexed by file name (eg. "index.html")
 	locales map[string]*gotext.Locale     // Indexed by lowercase ISO 639-2 (eg. "fr")
 
-	// Secret key for HMAC token verification
-	tokenKey string
+	config *config.Config
 }
 
-func NewServer(back *back.Back, tokenKey string) (*Server, error) {
+func NewServer(back *back.Back, config *config.Config) (*Server, error) {
 	baseDir, err := getResourcesDir()
 	if err != nil {
 		return nil, err
 	}
 
 	s := &Server{
-		tokenKey: tokenKey,
-		back:     back,
-		locales:  map[string]*gotext.Locale{},
+		config:  config,
+		back:    back,
+		locales: map[string]*gotext.Locale{},
 		http: &http.Server{
 			Addr:         "127.0.0.1:3001",
 			ReadTimeout:  5 * time.Second,

@@ -36,11 +36,7 @@ func main() {
 	}
 
 	log.Printf("info: Starting Kaepora %s", global.Version)
-	back, err := back.New(
-		"sqlite3", "./kaepora.db",
-		os.Getenv("KAEPORA_OOTR_API_KEY"),
-		conf,
-	)
+	back, err := back.New("sqlite3", "./kaepora.db", conf)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -88,12 +84,12 @@ func serve(b *back.Back, conf *config.Config) error {
 	signaled := make(chan os.Signal, 1)
 	signal.Notify(signaled, syscall.SIGINT, syscall.SIGTERM)
 
-	bot, err := bot.New(b, os.Getenv("KAEPORA_DISCORD_TOKEN"), conf)
+	bot, err := bot.New(b, conf)
 	if err != nil {
 		return err
 	}
 
-	server, err := web.NewServer(b, os.Getenv("KAEPORA_WEB_TOKEN_KEY"))
+	server, err := web.NewServer(b, conf)
 	if err != nil {
 		return err
 	}
