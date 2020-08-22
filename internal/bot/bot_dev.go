@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"io"
 	"kaepora/internal/util"
+	"log"
 	"strings"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
 
+// nolint:funlen
 func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error {
 	if !bot.isAdmin(m.Author.ID) {
 		return fmt.Errorf("!dev command ran by a non-admin: %v", args)
@@ -19,6 +21,7 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 **Admin-only commands**:
 %[1]s
 !dev as NAME PARAMS          # send bot command as another user
+!dev to NAME PARAMS          # send message to another user via the bot
 !dev error                   # error out
 !dev panic                   # panic and abort
 !dev rerank SHORTCODE        # erase and recompute all the ranking history for a league
@@ -34,6 +37,8 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 	switch args[0] {
 	case "as":
 		return bot.cmdDevAs(m, args, out)
+	case "to":
+		return bot.cmdDevTo(m, args, out)
 	case "panic":
 		panic("an admin asked me to panic")
 	case "uptime":
@@ -122,6 +127,31 @@ func (bot *Bot) cmdDevAs(m *discordgo.Message, args []string, _ io.Writer) error
 	m.Content = strings.Join(args[2:], " ")
 
 	bot.createWriterAndDispatch(bot.dg, m, m.Author.ID)
+
+	return nil
+}
+
+func (bot *Bot) cmdDevTo(_ *discordgo.Message, args []string, _ io.Writer) error {
+	if len(args) < 3 {
+		return util.ErrPublic("expected a name and a message")
+	}
+
+	player, err := bot.back.GetPlayerByName(args[1])
+	if err != nil {
+		return util.ErrPublic("no player with this name")
+	}
+
+	message := strings.Join(args[2:], " ")
+	out, err := newUserChannelWriter(bot.dg, player.DiscordID.String)
+	if err != nil {
+		log.Printf("error: could not create channel writer: %s", err)
+	}
+
+	fmt.Fprint(out, message)
+
+	if err := out.Flush(); err != nil {
+		log.Printf("error: could not send message: %s", err)
+	}
 
 	return nil
 }
