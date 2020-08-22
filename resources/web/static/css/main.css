@@ -710,7 +710,10 @@ ul.spoilers--hash li {
 /* }}} Spoilers */
 
 /* {{{ Shuffled Settings Doc */
-.shuffled-doc ul li {
+.Setting--values {
     margin-left: 3rem;
+    margin-bottom: 1.5rem;
 }
+
+.Setting--values li { line-height: 2; }
 /* }}} Shuffled Settings Doc */

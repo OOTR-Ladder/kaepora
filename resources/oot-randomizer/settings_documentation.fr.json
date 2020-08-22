@@ -4,7 +4,7 @@
         "Values": [
             {
                 "Value": false,
-                "Title": "non",
+                "Title": "Non",
                 "Description": "Certains objets et lieux peuvent être inaccessibles."
             }
         ]
@@ -14,7 +14,7 @@
         "Values": [
             {
                 "Value": true,
-                "Title": "oui",
+                "Title": "Oui",
                 "Description": "Les missiles teigneux sont pris en compte dans la logique."
             }
         ]
@@ -24,27 +24,27 @@
         "Values": [
             {
                 "Value": "medallions",
-                "Title": "médaillons",
+                "Title": "Médaillons",
                 "Description": "Le pont donnant accès au château de Ganon apparait une fois les six médaillons obtenus."
             },
             {
                 "Value": "dungeons",
-                "Title": "donjons",
+                "Title": "Donjons",
                 "Description": "Le pont donnant accès au château de Ganon apparait une fois les six médaillons et les trois pierres ancestrales obtenus."
             },
             {
                 "Value": "open",
-                "Title": "ouvert",
+                "Title": "Ouvert",
                 "Description": "Le pont donnant accès au château de Ganon est toujours présent."
             },
             {
                 "Value": "stones",
-                "Title": "pierres",
+                "Title": "Pierres",
                 "Description": "Le pont donnant accès au château de Ganon apparait une fois les trois pierres ancestrales obtenues."
             },
             {
                 "Value": "vanilla",
-                "Title": "vanille",
+                "Title": "Vanille",
                 "Description": "Le pont donnant accès au château de Ganon apparait une fois que le médaillon de l'Ombre, de l'Esprit, et les Flèches de Lumière aient été obtenus."
             }
         ]
@@ -54,7 +54,7 @@
         "Values": [
             {
                 "Value": true,
-                "Title": "oui",
+                "Title": "Oui",
                 "Description": "Seuls les coffres contenant un objet important sont grands."
             }
         ]
@@ -64,17 +64,17 @@
         "Values": [
             {
                 "Value": "double",
-                "Title": "double",
+                "Title": "Double",
                 "Description": "Tout fait deux fois plus de dégâts."
             },
             {
                 "Value": "quadruple",
-                "Title": "quadruple",
+                "Title": "Quadruple",
                 "Description": "Tout fait quatre fois plus de dégâts."
             },
             {
                 "Value": "half",
-                "Title": "moitié",
+                "Title": "Moitié",
                 "Description": "Tout fait moitié moins de dégâts."
             }
         ]
@@ -84,12 +84,12 @@
         "Values": [
             {
                 "Value": "dungeons",
-                "Title": "donjons",
+                "Title": "Donjons",
                 "Description": "Les entrées des donjons sont mélangées entre elles, y compris le Puits, la Caverne Polaire et le Gymnase Gerudo."
             },
             {
                 "Value": "simple-indoors",
-                "Title": "intérieurs simplifié",
+                "Title": "Intérieurs simplifié",
                 "Description": "Les entrées des donjons sont mélangées entre elles. Les entrées de grottes sont mélangées entre elles. La plupart des maisons ainsi que les fontaines des grandes fées sont mélangées entre elles."
             }
         ]
@@ -99,7 +99,7 @@
         "Values": [
             {
                 "Value": "none",
-                "Title": "aucun",
+                "Title": "Aucun",
                 "Description": "Les Pierres à potin ne donnent aucun indice."
             },
             {
@@ -114,17 +114,17 @@
         "Values": [
             {
                 "Value": "plentiful",
-                "Title": "en abondance",
+                "Title": "En abondance",
                 "Description": "Les objets importants sont disponibles en abondance."
             },
             {
                 "Value": "scarce",
-                "Title": "rare",
+                "Title": "Rare",
                 "Description": "Certains objets non nécessaires sont retirés."
             },
             {
                 "Value": "minimal",
-                "Title": "unique",
+                "Title": "Unique",
                 "Description": "La plupart des objets non nécessaires sont retirés."
             }
         ]
@@ -134,7 +134,7 @@
         "Values": [
             {
                 "Value": true,
-                "Title": "oui",
+                "Title": "Oui",
                 "Description": "Les donjons ne peuvent contenir qu'un seul objet important, à l'exception du Temple de l'Esprit qui en contient deux."
             }
         ]
@@ -144,7 +144,7 @@
         "Values": [
             {
                 "Value": false,
-                "Title": "non",
+                "Title": "Non",
                 "Description": "La Porte du Temps est fermée et ne peut s'ouvrir qu'en jouant le Chant du Temps."
             }
         ]
@@ -159,7 +159,7 @@
             },
             {
                 "Value": "closed",
-                "Title": "fermée",
+                "Title": "Fermée",
                 "Description": "La sortie de la forêt Kokiri vers la plaine d'Hyrule est bloquée. Le Kokiri la bloquant ne se déplacera qu'une fois l'Arbre Mojo complété."
             }
         ]
@@ -189,7 +189,7 @@
             },
             {
                 "Value": "random",
-                "Title": "random",
+                "Title": "Au hasard",
                 "Description": "Chaque boutique vend entre 0 et 4 objets aléatoires. Ces objets seront toujours sur le côté gauche."
             }
         ]
@@ -199,7 +199,7 @@
         "Values": [
             {
                 "Value": true,
-                "Title": "oui",
+                "Title": "Oui",
                 "Description": "Un pack de 10 haricots magiques est trouvable, et le vendeur de Haricots vend un unique objet pour 60 rubis."
             }
         ]
@@ -209,17 +209,17 @@
         "Values": [
             {
                 "Value": "vanilla",
-                "Title": "vanille",
+                "Title": "À l'origine",
                 "Description": "Les clefs de Boss sont à leur emplacement d'origine."
             },
             {
                 "Value": "remove",
-                "Title": "retirées",
+                "Title": "Retirées",
                 "Description": "Il n'y a pas de clefs de Boss et les portes vers les Boss sont toujours ouvertes."
             },
             {
                 "Value": "keysanity",
-                "Title": "partout",
+                "Title": "Partout",
                 "Description": "Les clefs de Boss peuvent être n'importe où des objets sont obtenables"
             }
         ]
@@ -229,7 +229,7 @@
         "Values": [
             {
                 "Value": true,
-                "Title": "oui",
+                "Title": "Oui",
                 "Description": "Jouer le Chant d'Epona à une vache donne un objet aléatoire."
             }
         ]
@@ -239,17 +239,17 @@
         "Values": [
             {
                 "Value": "lacs_vanilla",
-                "Title": "sur la cinématique des Flèches de Lumière vanille",
+                "Title": "Sur la cinématique des Flèches de Lumière vanille",
                 "Description": "La Grande clef du Château de Ganon est sur la cinématique des Flèches de lumière, qui se déclenche une fois les médaillons de l'Ombre et de l'Esprit obtenus."
             },
             {
                 "Value": "dungeon",
-                "Title": "donjon",
+                "Title": "Donjon",
                 "Description": "La Grande clef du Château de Ganon peut être n'importe où dans le château de Ganon."
             },
             {
                 "Value": "keysanity",
-                "Title": "partout",
+                "Title": "Partout",
                 "Description": "La Grande clef du Château de Ganon peut être n'importe où des objets sont obtenables."
             }
         ]
@@ -259,7 +259,7 @@
         "Values": [
             {
                 "Value": true,
-                "Title": "oui",
+                "Title": "Oui",
                 "Description": "La carte Gerudo peut se trouver n'importe où des objets sont obtenables."
             }
         ]
@@ -269,7 +269,7 @@
         "Values": [
             {
                 "Value": true,
-                "Title": "oui",
+                "Title": "Oui",
                 "Description": "Les deux ocarinas peuvent se trouver n'importe où des objets sont obtenables."
             }
         ]
@@ -279,7 +279,7 @@
         "Values": [
             {
                 "Value": "low",
-                "Title": "abordable",
+                "Title": "Abordable",
                 "Description": "Toutes les Pestes Mojo vendent un objet aléatoire pour 10 rubis."
             }
         ]
@@ -289,17 +289,17 @@
         "Values": [
             {
                 "Value": "vanilla",
-                "Title": "vanille",
+                "Title": "À l'origine",
                 "Description": "Les petites clefs sont à leur emplacement d'origine."
             },
             {
                 "Value": "remove",
-                "Title": "retirées",
+                "Title": "Retirées",
                 "Description": "Les petites clefs sont retirées, et toutes les portes des donjons sont ouvertes, excepté la porte du Boss."
             },
             {
                 "Value": "keysanity",
-                "Title": "partout",
+                "Title": "Partout",
                 "Description": "Les petites clefs peuvent être n'importe où des objets sont obtenables."
             }
         ]
@@ -309,7 +309,7 @@
         "Values": [
             {
                 "Value": true,
-                "Title": "oui",
+                "Title": "Oui",
                 "Description": "Les chants peuvent être n'importe où des objets sont obtenables."
             }
         ]
@@ -319,7 +319,7 @@
         "Values": [
             {
                 "Value": true,
-                "Title": "oui",
+                "Title": "Oui",
                 "Description": "L'œuf curieux donné par Malon peut être n'importe où des objets sont obtenables."
             }
         ]
@@ -329,7 +329,7 @@
         "Values": [
             {
                 "Value": "adult",
-                "Title": "adulte",
+                "Title": "Adulte",
                 "Description": "Le jeu commence en tant que Link adulte."
             }
         ]
@@ -339,17 +339,17 @@
         "Values": [
             {
                 "Value": "dungeons",
-                "Title": "donjons",
+                "Title": "Donjons",
                 "Description": "Les Skulltulas d'Or des donjons peuvent être des objets."
             },
             {
                 "Value": "overworld",
-                "Title": "extérieur",
+                "Title": "Extérieur",
                 "Description": "Les Skulltulas d'Or hors des donjons peuvent être des objets."
             },
             {
                 "Value": "all",
-                "Title": "toutes",
+                "Title": "Toutes",
                 "Description": "Toutes les Skulltula d'Or peuvent être des objets."
             }
         ]
@@ -359,12 +359,12 @@
         "Values": [
             {
                 "Value": "adult",
-                "Title": "ouverte en adulte",
+                "Title": "Ouverte en adulte",
                 "Description": "Le roi Zora est déplacé et la Fontaine Zora toujours accessible depuis le Domaine Zora uniquement en adulte."
             },
             {
                 "Value": "open",
-                "Title": "toujours ouverte",
+                "Title": "Toujours ouverte",
                 "Description": "Le roi Zora est déplacé et la Fontaine Zora toujours accessible depuis le Domaine Zora."
             }
         ]
@@ -374,7 +374,7 @@
         "Values": [
             {
                 "Value": "open",
-                "Title": "ouverte",
+                "Title": "Ouverte",
                 "Description": "Le pont menant à la Vallée Gerudo en adulte est déjà reconstruit."
             }
         ]
@@ -384,7 +384,7 @@
         "Values": [
             {
                 "Value": true,
-                "Title": "oui",
+                "Title": "Oui",
                 "Description": "La Triforce a été brisée par Ganon et répartie dans tout Hyrule. Trouvez 20 morceaux pour finir le jeu !"
             }
         ]
@@ -394,7 +394,7 @@
         "Values": [
             {
                 "Value": true,
-                "Title": "oui",
+                "Title": "Oui",
                 "Description": "Sortir votre Ocarina suffira à faire apparaître Pierre. Pas besoin de créer son chant en enfant."
             }
         ]
@@ -404,7 +404,7 @@
         "Values": [
             {
                 "Value": true,
-                "Title": "oui",
+                "Title": "Oui",
                 "Description": "Vous commencez le jeu avec 10 bâtons et 20 noix."
             }
         ]
@@ -414,7 +414,7 @@
         "Values": [
             {
                 "Value": true,
-                "Title": "oui",
+                "Title": "Oui",
                 "Description": "Le nombre de cocottes à ramener dans l'enclos d'Anju est aléatoire."
             }
         ]
@@ -424,7 +424,7 @@
         "Values": [
             {
                 "Value": false,
-                "Title": "non",
+                "Title": "Désactivé",
                 "Description": "L'épée Kokiri est à son endroit d'origine."
             }
         ]
