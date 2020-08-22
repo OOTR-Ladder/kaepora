@@ -197,7 +197,11 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 		m.Content,
 	)
 
-	out, err := newUserChannelWriter(s, m.Author.ID)
+	bot.createWriterAndDispatch(s, m.Message, m.Author.ID)
+}
+
+func (bot *Bot) createWriterAndDispatch(s *discordgo.Session, m *discordgo.Message, authorID string) {
+	out, err := newUserChannelWriter(s, authorID)
 	if err != nil {
 		log.Printf("error: could not create channel writer: %s", err)
 	}
@@ -207,7 +211,7 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 		}
 	}()
 
-	if err := bot.dispatch(m.Message, out); err != nil {
+	if err := bot.dispatch(m, out); err != nil {
 		out.Reset()
 		fmt.Fprintln(out, "There was an error processing your command.")
 

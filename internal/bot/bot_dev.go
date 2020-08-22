@@ -18,6 +18,7 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 		fmt.Fprintf(out, `
 **Admin-only commands**:
 %[1]s
+!dev as NAME PARAMS          # send bot command as another user
 !dev error                   # error out
 !dev panic                   # panic and abort
 !dev rerank SHORTCODE        # erase and recompute all the ranking history for a league
@@ -31,6 +32,8 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 	}
 
 	switch args[0] {
+	case "as":
+		return bot.cmdDevAs(m, args, out)
 	case "panic":
 		panic("an admin asked me to panic")
 	case "uptime":
@@ -103,4 +106,22 @@ func (bot *Bot) cmdDevAddListen(m *discordgo.Message, _ []string, _ io.Writer) (
 func (bot *Bot) cmdDevRerank(_ *discordgo.Message, args []string, _ io.Writer) error {
 	shortcode := argsAsName(args[1:])
 	return bot.back.Rerank(shortcode)
+}
+
+func (bot *Bot) cmdDevAs(m *discordgo.Message, args []string, _ io.Writer) error {
+	if len(args) < 3 {
+		return util.ErrPublic("expected a name and a command")
+	}
+
+	player, err := bot.back.GetPlayerByName(args[1])
+	if err != nil {
+		return util.ErrPublic("no player with this name")
+	}
+
+	m.Author.ID = player.DiscordID.String
+	m.Content = strings.Join(args[2:], " ")
+
+	bot.createWriterAndDispatch(bot.dg, m, m.Author.ID)
+
+	return nil
 }
