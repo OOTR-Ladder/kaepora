@@ -295,12 +295,13 @@ func getMatchSessionsToEnd(tx *sqlx.Tx) ([]MatchSession, map[util.UUIDAsBlob][]M
     SELECT MatchSession.* FROM MatchSession
     WHERE
         DATETIME(MatchSession.StartDate) < DATETIME(?)
-        AND MatchSession.Status = ?`
+        AND MatchSession.Status IN(?, ?)`
 	var sessions []MatchSession
 	if err := tx.Select(
 		&sessions, query,
 		util.TimeAsDateTimeTZ(time.Now()),
 		MatchSessionStatusInProgress,
+		MatchSessionStatusJoinable, // cleanup that should only happen in dev
 	); err != nil {
 		return nil, nil, err
 	}
