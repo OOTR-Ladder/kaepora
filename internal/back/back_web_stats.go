@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
+	"io"
 	"kaepora/internal/util"
 	"log"
 	"math"
@@ -46,12 +47,7 @@ func (b *Back) GetRatingsDistributionGraph(shortcode string) (template.HTML, err
 	}
 	graph.BarWidth = (graph.Width - (len(bars) * graph.BarSpacing)) / len(bars)
 
-	var buf bytes.Buffer
-	if err := graph.Render(chart.SVG, &buf); err != nil {
-		return template.HTML(""), err
-	}
-
-	return template.HTML(buf.Bytes()), nil // nolint:gosec
+	return renderChart(graph)
 }
 
 func (b *Back) getRatingsStats(
@@ -217,12 +213,7 @@ func generateSeedTimesGraph(times []int) (template.HTML, error) {
 
 	graph.BarWidth = (graph.Width - (len(bars) * graph.BarSpacing)) / len(bars)
 
-	var buf bytes.Buffer
-	if err := graph.Render(chart.SVG, &buf); err != nil {
-		return template.HTML(""), err
-	}
-
-	return template.HTML(buf.Bytes()), nil // nolint:gosec
+	return renderChart(graph)
 }
 
 func generateWLGraph(wins, losses float64) (template.HTML, error) {
@@ -249,12 +240,7 @@ func generateWLGraph(wins, losses float64) (template.HTML, error) {
 		},
 	}
 
-	var buf bytes.Buffer
-	if err := graph.Render(chart.SVG, &buf); err != nil {
-		return template.HTML(""), err
-	}
-
-	return template.HTML(buf.Bytes()), nil // nolint:gosec
+	return renderChart(graph)
 }
 
 func generateRRDGraph(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) (template.HTML, error) {
@@ -316,8 +302,16 @@ func generateRRDGraph(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) (template
 		chart.LegendLeft(&graph),
 	}
 
+	return renderChart(graph)
+}
+
+type renderable interface {
+	Render(chart.RendererProvider, io.Writer) error
+}
+
+func renderChart(r renderable) (template.HTML, error) {
 	var buf bytes.Buffer
-	if err := graph.Render(chart.SVG, &buf); err != nil {
+	if err := r.Render(chart.SVG, &buf); err != nil {
 		return template.HTML(""), err
 	}
 
