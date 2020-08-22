@@ -11,23 +11,18 @@
     </div>
 </section>
 
-<section class="container shuffled-doc">
-    <ul>
+<section class="section">
+    <div class="container">
         {{- range $name, $entry := .Payload.Doc -}}
-        <li>
-            <span title="{{$name}}"><strong>{{$entry.Title}}</strong></span>
-            <ul>
-
+        <h3 class="title is-5">{{$entry.Title}} <span class="tag is-info is-rounded is-small">{{$name}}</span></h3>
+            <ul class="Setting--values">
                 {{- range $value := $entry.Values -}}
                     <li>
-                        <strong><span title="{{$value.Value}}">{{$value.Title}}</span></strong>
-                        {{$value.Description}}
+                        <span class="tag is-light is-rounded">{{$value.Value}}</span> <strong>{{$value.Title}}</strong> : {{$value.Description}}
                     </li>
                 {{- end -}}
-
             </ul>
-        </li>
         {{- end -}}
-    </ul>
+    </div>
 </section>
 {{end}}
