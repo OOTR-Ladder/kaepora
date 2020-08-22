@@ -14,6 +14,24 @@
 <section class="section">
     <div class="container">
         {{- range $name, $entry := .Payload.Doc -}}
+            <div class="Setting {{$name}}">
+                <h3 class="Setting--title title is-4 is-size-6-touch">{{$entry.Title}}</h3>
+                <div class="Setting--name tag is-info is-rounded">{{$name}}</div>
+
+                <ul class="SettingValues">
+                    {{- range $value := $entry.Values -}}
+                        <li class="SettingValue">
+                            <div class="SettingValue--name">
+                                <strong>{{$value.Title}}</strong> <span class="tag is-light is-rounded">{{$value.Value}}</span>
+                            </div>
+                            <p>{{$value.Description}}</p>
+                        </li>
+                    {{- end -}}
+                </ul>
+            </div>
+        {{- end -}}
+
+        {{- range $name, $entry := .Payload.Doc -}}
         <h3 class="title is-5">{{$entry.Title}} <span class="tag is-info is-rounded is-small">{{$name}}</span></h3>
             <ul class="Setting--values">
                 {{- range $value := $entry.Values -}}
