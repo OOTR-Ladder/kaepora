@@ -372,7 +372,7 @@ func (b *Back) GetPlayerMatches(playerID util.UUIDAsBlob) ([]Match, map[util.UUI
 				return err
 			}
 
-			_, entry, err := matches[k].getPlayerAndOpponentEntries(playerID)
+			_, entry, err := matches[k].GetPlayerAndOpponentEntries(playerID)
 			if err != nil {
 				return err
 			}

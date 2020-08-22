@@ -221,7 +221,7 @@ func getMatchesBySessionID(tx *sqlx.Tx, sessionID util.UUIDAsBlob) ([]Match, err
 	return matches, nil
 }
 
-func (m *Match) getPlayerAndOpponentEntries(playerID util.UUIDAsBlob) (MatchEntry, MatchEntry, error) {
+func (m *Match) GetPlayerAndOpponentEntries(playerID util.UUIDAsBlob) (MatchEntry, MatchEntry, error) {
 	if len(m.Entries) != 2 {
 		return MatchEntry{}, MatchEntry{}, fmt.Errorf("invalid Match %s: not exactly 2 MatchEntry", m.ID)
 	}

@@ -341,7 +341,7 @@ func getActiveMatchAndEntriesForPlayer(tx *sqlx.Tx, player Player) (
 		return match, self, opponent, fmt.Errorf("cannot find Match: %w", err)
 	}
 
-	self, opponent, err = match.getPlayerAndOpponentEntries(player.ID)
+	self, opponent, err = match.GetPlayerAndOpponentEntries(player.ID)
 	if err != nil {
 		return match, self, opponent, err
 	}

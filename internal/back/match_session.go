@@ -120,7 +120,7 @@ func getPlayerActiveSession(tx *sqlx.Tx, playerID util.UUIDAsBlob) (MatchSession
 			return MatchSession{}, err
 		}
 
-		self, _, err := match.getPlayerAndOpponentEntries(playerID)
+		self, _, err := match.GetPlayerAndOpponentEntries(playerID)
 		if err != nil {
 			return MatchSession{}, err
 		}

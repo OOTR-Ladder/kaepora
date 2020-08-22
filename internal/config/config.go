@@ -22,6 +22,26 @@ type Config struct {
 	DiscordToken, WebToken, OOTRAPIKey string
 }
 
+func (c *Config) IsDiscordIDBanned(id string) bool {
+	for _, v := range c.DiscordBannedUserIDs {
+		if v == id {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (c *Config) IsDiscordIDAdmin(id string) bool {
+	for _, v := range c.DiscordAdminUserIDs {
+		if v == id {
+			return true
+		}
+	}
+
+	return false
+}
+
 func NewFromUserConfigDir() (*Config, error) {
 	c := &Config{}
 	if err := c.ReloadFromUserConfigDir(); err != nil {

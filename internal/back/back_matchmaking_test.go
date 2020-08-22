@@ -224,7 +224,7 @@ func haveZeldaForfeit(back *Back) error {
 
 	var opponent Player
 	if err := back.transaction(func(tx *sqlx.Tx) (err error) {
-		_, against, err := match.getPlayerAndOpponentEntries(player.ID)
+		_, against, err := match.GetPlayerAndOpponentEntries(player.ID)
 		if err != nil {
 			return fmt.Errorf("cannot get MatchEntry: %s", err)
 		}
