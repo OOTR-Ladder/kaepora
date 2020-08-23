@@ -5,39 +5,39 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: internal/web/templates.go:125
+#: internal/web/templates.go:134
 msgid "Planned"
 msgstr "Planifiée"
 
-#: internal/web/templates.go:128
+#: internal/web/templates.go:137
 msgid "Joinable"
 msgstr "Inscriptions ouvertes"
 
-#: internal/web/templates.go:131
+#: internal/web/templates.go:140
 msgid "Preparing"
 msgstr "En préparation"
 
-#: internal/web/templates.go:134
+#: internal/web/templates.go:143
 msgid "Race in progress"
 msgstr "Course en cours"
 
-#: internal/web/templates.go:137
+#: internal/web/templates.go:146
 msgid "Closed"
 msgstr "Fermée"
 
-#: internal/web/templates.go:186
+#: internal/web/templates.go:195
 msgid "not started"
 msgstr "pas commencé"
 
-#: internal/web/templates.go:188
+#: internal/web/templates.go:197
 msgid "in progress"
 msgstr "en cours"
 
-#: internal/web/templates.go:192
+#: internal/web/templates.go:201
 msgid "before start"
 msgstr "avant départ"
 
-#: internal/web/templates.go:197
+#: internal/web/templates.go:206
 msgid "forfeit (%s)"
 msgstr "forfait (%s)"
 
@@ -396,16 +396,32 @@ msgid "Gossip stones"
 msgstr "Pierres à Potins"
 
 #: resources/web/templates/layouts/spoilers.html:54
+msgid "Entrances"
+msgstr "Entrées / Sorties"
+
+#: resources/web/templates/layouts/spoilers.html:59
 msgid "Settings"
 msgstr "Paramètres"
 
-#: resources/web/templates/layouts/spoilers.html:73
+#: resources/web/templates/layouts/spoilers.html:78
 msgid "Location"
 msgstr "Emplacement"
 
-#: resources/web/templates/layouts/spoilers.html:74
+#: resources/web/templates/layouts/spoilers.html:79
 msgid "Gossip"
 msgstr "Potin"
+
+#: resources/web/templates/layouts/spoilers.html:98
+msgid "Scene"
+msgstr "Scène"
+
+#: resources/web/templates/layouts/spoilers.html:99
+msgid "Exit"
+msgstr "Sortie"
+
+#: resources/web/templates/layouts/spoilers.html:100
+msgid "Destination"
+msgstr "Destination"
 
 #: resources/web/templates/layouts/stats.html:9
 msgid "Ladder & Seed statistics"

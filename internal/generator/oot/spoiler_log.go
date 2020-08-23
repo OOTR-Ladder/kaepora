@@ -13,20 +13,61 @@ type SpoilerLog struct {
 	Seed           string   `json:":seed"`
 	SettingsString string   `json:":settings_string"`
 
-	Settings      map[string]interface{}                    `json:"settings"`
-	ItemPool      map[string]int                            `json:"item_pool"`
-	Locations     map[string]SpoilerLogItem                 `json:"locations"`
-	WOTHLocations map[string]SpoilerLogItem                 `json:":woth_locations"`
-	BarrenRegions []string                                  `json:":barren_regions"`
-	GossipStones  map[string]SpoilerLogGossip               `json:"gossip_stones"`
-	Playthrough   map[json.Number]map[string]SpoilerLogItem `json:":playthrough"`
+	Entrances     map[Exit]string                                       `json:"entrances"`
+	Settings      map[string]interface{}                                `json:"settings"`
+	ItemPool      map[string]int                                        `json:"item_pool"`
+	Locations     map[SpoilerLogLocation]SpoilerLogItem                 `json:"locations"`
+	WOTHLocations map[SpoilerLogLocation]SpoilerLogItem                 `json:":woth_locations"`
+	BarrenRegions []string                                              `json:":barren_regions"`
+	GossipStones  map[string]SpoilerLogGossip                           `json:"gossip_stones"`
+	Playthrough   map[json.Number]map[SpoilerLogLocation]SpoilerLogItem `json:":playthrough"`
+}
+
+// SpoilerLogGossip is the text that is shown when interacting with a Gossip Stone.
+type SpoilerLogGossip struct {
+	Text   string   `json:"text"`
+	Colors []string `json:"colors"`
+}
+
+// Exit is a Scene exit/entrance.
+type Exit string
+
+// Scene, Exit string
+
+type (
+	// SpoilerLogItem is the name of an item that can be randomized in a SpoilerLogLocation.
+	SpoilerLogItem string
+
+	// SpoilerLogLocation is the name of a location where a random item can be placed.
+	SpoilerLogLocation string
+
+	// SpoilerLogItemCategory is a category a SpoilerLogItem can belong to.
+	SpoilerLogItemCategory int
+)
+
+func (e Exit) Scene() string {
+	parts := strings.Split(string(e), " -> ")
+	if len(parts) != 2 {
+		panic(fmt.Errorf("expected 2 parts, got %d", len(parts)))
+	}
+
+	return parts[0]
+}
+
+func (e Exit) Exit() string {
+	parts := strings.Split(string(e), " -> ")
+	if len(parts) != 2 {
+		panic(fmt.Errorf("expected 2 parts, got %d", len(parts)))
+	}
+
+	return parts[1]
 }
 
 // Spheres returns the playthrough as an ordered slice. The playthrough is
 // returned as a map with numeric keys a string which makes iterating over it
 // in order impossible.
-func (s SpoilerLog) Spheres() []map[string]SpoilerLogItem {
-	ret := make([]map[string]SpoilerLogItem, len(s.Playthrough))
+func (s SpoilerLog) Spheres() []map[SpoilerLogLocation]SpoilerLogItem {
+	ret := make([]map[SpoilerLogLocation]SpoilerLogItem, len(s.Playthrough))
 
 	for k := range s.Playthrough {
 		iK, _ := k.Int64()
@@ -35,13 +76,6 @@ func (s SpoilerLog) Spheres() []map[string]SpoilerLogItem {
 
 	return ret
 }
-
-type (
-	// SpoilerLogItem is the name of an item that can be randomized in a SpoilerLogLocation.
-	SpoilerLogItem string
-	// SpoilerLogItemCategory is a category a SpoilerLogItem can belong to.
-	SpoilerLogItemCategory int
-)
 
 // Possible item categories, these are arbitrary.
 const (
@@ -124,10 +158,4 @@ func (i *SpoilerLogItem) UnmarshalJSON(raw []byte) error {
 	}
 
 	return fmt.Errorf("unable to parse item: %s", string(raw))
-}
-
-// SpoilerLogGossip is the text that is shown when interacting with a Gossip Stone.
-type SpoilerLogGossip struct {
-	Text   string   `json:"text"`
-	Colors []string `json:"colors"`
 }

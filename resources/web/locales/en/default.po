@@ -5,39 +5,39 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: internal/web/templates.go:125
+#: internal/web/templates.go:134
 msgid "Planned"
 msgstr ""
 
-#: internal/web/templates.go:128
+#: internal/web/templates.go:137
 msgid "Joinable"
 msgstr ""
 
-#: internal/web/templates.go:131
+#: internal/web/templates.go:140
 msgid "Preparing"
 msgstr ""
 
-#: internal/web/templates.go:134
+#: internal/web/templates.go:143
 msgid "Race in progress"
 msgstr ""
 
-#: internal/web/templates.go:137
+#: internal/web/templates.go:146
 msgid "Closed"
 msgstr ""
 
-#: internal/web/templates.go:186
+#: internal/web/templates.go:195
 msgid "not started"
 msgstr ""
 
-#: internal/web/templates.go:188
+#: internal/web/templates.go:197
 msgid "in progress"
 msgstr ""
 
-#: internal/web/templates.go:192
+#: internal/web/templates.go:201
 msgid "before start"
 msgstr ""
 
-#: internal/web/templates.go:197
+#: internal/web/templates.go:206
 msgid "forfeit (%s)"
 msgstr ""
 
@@ -394,15 +394,31 @@ msgid "Gossip stones"
 msgstr ""
 
 #: resources/web/templates/layouts/spoilers.html:54
+msgid "Entrances"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:59
 msgid "Settings"
 msgstr ""
 
-#: resources/web/templates/layouts/spoilers.html:73
+#: resources/web/templates/layouts/spoilers.html:78
 msgid "Location"
 msgstr ""
 
-#: resources/web/templates/layouts/spoilers.html:74
+#: resources/web/templates/layouts/spoilers.html:79
 msgid "Gossip"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:98
+msgid "Scene"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:99
+msgid "Exit"
+msgstr ""
+
+#: resources/web/templates/layouts/spoilers.html:100
+msgid "Destination"
 msgstr ""
 
 #: resources/web/templates/layouts/stats.html:9
