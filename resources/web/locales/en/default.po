@@ -123,6 +123,14 @@ msgstr ""
 msgid "Region"
 msgstr ""
 
+#: resources/web/templates/includes/stats_items.html:7
+msgid "Name"
+msgstr ""
+
+#: resources/web/templates/includes/stats_items.html:8
+msgid "avg. sphere"
+msgstr ""
+
 #: resources/web/templates/includes/stats_league.html:5
 msgid "Registered players: %d"
 msgstr ""
@@ -199,10 +207,6 @@ msgstr ""
 msgid "Seed completion time"
 msgstr ""
 
-#: resources/web/templates/includes/stats_locations.html:3
-msgid "Items"
-msgstr ""
-
 #: resources/web/templates/includes/stats_locations.html:8
 msgid "% items"
 msgstr ""
@@ -237,10 +241,6 @@ msgstr ""
 
 #: resources/web/templates/includes/stats_locations.html:17
 msgid "% triforce"
-msgstr ""
-
-#: resources/web/templates/includes/stats_settings.html:7
-msgid "Name"
 msgstr ""
 
 #: resources/web/templates/includes/stats_settings.html:8
@@ -431,4 +431,8 @@ msgstr ""
 
 #: resources/web/templates/layouts/stats.html:27
 msgid "Locations"
+msgstr ""
+
+#: resources/web/templates/layouts/stats.html:30
+msgid "Items"
 msgstr ""

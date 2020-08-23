@@ -1,0 +1,21 @@
+{{define "stats_items"}}
+<div class="long-table-container">
+    <h4 class="title">{{t .Locale "Items"}}</h4>
+    <table class="table is-fullwidth js-table-sortable">
+        <thead>
+            <tr>
+                <th class="sticky is-unselectable">{{t .Locale "Name"}}&nbsp;<span>↓</span></th>
+                <th class="sticky has-text-right is-unselectable">{{t .Locale "avg. sphere"}}&nbsp;<span></span></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{- range $v := .Payload.Seed.Spheres -}}
+            <tr>
+                <td>{{$v.Name}}</td>
+                <td>{{printf "%.2f" $v.Pct}}</td>
+            </tr>
+            {{- end -}}
+        </tbody>
+    </table>
+</div>
+{{end}}

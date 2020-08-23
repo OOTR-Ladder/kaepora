@@ -125,6 +125,14 @@ msgstr "Zones vides"
 msgid "Region"
 msgstr "Zone"
 
+#: resources/web/templates/includes/stats_items.html:7
+msgid "Name"
+msgstr "Nom"
+
+#: resources/web/templates/includes/stats_items.html:8
+msgid "avg. sphere"
+msgstr "sphère moy."
+
 #: resources/web/templates/includes/stats_league.html:5
 msgid "Registered players: %d"
 msgstr "Joueurs enregistrés : %d"
@@ -201,10 +209,6 @@ msgstr "Distribution du classement"
 msgid "Seed completion time"
 msgstr "Temps de complétion"
 
-#: resources/web/templates/includes/stats_locations.html:3
-msgid "Items"
-msgstr "Objets"
-
 #: resources/web/templates/includes/stats_locations.html:8
 msgid "% items"
 msgstr "% d'objets"
@@ -240,10 +244,6 @@ msgstr "% chants"
 #: resources/web/templates/includes/stats_locations.html:17
 msgid "% triforce"
 msgstr "% triforce"
-
-#: resources/web/templates/includes/stats_settings.html:7
-msgid "Name"
-msgstr "Nom"
 
 #: resources/web/templates/includes/stats_settings.html:8
 msgid "Value"
@@ -434,3 +434,7 @@ msgstr "Statistiques du Ladder"
 #: resources/web/templates/layouts/stats.html:27
 msgid "Locations"
 msgstr "Emplacements"
+
+#: resources/web/templates/layouts/stats.html:30
+msgid "Items"
+msgstr "Objets"

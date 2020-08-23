@@ -26,6 +26,9 @@
                     <li data-target=".js-stats-tab-locations">
                         <a href="#locations" role="tab" aria-controls="stats-locations">{{t .Locale "Locations"}}</a>
                     </li>
+                    <li data-target=".js-stats-tab-items">
+                        <a href="#items" role="tab" aria-controls="stats-items">{{t .Locale "Items"}}</a>
+                    </li>
 
                     {{if $.Payload.ExtendedStats}}
                     <li data-target=".js-stats-tab-settings">
@@ -47,6 +50,10 @@
 
         <div class="container js-stats-tab-locations is-hidden" role="tabpanel" aria-labelledby="stats-locations">
             {{- template "stats_locations" . -}}
+        </div>
+
+        <div class="container js-stats-tab-items is-hidden" role="tabpanel" aria-labelledby="stats-items">
+            {{- template "stats_items" . -}}
         </div>
 
         {{if $.Payload.ExtendedStats}}

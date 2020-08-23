@@ -68,6 +68,8 @@ func (s *Server) getSeedStats(shortcode string) (statsSeed, error) {
 	barrenRegions := map[string]int{}
 	settings := map[string]map[string]int{} // name => value => count
 	locationsAcc := map[string]map[oot.SpoilerLogItemCategory]int{}
+	sphereSum := map[string]int{}   // total sphere sum by item
+	sphereCount := map[string]int{} // item occurrence count
 
 	if err := s.back.MapSpoilerLogs(shortcode, func(raw io.Reader) error {
 		seedTotal++
@@ -112,6 +114,8 @@ func (s *Server) getSeedStats(shortcode string) (statsSeed, error) {
 			settings[name][fmt.Sprintf("%v", value)]++
 		}
 
+		computeSphereStats(l, sphereSum, sphereCount)
+
 		return nil
 	}); err != nil {
 		return statsSeed{}, err
@@ -124,7 +128,25 @@ func (s *Server) getSeedStats(shortcode string) (statsSeed, error) {
 		WOTHItems: namedPctFromMap(wothItems, seedTotal),
 		Locations: locationPctFromMap(locationsAcc, seedTotal),
 		Settings:  namedPct2DFrom2DMap(settings, seedTotal),
+		Spheres:   namedAvgFromSumAndCount(sphereSum, sphereCount),
 	}, nil
+}
+
+func computeSphereStats(l oot.SpoilerLog, sphereSum, sphereCount map[string]int) {
+	progressive := map[string]int{}
+
+	for k, sphere := range l.Spheres() {
+		for _, item := range sphere {
+			itemName := progressiveItemName(progressive, string(item))
+			switch item.GetCategory() { // nolint:exhaustive
+			case oot.SpoilerLogItemCategorySmallKey, oot.SpoilerLogItemCategoryBossKey:
+				continue
+			}
+
+			sphereSum[itemName] += k
+			sphereCount[itemName]++
+		}
+	}
 }
 
 func progressiveItemName(cache map[string]int, item string) string {
@@ -180,6 +202,19 @@ func namedPctFromMap(m map[string]int, totalInt int) (ret []namedPct) {
 	return ret
 }
 
+func namedAvgFromSumAndCount(sum, count map[string]int) (ret []namedPct) {
+	for k, v := range sum {
+		ret = append(ret, namedPct{
+			Name: k,
+			Pct:  (float64(v) / float64(count[k])),
+		})
+	}
+
+	sort.Sort(byPctDesc(ret))
+
+	return ret
+}
+
 func namedPct2DFrom2DMap(m map[string]map[string]int, totalInt int) (ret []namedPct2D) {
 	total := float64(totalInt)
 
@@ -200,6 +235,7 @@ func namedPct2DFrom2DMap(m map[string]map[string]int, totalInt int) (ret []named
 
 type statsSeed struct {
 	WOTH, WOTHItems, Barren []namedPct
+	Spheres                 []namedPct
 	Locations               []locationPct
 	Settings                []namedPct2D
 }
