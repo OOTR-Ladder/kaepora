@@ -166,9 +166,8 @@ func (bot *Bot) isListeningOn(channelID string) bool {
 
 // handleMessage treats incoming messages as CLI commands and runs the corresponding back code.
 func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
-	// Ignore webooks, self, bots, non-commands.
-	if m.Author == nil || m.Author.ID == s.State.User.ID ||
-		m.Author.Bot || !strings.HasPrefix(m.Content, "!") {
+	// Ignore webooks, self, bots.
+	if m.Author == nil || m.Author.ID == s.State.User.ID || m.Author.Bot {
 		return
 	}
 
@@ -201,6 +200,11 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 }
 
 func (bot *Bot) createWriterAndDispatch(s *discordgo.Session, m *discordgo.Message, authorID string) {
+	// Ignore non-commands.
+	if !strings.HasPrefix(m.Content, "!") {
+		return
+	}
+
 	out, err := newUserChannelWriter(s, authorID)
 	if err != nil {
 		log.Printf("error: could not create channel writer: %s", err)
