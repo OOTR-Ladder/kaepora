@@ -52,94 +52,86 @@ func (s *Schedule) NextBetween(t time.Time, max time.Time) time.Time {
 		return time.Time{}
 	}
 
-	min := max
-	for location, perLoc := range s.prepareTzMap() {
-		local := t.In(location)
-		dow := local.Format("Mon")
-
-		for _, nextHourStr := range perLoc[dow] {
-			nextHour, err := time.ParseInLocation("15:04", nextHourStr, location)
-			if err != nil {
-				log.Printf("error: ignored schedule, can't parse time '%s': %v", nextHourStr, err)
-				continue // HACK, silently ignore misconfiguration
-			}
-
-			localNext := time.Date(
-				local.Year(), local.Month(), local.Day(),
-				nextHour.Hour(), nextHour.Minute(),
-				0, 0, location,
-			)
-
-			if localNext.After(t) && localNext.Before(min) {
-				min = localNext
-			}
+	for _, next := range s.flattenHours(t) {
+		if next.Before(t) {
+			continue
 		}
+
+		if next.After(max) {
+			return time.Time{}
+		}
+
+		return next
 	}
 
-	if min != max {
-		return min
-	}
-
-	// Found nothing, roll over to next day at midnight until max is reached
-	next := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location()).AddDate(0, 0, 1)
-	return s.NextBetween(next, max)
+	// No match, attempt starting at next day.
+	return s.NextBetween(t.AddDate(0, 0, 1), max)
 }
 
-// prepareTzMap parses the per-day schedule into a per-location map.
-func (s *Schedule) prepareTzMap() map[*time.Location]map[string][]string {
-	// tzMap[location][dow] => 15:04
-	tzMap := map[*time.Location]map[string][]string{}
+// flattenHours get all hours in the week of the given time.
+func (s *Schedule) flattenHours(t time.Time) []time.Time {
+	ret := make([]time.Time, 0, s.totalHoursCount())
 
-	for _, wd := range []string{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"} {
-		for _, v := range s.hoursForWeekday(wd) {
-			parts := strings.SplitN(v, " ", 2)
-			if len(parts) < 2 {
-				log.Printf("error: ignored schedule, bad format: '%s'", v)
-				continue // HACK, silently ignore misconfiguration
-			}
+	start := t.AddDate(0, 0, -int(t.Weekday()))
+	for dow := 0; dow < 7; dow++ {
+		day := start.AddDate(0, 0, dow)
 
-			location, err := time.LoadLocation(parts[1])
+		for _, rawHour := range s.hoursForDow(dow) {
+			hourStr, location, err := hourLocation(rawHour)
 			if err != nil {
-				log.Printf("error: ignored schedule, bad location '%s': %v", parts[1], err)
-				continue // HACK, silently ignore misconfiguration
+				log.Printf("error: %s", err)
+				continue
 			}
 
-			if _, ok := tzMap[location]; !ok {
-				tzMap[location] = map[string][]string{}
+			hour, err := time.ParseInLocation("15:04", hourStr, location)
+			if err != nil {
+				log.Printf("error: %s", err)
+				continue
 			}
 
-			tzMap[location][wd] = append(tzMap[location][wd], parts[0])
-			sort.Strings(tzMap[location][wd])
+			ret = append(ret, time.Date(
+				day.Year(), day.Month(), day.Day(),
+				hour.Hour(), hour.Minute(),
+				0, 0, location,
+			))
 		}
 	}
 
-	return tzMap
+	sort.Slice(ret, func(i, j int) bool {
+		return ret[i].Before(ret[j])
+	})
+
+	return ret
+}
+
+// totalHoursCount returns the number of hours set across all days.
+func (s *Schedule) totalHoursCount() int {
+	return len(s.Mon) + len(s.Tue) + len(s.Wed) + len(s.Thu) + len(s.Fri) +
+		len(s.Sat) + len(s.Sun)
+}
+
+func hourLocation(str string) (string, *time.Location, error) {
+	parts := strings.SplitN(str, " ", 2)
+	if len(parts) < 2 {
+		return "", nil, fmt.Errorf("bad format: '%s'", str)
+	}
+
+	location, err := time.LoadLocation(parts[1])
+	if err != nil {
+		return "", nil, fmt.Errorf("bad location '%s': %v", parts[1], err)
+	}
+
+	return parts[0], location, nil
 }
 
 // Next returns the next scheduled date in a week span.
 func (s *Schedule) Next() time.Time {
-	return s.NextBetween(time.Now(), time.Now().AddDate(0, 0, 7))
+	now := time.Now()
+	return s.NextBetween(now, now.AddDate(0, 0, 7))
 }
 
-func (s *Schedule) hoursForWeekday(day string) []string {
-	switch day {
-	case "Mon":
-		return s.Mon
-	case "Tue":
-		return s.Tue
-	case "Wed":
-		return s.Wed
-	case "Thu":
-		return s.Thu
-	case "Fri":
-		return s.Fri
-	case "Sat":
-		return s.Sat
-	case "Sun":
-		return s.Sun
-	default:
-		panic("invalid day: " + day)
-	}
+func (s *Schedule) hoursForDow(dow int) []string {
+	return [][]string{s.Sun, s.Mon, s.Tue, s.Wed, s.Thu, s.Fri, s.Sat}[dow]
 }
 
 func (s *Schedule) Scan(src interface{}) error {

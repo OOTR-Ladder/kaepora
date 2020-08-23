@@ -41,6 +41,26 @@ func TestScheduleNextBetween(t *testing.T) {
 			now:      "2020-04-10 22:00:00-02:00",
 			expected: "2020-04-13 05:00:00+02:00",
 		},
+		{
+			now:      "2020-08-23 00:00:00+00:00",
+			expected: "2020-08-24 05:00:00+02:00",
+		},
+		{
+			now:      "2020-08-24 04:59:00+02:00",
+			expected: "2020-08-24 05:00:00+02:00",
+		},
+	})
+}
+
+func TestScheduleNextMidnight(t *testing.T) {
+	s := back.NewSchedule()
+	s.Mon = []string{"00:00 UTC", "12:00 UTC"}
+
+	testSchedule(t, s, []scheduleTestData{
+		{
+			now:      "2020-08-23 00:00:00+00:00",
+			expected: "2020-08-24 00:00:00+00:00",
+		},
 	})
 }
 
