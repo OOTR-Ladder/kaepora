@@ -14,6 +14,7 @@ import (
 
 const RandomizerName = "oot-randomizer"
 
+// Randomizer is the local OOTR generator.
 type Randomizer struct {
 	version string
 }

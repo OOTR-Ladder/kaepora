@@ -1,4 +1,4 @@
-// package bot handles the Discord bot that talks to the back.Back.
+// Package bot handles the Discord bot that talks to the back.Back.
 // If a bot for another messaging platform is added, it should live in a
 // separate module and this one should be renamed.
 package bot
@@ -37,6 +37,7 @@ type Bot struct {
 	notifications <-chan back.Notification
 }
 
+// New creates a new Discord bot ready to be launched with Serve.
 func New(back *back.Back, config *config.Config) (*Bot, error) {
 	dg, err := discordgo.New("Bot " + config.DiscordToken)
 	if err != nil {

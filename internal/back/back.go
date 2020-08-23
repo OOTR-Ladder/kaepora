@@ -1,4 +1,4 @@
-// package back contains all the business logic.
+// Package back contains all the business logic.
 package back
 
 import (

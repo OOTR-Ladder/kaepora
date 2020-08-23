@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// NormalizeStreamURL returns the "canonical" URL for a given livestream URL.
 func NormalizeStreamURL(str string) (string, error) {
 	// Allow URL without schemes, without a scheme the host is parsed as part
 	// of the path.

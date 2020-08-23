@@ -126,6 +126,7 @@ type Server struct {
 	config *config.Config
 }
 
+// NewServer creates a new HTTP server ready to listen.
 func NewServer(back *back.Back, config *config.Config) (*Server, error) {
 	baseDir, err := getResourcesDir()
 	if err != nil {
