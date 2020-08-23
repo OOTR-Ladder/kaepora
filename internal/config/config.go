@@ -24,6 +24,8 @@ type Config struct {
 	Domain string
 }
 
+// IsDiscordIDBanned returns true if the given Discord user ID is a banned
+// from the ladder, meaning he can't even talk to the bot.
 func (c *Config) IsDiscordIDBanned(id string) bool {
 	for _, v := range c.DiscordBannedUserIDs {
 		if v == id {
@@ -34,6 +36,8 @@ func (c *Config) IsDiscordIDBanned(id string) bool {
 	return false
 }
 
+// IsDiscordIDAdmin returns true if the given Discord user ID is a Kaepora
+// admin, meaning he has access to extra data and dangerous commands.
 func (c *Config) IsDiscordIDAdmin(id string) bool {
 	for _, v := range c.DiscordAdminUserIDs {
 		if v == id {

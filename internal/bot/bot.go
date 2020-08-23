@@ -79,30 +79,6 @@ func New(back *back.Back, config *config.Config) (*Bot, error) {
 	return bot, nil
 }
 
-// isAdmin returns true if the given Discord user ID is a Kaepora admin,
-// meaning he has access to extra data and dangerous commands.
-func (bot *Bot) isAdmin(discordID string) bool {
-	for _, v := range bot.config.DiscordAdminUserIDs {
-		if discordID == v {
-			return true
-		}
-	}
-
-	return false
-}
-
-// isBanned returns true if the given Discord user ID is a banned from the
-// ladder, meaning he can't even talk to the bot.
-func (bot *Bot) isBanned(discordID string) bool {
-	for _, v := range bot.config.DiscordBannedUserIDs {
-		if discordID == v {
-			return true
-		}
-	}
-
-	return false
-}
-
 // Serve runs the Discord bot until the done channel is closed.
 func (bot *Bot) Serve(wg *sync.WaitGroup, done <-chan struct{}) {
 	log.Println("info: starting Discord bot")
@@ -179,7 +155,8 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 
 	// Only act on PMs and a predetermined set of channels.
 	if channel.Type == discordgo.ChannelTypeGuildText {
-		bypass := m.Message.Content == `!dev addlisten` && bot.isAdmin(m.Author.ID) // HACK
+		// Let the command that adds a channel through.
+		bypass := m.Message.Content == `!dev addlisten` && bot.config.IsDiscordIDAdmin(m.Author.ID)
 		if !bypass && !bot.isListeningOn(m.ChannelID) {
 			return
 		}
@@ -239,7 +216,7 @@ func (bot *Bot) dispatch(m *discordgo.Message, w *channelWriter) error {
 		}
 	}()
 
-	if bot.isBanned(m.Author.ID) {
+	if bot.config.IsDiscordIDBanned(m.Author.ID) {
 		return util.ErrPublic("your account has been banned")
 	}
 
