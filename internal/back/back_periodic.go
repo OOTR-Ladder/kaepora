@@ -290,18 +290,18 @@ func getMatchSessionsToStart(tx *sqlx.Tx) ([]MatchSession, error) {
 	return sessions, nil
 }
 
+// getMatchSessionsToEnd returns all non-closed sessions that are both stale
+// (we are past their StartDate) and have no matches in progress.
 func getMatchSessionsToEnd(tx *sqlx.Tx) ([]MatchSession, map[util.UUIDAsBlob][]Match, error) {
 	query := `
-    SELECT MatchSession.* FROM MatchSession
-    WHERE
-        DATETIME(MatchSession.StartDate) < DATETIME(?)
-        AND MatchSession.Status IN(?, ?)`
+        SELECT MatchSession.* FROM MatchSession
+        WHERE DATETIME(MatchSession.StartDate) < DATETIME(?)
+              AND MatchSession.Status != ?`
 	var sessions []MatchSession
 	if err := tx.Select(
 		&sessions, query,
 		util.TimeAsDateTimeTZ(time.Now()),
-		MatchSessionStatusInProgress,
-		MatchSessionStatusJoinable, // cleanup that should only happen in dev
+		MatchSessionStatusClosed,
 	); err != nil {
 		return nil, nil, err
 	}
@@ -316,8 +316,9 @@ loop:
 			return nil, nil, err
 		}
 
-		// Should not happen, but a session with no match cannot even be in progress so close it.
+		// A stale session with no match should only happen in dev.
 		if len(matches) == 0 {
+			log.Printf("warning: closing stale session with no match:  %s", sessions[k].ID)
 			ret = append(ret, sessions[k])
 			continue
 		}
