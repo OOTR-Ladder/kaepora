@@ -241,7 +241,7 @@ func (b *Back) sendMatchEndNotification(
 	}
 
 	if opponent.StreamURL != "" {
-		notif.Printf("Your opponent stream: %s\n", opponent.StreamURL)
+		notif.Printf("Your opponent stream: <%s>\n", opponent.StreamURL)
 	}
 
 	b.notifications <- notif
@@ -275,10 +275,10 @@ func (b *Back) sendMatchSeedNotification(
 
 			notif.Print(
 				"Here is your seed in _Patch_ format. " +
-					"You can use https://ootrandomizer.com/generator to patch your ROM.\n",
+					"You can use <https://ootrandomizer.com/generator> to patch your ROM.\n",
 			)
 		} else {
-			notif.Printf("Here is your seed: %s\n", url)
+			notif.Printf("Here is your seed: <%s>\n", url)
 		}
 
 		if hash := hashFromSpoilerLog(out.SpoilerLog); hash != "" {
@@ -495,7 +495,7 @@ func (b *Back) sendSessionRecapNotification(
 		notif.Printf("There are still %d race(s) in progress.\n", unknown)
 		notif.Printf("You can get an up to date recap with `!recap %s`.", league.ShortCode)
 	} else {
-		notif.Printf("Get the seeds and spoiler logs on https://ootrladder.com/en/sessions/%s", session.ID)
+		notif.Printf("Get the seeds and spoiler logs on <https://ootrladder.com/en/sessions/%s>", session.ID)
 	}
 
 	b.notifications <- notif
@@ -608,7 +608,7 @@ func (b *Back) sendSpoilerLogNotification(player Player, matchID util.UUIDAsBlob
 		return
 	}
 
-	notif.Printf("Here is the spoiler log for your seed: %s", signed)
+	notif.Printf("Here is the spoiler log for your seed: <%s>", signed)
 
 	b.notifications <- notif
 }
