@@ -57,8 +57,6 @@ func (a byName) Swap(i, j int) {
 	a[i], a[j] = a[j], a[i]
 }
 
-// TODO: fix funlen.
-// nolint:funlen
 func (s *Server) getSeedStats(shortcode string) (statsSeed, error) {
 	start := time.Now()
 	seedTotal := 0
@@ -80,40 +78,13 @@ func (s *Server) getSeedStats(shortcode string) (statsSeed, error) {
 			return err
 		}
 
-		progressive := map[string]int{}
-		for location, item := range l.WOTHLocations {
-			wothLocations[string(location)]++
-
-			if strings.HasPrefix(string(item), "Progressive") {
-				wothItems[progressiveItemName(progressive, string(item))]++
-			} else {
-				wothItems[string(item)]++
-			}
-		}
-
 		for _, name := range l.BarrenRegions {
 			barrenRegions[name]++
 		}
 
-		for name, item := range l.Locations {
-			if _, ok := locationsAcc[string(name)]; !ok {
-				locationsAcc[string(name)] = make(
-					map[oot.SpoilerLogItemCategory]int,
-					oot.SpoilerLogItemCategoryCount,
-				)
-			}
-
-			locationsAcc[string(name)][item.GetCategory()]++
-		}
-
-		for name, value := range l.Settings {
-			if _, ok := settings[name]; !ok {
-				settings[name] = map[string]int{}
-			}
-
-			settings[name][fmt.Sprintf("%v", value)]++
-		}
-
+		computeWOTHStats(l, wothLocations, wothItems)
+		computeLocationStats(l, locationsAcc)
+		computeSettingsStats(l, settings)
 		computeSphereStats(l, sphereSum, sphereCount)
 
 		return nil
@@ -130,6 +101,42 @@ func (s *Server) getSeedStats(shortcode string) (statsSeed, error) {
 		Settings:  namedPct2DFrom2DMap(settings, seedTotal),
 		Spheres:   namedAvgFromSumAndCount(sphereSum, sphereCount),
 	}, nil
+}
+
+func computeWOTHStats(l oot.SpoilerLog, wothLocations, wothItems map[string]int) {
+	progressive := map[string]int{}
+	for location, item := range l.WOTHLocations {
+		wothLocations[string(location)]++
+
+		if strings.HasPrefix(string(item), "Progressive") {
+			wothItems[progressiveItemName(progressive, string(item))]++
+		} else {
+			wothItems[string(item)]++
+		}
+	}
+}
+
+func computeLocationStats(l oot.SpoilerLog, locationsAcc map[string]map[oot.SpoilerLogItemCategory]int) {
+	for name, item := range l.Locations {
+		if _, ok := locationsAcc[string(name)]; !ok {
+			locationsAcc[string(name)] = make(
+				map[oot.SpoilerLogItemCategory]int,
+				oot.SpoilerLogItemCategoryCount,
+			)
+		}
+
+		locationsAcc[string(name)][item.GetCategory()]++
+	}
+}
+
+func computeSettingsStats(l oot.SpoilerLog, settings map[string]map[string]int) {
+	for name, value := range l.Settings {
+		if _, ok := settings[name]; !ok {
+			settings[name] = map[string]int{}
+		}
+
+		settings[name][fmt.Sprintf("%v", value)]++
+	}
 }
 
 func computeSphereStats(l oot.SpoilerLog, sphereSum, sphereCount map[string]int) {
