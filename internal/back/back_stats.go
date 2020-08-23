@@ -7,6 +7,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// StatsMisc holds miscellaneous stats about a league.
 type StatsMisc struct {
 	RegisteredPlayers, RankedPlayers, PlayersOnLeaderboard int
 	SeedsPlayed, Forfeits, DoubleForfeits                  int
@@ -90,6 +91,8 @@ func (b *Back) GetMiscStats(shortcode string) (misc StatsMisc, _ error) { // nol
 	return misc, nil
 }
 
+// MapSpoilerLogs applies a function on all the spoilers log of completed
+// matches of a league.
 func (b *Back) MapSpoilerLogs(
 	shortcode string,
 	cb func(io.Reader) error,

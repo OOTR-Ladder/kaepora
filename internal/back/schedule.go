@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// A Schedule is a per-weekday set hour local times at which sessions can occur.
 type Schedule struct {
 	Mon []string
 	Tue []string
@@ -32,6 +33,7 @@ func NewSchedule() Schedule {
 	}
 }
 
+// SetAll sets the same to of hours to all weekdays (the slice is not copied).
 func (s *Schedule) SetAll(hours []string) {
 	s.Mon = hours
 	s.Tue = hours
@@ -42,6 +44,8 @@ func (s *Schedule) SetAll(hours []string) {
 	s.Sun = hours
 }
 
+// NextBetween returns the first event occurring between to point in time or a
+// zero time if none is found.
 func (s *Schedule) NextBetween(t time.Time, max time.Time) time.Time {
 	t, max = t.UTC(), max.UTC()
 	if t.After(max) {
@@ -112,7 +116,7 @@ func (s *Schedule) prepareTzMap() map[*time.Location]map[string][]string {
 	return tzMap
 }
 
-// Returns the next scheduled date in a week span.
+// Next returns the next scheduled date in a week span.
 func (s *Schedule) Next() time.Time {
 	return s.NextBetween(time.Now(), time.Now().AddDate(0, 0, 7))
 }

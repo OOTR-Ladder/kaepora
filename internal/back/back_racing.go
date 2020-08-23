@@ -10,20 +10,8 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func (b *Back) JoinCurrentMatchSession(
-	player Player, league League,
-) (MatchSession, error) {
-	var ret MatchSession
-	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
-		ret, err = joinCurrentMatchSessionTx(tx, player, league)
-		return err
-	}); err != nil {
-		return MatchSession{}, err
-	}
-
-	return ret, nil
-}
-
+// JoinCurrentMatchSessionByShortcode adds a player to the currently joinable
+// session of a league. It returns the session and league that were joined.
 func (b *Back) JoinCurrentMatchSessionByShortcode(player Player, shortcode string) (
 	session MatchSession,
 	league League,
@@ -91,10 +79,12 @@ func ensurePlayerHasNoActiveMatch(tx *sqlx.Tx, playerID util.UUIDAsBlob) error {
 	return util.ErrPublic("you already have a race in progress")
 }
 
+// CompleteActiveMatch ends the timer of the current player match entry.
 func (b *Back) CompleteActiveMatch(player Player) (Match, error) {
 	return b.endActiveMatch(player, false)
 }
 
+// ForfeitActiveMatch forfeits the current player match entry.
 func (b *Back) ForfeitActiveMatch(player Player) (Match, error) {
 	return b.endActiveMatch(player, true)
 }
@@ -167,6 +157,9 @@ func (b *Back) sendPrivateRecapForSessionID(sessionID util.UUIDAsBlob, player Pl
 	})
 }
 
+// CancelActiveMatchSession removes the player from the currently joinable
+// session, it cannot be called if the session has begun its preparation
+// phase.
 func (b *Back) CancelActiveMatchSession(player Player) (MatchSession, error) {
 	var ret MatchSession
 
@@ -179,7 +172,7 @@ func (b *Back) CancelActiveMatchSession(player Player) (MatchSession, error) {
 			return err
 		}
 
-		if err := session.CanCancel(); err != nil {
+		if err := session.canCancel(); err != nil {
 			return err
 		}
 

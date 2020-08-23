@@ -10,8 +10,8 @@ import (
 	glicko "github.com/zelenin/go-glicko2"
 )
 
-// TODO seems like an OK cutoff right now, but will need to be change
-// later I've seen a RD of 50 being the average for active players.
+// DeviationThreshold is value under which players must stay to appear on the
+// leaderboards.
 const DeviationThreshold = 200
 
 type PlayerRating struct {
