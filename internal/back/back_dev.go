@@ -9,18 +9,17 @@ import (
 	"gopkg.in/guregu/null.v4"
 )
 
-func (b *Back) SendDevSeed(
-	discordID string,
-	leagueShortCode string,
-	seed string,
-) error {
+// SendDevSeed generates a seed from a league settings and sends it over
+// Discord. This was originally for dev purposes but is now accessible to
+// everyone.
+func (b *Back) SendDevSeed(discordID string, leagueShortCode string, seed string) error {
 	return b.transaction(func(tx *sqlx.Tx) error {
 		league, err := getLeagueByShortCode(tx, leagueShortCode)
 		if err != nil {
 			return fmt.Errorf("could not find League: %w", err)
 		}
 
-		gen, err := b.generatorFactory.NewGenerator(league.Generator)
+		gen, err := b.GetGenerator(league.Generator)
 		if err != nil {
 			return err
 		}
@@ -51,6 +50,7 @@ func (b *Back) SendDevSeed(
 	})
 }
 
+// LoadFixtures fills the DB with dev data.
 func (b *Back) LoadFixtures() error {
 	game := NewGame("The Legend of Zelda: Ocarina of Time")
 	leagues := []League{

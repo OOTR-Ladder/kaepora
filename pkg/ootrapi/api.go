@@ -1,4 +1,4 @@
-// package ootrapi is an API client for the ootrandomizer.com HTTP API v2
+// Package ootrapi is an API client for the ootrandomizer.com HTTP API v2.
 package ootrapi
 
 import (
@@ -17,12 +17,14 @@ import (
 	"golang.org/x/time/rate"
 )
 
+// API holds the necessary state to communicate with the OOTR API.
 type API struct {
 	http    http.Client
 	key     string
 	limiter *rate.Limiter
 }
 
+// New creates a new authenticated, rate-limited access point to the API.
 func New(key string) *API {
 	return &API{
 		// We're allowed 20 requests per 10 second
@@ -34,10 +36,13 @@ func New(key string) *API {
 	}
 }
 
+// SeedStatus represents the step at which seedgen currently is for a seed.
 type SeedStatus int
 
+// Possible values for SeedStatus.
 const (
-	// the API zero value being a valid value, we need another invalid value.
+	// SeedStatusInvalid is our internal invalid default value, the API zero
+	// value being a valid value.
 	SeedStatusInvalid SeedStatus = -1
 
 	SeedStatusGenerating   SeedStatus = 0 // in progress
@@ -46,6 +51,7 @@ const (
 	SeedStatusFailed       SeedStatus = 3 // generation failed, this won't fail gracefully for now
 )
 
+// IsValid returns false is the value can't be returned by the API.
 func (s SeedStatus) IsValid() bool {
 	return s >= 0 && s <= 3
 }
@@ -62,6 +68,7 @@ func (api *API) getURL(subPath string, q url.Values) string {
 	return u.String()
 }
 
+// CreateSeed starts a new seedgen using the given OOTR version and settings.
 func (api *API) CreateSeed(version string, settings map[string]interface{}) (string, error) {
 	log.Print("debug: creating API seed")
 
@@ -101,6 +108,7 @@ func (api *API) CreateSeed(version string, settings map[string]interface{}) (str
 	return response.ID, nil
 }
 
+// GetSeedStatus returns the step at which seedgen is for a given seed ID.
 func (api *API) GetSeedStatus(id string) (SeedStatus, error) {
 	log.Printf("debug: fetching API seed status for ID  %s", id)
 
@@ -128,6 +136,7 @@ func (api *API) GetSeedStatus(id string) (SeedStatus, error) {
 	return res.Status, nil
 }
 
+// GetSeedSpoilerLog returns the raw JSON spoiler log for a generated seed.
 func (api *API) GetSeedSpoilerLog(id string) ([]byte, error) {
 	log.Printf("debug: fetching API seed spoiler log for ID  %s", id)
 
@@ -147,6 +156,7 @@ func (api *API) GetSeedSpoilerLog(id string) ([]byte, error) {
 	return []byte(res.SpoilerLog), nil
 }
 
+// GetSeedPatch returns the raw binary patch that can be used to generate an OOTR rom.
 func (api *API) GetSeedPatch(id string) ([]byte, error) {
 	log.Printf("debug: fetching API seed patch for ID  %s", id)
 
@@ -165,6 +175,9 @@ func (api *API) GetSeedPatch(id string) ([]byte, error) {
 	return ret, nil
 }
 
+// UnlockSeedSpoilerLog allows access to the seed spoiler log from the OOTR
+// website. This is only useful for seeds generated with the API-specific
+// 'locked' parameter.
 func (api *API) UnlockSeedSpoilerLog(id string) error {
 	log.Printf("debug: unlocking API seed spoiler logs for ID  %s", id)
 

@@ -1,4 +1,4 @@
-// package bot handles the Discord bot that talks to the back.Back.
+// Package bot handles the Discord bot that talks to the back.Back.
 // If a bot for another messaging platform is added, it should live in a
 // separate module and this one should be renamed.
 package bot
@@ -37,6 +37,7 @@ type Bot struct {
 	notifications <-chan back.Notification
 }
 
+// New creates a new Discord bot ready to be launched with Serve.
 func New(back *back.Back, config *config.Config) (*Bot, error) {
 	dg, err := discordgo.New("Bot " + config.DiscordToken)
 	if err != nil {
@@ -77,30 +78,6 @@ func New(back *back.Back, config *config.Config) (*Bot, error) {
 	}
 
 	return bot, nil
-}
-
-// isAdmin returns true if the given Discord user ID is a Kaepora admin,
-// meaning he has access to extra data and dangerous commands.
-func (bot *Bot) isAdmin(discordID string) bool {
-	for _, v := range bot.config.DiscordAdminUserIDs {
-		if discordID == v {
-			return true
-		}
-	}
-
-	return false
-}
-
-// isBanned returns true if the given Discord user ID is a banned from the
-// ladder, meaning he can't even talk to the bot.
-func (bot *Bot) isBanned(discordID string) bool {
-	for _, v := range bot.config.DiscordBannedUserIDs {
-		if discordID == v {
-			return true
-		}
-	}
-
-	return false
 }
 
 // Serve runs the Discord bot until the done channel is closed.
@@ -166,9 +143,8 @@ func (bot *Bot) isListeningOn(channelID string) bool {
 
 // handleMessage treats incoming messages as CLI commands and runs the corresponding back code.
 func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
-	// Ignore webooks, self, bots, non-commands.
-	if m.Author == nil || m.Author.ID == s.State.User.ID ||
-		m.Author.Bot || !strings.HasPrefix(m.Content, "!") {
+	// Ignore webooks, self, bots.
+	if m.Author == nil || m.Author.ID == s.State.User.ID || m.Author.Bot {
 		return
 	}
 
@@ -180,7 +156,8 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 
 	// Only act on PMs and a predetermined set of channels.
 	if channel.Type == discordgo.ChannelTypeGuildText {
-		bypass := m.Message.Content == `!dev addlisten` && bot.isAdmin(m.Author.ID) // HACK
+		// Let the command that adds a channel through.
+		bypass := m.Message.Content == `!dev addlisten` && bot.config.IsDiscordIDAdmin(m.Author.ID)
 		if !bypass && !bot.isListeningOn(m.ChannelID) {
 			return
 		}
@@ -201,6 +178,11 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 }
 
 func (bot *Bot) createWriterAndDispatch(s *discordgo.Session, m *discordgo.Message, authorID string) {
+	// Ignore non-commands.
+	if !strings.HasPrefix(m.Content, "!") {
+		return
+	}
+
 	out, err := newUserChannelWriter(s, authorID)
 	if err != nil {
 		log.Printf("error: could not create channel writer: %s", err)
@@ -235,7 +217,7 @@ func (bot *Bot) dispatch(m *discordgo.Message, w *channelWriter) error {
 		}
 	}()
 
-	if bot.isBanned(m.Author.ID) {
+	if bot.config.IsDiscordIDBanned(m.Author.ID) {
 		return util.ErrPublic("your account has been banned")
 	}
 

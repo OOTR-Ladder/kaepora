@@ -332,7 +332,7 @@ func getActiveMatchAndEntriesForPlayer(tx *sqlx.Tx, player Player) (
 		return match, self, opponent, fmt.Errorf("unable to get active session: %w", err)
 	}
 
-	if err := session.CanForfeit(); err != nil {
+	if err := session.canForfeit(); err != nil {
 		return match, self, opponent, err
 	}
 

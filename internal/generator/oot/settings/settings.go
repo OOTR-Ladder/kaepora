@@ -9,8 +9,6 @@ import (
 	"sort"
 )
 
-const DefaultName = "settings-randomizer.json"
-
 // Settings holds every setting we want to randomize, along with their possible
 // values, cost, and a probability weight.
 // The cost is an arbitrary cost out of a budget of an arbitrary number of
@@ -22,6 +20,10 @@ const DefaultName = "settings-randomizer.json"
 // TODO check "warp_songs" and "spawn_positions" in the fork.
 type Settings map[string]Setting // name (json key) => possible values
 
+// DefaultName is the default name of the file containing the shuffled settings parameters.
+const DefaultName = "settings-randomizer.json"
+
+// Load loads shuffled settings parameters from file.
 func Load(path string) (Settings, error) {
 	var ret Settings
 	f, err := os.Open(path)

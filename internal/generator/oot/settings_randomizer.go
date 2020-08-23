@@ -17,6 +17,7 @@ const (
 	SettingsCostBudget     = 20
 )
 
+// SettingsRandomizer is the "Shuffled Settings" using the local OOTR.
 type SettingsRandomizer struct {
 	oot *Randomizer
 }

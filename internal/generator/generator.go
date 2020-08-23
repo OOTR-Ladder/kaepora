@@ -1,8 +1,7 @@
+// Package generator holds all possible randomized seed generators.
 package generator
 
-import (
-	"encoding/json"
-)
+import "encoding/json"
 
 // Output is the the full set of data that comes out of a generator.
 // Mostly here to avoid having to return n fields.
@@ -12,11 +11,14 @@ type Output struct {
 	SpoilerLog []byte
 }
 
+// Generator is a generic randomized game "seed" generator.
 type Generator interface {
+	// Generate creates the randomized game and its solution.
 	Generate(settings, seed string) (Output, error)
 
 	// IsExternal returns true if the generation is not done locally but
-	// through an external service (API).
+	// through an external service (API). Internal generators are rate-limited
+	// based on local resources.
 	IsExternal() bool
 
 	// GetDownloadURL returns an URL where the user can download its seed.
@@ -29,6 +31,7 @@ type Generator interface {
 	UnlockSpoilerLog(stat []byte) error
 }
 
+// Test is a noop generator for testing purposes.
 type Test struct{}
 
 func NewTest() *Test {

@@ -8,6 +8,7 @@ import (
 
 const SettingsRandomizerAPIName = "oot-settings-randomizer-api"
 
+// SettingsRandomizerAPI is the "Shuffled Settings" using the OOTR API.
 type SettingsRandomizerAPI struct {
 	oot *RandomizerAPI
 }

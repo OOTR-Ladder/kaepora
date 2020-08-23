@@ -9,6 +9,9 @@ import (
 	"gopkg.in/guregu/null.v4"
 )
 
+// A League is a set of rules, randomizer settings, and scheduling parameters.
+// All match sessions belong to a League which announces them in a specific
+// discord channel.
 type League struct {
 	ID        util.UUIDAsBlob
 	CreatedAt util.TimeAsTimestamp

@@ -13,7 +13,7 @@ import (
 
 // nolint:funlen
 func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error {
-	if !bot.isAdmin(m.Author.ID) {
+	if !bot.config.IsDiscordIDAdmin(m.Author.ID) {
 		return fmt.Errorf("!dev command ran by a non-admin: %v", args)
 	}
 	if len(args) < 1 {

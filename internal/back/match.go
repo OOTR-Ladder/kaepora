@@ -51,11 +51,14 @@ func NewMatch(tx *sqlx.Tx, session MatchSession, seed string) (Match, error) {
 	}, nil
 }
 
+// IsDoubleForfeit returns true if both players forfeited the match.
 func (m *Match) IsDoubleForfeit() bool {
 	return m.Entries[0].Status == MatchEntryStatusForfeit &&
 		m.Entries[1].Status == MatchEntryStatusForfeit
 }
 
+// WinningEntry returns the entry of the winning player or the first one if
+// the match is a draw.
 func (m *Match) WinningEntry() MatchEntry {
 	if m.Entries[1].HasWon() {
 		return m.Entries[1]
@@ -64,6 +67,8 @@ func (m *Match) WinningEntry() MatchEntry {
 	return m.Entries[0]
 }
 
+// LosingEntry returns the entry of the losing player or the second one if the
+// match is a draw.
 func (m *Match) LosingEntry() MatchEntry {
 	if m.Entries[1].HasWon() {
 		return m.Entries[0]
@@ -76,6 +81,7 @@ func (m *Match) end() {
 	m.EndedAt = util.NewNullTimeAsTimestamp(time.Now())
 }
 
+// HasEnded returns true if both players ended their race.
 func (m *Match) HasEnded() bool {
 	return m.EndedAt.Valid
 }

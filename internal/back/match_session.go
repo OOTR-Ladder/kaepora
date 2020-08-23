@@ -12,15 +12,19 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// Offsets from a MatchSession StartDate at which at which the status changes
+// (mind the negative offsets).
 const (
-	// joinable after T+offset (mind the negative offsets).
+	// joinable after T+offset .
 	MatchSessionJoinableAfterOffset = -1 * time.Hour
 	// player receive seeds at T+offset and can no longer join/cancel.
 	MatchSessionPreparationOffset = -15 * time.Minute
 )
 
+// MatchSessionStatus is the state of a session in its lifecycle.
 type MatchSessionStatus int
 
+// Possible MatchSessionStatus values.
 const (
 	MatchSessionStatusWaiting    MatchSessionStatus = 0 // waiting for StartDate - 30m
 	MatchSessionStatusJoinable   MatchSessionStatus = 1 // waiting for runners to join
@@ -210,6 +214,7 @@ loop:
 	}
 }
 
+// RemovePlayerID removes a player from the list of joining players.
 func (s *MatchSession) RemovePlayerID(toRemove uuid.UUID) {
 	filtered := make([]uuid.UUID, 0, len(s.PlayerIDs)-1)
 	for k := range s.PlayerIDs {
@@ -223,7 +228,8 @@ func (s *MatchSession) RemovePlayerID(toRemove uuid.UUID) {
 	s.PlayerIDs = filtered
 }
 
-func (s *MatchSession) CanCancel() error {
+// canCancel returns nil if a player can cancel joining the session.
+func (s *MatchSession) canCancel() error {
 	if s.Status == MatchSessionStatusWaiting {
 		// unreachable
 		return util.ErrPublic("you can't cancel a race that is not yet open to join")
@@ -241,8 +247,9 @@ func (s *MatchSession) CanCancel() error {
 	return nil
 }
 
-func (s *MatchSession) CanForfeit() error {
-	if err := s.CanCancel(); err == nil {
+// canForfeit returns nil if the player can forfeit its Match in the session.
+func (s *MatchSession) canForfeit() error {
+	if err := s.canCancel(); err == nil {
 		return util.ErrPublic("you can `!cancel` the current race wihout taking a loss!")
 	}
 

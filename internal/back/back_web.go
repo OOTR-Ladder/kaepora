@@ -12,6 +12,8 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// GetLeaderboardForShortcode returns the full ordered leaderboard of a
+// league, filtered by a Rating Deviation threshold.
 func (b *Back) GetLeaderboardForShortcode(shortcode string, maxDeviation int) (out []LeaderboardEntry, _ error) {
 	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
 		out, err = b.getLeaderboardForShortcode(tx, shortcode, maxDeviation)
@@ -274,6 +276,7 @@ type PlayerStats struct {
 	Performances []PlayerPerformance
 }
 
+// GetPlayerStats computes and returns the stats of a single player.
 // nolint:funlen
 func (b *Back) GetPlayerStats(playerID util.UUIDAsBlob) (stats PlayerStats, _ error) {
 	if err := b.transaction(func(tx *sqlx.Tx) (err error) {

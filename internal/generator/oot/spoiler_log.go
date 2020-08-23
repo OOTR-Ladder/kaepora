@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// SpoilerLog is a the solution to a OOTR seed.
 type SpoilerLog struct {
 	Version        string   `json:":version"`
 	FileHash       []string `json:"file_hash"`
@@ -36,10 +37,13 @@ func (s SpoilerLog) Spheres() []map[string]SpoilerLogItem {
 }
 
 type (
-	SpoilerLogItem         string
+	// SpoilerLogItem is the name of an item that can be randomized in a SpoilerLogLocation.
+	SpoilerLogItem string
+	// SpoilerLogItemCategory is a category a SpoilerLogItem can belong to.
 	SpoilerLogItemCategory int
 )
 
+// Possible item categories, these are arbitrary.
 const (
 	SpoilerLogItemCategoryItem SpoilerLogItemCategory = iota
 	SpoilerLogItemCategoryBossKey
@@ -55,6 +59,7 @@ const (
 	SpoilerLogItemCategoryCount // keep this last
 )
 
+// GetCategory returns the category the item belongs to.
 func (i SpoilerLogItem) GetCategory() SpoilerLogItemCategory {
 	if strings.HasPrefix(string(i), "Small Key") {
 		return SpoilerLogItemCategorySmallKey
@@ -121,6 +126,7 @@ func (i *SpoilerLogItem) UnmarshalJSON(raw []byte) error {
 	return fmt.Errorf("unable to parse item: %s", string(raw))
 }
 
+// SpoilerLogGossip is the text that is shown when interacting with a Gossip Stone.
 type SpoilerLogGossip struct {
 	Text   string   `json:"text"`
 	Colors []string `json:"colors"`

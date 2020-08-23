@@ -1,4 +1,4 @@
-// package back contains all the business logic.
+// Package back contains all the business logic.
 package back
 
 import (
@@ -31,6 +31,7 @@ type Back struct {
 	countingDown map[util.UUIDAsBlob]struct{}
 }
 
+// New creates a new ladder backend ready to be run with Run.
 func New(sqlDriver, sqlDSN string, config *config.Config) (*Back, error) {
 	// Why even bother converting names? A single greppable string across all
 	// your source code is better than any odd conversion scheme you could ever
@@ -53,6 +54,7 @@ func New(sqlDriver, sqlDSN string, config *config.Config) (*Back, error) {
 	}, nil
 }
 
+// GetGenerator returns a new Generator by name.
 func (b *Back) GetGenerator(name string) (generator.Generator, error) {
 	return b.generatorFactory.NewGenerator(name)
 }

@@ -12,11 +12,13 @@ func (e ErrPublic) Error() string {
 	return string(e)
 }
 
+// Is implements the error interface.
 func (e ErrPublic) Is(v error) bool {
 	_, ok := v.(ErrPublic)
 	return ok
 }
 
+// ConcatErrors returns an error if errs contains a single non-nil error.
 func ConcatErrors(errs []error) error {
 	if len(errs) == 0 {
 		return nil

@@ -265,7 +265,7 @@ func haveZFGBeLate(back *Back, session MatchSession) error {
 		return err
 	}
 
-	if _, err := back.JoinCurrentMatchSession(player, league); err == nil {
+	if _, _, err := back.JoinCurrentMatchSessionByShortcode(player, league.ShortCode); err == nil {
 		return errors.New("expected an error when joining MatchSessionStatusPreparing")
 	}
 

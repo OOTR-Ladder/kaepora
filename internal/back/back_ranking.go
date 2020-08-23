@@ -174,6 +174,7 @@ func (b *Back) closeRatingPeriod(
 	return nil
 }
 
+// Rerank removes and regenerates all rankings for a given league.
 func (b *Back) Rerank(shortcode string) error {
 	var (
 		league          League

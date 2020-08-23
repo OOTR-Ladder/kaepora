@@ -14,6 +14,7 @@ import (
 
 const RandomizerAPIName = "oot-randomizer-api"
 
+// RandomizerAPI is the remote generator using the OOTR API.
 type RandomizerAPI struct {
 	version string
 	api     *ootrapi.API

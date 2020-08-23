@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 )
 
+// Config holds the state shared by all components of the ladder. The
+// configuration is read from file and overridden with env vars.
 type Config struct {
 	// DiscordListenIDs is a list of channel ID where the bot will listen and
 	// accept commands. PMs are always listened to.
@@ -24,6 +26,8 @@ type Config struct {
 	Domain string
 }
 
+// IsDiscordIDBanned returns true if the given Discord user ID is a banned
+// from the ladder, meaning he can't even talk to the bot.
 func (c *Config) IsDiscordIDBanned(id string) bool {
 	for _, v := range c.DiscordBannedUserIDs {
 		if v == id {
@@ -34,6 +38,8 @@ func (c *Config) IsDiscordIDBanned(id string) bool {
 	return false
 }
 
+// IsDiscordIDAdmin returns true if the given Discord user ID is a Kaepora
+// admin, meaning he has access to extra data and dangerous commands.
 func (c *Config) IsDiscordIDAdmin(id string) bool {
 	for _, v := range c.DiscordAdminUserIDs {
 		if v == id {
@@ -44,9 +50,10 @@ func (c *Config) IsDiscordIDAdmin(id string) bool {
 	return false
 }
 
+// NewFromUserConfigDir reads a config file from a standard directory.
 func NewFromUserConfigDir() (*Config, error) {
 	c := &Config{}
-	if err := c.ReloadFromUserConfigDir(); err != nil {
+	if err := c.reloadFromUserConfigDir(); err != nil {
 		return nil, err
 	}
 
@@ -70,7 +77,7 @@ func (c *Config) expandFromEnv() {
 	}
 }
 
-func (c *Config) ReloadFromUserConfigDir() error {
+func (c *Config) reloadFromUserConfigDir() error {
 	defer c.expandFromEnv()
 
 	path, err := getOrCreateUserConfigPath()

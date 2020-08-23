@@ -62,7 +62,7 @@ func (bot *Bot) displayLeagues(out io.Writer) error {
 func (bot *Bot) cmdRecap(m *discordgo.Message, args []string, out io.Writer) error {
 	shortcode := argsAsName(args)
 	scope := back.RecapScopePublic
-	if bot.isAdmin(m.Author.ID) {
+	if bot.config.IsDiscordIDAdmin(m.Author.ID) {
 		scope = back.RecapScopeAdmin
 	}
 

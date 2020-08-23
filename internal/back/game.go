@@ -8,6 +8,8 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// Game is the root of all leagues and randomizers, it is mostly unused but
+// paves the way for multi-game support.
 type Game struct {
 	ID        util.UUIDAsBlob
 	CreatedAt util.TimeAsTimestamp
