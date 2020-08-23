@@ -80,7 +80,7 @@ func (s *Server) getSeedStats(shortcode string) (statsSeed, error) {
 
 		progressive := map[string]int{}
 		for location, item := range l.WOTHLocations {
-			wothLocations[location]++
+			wothLocations[string(location)]++
 
 			if strings.HasPrefix(string(item), "Progressive") {
 				wothItems[progressiveItemName(progressive, string(item))]++
@@ -94,14 +94,14 @@ func (s *Server) getSeedStats(shortcode string) (statsSeed, error) {
 		}
 
 		for name, item := range l.Locations {
-			if _, ok := locationsAcc[name]; !ok {
-				locationsAcc[name] = make(
+			if _, ok := locationsAcc[string(name)]; !ok {
+				locationsAcc[string(name)] = make(
 					map[oot.SpoilerLogItemCategory]int,
 					oot.SpoilerLogItemCategoryCount,
 				)
 			}
 
-			locationsAcc[name][item.GetCategory()]++
+			locationsAcc[string(name)][item.GetCategory()]++
 		}
 
 		for name, value := range l.Settings {

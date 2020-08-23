@@ -49,6 +49,11 @@
                 <li data-target=".js-spoilers-tab-gossip">
                     <a href="#gossip" role="tab" aria-controls="spoilers-gossip">{{t .Locale "Gossip stones"}}</a>
                 </li>
+                {{- if len .Payload.Log.Entrances -}}
+                <li data-target=".js-spoilers-tab-entrances">
+                    <a href="#entrances" role="tab" aria-controls="spoilers-entrances">{{t .Locale "Entrances"}}</a>
+                </li>
+                {{- end -}}
                 {{- if len .Payload.Settings -}}
                 <li data-target=".js-spoilers-tab-settings">
                     <a href="#settings" role="tab" aria-controls="spoilers-settings">{{t .Locale "Settings"}}</a>
@@ -79,6 +84,28 @@
                 <tr>
                     <td>{{$location}}</td>
                     <td>{{$gossip | gossipText}}</td>
+                </tr>
+                {{- end -}}
+            </tbody>
+        </table>
+        </ul>
+    </div>  <!-- container -->
+
+    <div class="container js-spoilers-tab-entrances is-hidden" role="tabpanel" aria-labelledby="spoilers-entrances">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{{t .Locale "Scene"}}</th>
+                    <th>{{t .Locale "Exit"}}</th>
+                    <th>{{t .Locale "Destination"}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{- range $exit, $destination := .Payload.Log.Entrances -}}
+                <tr>
+                    <td>{{$exit.Scene}}</td>
+                    <td>{{$exit.Exit}}</td>
+                    <td>{{$destination}}</td>
                 </tr>
                 {{- end -}}
             </tbody>
