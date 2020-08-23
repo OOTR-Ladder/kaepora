@@ -44,7 +44,7 @@ func (s *Schedule) SetAll(hours []string) {
 	s.Sun = hours
 }
 
-// NextBetween returns the first event occurring between to point in time or a
+// NextBetween returns the first event occurring between two point in time or a
 // zero time if none is found.
 func (s *Schedule) NextBetween(t time.Time, max time.Time) time.Time {
 	t, max = t.UTC(), max.UTC()
@@ -53,7 +53,7 @@ func (s *Schedule) NextBetween(t time.Time, max time.Time) time.Time {
 	}
 
 	for _, next := range s.flattenHours(t) {
-		if next.Before(t) {
+		if next.Before(t) || next.Sub(t) == 0 {
 			continue
 		}
 

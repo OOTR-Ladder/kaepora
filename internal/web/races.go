@@ -10,7 +10,6 @@ import (
 	"kaepora/internal/util"
 	"log"
 	"net/http"
-	"reflect"
 	"sort"
 	"time"
 
@@ -280,65 +279,31 @@ func (s *Server) getSchedulesBetween(start, end time.Time) ([]scheduleEntry, err
 		return nil, err
 	}
 
-	lastFoundStart := map[util.UUIDAsBlob]time.Time{}
 	var ret []scheduleEntry
 
-	for i := start; i.Before(end); {
-		least := end
-
-		for k := range leagues {
-			next := leagues[k].Schedule.NextBetween(i, end)
-			if next.IsZero() || next == lastFoundStart[leagues[k].ID] {
+	for k := range leagues {
+		lastFoundStart := start
+		for next := start; !next.IsZero() && next.Before(end); next = leagues[k].Schedule.NextBetween(next, end) {
+			if next == lastFoundStart {
 				continue
 			}
-			lastFoundStart[leagues[k].ID] = next
 
-			if next.Before(least) {
-				least = next
-			}
-
+			lastFoundStart = next
 			ret = append(ret, scheduleEntry{
 				LeagueName: leagues[k].Name,
 				StartDate:  next,
 			})
 		}
-
-		i = least
 	}
 
-	sort.Sort(sortByDate(ret))
+	sort.Slice(ret, func(i, j int) bool {
+		return ret[i].StartDate.Before(ret[j].StartDate)
+	})
 
-	// HACK: There's definitely something wrong in the schedule generation as
-	// duplicates are not supposed to happen. TODO
-	deduped := make([]scheduleEntry, 0, len(ret))
-	for _, v := range ret {
-		if len(deduped) > 0 {
-			if reflect.DeepEqual(deduped[len(deduped)-1], v) {
-				continue
-			}
-		}
-
-		deduped = append(deduped, v)
-	}
-
-	return deduped, nil
+	return ret, nil
 }
 
 type scheduleEntry struct {
 	LeagueName string
 	StartDate  time.Time
-}
-
-type sortByDate []scheduleEntry
-
-func (a sortByDate) Len() int {
-	return len([]scheduleEntry(a))
-}
-
-func (a sortByDate) Less(i, j int) bool {
-	return a[i].StartDate.Before(a[j].StartDate)
-}
-
-func (a sortByDate) Swap(i, j int) {
-	a[i], a[j] = a[j], a[i]
 }
