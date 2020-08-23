@@ -41,6 +41,9 @@ test:
 run:
 	gin --all --bin "$(EXEC)" --buildArgs "${BUILDFLAGS}" -- serve
 
+runi:
+	gin --immediate --bin "$(EXEC)" --buildArgs "${BUILDFLAGS}" -- serve
+
 extract:
 	./extract > out.po
 	msgmerge --lang=en --backup=off -F -U resources/web/locales/en/default.po out.po
