@@ -268,6 +268,7 @@ Brackets indicate optional arguments.
 !rename NAME            # set your display name to NAME
 !seed SHORTCODE [SEED]  # generate a seed valid for the given league
 !setstream URL          # set your stream URL
+!token                  # get an URL to authenticate yourself on the website
 
 # Racing
 !cancel            # cancel joining the next race without penalty until T%[3]s

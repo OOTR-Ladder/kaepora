@@ -19,6 +19,10 @@ func (b *Back) runPeriodicTasks() error {
 		}
 	}()
 
+	if err := b.pruneExpiredTokens(); err != nil {
+		return err
+	}
+
 	if err := b.createNextScheduledMatchSessions(); err != nil {
 		return err
 	}
