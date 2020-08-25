@@ -9,7 +9,6 @@ import (
 	"kaepora/internal/generator/oot"
 	"kaepora/internal/util"
 	"log"
-	"net/url"
 	"text/tabwriter"
 	"time"
 
@@ -597,18 +596,14 @@ func (b *Back) sendSpoilerLogNotification(player Player, matchID util.UUIDAsBlob
 		Type:          NotificationTypeSpoilerLog,
 	}
 
-	u, _ := url.Parse(fmt.Sprintf("https://%s/en/matches/%s/spoilers", b.config.Domain, matchID))
-	q := u.Query()
-	q.Set("u", player.Name)
-	u.RawQuery = q.Encode()
-
-	signed, err := b.config.SignURL(u.String(), 24*time.Hour)
+	token, err := b.CreateToken(player.ID, 24*time.Hour)
 	if err != nil {
-		log.Printf("error: unable to sign URL: %s", err)
+		log.Printf("error: unable to create token for player: %s", err)
 		return
 	}
 
-	notif.Printf("Here is the spoiler log for your seed: <%s>", signed)
+	url := fmt.Sprintf("https://%s/en/matches/%s/spoilers?t=%s", b.config.Domain, matchID, token)
+	notif.Printf("Here is the spoiler log for your seed: <%s>", url)
 
 	b.notifications <- notif
 }

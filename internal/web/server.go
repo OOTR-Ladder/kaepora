@@ -326,6 +326,21 @@ func urlID(r *http.Request, name string) (util.UUIDAsBlob, error) {
 	return util.UUIDAsBlob(uid), nil
 }
 
+// urlID parses an URL query parameter as an UUID.
+func queryID(r *http.Request, name string) (util.UUIDAsBlob, error) {
+	str := r.URL.Query().Get(name)
+	if str == "" {
+		return util.UUIDAsBlob{}, fmt.Errorf("empty ID in URL query %s", name)
+	}
+
+	uid, err := uuid.Parse(str)
+	if err != nil {
+		return util.UUIDAsBlob{}, err
+	}
+
+	return util.UUIDAsBlob(uid), nil
+}
+
 func (s *Server) shuffledSettings(w http.ResponseWriter, r *http.Request) {
 	locale := chi.URLParam(r, "locale")
 	doc, err := back.LoadSettingsDocumentation(locale)
@@ -343,28 +358,15 @@ func (s *Server) shuffledSettings(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) getSignedPlayer(r *http.Request) (*back.Player, error) {
-	// Unauthenticated.
-	if r.URL.Query().Get("t") == "" {
+	tokenID, err := queryID(r, "t")
+	if err != nil {
+		// Empty or invalid token, just ignore it.
 		return nil, nil
 	}
 
-	u := r.URL.Query().Get("u")
-	// A token but no user, something is fishy.
-	if u == "" {
-		return nil, errors.New("no user in signed request")
-	}
-
-	if err := s.config.CheckURL(r.URL.String()); err != nil {
-		return nil, err
-	}
-
-	player, err := s.back.GetPlayerByName(u)
+	player, err := s.back.GetPlayerFromTokenID(tokenID)
 	if err != nil {
 		return nil, err
-	}
-
-	if s.config.IsDiscordIDBanned(player.DiscordID.String) {
-		return nil, fmt.Errorf("user %s is banned", u)
 	}
 
 	return &player, nil
