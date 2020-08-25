@@ -136,6 +136,18 @@ func getPlayerActiveSession(tx *sqlx.Tx, playerID util.UUIDAsBlob) (MatchSession
 	return MatchSession{}, sql.ErrNoRows
 }
 
+// PlayerIsInSession returns true if the player exists and is an active session.
+func (b *Back) PlayerIsInSession(playerID util.UUIDAsBlob) (ret bool) {
+	if err := b.transaction(func(tx *sqlx.Tx) error {
+		_, err := getPlayerActiveSession(tx, playerID)
+		return err
+	}); err != nil {
+		return false
+	}
+
+	return true
+}
+
 func getNextMatchSessionForLeague(tx *sqlx.Tx, leagueID util.UUIDAsBlob) (MatchSession, error) {
 	var ret MatchSession
 	query := `

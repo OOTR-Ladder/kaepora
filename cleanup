@@ -2,6 +2,6 @@
 # To avoid spamming players when working on a real DB.
 
 sqlite3 kaepora.db <<EOF
-UPDATE Player SET DiscordID = NULL;
+UPDATE Player SET DiscordID = NULL WHERE ID != X'E340D593A1D546608EC2B4287F490350';
 UPDATE League SET AnnounceDiscordChannelID = NULL;
 EOF

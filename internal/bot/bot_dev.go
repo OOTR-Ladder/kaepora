@@ -28,6 +28,7 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 !dev setannounce SHORTCODE   # configure a league to post its announcements in the channel the command was sent in
 !dev uptime                  # display for how long the server has been running
 !dev url                     # display the link to use when adding the bot to a new server
+!dev token                   # get an authenticated URL to the website
 %[1]s`,
 			"```",
 		)
@@ -35,6 +36,8 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 	}
 
 	switch args[0] {
+	case "token":
+		return bot.cmdDevToken(m, args, out)
 	case "as":
 		return bot.cmdDevAs(m, args, out)
 	case "to":
@@ -153,5 +156,20 @@ func (bot *Bot) cmdDevTo(_ *discordgo.Message, args []string, _ io.Writer) error
 		log.Printf("error: could not send message: %s", err)
 	}
 
+	return nil
+}
+
+func (bot *Bot) cmdDevToken(m *discordgo.Message, _ []string, w io.Writer) error {
+	player, err := bot.back.GetPlayerByDiscordID(m.Author.ID)
+	if err != nil {
+		return err
+	}
+
+	token, err := bot.back.CreateToken(player.ID, 24*time.Hour)
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(w, "`?t=%s`", token)
 	return nil
 }

@@ -18,12 +18,22 @@ import (
 
 // getAllMatchSession shows a shortened recap of previous races.
 func (s *Server) getAllMatchSession(w http.ResponseWriter, r *http.Request) {
+	statuses := []back.MatchSessionStatus{
+		back.MatchSessionStatusClosed,
+	}
+
+	if s.isUserAdmin(r) {
+		statuses = append(
+			statuses,
+			back.MatchSessionStatusPreparing,
+			back.MatchSessionStatusInProgress,
+		)
+	}
+
 	sessions, leagues, err := s.back.GetMatchSessions(
 		time.Now().Add(-30*24*time.Hour),
 		time.Now(),
-		[]back.MatchSessionStatus{
-			back.MatchSessionStatusClosed,
-		},
+		statuses,
 		`DATETIME(StartDate) DESC`,
 	)
 	if err != nil {
@@ -55,10 +65,12 @@ func (s *Server) getOneMatchSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for k := range matches {
-		if !matches[k].HasEnded() {
-			s.error(w, r, errors.New("this session is still in progress"), http.StatusForbidden)
-			return
+	if !s.isUserAdmin(r) {
+		for k := range matches {
+			if !matches[k].HasEnded() {
+				s.error(w, r, errors.New("this session is still in progress"), http.StatusForbidden)
+				return
+			}
 		}
 	}
 
@@ -101,7 +113,7 @@ func (s *Server) getSpoilerLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !match.HasEnded() {
+	if !s.isUserAdmin(r) && !match.HasEnded() {
 		if err := s.canSignedPlayerSeeSpoilerLog(r, match); err != nil {
 			s.error(w, r, err, http.StatusInternalServerError)
 			return
@@ -150,10 +162,7 @@ func (s *Server) canSignedPlayerSeeSpoilerLog(r *http.Request, match back.Match)
 		return err
 	}
 	if player == nil {
-		return errors.New("match has not ended")
-	}
-	if s.config.IsDiscordIDAdmin(player.DiscordID.String) {
-		return nil
+		return util.ErrPublic("match has not ended")
 	}
 
 	entry, _, err := match.GetPlayerAndOpponentEntries(player.ID)
@@ -161,7 +170,7 @@ func (s *Server) canSignedPlayerSeeSpoilerLog(r *http.Request, match back.Match)
 		return err
 	}
 	if !entry.HasEnded() {
-		return errors.New("match has not ended")
+		return util.ErrPublic("match has not ended")
 	}
 
 	return nil
