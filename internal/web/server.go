@@ -371,3 +371,17 @@ func (s *Server) getSignedPlayer(r *http.Request) (*back.Player, error) {
 
 	return &player, nil
 }
+
+func (s *Server) isUserAdmin(r *http.Request) bool {
+	player, err := s.getSignedPlayer(r)
+	if err != nil || player == nil {
+		return false
+	}
+
+	if !s.config.IsDiscordIDAdmin(player.DiscordID.String) {
+		return false
+	}
+
+	// Don't allow access to spoiler logs and stuff if the user is in a race.
+	return !s.back.PlayerIsInSession(player.ID)
+}
