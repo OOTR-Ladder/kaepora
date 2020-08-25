@@ -16,25 +16,22 @@ func TestSignURLBadWebToken(t *testing.T) {
 
 func TestSignURL(t *testing.T) {
 	c := config.Config{WebToken: "00000000000000000000000000000000"}
-	str, err := c.SignURL("https://ootrandomizer.com?u=Gaebora", 1*time.Hour)
-	if err != nil {
-		t.Fatal(err)
+	uris := []string{
+		"https://ootrandomizer.com",
+		"http://ootrandomizer.com/path?a=foo&y=baz&z=bar",
+		"https://ootrandomizer.com/path?z=bar&a=foo&y=baz&t=bad",
 	}
 
-	if err := c.CheckURL(str); err != nil {
-		t.Fatal(err)
-	}
-}
+	for _, v := range uris {
+		str, err := c.SignURL(v, 1*time.Hour)
+		if err != nil {
+			t.Error(err)
+			continue
+		}
 
-func TestSignURLOverride(t *testing.T) {
-	c := config.Config{WebToken: "00000000000000000000000000000000"}
-	str, err := c.SignURL("https://ootrandomizer.com?t=foo&td=42", 1*time.Hour)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if err := c.CheckURL(str); err != nil {
-		t.Fatal(err)
+		if err := c.CheckURL(str); err != nil {
+			t.Error(err)
+		}
 	}
 }
 
@@ -65,21 +62,5 @@ func TestSignURLBadToken(t *testing.T) {
 
 	if err := c.CheckURL(str); err == nil {
 		t.Fatal("expected bad token")
-	}
-}
-
-func TestSignURLHTTPS(t *testing.T) {
-	c := config.Config{WebToken: "00000000000000000000000000000000"}
-	str, err := c.SignURL("http://ootrandomizer.com?u=Gaebora", 1*time.Hour)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	u, _ := url.Parse(str)
-	u.Scheme = "http"
-	str = u.String()
-
-	if err := c.CheckURL(str); err != nil {
-		t.Fatal(err)
 	}
 }

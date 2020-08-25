@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"log"
 	"net/url"
 	"strconv"
 	"time"
@@ -56,12 +57,16 @@ func (c *Config) CheckURL(str string) error {
 	q.Del("t")
 	u.RawQuery = q.Encode()
 
-	token, err := c.sign([]byte(u.String()))
+	toSign := []byte(u.String())
+	token, err := c.sign(toSign)
 	if err != nil {
 		return err
 	}
 
 	if token != inputToken {
+		log.Printf("warning: input URL: %s", str)
+		log.Printf("warning: signed URL: %s", string(toSign))
+		log.Printf("warning: '%s' != '%s'", inputToken, token)
 		return errors.New("invalid token")
 	}
 
