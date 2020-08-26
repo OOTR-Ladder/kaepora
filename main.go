@@ -36,24 +36,30 @@ func main() {
 	}
 
 	log.Printf("info: Starting Kaepora %s", global.Version)
-	back, err := back.New("sqlite3", "./kaepora.db", conf)
+	b, err := back.New("sqlite3", "./kaepora.db", conf)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	switch flag.Arg(0) {
 	case "fixtures":
-		if err := back.LoadFixtures(); err != nil {
+		if err := b.LoadFixtures(); err != nil {
 			log.Fatal(err)
 		}
 	case "serve":
-		if err := serve(back, conf); err != nil {
+		if err := serve(b, conf); err != nil {
 			log.Fatal(err)
 		}
 	case "rerank":
-		if err := back.Rerank(flag.Arg(1)); err != nil {
+		if err := b.Rerank(flag.Arg(1)); err != nil {
 			log.Fatal(err)
 		}
+	case "token":
+		token, err := b.CreateTokenForPlayerName(flag.Arg(1), back.DefaultTokenLifetime)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("%s", token)
 	default:
 		fmt.Fprint(os.Stderr, help())
 		os.Exit(1)

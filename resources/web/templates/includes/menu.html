@@ -4,6 +4,9 @@
         <a href="{{uri .Locale}}" class="navbar-item">
             <img src="/_/img/logo.png" alt="logo" width="32" height="32" />
             OoTR Ladder
+            {{if .AuthenticatedPlayer }}
+                 - {{.AuthenticatedPlayer.Name}}
+            {{end}}
         </a>
     </div>
 

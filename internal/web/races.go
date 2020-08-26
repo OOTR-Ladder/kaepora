@@ -22,7 +22,7 @@ func (s *Server) getAllMatchSession(w http.ResponseWriter, r *http.Request) {
 		back.MatchSessionStatusClosed,
 	}
 
-	if s.isUserAdmin(r) {
+	if s.isAuthenticatedUserAdmin(r) {
 		statuses = append(
 			statuses,
 			back.MatchSessionStatusPreparing,
@@ -65,7 +65,7 @@ func (s *Server) getOneMatchSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !s.isUserAdmin(r) {
+	if !s.isAuthenticatedUserAdmin(r) {
 		for k := range matches {
 			if !matches[k].HasEnded() {
 				s.error(w, r, errors.New("this session is still in progress"), http.StatusForbidden)
@@ -113,8 +113,8 @@ func (s *Server) getSpoilerLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !s.isUserAdmin(r) && !match.HasEnded() {
-		if err := s.canSignedPlayerSeeSpoilerLog(r, match); err != nil {
+	if !s.isAuthenticatedUserAdmin(r) && !match.HasEnded() {
+		if err := s.canAuthenticatedPlayerSeeSpoilerLog(r, match); err != nil {
 			s.error(w, r, err, http.StatusInternalServerError)
 			return
 		}
@@ -152,15 +152,12 @@ func (s *Server) getSpoilerLog(w http.ResponseWriter, r *http.Request) {
 	}{match, settings, string(raw), parsed})
 }
 
-func (s *Server) canSignedPlayerSeeSpoilerLog(r *http.Request, match back.Match) error {
+func (s *Server) canAuthenticatedPlayerSeeSpoilerLog(r *http.Request, match back.Match) error {
 	if match.HasEnded() {
 		return nil
 	}
 
-	player, err := s.getSignedPlayer(r)
-	if err != nil {
-		return err
-	}
+	player := playerFromContext(r)
 	if player == nil {
 		return util.ErrPublic("match has not ended")
 	}

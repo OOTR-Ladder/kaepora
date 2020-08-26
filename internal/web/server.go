@@ -35,6 +35,7 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Logger)
+	r.Use(s.tokenAuthenticator)
 
 	fs := http.StripPrefix("/_/", http.FileServer(http.Dir(
 		filepath.Join(baseDir, "static"),
@@ -76,7 +77,10 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 
 type ctxKey int
 
-const ctxKeyLocale ctxKey = iota
+const (
+	ctxKeyLocale ctxKey = iota
+	ctxKeyAuthPlayer
+)
 
 func chooseLocale(candidates ...string) string {
 	matcher := language.NewMatcher([]language.Tag{
@@ -217,12 +221,14 @@ func (s *Server) response(
 	}
 
 	wrapped := struct {
-		Locale  string
-		Leagues []back.League
-		Payload interface{}
+		Locale              string
+		Leagues             []back.League
+		AuthenticatedPlayer *back.Player
+		Payload             interface{}
 	}{
 		r.Context().Value(ctxKeyLocale).(string),
 		leagues,
+		playerFromContext(r),
 		payload,
 	}
 
@@ -356,33 +362,4 @@ func (s *Server) shuffledSettings(w http.ResponseWriter, r *http.Request) {
 	}{
 		Doc: doc,
 	})
-}
-
-func (s *Server) getSignedPlayer(r *http.Request) (*back.Player, error) {
-	tokenID, err := queryID(r, "t")
-	if err != nil {
-		// Empty or invalid token, just ignore it.
-		return nil, nil
-	}
-
-	player, err := s.back.GetPlayerFromTokenID(tokenID)
-	if err != nil {
-		return nil, err
-	}
-
-	return &player, nil
-}
-
-func (s *Server) isUserAdmin(r *http.Request) bool {
-	player, err := s.getSignedPlayer(r)
-	if err != nil || player == nil {
-		return false
-	}
-
-	if !s.config.IsDiscordIDAdmin(player.DiscordID.String) {
-		return false
-	}
-
-	// Don't allow access to spoiler logs and stuff if the user is in a race.
-	return !s.back.PlayerIsInSession(player.ID)
 }

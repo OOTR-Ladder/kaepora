@@ -596,7 +596,7 @@ func (b *Back) sendSpoilerLogNotification(player Player, matchID util.UUIDAsBlob
 		Type:          NotificationTypeSpoilerLog,
 	}
 
-	token, err := b.CreateToken(player.ID, 24*time.Hour)
+	token, err := b.CreateToken(player.ID, DefaultTokenLifetime)
 	if err != nil {
 		log.Printf("error: unable to create token for player: %s", err)
 		return

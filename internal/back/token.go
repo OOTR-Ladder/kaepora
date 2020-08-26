@@ -9,6 +9,8 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+const DefaultTokenLifetime = 24 * time.Hour
+
 // A token is an expirable random string used to authenticate players.
 type token struct {
 	ID        util.UUIDAsBlob
@@ -17,28 +19,30 @@ type token struct {
 	PlayerID  util.UUIDAsBlob
 }
 
-func (b *Back) GetPlayerFromTokenID(tokenID util.UUIDAsBlob) (player Player, _ error) {
+func (b *Back) GetPlayerFromTokenID(tokenID util.UUIDAsBlob) (*Player, error) {
+	var ret *Player
 	if err := b.transaction(func(tx *sqlx.Tx) error {
 		token, err := getTokenByID(tx, tokenID)
 		if err != nil {
-			return err
+			return fmt.Errorf("token not found: %s", err)
 		}
 
-		player, err = getPlayerByID(tx, token.PlayerID)
+		player, err := getPlayerByID(tx, token.PlayerID)
 		if err != nil {
-			return err
+			return fmt.Errorf("player not found: %s", err)
 		}
 
 		if b.config.IsDiscordIDBanned(player.DiscordID.String) {
 			return fmt.Errorf("user %s is banned", player.Name)
 		}
 
+		ret = &player
 		return nil
 	}); err != nil {
-		return Player{}, err
+		return nil, err
 	}
 
-	return player, nil
+	return ret, nil
 }
 
 func newToken(playerID util.UUIDAsBlob, lifetime time.Duration) token {
@@ -60,6 +64,28 @@ func (b *Back) CreateToken(playerID util.UUIDAsBlob, lifetime time.Duration) (st
 	}
 
 	return t.ID.String(), nil
+}
+
+func (b *Back) CreateTokenForPlayerName(name string, lifetime time.Duration) (string, error) {
+	var ret string
+	if err := b.transaction(func(tx *sqlx.Tx) error {
+		player, err := getPlayerByName(tx, name)
+		if err != nil {
+			return err
+		}
+
+		t := newToken(player.ID, lifetime)
+		ret = t.ID.String()
+		if err := t.insert(tx); err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return "", err
+	}
+
+	return ret, nil
 }
 
 func getTokenByID(tx *sqlx.Tx, id util.UUIDAsBlob) (token, error) {

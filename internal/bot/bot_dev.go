@@ -3,6 +3,7 @@ package bot
 import (
 	"fmt"
 	"io"
+	"kaepora/internal/back"
 	"kaepora/internal/util"
 	"log"
 	"strings"
@@ -165,7 +166,7 @@ func (bot *Bot) cmdDevToken(m *discordgo.Message, _ []string, w io.Writer) error
 		return err
 	}
 
-	token, err := bot.back.CreateToken(player.ID, 24*time.Hour)
+	token, err := bot.back.CreateToken(player.ID, back.DefaultTokenLifetime)
 	if err != nil {
 		return err
 	}
