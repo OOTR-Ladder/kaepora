@@ -260,6 +260,21 @@ func (b *Back) GetPlayerByName(name string) (player Player, _ error) {
 	return player, nil
 }
 
+func (b *Back) GetPlayerByID(id util.UUIDAsBlob) (player Player, _ error) {
+	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
+		player, err = getPlayerByID(tx, id)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return Player{}, err
+	}
+
+	return player, nil
+}
+
 // PlayerPerformance is the overall performance of a single Player on a single League.
 type PlayerPerformance struct {
 	LeagueID util.UUIDAsBlob

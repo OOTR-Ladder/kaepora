@@ -22,7 +22,8 @@ Located at: `$XDG_CONFIG_HOME/kaepora/config.json`
     "DiscordListenIDs": ["<channel ID, set using !dev commands>"],
     "DiscordBannedUserIDs": ["<discord user id, manually inserted>"],
 
-    "WebToken": "<secure random string>", // overriden by KAEPORA_WEB_TOKEN
+    "CookieHashKey": "<secure random string (32 chars)>", // overriden by KAEPORA_COOKIE_HASH_KEY
+    "CookieBlockKey": "<secure random string (32 chars)>", // overriden by KAEPORA_COOKIE_BLOCK_KEY
     "DiscordToken": "<optional (no bot)>", // overriden by KAEPORA_DISCORD_TOKEN
     "OOTRAPIKey": "<optional (no remote seedgen)>" // overriden by KAEPORA_OOTR_API_KEY
 }

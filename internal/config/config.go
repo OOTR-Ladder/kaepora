@@ -21,9 +21,11 @@ type Config struct {
 	// Who is not allowed to do anything.
 	DiscordBannedUserIDs []string
 
-	DiscordToken, WebToken, OOTRAPIKey string
+	DiscordToken, OOTRAPIKey      string
+	CookieHashKey, CookieBlockKey string
 
-	Domain string
+	Domain  string
+	DevMode bool
 }
 
 // IsDiscordIDBanned returns true if the given Discord user ID is a banned
@@ -67,7 +69,8 @@ func (c *Config) expandFromEnv() {
 	}{
 		{"KAEPORA_OOTR_API_KEY", &c.OOTRAPIKey},
 		{"KAEPORA_DISCORD_TOKEN", &c.DiscordToken},
-		{"KAEPORA_WEB_TOKEN", &c.WebToken},
+		{"KAEPORA_COOKIE_HASH_KEY", &c.CookieHashKey},
+		{"KAEPORA_COOKIE_BLOCK_KEY", &c.CookieBlockKey},
 	}
 
 	for _, v := range vars {

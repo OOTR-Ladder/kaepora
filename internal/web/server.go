@@ -21,6 +21,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/google/uuid"
+	"github.com/gorilla/securecookie"
 	"github.com/leonelquinteros/gotext"
 	"github.com/russross/blackfriday/v2"
 	"golang.org/x/text/language"
@@ -127,6 +128,7 @@ type Server struct {
 	back    *back.Back
 	tpl     map[string]*template.Template // Indexed by file name (eg. "index.html")
 	locales map[string]*gotext.Locale     // Indexed by lowercase ISO 639-2 (eg. "fr")
+	sc      *securecookie.SecureCookie
 
 	config *config.Config
 }
@@ -138,10 +140,18 @@ func NewServer(back *back.Back, config *config.Config) (*Server, error) {
 		return nil, err
 	}
 
+	if len(config.CookieHashKey) != 32 {
+		return nil, errors.New("CookieHashKey must be 32 chars")
+	}
+	if len(config.CookieBlockKey) != 32 {
+		return nil, errors.New("CookieBlockKey must be 32 chars")
+	}
+
 	s := &Server{
 		config:  config,
 		back:    back,
 		locales: map[string]*gotext.Locale{},
+		sc:      securecookie.New([]byte(config.CookieHashKey), []byte(config.CookieBlockKey)),
 		http: &http.Server{
 			Addr:         "127.0.0.1:3001",
 			ReadTimeout:  5 * time.Second,
