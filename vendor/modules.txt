@@ -304,6 +304,9 @@ github.com/google/go-querystring/query
 github.com/google/uuid
 # github.com/googleapis/gax-go/v2 v2.0.5
 github.com/googleapis/gax-go/v2
+# github.com/gorilla/securecookie v1.1.1
+## explicit
+github.com/gorilla/securecookie
 # github.com/gorilla/websocket v1.4.2
 github.com/gorilla/websocket
 # github.com/gostaticanalysis/analysisutil v0.1.0
