@@ -2,6 +2,7 @@ package back
 
 import (
 	"fmt"
+	"kaepora/internal/generator/factory"
 	"kaepora/internal/generator/oot"
 	"kaepora/internal/util"
 
@@ -12,14 +13,19 @@ import (
 // SendDevSeed generates a seed from a league settings and sends it over
 // Discord. This was originally for dev purposes but is now accessible to
 // everyone.
-func (b *Back) SendDevSeed(discordID string, leagueShortCode string, seed string) error {
+func (b *Back) SendDevSeed(discordID, leagueShortCode, seed, version string) error {
 	return b.transaction(func(tx *sqlx.Tx) error {
 		league, err := getLeagueByShortCode(tx, leagueShortCode)
 		if err != nil {
 			return fmt.Errorf("could not find League: %w", err)
 		}
 
-		gen, err := b.GetGenerator(league.Generator)
+		generatorID := league.Generator
+		if version != "" {
+			generatorID = factory.OverrideVersion(generatorID, version)
+		}
+
+		gen, err := b.GetGenerator(generatorID)
 		if err != nil {
 			return err
 		}

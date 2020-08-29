@@ -267,8 +267,10 @@ Brackets indicate optional arguments.
 !recap [SHORTCODE]      # show the 1v1 results for the current session
 !register [NAME]        # create your account and link it to your Discord account
 !rename NAME            # set your display name to NAME
-!seed SHORTCODE [SEED]  # generate a seed valid for the given league
 !setstream URL          # set your stream URL
+
+!seed SHORTCODE [VERSION] [SEED]  # generate a seed valid for the given league
+                                  # VERSION must be a valid OOTR version number
 
 # Racing
 !cancel            # cancel joining the next race without penalty until T%[3]s
@@ -303,8 +305,8 @@ func (bot *Bot) cmdAllRight(m *discordgo.Message, _ []string, w io.Writer) error
 }
 
 func (bot *Bot) cmdSendSeed(m *discordgo.Message, args []string, w io.Writer) error {
-	if len(args) < 1 || len(args) > 2 {
-		return util.ErrPublic("expected 1 or 2 arguments: SHORTCODE [SEED]")
+	if len(args) < 1 || len(args) > 3 {
+		return util.ErrPublic("expected 1 to 3 arguments: SHORTCODE [VERSION] [SEED]")
 	}
 
 	if !bot.manualSeedgenLimiter.Allow() {
@@ -312,9 +314,15 @@ func (bot *Bot) cmdSendSeed(m *discordgo.Message, args []string, w io.Writer) er
 		return nil
 	}
 
-	seed := uuid.New().String()
-	if len(args) == 2 {
-		seed = args[1]
+	var version string
+	if len(args) > 1 {
+		version = args[1]
 	}
-	return bot.back.SendDevSeed(m.Author.ID, args[0], seed)
+
+	seed := uuid.New().String()
+	if len(args) > 2 {
+		seed = args[2]
+	}
+
+	return bot.back.SendDevSeed(m.Author.ID, args[0], seed, version)
 }

@@ -70,7 +70,7 @@ func (api *API) getURL(subPath string, q url.Values) string {
 
 // CreateSeed starts a new seedgen using the given OOTR version and settings.
 func (api *API) CreateSeed(version string, settings map[string]interface{}) (string, error) {
-	log.Print("debug: creating API seed")
+	log.Printf("debug: creating API seed for version %s", version)
 
 	body, err := json.Marshal(settings)
 	if err != nil {

@@ -38,6 +38,11 @@ func (f Factory) NewGenerator(id string) (generator.Generator, error) {
 	}
 }
 
+func OverrideVersion(id, version string) string {
+	name, _ := parseID(id)
+	return name + ":" + version
+}
+
 func parseID(id string) (name, version string) {
 	parts := strings.SplitN(id, ":", 2)
 	switch len(parts) {
