@@ -211,7 +211,6 @@ func (s *Server) authDiscordRedirect(w http.ResponseWriter, r *http.Request, con
 	if err := s.setEncodedCookie(
 		w, authStateCookieName, state,
 		authStateCookieLifetime,
-		http.SameSiteLaxMode,
 	); err != nil {
 		s.error(w, r, err, http.StatusInternalServerError)
 		return
@@ -236,7 +235,7 @@ func randomState() (string, error) {
 }
 
 func (s *Server) deleteCookie(w http.ResponseWriter, name string) error {
-	return s.setEncodedCookie(w, name, "", -1, http.SameSiteLaxMode)
+	return s.setEncodedCookie(w, name, "", -1)
 }
 
 func (s *Server) setAuthCookie(
@@ -246,7 +245,6 @@ func (s *Server) setAuthCookie(
 	return s.setEncodedCookie(
 		w, authCookieName, playerID.String(),
 		authCookieLifetime,
-		http.SameSiteStrictMode,
 	)
 }
 
@@ -254,7 +252,6 @@ func (s *Server) setEncodedCookie(
 	w http.ResponseWriter,
 	name, value string,
 	lifetime time.Duration, // < 0 delete, 0 session, > 0 cookie
-	sameSite http.SameSite,
 ) error {
 	encoded, err := s.sc.Encode(name, value)
 	if err != nil {
@@ -285,7 +282,6 @@ func (s *Server) setEncodedCookie(
 		Domain:   domain,
 		HttpOnly: true,
 		Secure:   !s.config.DevMode,
-		SameSite: sameSite,
 	})
 
 	return nil
