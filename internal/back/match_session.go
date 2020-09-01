@@ -109,6 +109,9 @@ func getPlayerActiveSession(tx *sqlx.Tx, playerID util.UUIDAsBlob) (MatchSession
 		MatchSessionStatusInProgress,
 		`%"`+playerID.String()+`"%`,
 	); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return getPlayerActiveStartedSession(tx, playerID)
+		}
 		return MatchSession{}, err
 	}
 
@@ -133,7 +136,32 @@ func getPlayerActiveSession(tx *sqlx.Tx, playerID util.UUIDAsBlob) (MatchSession
 		}
 	}
 
-	return MatchSession{}, sql.ErrNoRows
+	return getPlayerActiveStartedSession(tx, playerID)
+}
+
+// getPlayerActiveStartedSession returns the active and _started_ session a
+// player is in. This should not be used directly, use getPlayerActiveSession
+// instead.
+func getPlayerActiveStartedSession(tx *sqlx.Tx, playerID util.UUIDAsBlob) (MatchSession, error) {
+	query := `
+        SELECT MatchSession.* FROM MatchSession
+        INNER JOIN Match ON(Match.MatchSessionID = MatchSession.ID)
+        INNER JOIN MatchEntry ON(MatchEntry.MatchID = Match.ID)
+        WHERE MatchEntry.PlayerID = ? AND MatchEntry.Status IN (?, ?)
+        ORDER BY MatchSession.StartDate ASC
+        LIMIT 1
+    `
+	var session MatchSession
+	if err := tx.Get(
+		&session, query,
+		playerID,
+		MatchEntryStatusWaiting,
+		MatchEntryStatusInProgress,
+	); err != nil {
+		return MatchSession{}, err
+	}
+
+	return session, nil
 }
 
 // PlayerIsInSession returns true if the player exists and is an active session.
