@@ -36,7 +36,6 @@ func (s *Server) getOnePlayer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, r, 1*time.Hour)
 	s.response(w, r, http.StatusOK, "one_player.html", struct {
 		Player      back.Player
 		PlayerStats back.PlayerStats

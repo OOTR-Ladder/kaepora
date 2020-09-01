@@ -338,7 +338,6 @@ func (s *Server) markdownContent(baseDir, name string) http.HandlerFunc {
 		))
 		title := getMarkdownTitle(path)
 
-		s.cache(w, r, 1*time.Hour)
 		s.response(w, r, http.StatusOK, "markdown.html", struct {
 			Title    string
 			Markdown template.HTML
@@ -390,7 +389,6 @@ func (s *Server) shuffledSettings(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, r, 1*time.Hour)
 	s.response(w, r, http.StatusOK, "shuffled-settings.html", struct {
 		Doc back.SettingsDocumentation
 	}{

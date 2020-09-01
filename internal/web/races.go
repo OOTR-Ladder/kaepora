@@ -41,7 +41,6 @@ func (s *Server) getAllMatchSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, r, 1*time.Minute)
 	s.response(w, r, http.StatusOK, "sessions.html", struct {
 		MatchSessions []back.MatchSession
 		Leagues       map[util.UUIDAsBlob]back.League
@@ -80,7 +79,6 @@ func (s *Server) getOneMatchSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, r, 1*time.Hour)
 	s.response(w, r, http.StatusOK, "one_session.html", struct {
 		MatchSession back.MatchSession
 		League       back.League
@@ -143,7 +141,6 @@ func (s *Server) getSpoilerLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, r, 1*time.Hour)
 	s.response(w, r, http.StatusOK, "spoilers.html", struct {
 		Match    back.Match
 		Settings map[string]back.SettingsDocumentationValueEntry
@@ -240,7 +237,6 @@ func (s *Server) leaderboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, r, 5*time.Minute)
 	s.response(w, r, http.StatusOK, "leaderboard.html", struct {
 		League      back.League
 		Leaderboard []back.LeaderboardEntry
@@ -269,7 +265,6 @@ func (s *Server) schedule(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, r, 5*time.Minute)
 	s.response(w, r, http.StatusOK, "schedule.html", struct {
 		nextRacesTemplateData
 		Schedules []scheduleEntry
