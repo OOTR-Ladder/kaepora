@@ -27,28 +27,9 @@ const (
 	authStateCookieLifetime = 0 // session cookie
 )
 
-func (s *Server) tokenAuthenticator(h http.Handler) http.Handler {
+func (s *Server) authenticator(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		player, err := s.getSignedPlayer(r)
-		if err != nil {
-			log.Printf("error: token auth: %s", err)
-		}
-		// immediate auth for dev and player that don't want to  OAuth
-		if player != nil {
-			if err := s.setAuthCookie(w, player.ID); err != nil {
-				log.Printf("error: unable to write auth cookie: %s", err)
-			}
-
-			u := r.URL
-			q := u.Query()
-			q.Del("t")
-			u.RawQuery = q.Encode()
-
-			http.Redirect(w, r, u.String(), http.StatusFound)
-			return
-		}
-
-		player, err = s.playerFromCookie(r)
+		player, err := s.playerFromCookie(r)
 		if err != nil {
 			log.Printf("error: cookie auth: %s", err)
 			player = nil
@@ -89,21 +70,6 @@ func playerFromContext(r *http.Request) *back.Player {
 
 func withPlayer(ctx context.Context, player *back.Player) context.Context {
 	return context.WithValue(ctx, ctxKeyAuthPlayer, player)
-}
-
-func (s *Server) getSignedPlayer(r *http.Request) (*back.Player, error) {
-	tokenID, err := queryID(r, "t")
-	if err != nil {
-		// Empty or invalid token, just ignore it.
-		return nil, nil
-	}
-
-	player, err := s.back.GetPlayerFromTokenID(tokenID)
-	if err != nil {
-		return nil, err
-	}
-
-	return player, nil
 }
 
 func (s *Server) isAuthenticatedUserAdmin(r *http.Request) bool {

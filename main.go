@@ -54,12 +54,6 @@ func main() {
 		if err := b.Rerank(flag.Arg(1)); err != nil {
 			log.Fatal(err)
 		}
-	case "token":
-		token, err := b.CreateTokenForPlayerName(flag.Arg(1), back.DefaultTokenLifetime)
-		if err != nil {
-			log.Fatal(err)
-		}
-		log.Printf("%s", token)
 	default:
 		fmt.Fprint(os.Stderr, help())
 		os.Exit(1)

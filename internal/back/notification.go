@@ -596,13 +596,7 @@ func (b *Back) sendSpoilerLogNotification(player Player, matchID util.UUIDAsBlob
 		Type:          NotificationTypeSpoilerLog,
 	}
 
-	token, err := b.CreateToken(player.ID, DefaultTokenLifetime)
-	if err != nil {
-		log.Printf("error: unable to create token for player: %s", err)
-		return
-	}
-
-	url := fmt.Sprintf("https://%s/en/matches/%s/spoilers?t=%s", b.config.Domain, matchID, token)
+	url := fmt.Sprintf("https://%s/en/matches/%s/spoilers", b.config.Domain, matchID)
 	notif.Printf("Here is the spoiler log for your seed: <%s>", url)
 
 	b.notifications <- notif

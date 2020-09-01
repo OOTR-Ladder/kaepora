@@ -38,7 +38,7 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Logger)
-	r.Use(s.tokenAuthenticator)
+	r.Use(s.authenticator)
 
 	fs := http.StripPrefix("/_/", http.FileServer(http.Dir(
 		filepath.Join(baseDir, "static"),
