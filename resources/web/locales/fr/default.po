@@ -53,37 +53,45 @@ msgstr "Commence dans %s"
 msgid "There is no scheduled race right now."
 msgstr "Il n'y a pas de course programmée pour l'instant."
 
-#: resources/web/templates/includes/menu.html:16
+#: resources/web/templates/includes/menu.html:19
 msgid "Races"
 msgstr "Courses"
 
-#: resources/web/templates/includes/menu.html:31
+#: resources/web/templates/includes/menu.html:34
 msgid "Rankings"
 msgstr "Classements"
 
-#: resources/web/templates/includes/menu.html:45
+#: resources/web/templates/includes/menu.html:48
 msgid "Stats"
 msgstr "Stats"
 
-#: resources/web/templates/includes/menu.html:59
+#: resources/web/templates/includes/menu.html:62
 msgid "Resources"
 msgstr "Ressources"
 
-#: resources/web/templates/includes/menu.html:64
+#: resources/web/templates/includes/menu.html:67
 msgid "Documentation"
 msgstr "Documentation"
 
-#: resources/web/templates/includes/menu.html:67
+#: resources/web/templates/includes/menu.html:70
 msgid "Rules"
 msgstr "Règles"
 
-#: resources/web/templates/includes/menu.html:70
+#: resources/web/templates/includes/menu.html:73
 msgid "Shuffled Settings"
 msgstr "Shuffled Settings"
 
-#: resources/web/templates/includes/menu.html:77
+#: resources/web/templates/includes/menu.html:80
 msgid "Discord"
 msgstr "Discord"
+
+#: resources/web/templates/includes/menu.html:87
+msgid "Sign out"
+msgstr "Déconnexion"
+
+#: resources/web/templates/includes/menu.html:92
+msgid "Sign in"
+msgstr "Connexion"
 
 #: resources/web/templates/includes/noscript.html:7
 msgid ""
@@ -266,14 +274,21 @@ msgid "The page you requested does not exist."
 msgstr "La page que vous avez demandé n'existe pas."
 
 #: resources/web/templates/layouts/error.html:14
-msgid "This page his not available yet."
+msgid "This page is not available yet."
 msgstr "Cette page n'est pas disponible pour l'instant."
 
 #: resources/web/templates/layouts/error.html:16
+msgid ""
+"[Log in](/auth/oauth2/discord) if you are attempting to access your own "
+"active races."
+msgstr ""
+"[Connectez-vous](/auth/oauth2/discord) si vous tentez d'accéder à des informations sur vos matches en cours."
+
+#: resources/web/templates/layouts/error.html:19
 msgid "An internal error occured."
 msgstr "Une erreur est survenue pendant le traitement de votre requête."
 
-#: resources/web/templates/layouts/error.html:18
+#: resources/web/templates/layouts/error.html:21
 msgid "Error %d"
 msgstr "Erreur %d"
 

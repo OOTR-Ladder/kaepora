@@ -39,7 +39,7 @@ type Bot struct {
 
 // New creates a new Discord bot ready to be launched with Serve.
 func New(back *back.Back, config *config.Config) (*Bot, error) {
-	dg, err := discordgo.New("Bot " + config.DiscordToken)
+	dg, err := discordgo.New("Bot " + config.Discord.Token)
 	if err != nil {
 		return nil, err
 	}
@@ -87,8 +87,8 @@ func (bot *Bot) Serve(wg *sync.WaitGroup, done <-chan struct{}) {
 	wg.Add(1)
 	defer wg.Done()
 
-	if bot.config.DiscordToken == "" {
-		log.Println("warning: missing Discord token, not running the bot")
+	if !bot.config.Discord.CanRunBot() {
+		log.Println("warning: Discord bot is not configured, not running it")
 		bot.idle(done)
 		return
 	}
@@ -133,7 +133,7 @@ loop:
 func (bot *Bot) isListeningOn(channelID string) bool {
 	// This should be cached into a map, but I don't plan on having more than
 	// one or two channels for now.
-	for _, v := range bot.config.DiscordListenIDs {
+	for _, v := range bot.config.Discord.ListenIDs {
 		if channelID == v {
 			return true
 		}

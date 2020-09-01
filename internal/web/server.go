@@ -21,10 +21,13 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/google/uuid"
+	"github.com/gorilla/securecookie"
 	"github.com/leonelquinteros/gotext"
 	"github.com/russross/blackfriday/v2"
 	"golang.org/x/text/language"
 )
+
+var errForbidden = errors.New("forbidden")
 
 func (s *Server) setupRouter(baseDir string) *chi.Mux {
 	middleware.DefaultLogger = middleware.RequestLogger(&middleware.DefaultLogFormatter{
@@ -35,18 +38,36 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Logger)
+	r.Use(s.authenticator)
 
 	fs := http.StripPrefix("/_/", http.FileServer(http.Dir(
 		filepath.Join(baseDir, "static"),
 	)))
 	r.HandleFunc("/_/*", func(w http.ResponseWriter, r *http.Request) {
-		s.cache(w, "public", 1*time.Hour)
+		s.cache(w, r, 1*time.Hour)
 		fs.ServeHTTP(w, r)
 	})
 
 	r.Get("/favicon.ico", s.favicon(fs))
-
 	r.Get("/dev/settings-relations.svg", s.devSettingsRelations)
+
+	r.Get("/auth/logout", func(w http.ResponseWriter, r *http.Request) {
+		if err := s.deleteCookie(w, authCookieName); err != nil {
+			s.error(w, r, err, http.StatusInternalServerError)
+			return
+		}
+
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	})
+
+	if s.config.Discord.CanSetupOAuth2() {
+		r.Get("/auth/oauth2/discord", s.authDiscord)
+	} else {
+		r.Get("/auth/oauth2/discord", func(w http.ResponseWriter, r *http.Request) {
+			s.error(w, r, errors.New("OAuth2 not configured"), http.StatusInternalServerError)
+		})
+		log.Print("warning: Discord OAuth2 configuration not set, authentication disabled")
+	}
 
 	r.With(s.langDetect).Route("/{locale}", func(r chi.Router) {
 		r.Get("/rules", s.markdownContent(baseDir, "rules.md"))
@@ -76,7 +97,10 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 
 type ctxKey int
 
-const ctxKeyLocale ctxKey = iota
+const (
+	ctxKeyLocale ctxKey = iota
+	ctxKeyAuthPlayer
+)
 
 func chooseLocale(candidates ...string) string {
 	matcher := language.NewMatcher([]language.Tag{
@@ -123,6 +147,7 @@ type Server struct {
 	back    *back.Back
 	tpl     map[string]*template.Template // Indexed by file name (eg. "index.html")
 	locales map[string]*gotext.Locale     // Indexed by lowercase ISO 639-2 (eg. "fr")
+	sc      *securecookie.SecureCookie
 
 	config *config.Config
 }
@@ -134,10 +159,21 @@ func NewServer(back *back.Back, config *config.Config) (*Server, error) {
 		return nil, err
 	}
 
+	if len(config.CookieHashKey) != 32 {
+		return nil, errors.New("CookieHashKey must be 32 chars")
+	}
+	if len(config.CookieBlockKey) != 32 {
+		return nil, errors.New("CookieBlockKey must be 32 chars")
+	}
+	if config.Domain == "" {
+		return nil, errors.New("Domain must be set")
+	}
+
 	s := &Server{
 		config:  config,
 		back:    back,
 		locales: map[string]*gotext.Locale{},
+		sc:      securecookie.New([]byte(config.CookieHashKey), []byte(config.CookieBlockKey)),
 		http: &http.Server{
 			Addr:         "127.0.0.1:3001",
 			ReadTimeout:  5 * time.Second,
@@ -216,13 +252,22 @@ func (s *Server) response(
 		return
 	}
 
+	// Default to English, some special pages (ie. auth) may not have a locale
+	// and still error out and thus call response through error.
+	locale := "en"
+	if iface := r.Context().Value(ctxKeyLocale); iface != nil {
+		locale = iface.(string)
+	}
+
 	wrapped := struct {
-		Locale  string
-		Leagues []back.League
-		Payload interface{}
+		Locale              string
+		Leagues             []back.League
+		AuthenticatedPlayer *back.Player
+		Payload             interface{}
 	}{
-		r.Context().Value(ctxKeyLocale).(string),
+		locale,
 		leagues,
+		playerFromContext(r),
 		payload,
 	}
 
@@ -236,6 +281,10 @@ func (s *Server) error(w http.ResponseWriter, r *http.Request, err error, code i
 		code = http.StatusNotFound
 	}
 
+	if errors.Is(err, errForbidden) {
+		code = http.StatusForbidden
+	}
+
 	log.Printf("error: HTTP %d: %v", code, err)
 	s.response(w, r, code, "error.html", struct {
 		HTTPCode int
@@ -243,7 +292,12 @@ func (s *Server) error(w http.ResponseWriter, r *http.Request, err error, code i
 	w.WriteHeader(code)
 }
 
-func (s *Server) cache(w http.ResponseWriter, scope string, d time.Duration) { // nolint:unparam
+func (s *Server) cache(w http.ResponseWriter, r *http.Request, d time.Duration) { // nolint:unparam
+	scope := "public"
+	if playerFromContext(r) != nil {
+		scope = "private"
+	}
+
 	w.Header().Set("Cache-Control", fmt.Sprintf("%s,max-age=%d", scope, d/time.Second))
 }
 
@@ -251,7 +305,7 @@ func (s *Server) favicon(fs http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		r.URL.Path = "/_/favicon.ico"
 
-		s.cache(w, "public", 365*24*time.Hour)
+		s.cache(w, r, 365*24*time.Hour)
 		fs.ServeHTTP(w, r)
 	}
 }
@@ -283,7 +337,7 @@ func (s *Server) markdownContent(baseDir, name string) http.HandlerFunc {
 		))
 		title := getMarkdownTitle(path)
 
-		s.cache(w, "public", 1*time.Hour)
+		s.cache(w, r, 1*time.Hour)
 		s.response(w, r, http.StatusOK, "markdown.html", struct {
 			Title    string
 			Markdown template.HTML
@@ -350,39 +404,10 @@ func (s *Server) shuffledSettings(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, "public", 1*time.Hour)
+	s.cache(w, r, 1*time.Hour)
 	s.response(w, r, http.StatusOK, "shuffled-settings.html", struct {
 		Doc back.SettingsDocumentation
 	}{
 		Doc: doc,
 	})
-}
-
-func (s *Server) getSignedPlayer(r *http.Request) (*back.Player, error) {
-	tokenID, err := queryID(r, "t")
-	if err != nil {
-		// Empty or invalid token, just ignore it.
-		return nil, nil
-	}
-
-	player, err := s.back.GetPlayerFromTokenID(tokenID)
-	if err != nil {
-		return nil, err
-	}
-
-	return &player, nil
-}
-
-func (s *Server) isUserAdmin(r *http.Request) bool {
-	player, err := s.getSignedPlayer(r)
-	if err != nil || player == nil {
-		return false
-	}
-
-	if !s.config.IsDiscordIDAdmin(player.DiscordID.String) {
-		return false
-	}
-
-	// Don't allow access to spoiler logs and stuff if the user is in a race.
-	return !s.back.PlayerIsInSession(player.ID)
 }

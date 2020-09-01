@@ -28,7 +28,6 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 !dev setannounce SHORTCODE   # configure a league to post its announcements in the channel the command was sent in
 !dev uptime                  # display for how long the server has been running
 !dev url                     # display the link to use when adding the bot to a new server
-!dev token                   # get an authenticated URL to the website
 %[1]s`,
 			"```",
 		)
@@ -36,8 +35,6 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 	}
 
 	switch args[0] {
-	case "token":
-		return bot.cmdDevToken(m, args, out)
 	case "as":
 		return bot.cmdDevAs(m, args, out)
 	case "to":
@@ -82,7 +79,7 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 
 func (bot *Bot) cmdDevRemoveListen(m *discordgo.Message, _ []string, _ io.Writer) (err error) {
 	i := -1
-	for k, v := range bot.config.DiscordListenIDs {
+	for k, v := range bot.config.Discord.ListenIDs {
 		if v == m.ChannelID {
 			i = k
 		}
@@ -92,22 +89,22 @@ func (bot *Bot) cmdDevRemoveListen(m *discordgo.Message, _ []string, _ io.Writer
 		return util.ErrPublic("channel was not being listened on")
 	}
 
-	bot.config.DiscordListenIDs = append(
-		bot.config.DiscordListenIDs[:i],
-		bot.config.DiscordListenIDs[i+1:]...,
+	bot.config.Discord.ListenIDs = append(
+		bot.config.Discord.ListenIDs[:i],
+		bot.config.Discord.ListenIDs[i+1:]...,
 	)
 
 	return bot.config.Write()
 }
 
 func (bot *Bot) cmdDevAddListen(m *discordgo.Message, _ []string, _ io.Writer) (err error) {
-	for _, v := range bot.config.DiscordListenIDs {
+	for _, v := range bot.config.Discord.ListenIDs {
 		if v == m.ChannelID {
 			return util.ErrPublic("channel is already being listened on")
 		}
 	}
 
-	bot.config.DiscordListenIDs = append(bot.config.DiscordListenIDs, m.ChannelID)
+	bot.config.Discord.ListenIDs = append(bot.config.Discord.ListenIDs, m.ChannelID)
 	return bot.config.Write()
 }
 
@@ -156,20 +153,5 @@ func (bot *Bot) cmdDevTo(_ *discordgo.Message, args []string, _ io.Writer) error
 		log.Printf("error: could not send message: %s", err)
 	}
 
-	return nil
-}
-
-func (bot *Bot) cmdDevToken(m *discordgo.Message, _ []string, w io.Writer) error {
-	player, err := bot.back.GetPlayerByDiscordID(m.Author.ID)
-	if err != nil {
-		return err
-	}
-
-	token, err := bot.back.CreateToken(player.ID, 24*time.Hour)
-	if err != nil {
-		return err
-	}
-
-	fmt.Fprintf(w, "`?t=%s`", token)
 	return nil
 }

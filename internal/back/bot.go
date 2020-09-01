@@ -170,7 +170,7 @@ func (b *Back) getTopAroundPlayer(
 			dir = "DESC"
 		}
 
-		bans := b.config.DiscordBannedUserIDs
+		bans := b.config.Discord.BannedUserIDs
 		if len(bans) == 0 {
 			bans = []string{"0"}
 		}

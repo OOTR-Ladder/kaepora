@@ -42,7 +42,7 @@ func (bot *Bot) cmdRegister(m *discordgo.Message, args []string, out io.Writer) 
 		name = m.Author.Username
 	}
 
-	if err := bot.back.RegisterDiscordPlayer(m.Author.ID, name); err != nil {
+	if _, err := bot.back.RegisterDiscordPlayer(m.Author.ID, name); err != nil {
 		return err
 	}
 

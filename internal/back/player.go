@@ -132,8 +132,8 @@ func (b *Back) UpdateDiscordPlayerName(discordID string, name string) error {
 	})
 }
 
-func (b *Back) RegisterDiscordPlayer(discordID, name string) error {
-	return b.transaction(func(tx *sqlx.Tx) error {
+func (b *Back) RegisterDiscordPlayer(discordID, name string) (player Player, _ error) {
+	if err := b.transaction(func(tx *sqlx.Tx) error {
 		if _, err := getPlayerByDiscordID(tx, discordID); err == nil {
 			return util.ErrPublic("you are already registered")
 		}
@@ -142,10 +142,18 @@ func (b *Back) RegisterDiscordPlayer(discordID, name string) error {
 			return util.ErrPublic(fmt.Sprintf("the name `%s` is taken already, please give me another name", name))
 		}
 
-		player := NewPlayer(name)
+		player = NewPlayer(name)
 		player.DiscordID = util.NullString(discordID)
-		return player.insert(tx)
-	})
+		if err := player.insert(tx); err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return Player{}, err
+	}
+
+	return player, nil
 }
 
 func (b *Back) UpdateDiscordPlayerStreamURL(discordID, streamURL string) (string, error) {

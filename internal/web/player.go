@@ -1,7 +1,6 @@
 package web
 
 import (
-	"errors"
 	"kaepora/internal/back"
 	"kaepora/internal/util"
 	"log"
@@ -37,7 +36,7 @@ func (s *Server) getOnePlayer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, "public", 1*time.Hour)
+	s.cache(w, r, 1*time.Hour)
 	s.response(w, r, http.StatusOK, "one_player.html", struct {
 		Player      back.Player
 		PlayerStats back.PlayerStats
@@ -67,7 +66,7 @@ func (s *Server) getOnePlayerGraph(w http.ResponseWriter, r *http.Request) {
 	case "seedtime":
 		graph, err = s.back.GetPlayerSeedTimeGraph(playerName, shortcode)
 	default:
-		s.error(w, r, errors.New("invalid graph name"), http.StatusNotFound)
+		s.notFound(w, r)
 		return
 	}
 	if err != nil {
@@ -75,7 +74,7 @@ func (s *Server) getOnePlayerGraph(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, "public", 1*time.Hour)
+	s.cache(w, r, 1*time.Hour)
 	w.Header().Set("Content-Type", "image/svg+xml")
 	if _, err := w.Write(graph); err != nil {
 		log.Printf("warning: error when writing graph: %s", err)

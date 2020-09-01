@@ -14,13 +14,13 @@ import (
 )
 
 func (s *Server) devSettingsRelations(w http.ResponseWriter, r *http.Request) {
-	if err := s.writeSettingsRelationSVG(w); err != nil {
+	if err := s.writeSettingsRelationSVG(w, r); err != nil {
 		s.error(w, r, err, http.StatusInternalServerError)
 		return
 	}
 }
 
-func (s *Server) writeSettingsRelationSVG(w http.ResponseWriter) error {
+func (s *Server) writeSettingsRelationSVG(w http.ResponseWriter, r *http.Request) error {
 	dot, err := getSettingsRelationsDOT()
 	if err != nil {
 		return err
@@ -41,7 +41,7 @@ func (s *Server) writeSettingsRelationSVG(w http.ResponseWriter) error {
 	cmd := exec.Command("dot", "-Tsvg", tmp.Name()) // nolint:gosec
 	cmd.Stdout = w
 	w.Header().Set("Content-Type", "image/svg+xml")
-	s.cache(w, "public", 1*time.Hour)
+	s.cache(w, r, 1*time.Hour)
 	if err := cmd.Run(); err != nil {
 		return err
 	}

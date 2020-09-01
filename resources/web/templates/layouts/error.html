@@ -11,7 +11,10 @@
                     {{if eq .Payload.HTTPCode 404}}
                         {{t .Locale "The page you requested does not exist."}}
                     {{else if eq .Payload.HTTPCode 403}}
-                        {{t .Locale "This page his not available yet."}}
+                        {{t .Locale "This page is not available yet."}}
+                        {{if not .AuthenticatedPlayer }}
+                        {{tmd .Locale "[Log in](/auth/oauth2/discord) if you are attempting to access your own active races."}}
+                        {{end}}
                     {{else if eq .Payload.HTTPCode 500}}
                         {{t .Locale "An internal error occured."}}
                     {{else}}

@@ -224,7 +224,7 @@ func (m *Match) GetPlayerAndOpponentEntries(playerID util.UUIDAsBlob) (MatchEntr
 		return m.Entries[1], m.Entries[0], nil
 	}
 
-	return MatchEntry{}, MatchEntry{}, fmt.Errorf("could not find MatchEntry for player %s in Match %d", playerID, m.ID)
+	return MatchEntry{}, MatchEntry{}, fmt.Errorf("could not find MatchEntry for player %s in Match %v", playerID, m.ID)
 }
 
 func getFirstMatchStartOfLeague(tx *sqlx.Tx, leagueID util.UUIDAsBlob) (util.TimeAsTimestamp, error) {

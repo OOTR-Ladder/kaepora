@@ -35,7 +35,7 @@ func (b *Back) getLeaderboardForShortcode(
 		return nil, err
 	}
 
-	bans := b.config.DiscordBannedUserIDs
+	bans := b.config.Discord.BannedUserIDs
 	if len(bans) == 0 {
 		bans = []string{"0"}
 	}
@@ -248,6 +248,21 @@ func (b *Back) GetMatch(id util.UUIDAsBlob) (match Match, _ error) {
 func (b *Back) GetPlayerByName(name string) (player Player, _ error) {
 	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
 		player, err = getPlayerByName(tx, name)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return Player{}, err
+	}
+
+	return player, nil
+}
+
+func (b *Back) GetPlayerByID(id util.UUIDAsBlob) (player Player, _ error) {
+	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
+		player, err = getPlayerByID(tx, id)
 		if err != nil {
 			return err
 		}
