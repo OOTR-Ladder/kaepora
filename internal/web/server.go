@@ -29,6 +29,7 @@ import (
 
 var errForbidden = errors.New("forbidden")
 
+// nolint:funlen
 func (s *Server) setupRouter(baseDir string) *chi.Mux {
 	middleware.DefaultLogger = middleware.RequestLogger(&middleware.DefaultLogFormatter{
 		Logger: log.New(os.Stdout, "web: ", 0),
@@ -166,7 +167,7 @@ func NewServer(back *back.Back, config *config.Config) (*Server, error) {
 		return nil, errors.New("CookieBlockKey must be 32 chars")
 	}
 	if config.Domain == "" {
-		return nil, errors.New("Domain must be set")
+		return nil, errors.New("Domain must be set") // nolint:stylecheck
 	}
 
 	s := &Server{
@@ -292,7 +293,7 @@ func (s *Server) error(w http.ResponseWriter, r *http.Request, err error, code i
 	w.WriteHeader(code)
 }
 
-func (s *Server) cache(w http.ResponseWriter, r *http.Request, d time.Duration) { // nolint:unparam
+func (s *Server) cache(w http.ResponseWriter, r *http.Request, d time.Duration) {
 	scope := "public"
 	if playerFromContext(r) != nil {
 		scope = "private"
@@ -371,21 +372,6 @@ func urlID(r *http.Request, name string) (util.UUIDAsBlob, error) {
 	str := chi.URLParam(r, "id")
 	if str == "" {
 		return util.UUIDAsBlob{}, fmt.Errorf("empty ID in URL param %s", name)
-	}
-
-	uid, err := uuid.Parse(str)
-	if err != nil {
-		return util.UUIDAsBlob{}, err
-	}
-
-	return util.UUIDAsBlob(uid), nil
-}
-
-// urlID parses an URL query parameter as an UUID.
-func queryID(r *http.Request, name string) (util.UUIDAsBlob, error) {
-	str := r.URL.Query().Get(name)
-	if str == "" {
-		return util.UUIDAsBlob{}, fmt.Errorf("empty ID in URL query %s", name)
 	}
 
 	uid, err := uuid.Parse(str)

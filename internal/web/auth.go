@@ -150,7 +150,11 @@ func (s *Server) getDiscordUserFromOAuth2Code(
 	}
 	client := conf.Client(r.Context(), token)
 
-	res, err := client.Get("https://discord.com/api/users/@me")
+	req, err := http.NewRequestWithContext(r.Context(), "GET", "https://discord.com/api/users/@me", nil)
+	if err != nil {
+		return discordUserPayload{}, err
+	}
+	res, err := client.Do(req)
 	if err != nil {
 		return discordUserPayload{}, err
 	}
