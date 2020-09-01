@@ -1,12 +1,17 @@
 {{define "content"}}
-<section class="hero is-dark homeHeader">
+<section class="hero is-dark homeHeader playerPage">
     <div class="hero-head">
         {{- template "menu" . -}}
     </div>
 
     <div class="hero-body">
         <div class="container">
-            <h1 class="title">{{ .Payload.Player.Name }}</h1>
+            <h1 class="title">
+                {{if ne "" .Payload.Player.StreamURL}}
+                    <a class="StreamLink" href="{{.Payload.Player.StreamURL}}"></a>
+                {{end}}
+                {{ .Payload.Player.Name }}
+            </h1>
             <span class="subtitle">{{ t .Locale "Climbing the ladder since %s" (date .Payload.Player.CreatedAt) }}</span>
         </div>
     </div>

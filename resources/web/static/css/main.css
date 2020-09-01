@@ -456,11 +456,11 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
 }
 
 table[class*="leaderboardTable"] .leaderboardTable--player .leaderboardTable--stream { vertical-align: middle; }
-.leaderboardTable--player .StreamLink {
+.StreamLink {
     width: 24px;
     height: 24px;
 }
-.leaderboardTable--player .StreamLink::before {
+.StreamLink::before {
     content: '';
     display: block;
     width: 24px;
@@ -469,9 +469,9 @@ table[class*="leaderboardTable"] .leaderboardTable--player .leaderboardTable--st
     background-image: url('../svg/live-generic.svg');
     background-size: 24px 24px;
 }
-.leaderboardTable--player .StreamLink[href*="twitch"]::before { background-image: url('../svg/live-twitch.svg'); }
-.leaderboardTable--player .StreamLink[href*="youtu"]::before { background-image: url('../svg/live-youtube.svg'); }
-.leaderboardTable--player .StreamLink[href*="mixer"]::before { background-image: url('../svg/live-mixer.svg'); }
+.StreamLink[href*="twitch"]::before { background-image: url('../svg/live-twitch.svg'); }
+.StreamLink[href*="youtu"]::before { background-image: url('../svg/live-youtube.svg'); }
+.StreamLink[href*="mixer"]::before { background-image: url('../svg/live-mixer.svg'); }
 
 table[class*="leaderboardTable"] .Ranking { position: relative; }
 table[class*="leaderboardTable"] .leaderboardTable--player .leaderboardTable--forfeits { position: relative; }
@@ -737,3 +737,13 @@ ul.spoilers--hash li {
     }
 }
 /* }}} Shuffled Settings Doc */
+
+.playerPage .StreamLink {
+    display: inline-block;
+    background: white;
+    border-radius: 3px;
+}
+
+.playerPage .StreamLink:hover {
+    background-color: #DDD;
+}
