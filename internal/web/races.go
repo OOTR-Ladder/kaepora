@@ -163,10 +163,7 @@ func (s *Server) canAuthenticatedPlayerSeeSpoilerLog(r *http.Request, match back
 	}
 
 	entry, _, err := match.GetPlayerAndOpponentEntries(player.ID)
-	if err != nil {
-		return err
-	}
-	if !entry.HasEnded() {
+	if err != nil || !entry.HasEnded() {
 		return errForbidden
 	}
 

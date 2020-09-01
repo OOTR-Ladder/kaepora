@@ -72,6 +72,10 @@ func (c *Config) Scheme() string {
 	return "https"
 }
 
+func (c *Config) BaseURL() string {
+	return fmt.Sprintf("%s://%s", c.Scheme(), c.Domain)
+}
+
 // IsDiscordIDBanned returns true if the given Discord user ID is a banned
 // from the ladder, meaning he can't even talk to the bot.
 func (c *Config) IsDiscordIDBanned(id string) bool {

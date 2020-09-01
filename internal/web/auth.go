@@ -79,7 +79,6 @@ func (s *Server) isAuthenticatedUserAdmin(r *http.Request) bool {
 	}
 
 	// Don't allow access to spoiler logs and stuff if the user is in a race.
-	log.Printf("debug: playerID %v", player.ID)
 	if s.back.PlayerIsInSession(player.ID) {
 		return false
 	}

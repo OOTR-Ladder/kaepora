@@ -494,7 +494,7 @@ func (b *Back) sendSessionRecapNotification(
 		notif.Printf("There are still %d race(s) in progress.\n", unknown)
 		notif.Printf("You can get an up to date recap with `!recap %s`.", league.ShortCode)
 	} else {
-		notif.Printf("Get the seeds and spoiler logs on <https://ootrladder.com/en/sessions/%s>", session.ID)
+		notif.Printf("Get the seeds and spoiler logs on <%s/en/sessions/%s>", b.config.BaseURL(), session.ID)
 	}
 
 	b.notifications <- notif
@@ -596,7 +596,7 @@ func (b *Back) sendSpoilerLogNotification(player Player, matchID util.UUIDAsBlob
 		Type:          NotificationTypeSpoilerLog,
 	}
 
-	url := fmt.Sprintf("https://%s/en/matches/%s/spoilers", b.config.Domain, matchID)
+	url := fmt.Sprintf("%s/en/matches/%s/spoilers", b.config.BaseURL(), matchID)
 	notif.Printf("Here is the spoiler log for your seed: <%s>", url)
 
 	b.notifications <- notif
