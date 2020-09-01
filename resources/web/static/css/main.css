@@ -747,3 +747,46 @@ ul.spoilers--hash li {
 .playerPage .StreamLink:hover {
     background-color: #DDD;
 }
+/* {{{ Profile page */
+.PlayerCard {
+    position: relative;
+    overflow: hidden;
+}
+.PlayerCard.box .title { color: var(--color-bg-dark); }
+.PlayerCard--name.title {
+    margin-bottom: 3rem;
+    font-size: 1.5rem;
+    font-weight: lighter;
+}
+.PlayerCard--name svg {
+    margin-right: .5rem;
+    max-width: 2rem;
+    fill: #505aff;
+    vertical-align: sub;
+}
+.PlayerCard--name span {
+    color: #505aff;
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.PlayerCard--icon{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+.PlayerCard--icon svg {
+    width: 8rem;
+    fill: #505aff;
+    opacity: .2;
+    transform: translate(-25%, 25%);
+}
+.WLRatio { margin-bottom: 1.5rem; }
+.WLRatio > .level { margin-bottom: .25rem; }
+
+.tab-content {
+    padding: 0 1.5rem;
+    display: none;
+}
+.tab-content.is-active { display: block; }
+/* }}} Profile page */
