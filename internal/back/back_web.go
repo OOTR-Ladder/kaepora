@@ -262,11 +262,9 @@ func (b *Back) GetPlayerByName(name string) (player Player, _ error) {
 
 // PlayerPerformance is the overall performance of a single Player on a single League.
 type PlayerPerformance struct {
-	LeagueID       util.UUIDAsBlob
-	Rating         PlayerRating
-	WLGraph        template.HTML // Win/Losses pie chart, SVG
-	RRDGraph       template.HTML // Rating/Rating Deviation graph, SVG
-	SeedTimesGraph template.HTML // Seed time distribution, SVG
+	LeagueID util.UUIDAsBlob
+	Rating   PlayerRating
+	WLGraph  template.HTML // Win/Losses pie chart, SVG
 
 	Wins, Losses, Draws, Forfeits int
 }
@@ -310,27 +308,14 @@ func (b *Back) GetPlayerStats(playerID util.UUIDAsBlob) (stats PlayerStats, _ er
 		}
 
 		for k := range stats.Performances {
-			stats.Performances[k].WLGraph, err = generateWLGraph(
+			wlGraph, err := generateWLGraph(
 				float64(stats.Performances[k].Wins),
 				float64(stats.Performances[k].Losses),
 			)
 			if err != nil {
 				return fmt.Errorf("WLGraph: %s", err)
 			}
-
-			stats.Performances[k].RRDGraph, err = generateRRDGraph(tx, playerID, stats.Performances[k].LeagueID)
-			if err != nil {
-				return fmt.Errorf("RRDGraph: %s", err)
-			}
-
-			stats.Performances[k].SeedTimesGraph, err = generatePlayerSeedTimesGraph(
-				tx,
-				playerID,
-				stats.Performances[k].LeagueID,
-			)
-			if err != nil {
-				return fmt.Errorf("SeedTimesGraph: %s", err)
-			}
+			stats.Performances[k].WLGraph = template.HTML(wlGraph) // nolint:gosec
 
 			for l := range ratings {
 				if stats.Performances[k].LeagueID == ratings[l].LeagueID {

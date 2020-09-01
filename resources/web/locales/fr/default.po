@@ -125,10 +125,6 @@ msgstr "Zones vides"
 msgid "Region"
 msgstr "Zone"
 
-#: resources/web/templates/includes/stats_items.html:7
-msgid "Name"
-msgstr "Nom"
-
 #: resources/web/templates/includes/stats_items.html:8
 msgid "avg. sphere"
 msgstr "sphère moy."
@@ -245,6 +241,10 @@ msgstr "% chants"
 msgid "% triforce"
 msgstr "% triforce"
 
+#: resources/web/templates/includes/stats_settings.html:7
+msgid "Name"
+msgstr "Nom"
+
 #: resources/web/templates/includes/stats_settings.html:8
 msgid "Value"
 msgstr "Valeur"
@@ -285,17 +285,17 @@ msgstr "Prochaines courses"
 msgid "Scheduled races"
 msgstr "Courses planifiées"
 
-#: resources/web/templates/layouts/index.html:33
-msgid "Races history"
-msgstr "Historique des courses"
-
-#: resources/web/templates/layouts/index.html:43
-msgid "Leaderboard"
-msgstr "Classement"
-
 #: resources/web/templates/layouts/index.html:59
 msgid "Full leaderboard"
 msgstr "Classement complet"
+
+#: resources/web/templates/layouts/leaderboard.html:7
+msgid "Leaderboard"
+msgstr "Classement"
+
+#: resources/web/templates/layouts/leaderboard.html:8
+msgid "%s league"
+msgstr "Ligue %s"
 
 #: resources/web/templates/layouts/leaderboard.html:22
 msgid "Rating"
@@ -321,17 +321,21 @@ msgstr "Le classement est actuellement vide."
 msgid "Climbing the ladder since %s"
 msgstr "Participe au ladder depuis le %s"
 
-#: resources/web/templates/layouts/one_player.html:29
+#: resources/web/templates/layouts/one_player.html:22
+msgid "ratings graph"
+msgstr "graph de l'évolution du niveau"
+
+#: resources/web/templates/layouts/one_player.html:31
+msgid "seed completion time graph"
+msgstr "graph des temps de complétion"
+
+#: resources/web/templates/layouts/one_player.html:39
 msgid "Past races"
 msgstr "Courses passées"
 
 #: resources/web/templates/layouts/one_session.html:9
 msgid "Session recap"
 msgstr "Récapitulatif de session"
-
-#: resources/web/templates/layouts/one_session.html:18
-msgid "%s league"
-msgstr "Ligue %s"
 
 #: resources/web/templates/layouts/one_session.html:19
 msgid "Race started at %s"
@@ -356,6 +360,10 @@ msgstr "Prochaines courses planifiées"
 #: resources/web/templates/layouts/schedule.html:45
 msgid "in"
 msgstr "dans"
+
+#: resources/web/templates/layouts/sessions.html:9
+msgid "Races history"
+msgstr "Historique des courses"
 
 #: resources/web/templates/layouts/sessions.html:10
 msgid "Races completed in the last 30 days"
@@ -387,10 +395,6 @@ msgstr "Télécharger le JSON brut"
 msgid "Spheres & Locations"
 msgstr "Sphères et Emplacements"
 
-#: resources/web/templates/layouts/spoilers.html:47
-msgid "WotH & barrens"
-msgstr "Voies et zones vides"
-
 #: resources/web/templates/layouts/spoilers.html:50
 msgid "Gossip stones"
 msgstr "Pierres à Potins"
@@ -398,10 +402,6 @@ msgstr "Pierres à Potins"
 #: resources/web/templates/layouts/spoilers.html:54
 msgid "Entrances"
 msgstr "Entrées / Sorties"
-
-#: resources/web/templates/layouts/spoilers.html:59
-msgid "Settings"
-msgstr "Paramètres"
 
 #: resources/web/templates/layouts/spoilers.html:78
 msgid "Location"
@@ -431,6 +431,10 @@ msgstr "Statistiques du Ladder et des seeds"
 msgid "Ladder stats"
 msgstr "Statistiques du Ladder"
 
+#: resources/web/templates/layouts/stats.html:24
+msgid "WotH & barrens"
+msgstr "Voies et zones vides"
+
 #: resources/web/templates/layouts/stats.html:27
 msgid "Locations"
 msgstr "Emplacements"
@@ -438,3 +442,7 @@ msgstr "Emplacements"
 #: resources/web/templates/layouts/stats.html:30
 msgid "Items"
 msgstr "Objets"
+
+#: resources/web/templates/layouts/stats.html:35
+msgid "Settings"
+msgstr "Paramètres"

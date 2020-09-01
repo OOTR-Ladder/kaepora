@@ -3,7 +3,6 @@ package back
 import (
 	"bytes"
 	"fmt"
-	"html/template"
 	"io"
 	"kaepora/internal/util"
 	"log"
@@ -16,7 +15,7 @@ import (
 	"github.com/wcharczuk/go-chart/drawing"
 )
 
-func (b *Back) GetRatingsDistributionGraph(shortcode string) (template.HTML, error) {
+func (b *Back) GetRatingsDistributionGraph(shortcode string) ([]byte, error) {
 	start := time.Now()
 	defer func() { log.Printf("info: computed ratings stats in %s", time.Since(start)) }()
 
@@ -27,7 +26,7 @@ func (b *Back) GetRatingsDistributionGraph(shortcode string) (template.HTML, err
 		StrokeWidth: 1,
 	})
 	if err != nil {
-		return template.HTML(""), err
+		return nil, err
 	}
 
 	graph := chart.BarChart{
@@ -97,7 +96,7 @@ func (b *Back) getRatingsStats(
 	return bars, float64(maxValue) / float64(valuesCount), nil
 }
 
-func (b *Back) GetLeagueSeedTimesGraph(shortcode string) (ret template.HTML, _ error) {
+func (b *Back) GetLeagueSeedTimesGraph(shortcode string) (ret []byte, _ error) {
 	start := time.Now()
 	defer func() { log.Printf("info: computed seed completion stats in %s", time.Since(start)) }()
 
@@ -114,13 +113,13 @@ func (b *Back) GetLeagueSeedTimesGraph(shortcode string) (ret template.HTML, _ e
 
 		return nil
 	}); err != nil {
-		return template.HTML(""), err
+		return nil, err
 	}
 
 	return ret, nil
 }
 
-func generatePlayerSeedTimesGraph(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) (template.HTML, error) {
+func generatePlayerSeedTimesGraph(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) ([]byte, error) {
 	var times []int
 	if err := tx.Select(
 		&times,
@@ -137,13 +136,13 @@ func generatePlayerSeedTimesGraph(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlo
 		playerID, leagueID,
 		MatchEntryStatusFinished, MatchSessionStatusClosed,
 	); err != nil {
-		return template.HTML(""), err
+		return nil, err
 	}
 
 	return generateSeedTimesGraph(times)
 }
 
-func generateLeagueSeedTimesGraph(tx *sqlx.Tx, leagueID util.UUIDAsBlob) (template.HTML, error) {
+func generateLeagueSeedTimesGraph(tx *sqlx.Tx, leagueID util.UUIDAsBlob) ([]byte, error) {
 	var times []int
 	if err := tx.Select(
 		&times,
@@ -159,13 +158,13 @@ func generateLeagueSeedTimesGraph(tx *sqlx.Tx, leagueID util.UUIDAsBlob) (templa
 		leagueID,
 		MatchEntryStatusFinished, MatchSessionStatusClosed,
 	); err != nil {
-		return template.HTML(""), err
+		return nil, err
 	}
 
 	return generateSeedTimesGraph(times)
 }
 
-func generateSeedTimesGraph(times []int) (template.HTML, error) {
+func generateSeedTimesGraph(times []int) ([]byte, error) {
 	style := chart.Style{
 		FontColor:   drawing.ColorBlack,
 		FillColor:   drawing.ColorFromHex("285577"),
@@ -174,7 +173,7 @@ func generateSeedTimesGraph(times []int) (template.HTML, error) {
 	}
 
 	bars := []chart.Value{
-		{Style: style, Label: "< 2:00"},
+		{Style: style, Label: "&lt; 2:00"},
 		{Style: style, Label: "2:00"},
 		{Style: style, Label: "2:30"},
 		{Style: style, Label: "3:00"},
@@ -200,7 +199,7 @@ func generateSeedTimesGraph(times []int) (template.HTML, error) {
 
 	if !hasValue {
 		// go-chart does not like it when all values are 0
-		return template.HTML(""), nil
+		return nil, nil
 	}
 
 	graph := chart.BarChart{
@@ -216,9 +215,9 @@ func generateSeedTimesGraph(times []int) (template.HTML, error) {
 	return renderChart(graph)
 }
 
-func generateWLGraph(wins, losses float64) (template.HTML, error) {
+func generateWLGraph(wins, losses float64) ([]byte, error) {
 	if wins == 0 && losses == 0 {
-		return template.HTML(""), nil
+		return nil, nil
 	}
 
 	graph := chart.PieChart{
@@ -243,7 +242,59 @@ func generateWLGraph(wins, losses float64) (template.HTML, error) {
 	return renderChart(graph)
 }
 
-func generateRRDGraph(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) (template.HTML, error) {
+func (b *Back) GetPlayerRatingGraph(playerName, shortcode string) ([]byte, error) {
+	var ret []byte
+	if err := b.transaction(func(tx *sqlx.Tx) error {
+		player, err := getPlayerByName(tx, playerName)
+		if err != nil {
+			return err
+		}
+
+		league, err := getLeagueByShortCode(tx, shortcode)
+		if err != nil {
+			return err
+		}
+
+		ret, err = generateRRDGraph(tx, player.ID, league.ID)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
+	return ret, nil
+}
+
+func (b *Back) GetPlayerSeedTimeGraph(playerName, shortcode string) ([]byte, error) {
+	var ret []byte
+	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
+		player, err := getPlayerByName(tx, playerName)
+		if err != nil {
+			return err
+		}
+
+		league, err := getLeagueByShortCode(tx, shortcode)
+		if err != nil {
+			return err
+		}
+
+		ret, err = generatePlayerSeedTimesGraph(tx, player.ID, league.ID)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
+	return ret, nil
+}
+
+func generateRRDGraph(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) ([]byte, error) {
 	var history []struct {
 		RatingPeriodStartedAt int64
 		Rating, Deviation     float64
@@ -253,12 +304,12 @@ func generateRRDGraph(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) (template
         WHERE PlayerID = ? AND LeagueID = ? ORDER BY RatingPeriodStartedAt ASC`,
 		playerID, leagueID,
 	); err != nil {
-		return template.HTML(""), err
+		return nil, err
 	}
 
 	if len(history) < 2 {
 		// Not enough data, return nothing.
-		return template.HTML(""), nil
+		return nil, nil
 	}
 
 	r := make([]float64, len(history))
@@ -309,11 +360,11 @@ type renderable interface {
 	Render(chart.RendererProvider, io.Writer) error
 }
 
-func renderChart(r renderable) (template.HTML, error) {
+func renderChart(r renderable) ([]byte, error) {
 	var buf bytes.Buffer
 	if err := r.Render(chart.SVG, &buf); err != nil {
-		return template.HTML(""), err
+		return nil, err
 	}
 
-	return template.HTML(buf.Bytes()), nil // nolint:gosec
+	return buf.Bytes(), nil
 }
