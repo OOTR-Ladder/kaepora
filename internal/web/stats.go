@@ -54,7 +54,10 @@ func (s *Server) stats(w http.ResponseWriter, r *http.Request) {
 		ShortCode                      string
 		ExtendedStats                  bool
 		SeedTimes, RatingsDistribution template.HTML
-	}{misc, attendance, seed, shortcode, shortcode == "shu", seedTime, ratings})
+	}{
+		misc, attendance, seed, shortcode, shortcode == "shu",
+		template.HTML(seedTime), template.HTML(ratings), // nolint:gosec
+	})
 }
 
 type attendanceEntry struct {

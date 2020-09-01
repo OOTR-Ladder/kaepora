@@ -59,6 +59,7 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 		r.Get("/sessions/{id}", s.getOneMatchSession)
 		r.Get("/matches/{id}/spoilers", s.getSpoilerLog)
 		r.Get("/player/{name}", s.getOnePlayer)
+		r.Get("/player/{playerName}/graph/{shortcode}/{graphName}.svg", s.getOnePlayerGraph)
 
 		r.Get("/schedule", s.schedule)
 		r.Get("/stats/{shortcode}", s.stats)

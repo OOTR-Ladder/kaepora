@@ -123,10 +123,6 @@ msgstr ""
 msgid "Region"
 msgstr ""
 
-#: resources/web/templates/includes/stats_items.html:7
-msgid "Name"
-msgstr ""
-
 #: resources/web/templates/includes/stats_items.html:8
 msgid "avg. sphere"
 msgstr ""
@@ -243,6 +239,10 @@ msgstr ""
 msgid "% triforce"
 msgstr ""
 
+#: resources/web/templates/includes/stats_settings.html:7
+msgid "Name"
+msgstr ""
+
 #: resources/web/templates/includes/stats_settings.html:8
 msgid "Value"
 msgstr ""
@@ -283,16 +283,16 @@ msgstr ""
 msgid "Scheduled races"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:33
-msgid "Races history"
+#: resources/web/templates/layouts/index.html:59
+msgid "Full leaderboard"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:43
+#: resources/web/templates/layouts/leaderboard.html:7
 msgid "Leaderboard"
 msgstr ""
 
-#: resources/web/templates/layouts/index.html:59
-msgid "Full leaderboard"
+#: resources/web/templates/layouts/leaderboard.html:8
+msgid "%s league"
 msgstr ""
 
 #: resources/web/templates/layouts/leaderboard.html:22
@@ -319,16 +319,20 @@ msgstr ""
 msgid "Climbing the ladder since %s"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:29
+#: resources/web/templates/layouts/one_player.html:22
+msgid "ratings graph"
+msgstr ""
+
+#: resources/web/templates/layouts/one_player.html:31
+msgid "seed completion time graph"
+msgstr ""
+
+#: resources/web/templates/layouts/one_player.html:39
 msgid "Past races"
 msgstr ""
 
 #: resources/web/templates/layouts/one_session.html:9
 msgid "Session recap"
-msgstr ""
-
-#: resources/web/templates/layouts/one_session.html:18
-msgid "%s league"
 msgstr ""
 
 #: resources/web/templates/layouts/one_session.html:19
@@ -353,6 +357,10 @@ msgstr ""
 
 #: resources/web/templates/layouts/schedule.html:45
 msgid "in"
+msgstr ""
+
+#: resources/web/templates/layouts/sessions.html:9
+msgid "Races history"
 msgstr ""
 
 #: resources/web/templates/layouts/sessions.html:10
@@ -385,20 +393,12 @@ msgstr ""
 msgid "Spheres & Locations"
 msgstr ""
 
-#: resources/web/templates/layouts/spoilers.html:47
-msgid "WotH & barrens"
-msgstr ""
-
 #: resources/web/templates/layouts/spoilers.html:50
 msgid "Gossip stones"
 msgstr ""
 
 #: resources/web/templates/layouts/spoilers.html:54
 msgid "Entrances"
-msgstr ""
-
-#: resources/web/templates/layouts/spoilers.html:59
-msgid "Settings"
 msgstr ""
 
 #: resources/web/templates/layouts/spoilers.html:78
@@ -429,10 +429,18 @@ msgstr ""
 msgid "Ladder stats"
 msgstr ""
 
+#: resources/web/templates/layouts/stats.html:24
+msgid "WotH & barrens"
+msgstr ""
+
 #: resources/web/templates/layouts/stats.html:27
 msgid "Locations"
 msgstr ""
 
 #: resources/web/templates/layouts/stats.html:30
 msgid "Items"
+msgstr ""
+
+#: resources/web/templates/layouts/stats.html:35
+msgid "Settings"
 msgstr ""
