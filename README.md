@@ -18,14 +18,19 @@ Non-goals and out of scope:
 Located at: `$XDG_CONFIG_HOME/kaepora/config.json`
 ```
 {
-    "DiscordAdminUserIDs": ["<discord user id>"],
-    "DiscordListenIDs": ["<channel ID, set using !dev commands>"],
-    "DiscordBannedUserIDs": ["<discord user id, manually inserted>"],
 
-    "CookieHashKey": "<secure random string (32 chars)>", // overriden by KAEPORA_COOKIE_HASH_KEY
+    "Discord": {
+        "Token": "<optional (no bot)>",              // overriden by KAEPORA_DISCORD_TOKEN
+        "ClientID": "<optional (no OAuth2)>",        // overriden by KAEPORA_DISCORD_CLIENT_ID
+        "ClientSecret":  "<optional (no OAuth2)>",   // overriden by KAEPORA_DISCORD_CLIENT_SECRET
+        "AdminUserIDs": ["<discord user id>"],
+        "ListenIDs": ["<channel ID, set using !dev commands>"],
+        "BannedUserIDs": ["<discord user id, manually inserted (TODO !dev ban)>"],
+    },
+
+    "CookieHashKey": "<secure random string (32 chars)>",  // overriden by KAEPORA_COOKIE_HASH_KEY
     "CookieBlockKey": "<secure random string (32 chars)>", // overriden by KAEPORA_COOKIE_BLOCK_KEY
-    "DiscordToken": "<optional (no bot)>", // overriden by KAEPORA_DISCORD_TOKEN
-    "OOTRAPIKey": "<optional (no remote seedgen)>" // overriden by KAEPORA_OOTR_API_KEY
+    "OOTRAPIKey": "<optional (no remote seedgen)>"         // overriden by KAEPORA_OOTR_API_KEY
 }
 ```
 

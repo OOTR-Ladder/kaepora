@@ -41,7 +41,7 @@ func (s *Server) getAllMatchSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, "public", 1*time.Minute)
+	s.cache(w, r, 1*time.Minute)
 	s.response(w, r, http.StatusOK, "sessions.html", struct {
 		MatchSessions []back.MatchSession
 		Leagues       map[util.UUIDAsBlob]back.League
@@ -80,7 +80,7 @@ func (s *Server) getOneMatchSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, "public", 1*time.Hour)
+	s.cache(w, r, 1*time.Hour)
 	s.response(w, r, http.StatusOK, "one_session.html", struct {
 		MatchSession back.MatchSession
 		League       back.League
@@ -127,7 +127,7 @@ func (s *Server) getSpoilerLog(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.URL.Query().Get("raw") == "1" {
-		s.sendRawSpoilerLog(w, league, match, raw)
+		s.sendRawSpoilerLog(w, r, league, match, raw)
 		return
 	}
 
@@ -143,7 +143,7 @@ func (s *Server) getSpoilerLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, "public", 1*time.Hour)
+	s.cache(w, r, 1*time.Hour)
 	s.response(w, r, http.StatusOK, "spoilers.html", struct {
 		Match    back.Match
 		Settings map[string]back.SettingsDocumentationValueEntry
@@ -159,7 +159,7 @@ func (s *Server) canAuthenticatedPlayerSeeSpoilerLog(r *http.Request, match back
 
 	player := playerFromContext(r)
 	if player == nil {
-		return util.ErrPublic("match has not ended")
+		return errForbidden
 	}
 
 	entry, _, err := match.GetPlayerAndOpponentEntries(player.ID)
@@ -167,14 +167,17 @@ func (s *Server) canAuthenticatedPlayerSeeSpoilerLog(r *http.Request, match back
 		return err
 	}
 	if !entry.HasEnded() {
-		return util.ErrPublic("match has not ended")
+		return errForbidden
 	}
 
 	return nil
 }
 
-func (s *Server) sendRawSpoilerLog(w http.ResponseWriter, league back.League, match back.Match, raw []byte) {
-	s.cache(w, "public", 1*time.Hour)
+func (s *Server) sendRawSpoilerLog(
+	w http.ResponseWriter, r *http.Request,
+	league back.League, match back.Match, raw []byte,
+) {
+	s.cache(w, r, 1*time.Hour)
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set(
 		"Content-Disposition",
@@ -240,7 +243,7 @@ func (s *Server) leaderboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, "public", 5*time.Minute)
+	s.cache(w, r, 5*time.Minute)
 	s.response(w, r, http.StatusOK, "leaderboard.html", struct {
 		League      back.League
 		Leaderboard []back.LeaderboardEntry
@@ -269,7 +272,7 @@ func (s *Server) schedule(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, "public", 5*time.Minute)
+	s.cache(w, r, 5*time.Minute)
 	s.response(w, r, http.StatusOK, "schedule.html", struct {
 		nextRacesTemplateData
 		Schedules []scheduleEntry

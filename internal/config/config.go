@@ -6,32 +6,76 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+
+	"golang.org/x/oauth2"
 )
 
 // Config holds the state shared by all components of the ladder. The
 // configuration is read from file and overridden with env vars.
 type Config struct {
+	Discord Discord
+
+	CookieHashKey, CookieBlockKey string
+	OOTRAPIKey                    string
+
+	Domain string
+
+	// DevMode weakens security during development and disables HTTPS.
+	DevMode bool
+}
+
+// Discord holds discord-specific configuration for both the bot and the web backend.
+type Discord struct {
+	Token                  string
+	ClientID, ClientSecret string
+
 	// DiscordListenIDs is a list of channel ID where the bot will listen and
 	// accept commands. PMs are always listened to.
-	DiscordListenIDs []string
+	ListenIDs []string
 
 	// Who is allowed to use `!dev` commands.
-	DiscordAdminUserIDs []string
+	AdminUserIDs []string
 
 	// Who is not allowed to do anything.
-	DiscordBannedUserIDs []string
+	BannedUserIDs []string
+}
 
-	DiscordToken, OOTRAPIKey      string
-	CookieHashKey, CookieBlockKey string
+func (c Discord) CanRunBot() bool {
+	return c.Token != ""
+}
 
-	Domain  string
-	DevMode bool
+func (c Discord) CanSetupOAuth2() bool {
+	return c.ClientSecret != "" && c.ClientID != ""
+}
+
+func (c Discord) OAuth2(conf *Config) *oauth2.Config {
+	return &oauth2.Config{
+		ClientID:     c.ClientID,
+		ClientSecret: c.ClientSecret,
+		RedirectURL: fmt.Sprintf(
+			"%s://%s/auth/oauth2/discord",
+			conf.Scheme(),
+			conf.Domain,
+		),
+		Scopes: []string{"identify"},
+		Endpoint: oauth2.Endpoint{
+			AuthURL:  "https://discord.com/api/oauth2/authorize",
+			TokenURL: "https://discord.com/api/oauth2/token",
+		},
+	}
+}
+
+func (c *Config) Scheme() string {
+	if c.DevMode {
+		return "http"
+	}
+	return "https"
 }
 
 // IsDiscordIDBanned returns true if the given Discord user ID is a banned
 // from the ladder, meaning he can't even talk to the bot.
 func (c *Config) IsDiscordIDBanned(id string) bool {
-	for _, v := range c.DiscordBannedUserIDs {
+	for _, v := range c.Discord.BannedUserIDs {
 		if v == id {
 			return true
 		}
@@ -43,7 +87,7 @@ func (c *Config) IsDiscordIDBanned(id string) bool {
 // IsDiscordIDAdmin returns true if the given Discord user ID is a Kaepora
 // admin, meaning he has access to extra data and dangerous commands.
 func (c *Config) IsDiscordIDAdmin(id string) bool {
-	for _, v := range c.DiscordAdminUserIDs {
+	for _, v := range c.Discord.AdminUserIDs {
 		if v == id {
 			return true
 		}
@@ -67,8 +111,11 @@ func (c *Config) expandFromEnv() {
 		src string
 		dst *string
 	}{
+		{"KAEPORA_DISCORD_TOKEN", &c.Discord.Token},
+		{"KAEPORA_DISCORD_CLIENT_SECRET", &c.Discord.ClientSecret},
+		{"KAEPORA_DISCORD_CLIENT_ID", &c.Discord.ClientID},
+
 		{"KAEPORA_OOTR_API_KEY", &c.OOTRAPIKey},
-		{"KAEPORA_DISCORD_TOKEN", &c.DiscordToken},
 		{"KAEPORA_COOKIE_HASH_KEY", &c.CookieHashKey},
 		{"KAEPORA_COOKIE_BLOCK_KEY", &c.CookieBlockKey},
 	}

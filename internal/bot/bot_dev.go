@@ -83,7 +83,7 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 
 func (bot *Bot) cmdDevRemoveListen(m *discordgo.Message, _ []string, _ io.Writer) (err error) {
 	i := -1
-	for k, v := range bot.config.DiscordListenIDs {
+	for k, v := range bot.config.Discord.ListenIDs {
 		if v == m.ChannelID {
 			i = k
 		}
@@ -93,22 +93,22 @@ func (bot *Bot) cmdDevRemoveListen(m *discordgo.Message, _ []string, _ io.Writer
 		return util.ErrPublic("channel was not being listened on")
 	}
 
-	bot.config.DiscordListenIDs = append(
-		bot.config.DiscordListenIDs[:i],
-		bot.config.DiscordListenIDs[i+1:]...,
+	bot.config.Discord.ListenIDs = append(
+		bot.config.Discord.ListenIDs[:i],
+		bot.config.Discord.ListenIDs[i+1:]...,
 	)
 
 	return bot.config.Write()
 }
 
 func (bot *Bot) cmdDevAddListen(m *discordgo.Message, _ []string, _ io.Writer) (err error) {
-	for _, v := range bot.config.DiscordListenIDs {
+	for _, v := range bot.config.Discord.ListenIDs {
 		if v == m.ChannelID {
 			return util.ErrPublic("channel is already being listened on")
 		}
 	}
 
-	bot.config.DiscordListenIDs = append(bot.config.DiscordListenIDs, m.ChannelID)
+	bot.config.Discord.ListenIDs = append(bot.config.Discord.ListenIDs, m.ChannelID)
 	return bot.config.Write()
 }
 

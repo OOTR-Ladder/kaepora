@@ -22,7 +22,7 @@ func (s *Server) index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, "public", 1*time.Minute)
+	s.cache(w, r, 1*time.Minute)
 	s.response(w, r, http.StatusOK, "index.html", data)
 }
 

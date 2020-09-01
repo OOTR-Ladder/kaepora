@@ -35,7 +35,7 @@ func (b *Back) getLeaderboardForShortcode(
 		return nil, err
 	}
 
-	bans := b.config.DiscordBannedUserIDs
+	bans := b.config.Discord.BannedUserIDs
 	if len(bans) == 0 {
 		bans = []string{"0"}
 	}
