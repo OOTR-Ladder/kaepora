@@ -41,7 +41,7 @@ func (s *Server) getAllMatchSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cache(w, "public", 1*time.Hour)
+	s.cache(w, "public", 1*time.Minute)
 	s.response(w, r, http.StatusOK, "sessions.html", struct {
 		MatchSessions []back.MatchSession
 		Leagues       map[util.UUIDAsBlob]back.League
