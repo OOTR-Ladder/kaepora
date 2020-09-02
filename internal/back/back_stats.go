@@ -3,6 +3,8 @@ package back
 import (
 	"io"
 	"kaepora/internal/util"
+	"log"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -16,6 +18,9 @@ type StatsMisc struct {
 }
 
 func (b *Back) GetMiscStats(shortcode string) (misc StatsMisc, _ error) { // nolint:funlen
+	start := time.Now()
+	defer func() { log.Printf("info: computed misc stats in %s", time.Since(start)) }()
+
 	if err := b.transaction(func(tx *sqlx.Tx) error {
 		league, err := getLeagueByShortCode(tx, shortcode)
 		if err != nil {
