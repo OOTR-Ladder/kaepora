@@ -23,6 +23,29 @@ body { font-family: "Avenir", "Ubuntu", "Noto Sans", "Segoe UI", sans-serif; }
 table.table { background-color: transparent; }
 #mainMenu .navbar-item { font-weight: bold; }
 
+section[class*="SiteHeader"] {
+    position: relative;
+    overflow: hidden;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+
+    background-color: #2a2a72;
+    background-image: linear-gradient(
+        to right bottom,
+        rgba(42, 42, 114, 1),
+        rgba(0, 159, 253, 1)
+    );
+
+    box-shadow: 0 -0.5em 1em 0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
+}
+
+.PageTitle {
+    font-size: 2.5rem;
+    font-weight: lighter;
+    line-height: 1.5;
+    color: var(--color-body-bg-color);
+}
+
 @media only screen and (max-width: 768px) {
     body { padding-bottom: calc(75px - 1rem); }
 }
@@ -748,38 +771,82 @@ ul.spoilers--hash li {
     background-color: #DDD;
 }
 /* {{{ Profile page */
-.PlayerCard {
-    position: relative;
-    overflow: hidden;
-}
-.PlayerCard.box .title { color: var(--color-bg-dark); }
-.PlayerCard--name.title {
-    margin-bottom: 3rem;
-    font-size: 1.5rem;
-    font-weight: lighter;
-}
-.PlayerCard--name svg {
-    margin-right: .5rem;
-    max-width: 2rem;
-    fill: #505aff;
-    vertical-align: sub;
-}
-.PlayerCard--name span {
-    color: #505aff;
-    font-size: 2rem;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-.PlayerCard--icon{
+.SiteHeader--profile::after {
+    content: '';
+    width: 8rem;
+    height: 8rem;
+
     position: absolute;
     bottom: 0;
-    right: 0;
-}
-.PlayerCard--icon svg {
-    width: 8rem;
-    fill: #505aff;
+    right: 1.5rem;
+
     opacity: .2;
-    transform: translate(-25%, 25%);
+    transform: translateY(1rem);
+
+    background: var(--color-white);
+    mask: url('../svg/user.svg') top left / cover;
+    -webkit-mask: url('../svg/user.svg') top left / cover;
+}
+.PlayerName { font-weight: bold; }
+.Player--dateInscription { color: var(--color-body-bg-color); }
+a[class*="Player--streamLink"] { display: inline-block; }
+a[class*="Player--streamLink"]::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 24px;
+
+    background-color: var(--color-body-bg-color);
+}
+.Player--streamLink__generic {
+    mask: url('../svg/live-generic.svg');
+    -webkit-mask: url('../svg/live-generic.svg');
+}
+.Player--streamLink__twitch {
+    mask: url('../svg/live-twitch.svg');
+    -webkit-mask: url('../svg/live-twitch.svg');
+}
+.Player--streamLink__facebook {
+    mask: url('../svg/live-facebook.svg');
+    -webkit-mask: url('../svg/live-facebook.svg');
+}
+.Player--streamLink__youtube {
+    mask: url('../svg/live-youtube.svg');
+    -webkit-mask: url('../svg/live-youtube.svg');
+}
+
+.QuickStats {
+    position: absolute;
+    top: 0;
+
+    transform: translateY(-50%);
+}
+.Stat {
+    margin-right: 1.5rem;
+    float: left;
+    background: var(--color-bg-dark);
+    border-radius: 20px;
+    box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.03), 0 0 0 1px rgba(10,10,10,.02);
+}
+.Stat:last-child::after {
+    content: '';
+    clear: both;
+}
+.Stat--name {
+    float: left;
+    margin: 0;
+    padding: 0 1.25rem;
+    line-height: 2rem;
+    background: var(--color-box);
+    border-radius: 20px;
+}
+.Stat--value {
+    float: left;
+    margin: 0;
+    padding: 0 1.25rem;
+    font-weight: bold;
+    line-height: 2rem;
+    color: var(--color-white);
 }
 .WLRatio { margin-bottom: 1.5rem; }
 .WLRatio > .level { margin-bottom: .25rem; }
