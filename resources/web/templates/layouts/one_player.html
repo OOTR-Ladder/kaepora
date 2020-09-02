@@ -1,83 +1,37 @@
 {{define "content"}}
-<section class="hero is-dark homeHeader playerPage">
+<section class="hero SiteHeader--profile">
     <div class="hero-head">
         {{- template "menu" . -}}
     </div>
 
     <div class="hero-body">
         <div class="container">
-            <h1 class="title">
-                {{if ne "" .Payload.Player.StreamURL}}
-                    <a class="StreamLink" href="{{.Payload.Player.StreamURL}}"></a>
-                {{end}}
-                {{ .Payload.Player.Name }}
-            </h1>
-            <span class="subtitle">{{ t .Locale "Climbing the ladder since %s" (date .Payload.Player.CreatedAt) }}</span>
+            <h1 class="PageTitle PlayerName">{{ .Payload.Player.Name }} {{if ne "" .Payload.Player.StreamURL}} <a class="Player--streamLink__twitch" href="{{.Payload.Player.StreamURL}}"></a> {{end}}</h1>
+            <div class="heading Player--dateInscription">{{ t .Locale "Climbing the ladder since %s" (date .Payload.Player.CreatedAt) }}</div>
         </div>
     </div>
 </section>
 
-<section class="container">
-    {{ range $v := .Payload.PlayerStats.Performances }}
-    <h2 class="title">{{ (index $.Payload.Leagues $v.LeagueID).Name }}</h2>
-    <div class="columns">
-        <div class="column">
-            <img
-                src="{{ uri $.Locale "player" $.Payload.Player.Name "graph" (index $.Payload.Leagues $v.LeagueID).ShortCode "rating.svg" }}"
-                alt="{{ t $.Locale "ratings graph" }}"
-            >
+<div class="container">
+    <div class="QuickStats">
+        <div class="QuickStats--stat Stat">
+            <div class="Stat--value">150</div>
+            <div class="Stat--name heading">{{t .Locale "Matches played"}}</div>
         </div>
-        <div class="column">{{ $v.WLGraph }}</div>
-    </div>
-    <div class="columns">
-        <div class="column">
-            <img
-                src="{{ uri $.Locale "player" $.Payload.Player.Name "graph" (index $.Payload.Leagues $v.LeagueID).ShortCode "seedtime.svg" }}"
-                alt="{{ t $.Locale "seed completion time graph" }}"
-            >
-            <div class="PlayerCard box is-shadowless">
-                <h1 class="title PlayerCard--name"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M3 4.995C3 3.893 3.893 3 4.995 3h14.01C20.107 3 21 3.893 21 4.995v14.01A1.995 1.995 0 0 1 19.005 21H4.995A1.995 1.995 0 0 1 3 19.005V4.995zM5 5v14h14V5H5zm2.972 13.18a9.983 9.983 0 0 1-1.751-.978A6.994 6.994 0 0 1 12.102 14c2.4 0 4.517 1.207 5.778 3.047a9.995 9.995 0 0 1-1.724 1.025A4.993 4.993 0 0 0 12.102 16c-1.715 0-3.23.864-4.13 2.18zM12 13a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7zm0-2a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg> {{t .Locale "Profile page of"}} <span>{{.Payload.Player.Name}}</span></h1>
-                <div class="PlayerCard--infos">
-                    <div class="level is-mobile">
-                        <div class="level-item has-text-centered">
-                            <div>
-                                <div class="heading">{{t .Locale "Climbing the ladder since"}}</div>
-                                <p class="title">{{date .Payload.Player.CreatedAt}}</p>
-                            </div>
-                        </div>
-                        <div class="level-item has-text-centered">
-                            <div>
-                                <div class="heading">{{t .Locale "Matches played"}}</div>
-                                <p class="title">X</p>
-                            </div>
-                        </div>
-                        <div class="level-item has-text-centered">
-                            <div>
-                                <div class="heading">{{t .Locale "Matches won"}}</div>
-                                <p class="title">X</p>
-                            </div>
-                        </div>
-                        <div class="level-item has-text-centered">
-                            <div>
-                                <div class="heading">{{t .Locale "Most played league"}}</div>
-                                <p class="title">Standard</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="PlayerCard--icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M4 22a8 8 0 1 1 16 0h-2a6 6 0 1 0-12 0H4zm8-9c-3.315 0-6-2.685-6-6s2.685-6 6-6 6 2.685 6 6-2.685 6-6 6zm0-2c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{end}}
-</section>
 
-<section class="container">
-    <h2 class="title">{{t .Locale "Past races"}}</h2>
+        <div class="QuickStats--stat Stat">
+            <div class="Stat--value">75</div>
+            <div class="Stat--name heading">{{t .Locale "Matches won"}}</div>
+        </div>
+
+        <div class="QuickStats--stat Stat is-hidden-touch">
+            <div class="Stat--name heading">{{t .Locale "Most played league"}}</div>
+            <div class="Stat--value">Standard</div>
+        </div>
+    </div>
+</div>
+
+<section class="section">
     <div class="container">
         <div class="columns">
             <div class="column is-half">
@@ -91,9 +45,6 @@
                                         <a>{{ (index $.Payload.Leagues $v.LeagueID).Name }}</a>
                                     </li>
                                 {{end}}
-                                <li>
-                                    <a>Random Settings</a>
-                                </li>
                             </ul>
                         </div>
                         <div class="tabs-content">
@@ -115,9 +66,13 @@
                                         <progress class="progress is-small is-success" value="50" max="100">50%</progress>
                                     </div>
 
-                                    <div class="RatingVariation">{{ $v.RRDGraph }}</div>
+                                    <div class="RatingVariation">
+                                        <img src="{{ uri $.Locale "player" $.Payload.Player.Name "graph" (index $.Payload.Leagues $v.LeagueID).ShortCode "rating.svg" }}" alt="{{ t $.Locale "ratings graph" }}" >
+                                    </div>
 
-                                    <div class="SeedDurations">{{ $v.SeedTimesGraph }}</div>
+                                    <div class="SeedDurations">
+                                        <img src="{{ uri $.Locale "player" $.Payload.Player.Name "graph" (index $.Payload.Leagues $v.LeagueID).ShortCode "seedtime.svg" }}" alt="{{ t $.Locale "seed completion time graph" }}" >
+                                    </div>
                                 </div>
                             {{end}}
                         </div>
