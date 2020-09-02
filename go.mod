@@ -35,6 +35,7 @@ require (
 	github.com/lib/pq v1.7.0 // indirect
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/mitchellh/mapstructure v1.3.2 // indirect
+	github.com/muesli/cache2go v0.0.0-20200423001931-a100c5aac93f
 	github.com/nakagami/firebirdsql v0.0.0-20200626040341-92e5c5093743 // indirect
 	github.com/neo4j/neo4j-go-driver v1.8.0 // indirect
 	github.com/pelletier/go-toml v1.8.0 // indirect
@@ -52,6 +53,7 @@ require (
 	go.mongodb.org/mongo-driver v1.3.4 // indirect
 	go.opencensus.io v0.22.4 // indirect
 	golang.org/x/image v0.0.0-20200618115811-c13761719519 // indirect
+	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/sys v0.0.0-20200625212154-ddb9806d33ae // indirect
 	golang.org/x/text v0.3.3
 	golang.org/x/time v0.0.0-20200416051211-89c76fbcd5d1

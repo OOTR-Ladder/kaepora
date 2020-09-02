@@ -403,6 +403,9 @@ github.com/mitchellh/go-homedir
 # github.com/mitchellh/mapstructure v1.3.2
 ## explicit
 github.com/mitchellh/mapstructure
+# github.com/muesli/cache2go v0.0.0-20200423001931-a100c5aac93f
+## explicit
+github.com/muesli/cache2go
 # github.com/nakabonne/nestif v0.3.0
 github.com/nakabonne/nestif
 # github.com/nakagami/firebirdsql v0.0.0-20200626040341-92e5c5093743
@@ -618,6 +621,7 @@ golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
 golang.org/x/net/trace
 # golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
+## explicit
 golang.org/x/oauth2
 golang.org/x/oauth2/google
 golang.org/x/oauth2/internal
