@@ -98,6 +98,7 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Logger)
 	r.Use(s.authenticator)
+	r.Use(s.contentSecurityPolicy)
 
 	fs := http.StripPrefix("/_/", http.FileServer(http.Dir(
 		filepath.Join(baseDir, "static"),
@@ -396,5 +397,13 @@ func (s *Server) shuffledSettings(w http.ResponseWriter, r *http.Request) {
 		Doc back.SettingsDocumentation
 	}{
 		Doc: doc,
+	})
+}
+
+func (s *Server) contentSecurityPolicy(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// TODO: Remove inline SVG.
+		w.Header().Add("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline';")
+		h.ServeHTTP(w, r)
 	})
 }
