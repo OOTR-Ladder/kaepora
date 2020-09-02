@@ -52,17 +52,31 @@ window.Kaepora = {
             target.setAttribute("aria-selected", true);
         }
 
+        function getFirstTab() {
+            return document.querySelector(container).getElementsByTagName("li")[0];
+        }
+
+        function onHistoryChange() {
+            const fragment = window.location.hash.substr(1);
+            const tab = fragment == ""
+                ? getFirstTab()
+                :  document.querySelector(`[data-target="${tabPrefix}${fragment}"]`)
+            ;
+            if (!tab) {
+                return;
+            }
+
+            deselectAll(container);
+            selectOne(tab);
+        }
+
         document.querySelector(container).addEventListener('click', e => {
             deselectAll(container);
             selectOne(e.target.parentNode); // target is <a>, the <li> carries the data.
         });
 
-        const fragment = window.location.hash.substr(1);
-        const tab = document.querySelector(`[data-target="${tabPrefix}${fragment}"]`);
-        if (tab) {
-            deselectAll(container);
-            selectOne(tab);
-        }
+        window.onpopstate = onHistoryChange;
+        onHistoryChange();
     },
 
     updateLocalDatetimes() {
