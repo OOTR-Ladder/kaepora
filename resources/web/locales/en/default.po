@@ -136,7 +136,7 @@ msgid "avg. sphere"
 msgstr ""
 
 #: resources/web/templates/includes/stats_league.html:5
-msgid "Registered players: %d"
+msgid "First ladder race: %s"
 msgstr ""
 
 #: resources/web/templates/includes/stats_league.html:6
@@ -160,15 +160,15 @@ msgid "Double forfeits: %d"
 msgstr ""
 
 #: resources/web/templates/includes/stats_league.html:19
-msgid "First ladder race: %s"
-msgstr ""
-
-#: resources/web/templates/includes/stats_league.html:20
 msgid "Average players per race: %d"
 msgstr ""
 
-#: resources/web/templates/includes/stats_league.html:21
+#: resources/web/templates/includes/stats_league.html:20
 msgid "Most players in a race: %d"
+msgstr ""
+
+#: resources/web/templates/includes/stats_league.html:21
+msgid "Total time played: %s"
 msgstr ""
 
 #: resources/web/templates/includes/stats_league.html:29
@@ -329,19 +329,19 @@ msgstr ""
 msgid "The leaderboard is currently empty."
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:10
+#: resources/web/templates/layouts/one_player.html:15
 msgid "Climbing the ladder since %s"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:22
+#: resources/web/templates/layouts/one_player.html:27
 msgid "ratings graph"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:31
+#: resources/web/templates/layouts/one_player.html:36
 msgid "seed completion time graph"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:39
+#: resources/web/templates/layouts/one_player.html:44
 msgid "Past races"
 msgstr ""
 

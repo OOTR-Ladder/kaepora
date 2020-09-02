@@ -138,8 +138,8 @@ msgid "avg. sphere"
 msgstr "sphère moy."
 
 #: resources/web/templates/includes/stats_league.html:5
-msgid "Registered players: %d"
-msgstr "Joueurs enregistrés : %d"
+msgid "First ladder race: %s"
+msgstr "Première course du Ladder : %s"
 
 #: resources/web/templates/includes/stats_league.html:6
 msgid "Ranked players: %d"
@@ -162,16 +162,16 @@ msgid "Double forfeits: %d"
 msgstr "Double forfaits : %d"
 
 #: resources/web/templates/includes/stats_league.html:19
-msgid "First ladder race: %s"
-msgstr "Première course du Ladder : %s"
-
-#: resources/web/templates/includes/stats_league.html:20
 msgid "Average players per race: %d"
 msgstr "Moyenne de joueurs par session : %d"
 
-#: resources/web/templates/includes/stats_league.html:21
+#: resources/web/templates/includes/stats_league.html:20
 msgid "Most players in a race: %d"
 msgstr "Plus grand nombre de joueurs dans une session : %d"
+
+#: resources/web/templates/includes/stats_league.html:21
+msgid "Total time played: %s"
+msgstr "Temps de jeu : %s"
 
 #: resources/web/templates/includes/stats_league.html:29
 msgid "Attendance (avg.)"
@@ -282,7 +282,8 @@ msgid ""
 "[Log in](/auth/oauth2/discord) if you are attempting to access your own "
 "active races."
 msgstr ""
-"[Connectez-vous](/auth/oauth2/discord) si vous tentez d'accéder à des informations sur vos matches en cours."
+"[Connectez-vous](/auth/oauth2/discord) si vous tentez d'accéder à des "
+"informations sur vos matches en cours."
 
 #: resources/web/templates/layouts/error.html:19
 msgid "An internal error occured."
@@ -332,19 +333,19 @@ msgstr "Forfaits"
 msgid "The leaderboard is currently empty."
 msgstr "Le classement est actuellement vide."
 
-#: resources/web/templates/layouts/one_player.html:10
+#: resources/web/templates/layouts/one_player.html:15
 msgid "Climbing the ladder since %s"
 msgstr "Participe au ladder depuis le %s"
 
-#: resources/web/templates/layouts/one_player.html:22
+#: resources/web/templates/layouts/one_player.html:27
 msgid "ratings graph"
 msgstr "graph de l'évolution du niveau"
 
-#: resources/web/templates/layouts/one_player.html:31
+#: resources/web/templates/layouts/one_player.html:36
 msgid "seed completion time graph"
 msgstr "graph des temps de complétion"
 
-#: resources/web/templates/layouts/one_player.html:39
+#: resources/web/templates/layouts/one_player.html:44
 msgid "Past races"
 msgstr "Courses passées"
 
@@ -461,3 +462,6 @@ msgstr "Objets"
 #: resources/web/templates/layouts/stats.html:35
 msgid "Settings"
 msgstr "Paramètres"
+
+#~ msgid "Registered players: %d"
+#~ msgstr "Joueurs enregistrés : %d"

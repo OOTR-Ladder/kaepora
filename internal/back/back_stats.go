@@ -11,10 +11,11 @@ import (
 
 // StatsMisc holds miscellaneous stats about a league.
 type StatsMisc struct {
-	RegisteredPlayers, RankedPlayers, PlayersOnLeaderboard int
-	SeedsPlayed, Forfeits, DoubleForfeits                  int
-	FirstLadderRace                                        util.TimeAsDateTimeTZ
-	AveragePlayersPerRace, MostPlayersInARace              int
+	RankedPlayers, PlayersOnLeaderboard       int
+	SeedsPlayed, Forfeits, DoubleForfeits     int
+	FirstLadderRace                           util.TimeAsDateTimeTZ
+	TotalSeedTime                             time.Duration
+	AveragePlayersPerRace, MostPlayersInARace int
 }
 
 func (b *Back) GetMiscStats(shortcode string) (misc StatsMisc, _ error) { // nolint:funlen
@@ -32,7 +33,6 @@ func (b *Back) GetMiscStats(shortcode string) (misc StatsMisc, _ error) { // nol
 			Query string
 			Args  []interface{}
 		}{
-			{&misc.RegisteredPlayers, `SELECT COUNT(*) FROM Player`, nil},
 			{&misc.RankedPlayers, `SELECT COUNT(*) FROM PlayerRating WHERE LeagueID = ?`, []interface{}{league.ID}},
 			{
 				&misc.PlayersOnLeaderboard,
@@ -42,25 +42,36 @@ func (b *Back) GetMiscStats(shortcode string) (misc StatsMisc, _ error) { // nol
 
 			{
 				&misc.SeedsPlayed,
-				`SELECT COUNT(*) FROM Match WHERE LeagueID = ?`,
-				[]interface{}{league.ID},
+				`SELECT COUNT(*) FROM Match
+                INNER JOIN MatchSession ON (Match.MatchSessionID = MatchSession.ID)
+                WHERE MatchSession.LeagueID = ? AND MatchSession.Status = ?`,
+				[]interface{}{league.ID, MatchSessionStatusClosed},
 			},
 			{
 				&misc.Forfeits,
 				`SELECT COUNT(*) FROM MatchEntry
-                LEFT JOIN Match ON (MatchEntry.MatchID = Match.ID)
-                WHERE Match.LeagueID = ? AND MatchEntry.Status = ?`,
-				[]interface{}{league.ID, MatchEntryStatusForfeit},
+                INNER JOIN Match ON (MatchEntry.MatchID = Match.ID)
+                INNER JOIN MatchSession ON (Match.MatchSessionID = MatchSession.ID)
+                WHERE Match.LeagueID = ? AND MatchEntry.Status = ? AND MatchSession.Status = ?`,
+				[]interface{}{league.ID, MatchEntryStatusForfeit, MatchSessionStatusClosed},
 			},
 			{
 				&misc.DoubleForfeits,
 				`SELECT COUNT(*) FROM (SELECT COUNT(*) as cnt FROM "MatchEntry"
-                LEFT JOIN Match ON (MatchEntry.MatchID = Match.ID)
-                WHERE Match.LeagueID = ? AND MatchEntry.Status == ?
+                INNER JOIN Match ON (MatchEntry.MatchID = Match.ID)
+                INNER JOIN MatchSession ON (Match.MatchSessionID = MatchSession.ID)
+                WHERE Match.LeagueID = ? AND MatchEntry.Status == ? AND MatchSession.Status = ?
                 GROUP BY MatchEntry.MatchID HAVING cnt > 1)`,
-				[]interface{}{league.ID, MatchEntryStatusForfeit},
+				[]interface{}{league.ID, MatchEntryStatusForfeit, MatchSessionStatusClosed},
 			},
-
+			{
+				&misc.TotalSeedTime,
+				`SELECT (? * SUM(MatchEntry.EndedAt - MatchEntry.StartedAt)) FROM MatchEntry
+                INNER JOIN Match ON (MatchEntry.MatchID = Match.ID)
+                INNER JOIN MatchSession ON (Match.MatchSessionID = MatchSession.ID)
+                WHERE Match.LeagueID = ? AND MatchSession.Status = ?`,
+				[]interface{}{time.Second, league.ID, MatchSessionStatusClosed},
+			},
 			{
 				&misc.FirstLadderRace,
 				`SELECT StartDate FROM MatchSession
@@ -71,14 +82,14 @@ func (b *Back) GetMiscStats(shortcode string) (misc StatsMisc, _ error) { // nol
 			{
 				&misc.AveragePlayersPerRace,
 				`SELECT round(avg(json_array_length(PlayerIDs)))
-                FROM MatchSession WHERE LeagueID = ?`,
-				[]interface{}{league.ID},
+                FROM MatchSession WHERE LeagueID = ? AND MatchSession.Status = ?`,
+				[]interface{}{league.ID, MatchSessionStatusClosed},
 			},
 			{
 				&misc.MostPlayersInARace,
 				`SELECT max(json_array_length(PlayerIDs))
-                FROM MatchSession WHERE LeagueID = ?`,
-				[]interface{}{league.ID},
+                FROM MatchSession WHERE LeagueID = ? AND MatchSession.Status = ?`,
+				[]interface{}{league.ID, MatchSessionStatusClosed},
 			},
 		}
 
@@ -109,9 +120,10 @@ func (b *Back) MapSpoilerLogs(
 		}
 
 		rows, err := tx.Query(`
-            SELECT SpoilerLog FROM Match WHERE LeagueID = ?
-            AND EndedAt IS NOT NULL`, // HACK: ensure we don't leak stats on in-progress matches
-			league.ID,
+            SELECT Match.SpoilerLog FROM Match
+            INNER JOIN MatchSession ON (Match.MatchSessionID = MatchSession.ID)
+            WHERE Match.LeagueID = ? AND MatchSession.Status = ? AND Match.EndedAt IS NOT NULL`,
+			league.ID, MatchSessionStatusClosed,
 		)
 		if err != nil {
 			return err

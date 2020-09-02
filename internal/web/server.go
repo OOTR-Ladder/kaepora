@@ -407,3 +407,24 @@ func (s *Server) contentSecurityPolicy(h http.Handler) http.Handler {
 		h.ServeHTTP(w, r)
 	})
 }
+
+// memoizer either returns a newly generated value or a cached one from the given cache/key.
+func memoizer(
+	cache *cache2go.CacheTable,
+	key string,
+	lifetime time.Duration,
+	valueFn func() (interface{}, error),
+) (interface{}, time.Duration, error) {
+	cached, err := cache.Value(key)
+	if err == nil {
+		return cached.Data(), time.Until(cached.CreatedOn().Add(cached.LifeSpan())), nil
+	}
+
+	generated, err := valueFn()
+	if err != nil {
+		return nil, 0, err
+	}
+	cache.Add(key, lifetime, generated)
+
+	return generated, lifetime, nil
+}

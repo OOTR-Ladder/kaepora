@@ -22,29 +22,24 @@ type leagueStats struct {
 }
 
 func (s *Server) stats(w http.ResponseWriter, r *http.Request) {
-	var payload *leagueStats
-	expire := time.Hour
 	shortcode := chi.URLParam(r, "shortcode")
-	key := "league_" + shortcode
-
-	cached, err := s.statsCache.Value(key)
-	if err == nil {
-		payload = cached.Data().(*leagueStats)
-		expire = time.Until(cached.CreatedOn().Add(cached.LifeSpan()))
-		log.Printf("debug: item was cached")
-	} else {
-		log.Printf("debug: item was NOT cached")
-		payload, err = s.computeLeagueStats(shortcode)
-		if err != nil {
-			s.error(w, r, err, http.StatusInternalServerError)
-			return
-		}
-		s.statsCache.Add(key, time.Hour, payload)
+	statsIface, expiresIn, err := memoizer(
+		s.statsCache,
+		"league_"+shortcode,
+		time.Hour,
+		func() (interface{}, error) {
+			return s.computeLeagueStats(shortcode)
+		},
+	)
+	if err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
 	}
 
-	log.Printf("debug: expire %s", expire)
-	s.cache(w, r, expire)
-	s.response(w, r, http.StatusOK, "stats.html", payload)
+	stats := statsIface.(*leagueStats)
+
+	s.cache(w, r, expiresIn)
+	s.response(w, r, http.StatusOK, "stats.html", stats)
 }
 
 func (s *Server) computeLeagueStats(shortcode string) (*leagueStats, error) {

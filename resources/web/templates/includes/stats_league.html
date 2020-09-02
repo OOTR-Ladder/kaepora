@@ -2,7 +2,7 @@
 <div class="columns is-centered">
     <div class="column is-one-third">
         <ul>
-            <li>{{t .Locale "Registered players: %d" .Payload.Misc.RegisteredPlayers}}</li>
+            <li>{{t .Locale "First ladder race: %s" (.Payload.Misc.FirstLadderRace | datetime) | unsafe}}</li>
             <li>{{t .Locale "Ranked players: %d" .Payload.Misc.RankedPlayers}}</li>
             <li>{{t .Locale "Players on leaderboard: %d" .Payload.Misc.PlayersOnLeaderboard}}</li>
         </ul>
@@ -16,9 +16,9 @@
     </div>
     <div class="column is-one-third">
         <ul>
-            <li>{{t .Locale "First ladder race: %s" (.Payload.Misc.FirstLadderRace | datetime) | unsafe}}</li>
             <li>{{t .Locale "Average players per race: %d" .Payload.Misc.AveragePlayersPerRace}}</li>
             <li>{{t .Locale "Most players in a race: %d" .Payload.Misc.MostPlayersInARace}}</li>
+            <li>{{t .Locale "Total time played: %s" .Payload.Misc.TotalSeedTime}}</li>
         </ul>
     </div>
 </div>
