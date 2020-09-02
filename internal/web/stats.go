@@ -12,52 +12,77 @@ import (
 	"github.com/go-chi/chi"
 )
 
+type leagueStats struct {
+	Misc                           back.StatsMisc
+	Attendance                     []attendanceEntry
+	Seed                           statsSeed
+	ShortCode                      string
+	ExtendedStats                  bool
+	SeedTimes, RatingsDistribution template.HTML
+}
+
 func (s *Server) stats(w http.ResponseWriter, r *http.Request) {
-	start := time.Now()
+	var payload *leagueStats
+	expire := time.Hour
 	shortcode := chi.URLParam(r, "shortcode")
-	misc, err := s.back.GetMiscStats(shortcode)
-	if err != nil {
-		s.error(w, r, err, http.StatusInternalServerError)
-		return
-	}
-	log.Printf("info: computed misc stats in %s", time.Since(start))
+	key := "league_" + shortcode
 
-	seed, err := s.getSeedStats(shortcode)
-	if err != nil {
-		s.error(w, r, err, http.StatusInternalServerError)
-		return
-	}
-
-	attendance, err := s.getAttendanceStats(shortcode)
-	if err != nil {
-		s.error(w, r, err, http.StatusInternalServerError)
-		return
+	cached, err := s.statsCache.Value(key)
+	if err == nil {
+		payload = cached.Data().(*leagueStats)
+		expire = time.Until(cached.CreatedOn().Add(cached.LifeSpan()))
+		log.Printf("debug: item was cached")
+	} else {
+		log.Printf("debug: item was NOT cached")
+		payload, err = s.computeLeagueStats(shortcode)
+		if err != nil {
+			s.error(w, r, err, http.StatusInternalServerError)
+			return
+		}
+		s.statsCache.Add(key, time.Hour, payload)
 	}
 
-	seedTime, err := s.back.GetLeagueSeedTimesGraph(shortcode)
+	log.Printf("debug: expire %s", expire)
+	s.cache(w, r, expire)
+	s.response(w, r, http.StatusOK, "stats.html", payload)
+}
+
+func (s *Server) computeLeagueStats(shortcode string) (*leagueStats, error) {
+	start := time.Now()
+	defer func() { log.Printf("info: computed league stats in %s", time.Since(start)) }()
+
+	var err error
+	payload := &leagueStats{}
+
+	payload.ShortCode = shortcode
+	payload.ExtendedStats = payload.ShortCode == "shu" // HACK
+
+	payload.Misc, err = s.back.GetMiscStats(payload.ShortCode)
 	if err != nil {
-		s.error(w, r, err, http.StatusInternalServerError)
-		return
+		return nil, err
 	}
 
-	ratings, err := s.back.GetRatingsDistributionGraph(shortcode)
+	payload.Seed, err = s.getSeedStats(payload.ShortCode)
 	if err != nil {
-		s.error(w, r, err, http.StatusInternalServerError)
-		return
+		return nil, err
 	}
 
-	s.cache(w, r, 1*time.Hour)
-	s.response(w, r, http.StatusOK, "stats.html", struct {
-		Misc                           back.StatsMisc
-		Attendance                     []attendanceEntry
-		Seed                           statsSeed
-		ShortCode                      string
-		ExtendedStats                  bool
-		SeedTimes, RatingsDistribution template.HTML
-	}{
-		misc, attendance, seed, shortcode, shortcode == "shu",
-		template.HTML(seedTime), template.HTML(ratings), // nolint:gosec
-	})
+	payload.Attendance, err = s.getAttendanceStats(payload.ShortCode)
+	if err != nil {
+		return nil, err
+	}
+
+	payload.SeedTimes, err = s.back.GetLeagueSeedTimesGraph(payload.ShortCode)
+	if err != nil {
+		return nil, err
+	}
+
+	payload.RatingsDistribution, err = s.back.GetRatingsDistributionGraph(payload.ShortCode)
+	if err != nil {
+		return nil, err
+	}
+
+	return payload, nil
 }
 
 type attendanceEntry struct {

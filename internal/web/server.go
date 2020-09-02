@@ -23,11 +23,69 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/securecookie"
 	"github.com/leonelquinteros/gotext"
+	"github.com/muesli/cache2go"
 	"github.com/russross/blackfriday/v2"
 	"golang.org/x/text/language"
 )
 
 var errForbidden = errors.New("forbidden")
+
+// Server contains the state required to serve the OOTRLadder website over HTTP.
+type Server struct {
+	http       *http.Server
+	back       *back.Back
+	tpl        map[string]*template.Template // Indexed by file name (eg. "index.html")
+	locales    map[string]*gotext.Locale     // Indexed by lowercase ISO 639-2 (eg. "fr")
+	sc         *securecookie.SecureCookie
+	statsCache *cache2go.CacheTable
+
+	config *config.Config
+}
+
+// NewServer creates a new HTTP server ready to listen.
+func NewServer(back *back.Back, config *config.Config) (*Server, error) {
+	baseDir, err := getResourcesDir()
+	if err != nil {
+		return nil, err
+	}
+
+	if len(config.CookieHashKey) != 32 {
+		return nil, errors.New("CookieHashKey must be 32 chars")
+	}
+	if len(config.CookieBlockKey) != 32 {
+		return nil, errors.New("CookieBlockKey must be 32 chars")
+	}
+	if config.Domain == "" {
+		return nil, errors.New("Domain must be set") // nolint:stylecheck
+	}
+
+	s := &Server{
+		config:     config,
+		back:       back,
+		locales:    map[string]*gotext.Locale{},
+		statsCache: cache2go.Cache("stats"),
+		sc:         securecookie.New([]byte(config.CookieHashKey), []byte(config.CookieBlockKey)),
+		http: &http.Server{
+			Addr:         "127.0.0.1:3001",
+			ReadTimeout:  5 * time.Second,
+			WriteTimeout: 5 * time.Second,
+			IdleTimeout:  10 * time.Second,
+		},
+	}
+
+	for _, k := range []string{"en", "fr"} {
+		s.locales[k] = gotext.NewLocale(filepath.Join(baseDir, "locales"), k)
+		s.locales[k].AddDomain("default")
+	}
+
+	s.http.Handler = s.setupRouter(baseDir)
+	s.tpl, err = s.loadTemplates(baseDir)
+	if err != nil {
+		return nil, err
+	}
+
+	return s, nil
+}
 
 // nolint:funlen
 func (s *Server) setupRouter(baseDir string) *chi.Mux {
@@ -140,61 +198,6 @@ func (s *Server) langDetect(next http.Handler) http.Handler {
 
 func (s *Server) notFound(w http.ResponseWriter, r *http.Request) {
 	s.error(w, r, errors.New(http.StatusText(http.StatusNotFound)), http.StatusNotFound)
-}
-
-// Server contains the state required to serve the OOTRLadder website over HTTP.
-type Server struct {
-	http    *http.Server
-	back    *back.Back
-	tpl     map[string]*template.Template // Indexed by file name (eg. "index.html")
-	locales map[string]*gotext.Locale     // Indexed by lowercase ISO 639-2 (eg. "fr")
-	sc      *securecookie.SecureCookie
-
-	config *config.Config
-}
-
-// NewServer creates a new HTTP server ready to listen.
-func NewServer(back *back.Back, config *config.Config) (*Server, error) {
-	baseDir, err := getResourcesDir()
-	if err != nil {
-		return nil, err
-	}
-
-	if len(config.CookieHashKey) != 32 {
-		return nil, errors.New("CookieHashKey must be 32 chars")
-	}
-	if len(config.CookieBlockKey) != 32 {
-		return nil, errors.New("CookieBlockKey must be 32 chars")
-	}
-	if config.Domain == "" {
-		return nil, errors.New("Domain must be set") // nolint:stylecheck
-	}
-
-	s := &Server{
-		config:  config,
-		back:    back,
-		locales: map[string]*gotext.Locale{},
-		sc:      securecookie.New([]byte(config.CookieHashKey), []byte(config.CookieBlockKey)),
-		http: &http.Server{
-			Addr:         "127.0.0.1:3001",
-			ReadTimeout:  5 * time.Second,
-			WriteTimeout: 5 * time.Second,
-			IdleTimeout:  10 * time.Second,
-		},
-	}
-
-	for _, k := range []string{"en", "fr"} {
-		s.locales[k] = gotext.NewLocale(filepath.Join(baseDir, "locales"), k)
-		s.locales[k].AddDomain("default")
-	}
-
-	s.http.Handler = s.setupRouter(baseDir)
-	s.tpl, err = s.loadTemplates(baseDir)
-	if err != nil {
-		return nil, err
-	}
-
-	return s, nil
 }
 
 // getResourcesDir returns the absolute path to the web server static resources.
