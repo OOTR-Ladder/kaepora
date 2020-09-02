@@ -87,10 +87,13 @@
                         <div class="tabs is-toggle is-fullwidth">
                             <ul>
                                 {{ range $k, $v := .Payload.PlayerStats.Performances }}
-                                    <li data-target="{{ (index $.Payload.Leagues $v.LeagueID).Name }}-{{ $k }}">
+                                    <li>
                                         <a>{{ (index $.Payload.Leagues $v.LeagueID).Name }}</a>
                                     </li>
                                 {{end}}
+                                <li>
+                                    <a>Random Settings</a>
+                                </li>
                             </ul>
                         </div>
                         <div class="tabs-content">

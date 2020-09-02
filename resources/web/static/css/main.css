@@ -784,6 +784,13 @@ ul.spoilers--hash li {
 .WLRatio { margin-bottom: 1.5rem; }
 .WLRatio > .level { margin-bottom: .25rem; }
 
+div[class*="PlayerMatch"]:not(:last-child) { margin-bottom: .5rem; }
+
+.PlayerMatch--result { font-weight: bold; }
+.PlayerMatch__win .PlayerMatch--result { color: #257942; }
+.PlayerMatch__lose .PlayerMatch--result { color: #cc0f35; }
+.PlayerMatch__tie .PlayerMatch--result { color: #947600; }
+
 .tab-content {
     padding: 0 1.5rem;
     display: none;

@@ -4,46 +4,66 @@
     <div class="tabs">
         <ul>
             <li>
-                <a>Saison beta</a>
+                <a>Beta</a>
             </li>
         </ul>
     </div>
     <div>
-        {{- if len .Payload.Matches -}}
-        <div class="tab-content MatchList column">
-            {{- range $match := .Payload.Matches -}}
-            <div class="MatchList--match{{if $match.IsDoubleForfeit}}__doubleFF{{end}} Match columns is-relative is-vcentered">
-                <div class="Match--players columns column is-three-fifths is-mobile is-gapless">
-                    <div class="column is-half-mobile is-half is-relative">
-                        <div class="Player__winner">
-                            <div class="Player--name"><a href="{{ uri $.Locale "player" (index $.Payload.Players ($match.WinningEntry).PlayerID).Name }}">{{ (index $.Payload.Players ($match.WinningEntry).PlayerID).Name }}</a></div>
-                            <div class="Player--time">{{ matchEntryStatus $.Locale $match.WinningEntry }}</div>
-                        </div>
-                    </div>
-                    <div class="column is-half-mobile is-half">
-                        <div class="Player__loser">
-                            <div class="Player--name"><a href="{{ uri $.Locale "player" (index $.Payload.Players ($match.LosingEntry).PlayerID).Name }}">{{ (index $.Payload.Players ($match.LosingEntry).PlayerID).Name }}</a></div>
-                            <div class="Player--time">{{ matchEntryStatus $.Locale $match.LosingEntry }}</div>
+        <div class="tab-content">
+            <div class="level is-mobile PlayerMatch__win">
+                <div class="level-left">
+                    <div class="level-item">
+                        <div>
+                            <span class="PlayerMatch--result">Victoire</span> contre <a href="#" class="PlayerMatch--opponent">TheSaltySponge</a>
                         </div>
                     </div>
                 </div>
-                <div class="Match--seed Seed column is-third has-text-centered is-relative">
-                    <span class="tag is-rounded Seed--number is-hidden-mobile">Seed :<code>{{ $match.Seed }}</code></span>
-                    <div class="Seed--links Link">
-                        <a href="{{uri $.Locale "matches" $match.ID.String "spoilers"}}" class="Link--spoiler button is-rounded is-small is-success">{{t $.Locale "Check the spoiler log"}}</a>
-                        <a href="{{$match | matchSeedURL }}" class="Link--seed button is-rounded is-small is-outlined is-info is-light is-hidden-mobile">{{t $.Locale "Get the seed"}}</a>
+                <div class="level-right">
+                    <div class="level-item">
+                        <span class="tag PlayerMatch--league">Standard</span>
+                    </div>
+                    <div class="level-item">
+                        <a href="#" class="PlayerMatch--spoiler button is-rounded is-small is-outlined is-info is-light">Solution</a>
                     </div>
                 </div>
             </div>
-            {{- end -}}
+
+            <div class="level is-mobile PlayerMatch__lose">
+                <div class="level-left">
+                    <div class="level-item">
+                        <div>
+                            <span class="PlayerMatch--result">Défaite</span> contre <a href="#" class="PlayerMatch--opponent">TheSaltySponge</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="level-right">
+                    <div class="level-item">
+                        <span class="tag PlayerMatch--league">Shuffled Settings</span>
+                    </div>
+                    <div class="level-item">
+                        <a href="#" class="PlayerMatch--spoiler button is-rounded is-small is-outlined is-info is-light">Solution</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="level is-mobile PlayerMatch__tie">
+                <div class="level-left">
+                    <div class="level-item">
+                        <div>
+                            <span class="PlayerMatch--result">Égalité</span> contre <a href="#" class="PlayerMatch--opponent">TheSaltySponge</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="level-right">
+                    <div class="level-item">
+                        <span class="tag PlayerMatch--league">Shuffled Settings</span>
+                    </div>
+                    <div class="level-item">
+                        <a href="#" class="PlayerMatch--spoiler button is-rounded is-small is-outlined is-info is-light">Solution</a>
+                    </div>
+                </div>
+            </div>
         </div>
-        {{else}}
-        <article class="message is-info">
-            <div class="message-body">
-                {{t .Locale "Not enough players joined this session."}}
-            </div>
-        </article>
-        {{end}}
     </div>
 </div>
 
