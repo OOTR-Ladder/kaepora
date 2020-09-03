@@ -301,31 +301,31 @@ msgstr ""
 msgid "Full leaderboard"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:7
+#: resources/web/templates/layouts/leaderboard.html:9
 msgid "Leaderboard"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:8
+#: resources/web/templates/layouts/leaderboard.html:10
 msgid "%s league"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:22
+#: resources/web/templates/layouts/leaderboard.html:24
 msgid "Rating"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:23
+#: resources/web/templates/layouts/leaderboard.html:25
 msgid "Victories"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:24
+#: resources/web/templates/layouts/leaderboard.html:26
 msgid "Losses"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:25
+#: resources/web/templates/layouts/leaderboard.html:27
 msgid "Forfeits"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:72
+#: resources/web/templates/layouts/leaderboard.html:74
 msgid "The leaderboard is currently empty."
 msgstr ""
 

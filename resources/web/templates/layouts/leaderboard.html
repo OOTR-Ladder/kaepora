@@ -1,11 +1,13 @@
 {{define "content"}}
-<section class="hero is-dark homeHeader">
-    {{- template "menu" . -}}
+<section class="hero SiteHeader--leaderboard">
+    <div class="hero-head">
+        {{- template "menu" . -}}
+    </div>
 
     <div class="hero-body">
         <div class="container">
-            <h1 class="title">{{t .Locale "Leaderboard"}}</h1>
-            <h2 class="subtitle">{{t .Locale "%s league" .Payload.League.Name}}</h2>
+            <h1 class="PageTitle">{{t .Locale "Leaderboard"}}</h1>
+            <div class="heading">{{t .Locale "%s league" .Payload.League.Name}}</div>
         </div>
     </div>
 </section>

@@ -305,31 +305,31 @@ msgstr "Courses planifiées"
 msgid "Full leaderboard"
 msgstr "Classement complet"
 
-#: resources/web/templates/layouts/leaderboard.html:7
+#: resources/web/templates/layouts/leaderboard.html:9
 msgid "Leaderboard"
 msgstr "Classement"
 
-#: resources/web/templates/layouts/leaderboard.html:8
+#: resources/web/templates/layouts/leaderboard.html:10
 msgid "%s league"
 msgstr "Ligue %s"
 
-#: resources/web/templates/layouts/leaderboard.html:22
+#: resources/web/templates/layouts/leaderboard.html:24
 msgid "Rating"
 msgstr "Score"
 
-#: resources/web/templates/layouts/leaderboard.html:23
+#: resources/web/templates/layouts/leaderboard.html:25
 msgid "Victories"
 msgstr "Victoires"
 
-#: resources/web/templates/layouts/leaderboard.html:24
+#: resources/web/templates/layouts/leaderboard.html:26
 msgid "Losses"
 msgstr "Défaites"
 
-#: resources/web/templates/layouts/leaderboard.html:25
+#: resources/web/templates/layouts/leaderboard.html:27
 msgid "Forfeits"
 msgstr "Forfaits"
 
-#: resources/web/templates/layouts/leaderboard.html:72
+#: resources/web/templates/layouts/leaderboard.html:74
 msgid "The leaderboard is currently empty."
 msgstr "Le classement est actuellement vide."
 
