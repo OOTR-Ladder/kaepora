@@ -116,6 +116,26 @@ section[class*="SiteHeader"] {
     max-width: 1.5rem;
     fill: var(--color-bg-dark);
 }
+.ladderNav > *[class*="ladderNav--item"] > a > i[class*="ladderNav--icon"],
+.ladderNav > *[class*="ladderNav--item"] > div > i[class*="ladderNav--icon"] {
+    display: block;
+    margin: 0 auto .3rem auto;
+    width: 20px;
+    height: 20px;
+}
+.ladderNav > *[class*="ladderNav--item"] > a > i[class*="ladderNav--icon"]::before,
+.ladderNav > *[class*="ladderNav--item"] > div > i[class*="ladderNav--icon"]::before {
+    content: '';
+    display: inline-block;
+    margin: 0;
+    width: 20px;
+    height: 20px;
+    background: var(--color-bg-dark);
+    transition: all ease-in-out 150ms;
+}
+.ladderNav > *[class*="ladderNav--item"] a:focus-within > i[class*="ladderNav--icon"]::before,
+.ladderNav > *[class*="ladderNav--item"] a:focus > i[class*="ladderNav--icon"]::before,
+.ladderNav > *[class*="ladderNav--item"]:hover i[class*="ladderNav--icon"]::before { background: #3273dc; }
 .ladderNav > .ladderNav--item__has-sub .ladderNav--sub {
     display: flex;
     position: absolute;
@@ -133,6 +153,33 @@ section[class*="SiteHeader"] {
 }
 .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] > a:hover,
 .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] > a:active { color: rgb(0, 159, 253); }
+
+/* Ladder navigation icons */
+.ladderNav > *[class*="ladderNav--item"] > a > i.ladderNav--icon__flag::before,
+.ladderNav > *[class*="ladderNav--item"] > div > i.ladderNav--icon__flag::before {
+    mask: url('../svg/flag.svg') top left / cover;
+    -webkit-mask: url('../svg/flag.svg') top left / cover;
+}
+.ladderNav > *[class*="ladderNav--item"] > a > i.ladderNav--icon__leaderboard::before,
+.ladderNav > *[class*="ladderNav--item"] > div > i.ladderNav--icon__leaderboard::before {
+    mask: url('../svg/trophy.svg') top left / cover;
+    -webkit-mask: url('../svg/trophy.svg') top left / cover;
+}
+.ladderNav > *[class*="ladderNav--item"] > a > i.ladderNav--icon__stats::before,
+.ladderNav > *[class*="ladderNav--item"] > div > i.ladderNav--icon__stats::before {
+    mask: url('../svg/bar-chart.svg') top left / cover;
+    -webkit-mask: url('../svg/bar-chart.svg') top left / cover;
+}
+.ladderNav > *[class*="ladderNav--item"] > a > i.ladderNav--icon__doc::before,
+.ladderNav > *[class*="ladderNav--item"] > div > i.ladderNav--icon__doc::before {
+    mask: url('../svg/doc.svg') top left / cover;
+    -webkit-mask: url('../svg/doc.svg') top left / cover;
+}
+.ladderNav > *[class*="ladderNav--item"] > a > i.ladderNav--icon__account::before,
+.ladderNav > *[class*="ladderNav--item"] > div > i.ladderNav--icon__account::before {
+    mask: url('../svg/user.svg') top left / cover;
+    -webkit-mask: url('../svg/user.svg') top left / cover;
+}
 
 @media only screen and (max-width: 768px){
     .navContainer {
