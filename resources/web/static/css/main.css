@@ -23,6 +23,12 @@ body { font-family: "Avenir", "Ubuntu", "Noto Sans", "Segoe UI", sans-serif; }
 table.table { background-color: transparent; }
 #mainMenu .navbar-item { font-weight: bold; }
 
+.title.is-display {
+    margin-top: 2rem;
+    font-size: 2rem;
+    font-weight: lighter;
+}
+
 section[class*="SiteHeader"] {
     position: relative;
     overflow: hidden;
@@ -827,6 +833,7 @@ a[class*="Player--streamLink"]::before {
     background: var(--color-bg-dark);
     border-radius: 20px;
     box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.03), 0 0 0 1px rgba(10,10,10,.02);
+    overflow: hidden;
 }
 .Stat:last-child::after {
     content: '';
@@ -838,18 +845,17 @@ a[class*="Player--streamLink"]::before {
     padding: 0 1.25rem;
     line-height: 2rem;
     background: var(--color-box);
-    border-radius: 20px;
 }
 .Stat--value {
     float: left;
     margin: 0;
-    padding: 0 1.25rem;
     font-weight: bold;
     line-height: 2rem;
     color: var(--color-white);
 }
-.WLRatio { margin-bottom: 1.5rem; }
+#PlayerPerformances .WLRatio { margin-bottom: 1.5rem; }
 .WLRatio > .level { margin-bottom: .25rem; }
+.RatingVariation { margin-bottom: 1.5rem; }
 
 div[class*="PlayerMatch"]:not(:last-child) { margin-bottom: .5rem; }
 
@@ -858,9 +864,54 @@ div[class*="PlayerMatch"]:not(:last-child) { margin-bottom: .5rem; }
 .PlayerMatch__lose .PlayerMatch--result { color: #cc0f35; }
 .PlayerMatch__tie .PlayerMatch--result { color: #947600; }
 
-.tab-content {
-    padding: 0 1.5rem;
-    display: none;
-}
+.tab-content { display: none; }
 .tab-content.is-active { display: block; }
+
+.SeasonResults .columns { margin-top: 0; }
+.NumSaison {
+    margin: 0;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    font-size: 5rem;
+    font-weight: bolder;
+    text-transform: uppercase;
+    color: #3273dc;
+
+    opacity: .1;
+    z-index: 0;
+    transform: translate(0%, 40%);
+}
+.SeasonResults .WLRatio {
+    position: relative;
+    z-index: 1;
+}
+
+@media only screen and (max-width: 768px) {
+    .QuickStats {
+        width: 100%;
+        padding: 0 1.25rem;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .Stat { margin-right: .5rem; }
+    .Stat--name,
+    .Stat--value {
+        padding: 0 .5rem;
+        font-size: .6rem;
+        line-height: 1.75rem;
+    }
+    .tab-content { padding: 0 .5rem; }
+    div[class*="PlayerMatch"] { font-size: .8em; }
+
+    .SeasonResults .columns > .column { padding: 0 .75rem .75rem; }
+    .tag:not(body).SeasonResults--league { font-size: .75rem; }
+    .NumSaison { font-size: 3rem; }
+}
+@media only screen and (min-width: 769px) {
+    .Stat--name,
+    .Stat--value { padding: 0 1.25rem; }
+    .tab-content { padding: 0 1.5rem; }
+}
 /* }}} Profile page */
