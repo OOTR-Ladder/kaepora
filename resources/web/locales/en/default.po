@@ -333,15 +333,35 @@ msgstr ""
 msgid "Climbing the ladder since %s"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:27
-msgid "ratings graph"
+#: resources/web/templates/layouts/one_player.html:21
+msgid "Matches played"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:36
-msgid "seed completion time graph"
+#: resources/web/templates/layouts/one_player.html:24
+msgid "Matches won"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:44
+#: resources/web/templates/layouts/one_player.html:38
+msgid "Most played league"
+msgstr ""
+
+#: resources/web/templates/layouts/one_player.html:38
+msgid "This season"
+msgstr ""
+
+#: resources/web/templates/layouts/one_player.html:70
+msgid "Ratings graph"
+msgstr ""
+
+#: resources/web/templates/layouts/one_player.html:74
+msgid "Seed completion times graph"
+msgstr ""
+
+#: resources/web/templates/layouts/one_player.html:82
+msgid "Past seasons"
+msgstr ""
+
+#: resources/web/templates/layouts/one_player.html:112
 msgid "Past races"
 msgstr ""
 
