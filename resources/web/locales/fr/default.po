@@ -81,15 +81,23 @@ msgstr "Règles"
 msgid "Shuffled Settings"
 msgstr "Shuffled Settings"
 
-#: resources/web/templates/includes/menu.html:80
-msgid "Discord"
-msgstr "Discord"
+#: resources/web/templates/includes/menu.html:76
+msgid "Discord Server"
+msgstr "Serveur Discord"
 
-#: resources/web/templates/includes/menu.html:87
+#: resources/web/templates/includes/menu.html:84
+msgid "Account"
+msgstr "Compte"
+
+#: resources/web/templates/includes/menu.html:89
+msgid "My profile"
+msgstr "Mon profil"
+
+#: resources/web/templates/includes/menu.html:92
 msgid "Sign out"
 msgstr "Déconnexion"
 
-#: resources/web/templates/includes/menu.html:92
+#: resources/web/templates/includes/menu.html:100
 msgid "Sign in"
 msgstr "Connexion"
 

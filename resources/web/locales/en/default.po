@@ -81,15 +81,23 @@ msgstr ""
 msgid "Shuffled Settings"
 msgstr ""
 
-#: resources/web/templates/includes/menu.html:80
-msgid "Discord"
+#: resources/web/templates/includes/menu.html:76
+msgid "Discord Server"
 msgstr ""
 
-#: resources/web/templates/includes/menu.html:87
-msgid "Sign out"
+#: resources/web/templates/includes/menu.html:84
+msgid "Account"
+msgstr ""
+
+#: resources/web/templates/includes/menu.html:89
+msgid "My profile"
 msgstr ""
 
 #: resources/web/templates/includes/menu.html:92
+msgid "Sign out"
+msgstr ""
+
+#: resources/web/templates/includes/menu.html:100
 msgid "Sign in"
 msgstr ""
 
