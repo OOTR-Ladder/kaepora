@@ -20,8 +20,9 @@
 
 html { background-color: var(--color-body-bg-color); }
 body { font-family: "Avenir", "Ubuntu", "Noto Sans", "Segoe UI", sans-serif; }
+
 table.table { background-color: transparent; }
-#mainMenu .navbar-item { font-weight: bold; }
+.box { border-radius: 20px; }
 
 .title.is-display {
     margin-top: 2rem;

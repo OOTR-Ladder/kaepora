@@ -21,7 +21,7 @@
                         {{if gt $x 1}}
                         <a href="{{uri $.Locale "sessions" $v.ID.String}}" class="box is-clipped SessionBox">
                         {{else}}
-                        <div class="box is-clipped SessionBox__no-match is-unselectable">
+                        <div class="box is-clipped is-shadowless SessionBox__no-match is-unselectable">
                         {{end}}
                             <div class="SessionBox--league">{{(index $.Payload.Leagues $v.LeagueID).Name}}</div>
                             <div class="SessionBox--datetime">{{$v.StartDate | datetime}}</div>

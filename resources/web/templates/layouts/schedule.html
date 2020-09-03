@@ -33,7 +33,7 @@
                     <h2 class="title is-4 has-text-link">{{t .Locale "Next scheduled races" }}</h2>
 
                     {{range $v := .Payload.Schedules}}
-                    <div class="box is-mini is-relative nextRace">
+                    <div class="box is-mini is-shadowless is-relative nextRace">
                         <div class="title is-4 nextRace--league">{{t $.Locale "%s league" $v.LeagueName}}</div>
                         <div class="subtitle is-6 nextRace--schedule">{{$v.StartDate | datetime}}</div>
 
