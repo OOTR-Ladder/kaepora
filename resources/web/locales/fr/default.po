@@ -53,51 +53,55 @@ msgstr "Commence dans %s"
 msgid "There is no scheduled race right now."
 msgstr "Il n'y a pas de course programmée pour l'instant."
 
-#: resources/web/templates/includes/menu.html:19
+#: resources/web/templates/includes/menu.html:12
+msgid "Logged in as"
+msgstr "Connecté en tant que"
+
+#: resources/web/templates/includes/menu.html:23
 msgid "Races"
 msgstr "Courses"
 
-#: resources/web/templates/includes/menu.html:34
+#: resources/web/templates/includes/menu.html:38
 msgid "Rankings"
 msgstr "Classements"
 
-#: resources/web/templates/includes/menu.html:48
+#: resources/web/templates/includes/menu.html:52
 msgid "Stats"
 msgstr "Stats"
 
-#: resources/web/templates/includes/menu.html:62
+#: resources/web/templates/includes/menu.html:66
 msgid "Resources"
 msgstr "Ressources"
 
-#: resources/web/templates/includes/menu.html:67
+#: resources/web/templates/includes/menu.html:71
 msgid "Documentation"
 msgstr "Documentation"
 
-#: resources/web/templates/includes/menu.html:70
+#: resources/web/templates/includes/menu.html:74
 msgid "Rules"
 msgstr "Règles"
 
-#: resources/web/templates/includes/menu.html:73
+#: resources/web/templates/includes/menu.html:77
 msgid "Shuffled Settings"
 msgstr "Shuffled Settings"
 
-#: resources/web/templates/includes/menu.html:76
+#: resources/web/templates/includes/menu.html:80
 msgid "Discord Server"
 msgstr "Serveur Discord"
 
-#: resources/web/templates/includes/menu.html:84
+#: resources/web/templates/includes/menu.html:88
 msgid "Account"
 msgstr "Compte"
 
-#: resources/web/templates/includes/menu.html:89
+#: resources/web/templates/includes/menu.html:93
 msgid "My profile"
 msgstr "Mon profil"
 
-#: resources/web/templates/includes/menu.html:92
+#: resources/web/templates/includes/menu.html:96
 msgid "Sign out"
 msgstr "Déconnexion"
 
-#: resources/web/templates/includes/menu.html:100
+#: resources/web/templates/includes/menu.html:104
 msgid "Sign in"
 msgstr "Connexion"
 
