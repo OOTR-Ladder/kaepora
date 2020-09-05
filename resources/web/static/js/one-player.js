@@ -1,6 +1,6 @@
 "use strict";
 
 (function (){
-    tabsWithContent("PlayerPerformances");
-    tabsWithContent("raceList");
+    window.Kaepora.bindFragmentlessTabs("PlayerPerformances");
+    window.Kaepora.bindFragmentlessTabs("raceList");
 })();
