@@ -397,9 +397,9 @@ msgstr "Course imminente"
 msgid "Current race"
 msgstr "Course en cours"
 
-#: resources/web/templates/layouts/schedule.html:33
-msgid "Next scheduled races"
-msgstr "Prochaines courses planifiées"
+#: resources/web/templates/layouts/schedule.html:37
+msgid "Next races"
+msgstr "Prochaines courses"
 
 #: resources/web/templates/layouts/schedule.html:45
 msgid "in"

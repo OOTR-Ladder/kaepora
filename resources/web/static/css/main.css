@@ -638,6 +638,8 @@ table[class*="leaderboardTable"] .leaderboardTable--player .Ranking--deviation {
 /* }}} Leaderboard */
 
 /* {{{ Schedule */
+.ConfirmedRaces { padding: 1.5rem; }
+
 .upcomingRace--title {
     padding-left: 1rem;
     font-size: 3.6rem;
@@ -649,6 +651,18 @@ table[class*="leaderboardTable"] .leaderboardTable--player .Ranking--deviation {
     opacity: .2;
 }
 
+@media only screen and (max-width: 768px) {
+    .ConfirmedRaces + .section { padding-top: 0; }
+}
+@media only screen and (min-width: 769px) {
+    .ConfirmedRaces--block {
+        position: absolute;
+        top: 0;
+        width: 100%;
+    
+        transform: translateY(-50%);
+    }
+}
 @media only screen and (max-width: 1215px) {
     .upcomingRace--title { transform: translateY(30%); }
 }
