@@ -4,8 +4,6 @@ package back
 // Please do not call them outside of the webserver.
 
 import (
-	"fmt"
-	"html/template"
 	"kaepora/internal/util"
 	"time"
 
@@ -279,14 +277,48 @@ func (b *Back) GetPlayerByID(id util.UUIDAsBlob) (player Player, _ error) {
 type PlayerPerformance struct {
 	LeagueID util.UUIDAsBlob
 	Rating   PlayerRating
-	WLGraph  template.HTML // Win/Losses pie chart, SVG
 
 	Wins, Losses, Draws, Forfeits int
+}
+
+func (p PlayerPerformance) MatchesPlayed() int {
+	return p.Wins + p.Losses + p.Draws
 }
 
 // PlayerStats holds the performances of a single Player over all its Leagues.
 type PlayerStats struct {
 	Performances []PlayerPerformance
+}
+
+func (s PlayerStats) MatchesWon() int {
+	var total int
+	for k := range s.Performances {
+		total += s.Performances[k].Wins
+	}
+
+	return total
+}
+
+func (s PlayerStats) MatchesPlayed() int {
+	var total int
+	for k := range s.Performances {
+		total += s.Performances[k].MatchesPlayed()
+	}
+
+	return total
+}
+
+func (s PlayerStats) MostPlayedLeagueID() util.UUIDAsBlob {
+	maxMatches := -1 // ensure a league will be picked if both are 0
+	var id util.UUIDAsBlob
+
+	for k := range s.Performances {
+		if s.Performances[k].MatchesPlayed() > maxMatches {
+			id = s.Performances[k].LeagueID
+		}
+	}
+
+	return id
 }
 
 // GetPlayerStats computes and returns the stats of a single player.
@@ -323,15 +355,6 @@ func (b *Back) GetPlayerStats(playerID util.UUIDAsBlob) (stats PlayerStats, _ er
 		}
 
 		for k := range stats.Performances {
-			wlGraph, err := generateWLGraph(
-				float64(stats.Performances[k].Wins),
-				float64(stats.Performances[k].Losses),
-			)
-			if err != nil {
-				return fmt.Errorf("WLGraph: %s", err)
-			}
-			stats.Performances[k].WLGraph = template.HTML(wlGraph) // nolint:gosec
-
 			for l := range ratings {
 				if stats.Performances[k].LeagueID == ratings[l].LeagueID {
 					stats.Performances[k].Rating = ratings[l]

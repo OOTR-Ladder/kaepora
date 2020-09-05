@@ -1,56 +1,63 @@
 {{define "content"}}
-    <section class="hero is-dark homeHeader">
+    <section class="hero SiteHeader--schedule">
         <div class="hero-head">
             {{- template "menu" . -}}
         </div>
 
         <div class="hero-body">
             <div class="container">
-                <h1 class="title">{{t .Locale "Schedule"}}</h1>
-                <div class="columns is-centered">
-                    <div class="column is-two-thirds">
-
-                    {{if .Payload.MatchSessions}}
-                        {{if future (index .Payload.MatchSessions 0).StartDate}}
-                            <h2 class="title is-unselectable upcomingRace--title">{{t .Locale "Upcoming race"}}</h2>
-                        {{else}}
-                            <h2 class="title is-unselectable upcomingRace--title">{{t .Locale "Current race"}}</h2>
-                        {{end}}
+                <h1 class="PageTitle">{{t .Locale "Schedule"}}</h1>
+                {{if .Payload.MatchSessions}}
+                    {{if future (index .Payload.MatchSessions 0).StartDate}}
+                        <div class="heading">{{t .Locale "Upcoming race"}}</div>
+                    {{else}}
+                        <div class="heading">{{t .Locale "Current race"}}</div>
                     {{end}}
-
-                    {{- template "current_races" . -}}
-                    </div>
-                </div>
+                {{end}}
             </div>
         </div>
     </section>
 
+    {{if .Payload.MatchSessions}}
+        <section class="section ConfirmedRaces">
+            <div class="container">
+                <div class="ConfirmedRaces--block">
+                    <div class="columns is-centered">
+                        <div class="column is-half">
+                            {{- template "current_races" . -}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    {{end}}
+
     <section class="section">
         <div class="container">
-            <div class="columns is-centered">
-                <div class="column is-two-thirds">
+            <h2 class="title is-display">{{t .Locale "Next races" }}</h2>
 
-                    <h2 class="title is-4 has-text-link">{{t .Locale "Next scheduled races" }}</h2>
-
-                    {{range $v := .Payload.Schedules}}
-                    <div class="box is-mini is-relative nextRace">
-                        <div class="title is-4 nextRace--league">{{t $.Locale "%s league" $v.LeagueName}}</div>
-                        <div class="subtitle is-6 nextRace--schedule">{{$v.StartDate | datetime}}</div>
-
-                        <div class="nextRace--contextual">
-                            <!-- if upcoming -->
-                            <div class="nextRace--contextual--countdown">
-                                <i class="ri-time-line"></i>
-                                <div>
-                                    {{t $.Locale "in"}} <span>{{until $v.StartDate "m"}}</span>
+            <div class="columns is-multiline">
+                {{range $v := .Payload.Schedules}}
+                    <div class="column is-half">
+                        <div class="box is-mini is-shadowless is-relative nextRace">
+                            <div class="title is-4 nextRace--league">{{$v.LeagueName}}</div>
+                            <div class="subtitle is-6 nextRace--schedule">{{$v.StartDate | datetime}}</div>
+        
+                            <div class="nextRace--contextual">
+                                <!-- if upcoming -->
+                                <div class="nextRace--contextual--countdown">
+                                    <i class="ri-time-line"></i>
+                                    <div>
+                                        {{t $.Locale "in"}} <span>{{until $v.StartDate "m"}}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {{end}}
-
-                </div>
+                {{end}}
             </div>
         </div>
     </section>
+
+    {{- template "footer" . -}}
 {{end}}

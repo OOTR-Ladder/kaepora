@@ -20,8 +20,77 @@
 
 html { background-color: var(--color-body-bg-color); }
 body { font-family: "Avenir", "Ubuntu", "Noto Sans", "Segoe UI", sans-serif; }
+
 table.table { background-color: transparent; }
-#mainMenu .navbar-item { font-weight: bold; }
+.box { border-radius: 20px; }
+
+.Logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 1rem 0 0 1rem;
+}
+.Logo--link {
+    display: inline-block;
+    padding: 1rem 0;
+    height: 2rem;
+    box-sizing: content-box;
+}
+.Logo--link > img {
+    float: left;
+    margin-right: .5rem;
+}
+.Logo--link > div {
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: bolder;
+    height: 2rem;
+    text-transform: uppercase;
+    color: var(--color-white);
+}
+.Logo--link > div > span {
+    display: inline-block;
+    line-height: 2rem;
+}
+
+.Logo .Logo--link > div > span:not(.heading) {line-height: 2rem; }
+.Logo.AuthenticatedPlayer .Logo--link > div { transform: translateY(-3px); }
+.Logo.AuthenticatedPlayer .Logo--link > div > span:not(.heading) { line-height: 20px; }
+.Logo.AuthenticatedPlayer .Logo--link > div > span.heading {
+    display: block;
+    margin: 0;
+    line-height: 12px;
+}
+
+.title.is-display {
+    margin-top: 2rem;
+    font-size: 2rem;
+    font-weight: lighter;
+}
+
+section[class*="SiteHeader"] {
+    position: relative;
+    overflow: hidden;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+
+    background-color: #2a2a72;
+    background-image: linear-gradient(
+        to right bottom,
+        rgba(42, 42, 114, 1),
+        rgba(0, 159, 253, 1)
+    );
+
+    box-shadow: 0 -0.5em 1em 0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
+}
+
+.PageTitle {
+    font-size: 2.5rem;
+    font-weight: bold;
+    line-height: 1.5;
+    color: var(--color-body-bg-color);
+}
+.PageTitle + .heading { color: var(--color-body-bg-color); }
 
 @media only screen and (max-width: 768px) {
     body { padding-bottom: calc(75px - 1rem); }
@@ -57,6 +126,7 @@ table.table { background-color: transparent; }
 /* {{{ Ladder navigation */
 .ladderNav {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     position: relative;
@@ -86,12 +156,33 @@ table.table { background-color: transparent; }
     max-width: 1.5rem;
     fill: var(--color-bg-dark);
 }
+.ladderNav > *[class*="ladderNav--item"] > a > i[class*="ladderNav--icon"],
+.ladderNav > *[class*="ladderNav--item"] > div > i[class*="ladderNav--icon"] {
+    display: block;
+    margin: 0 auto .3rem auto;
+    width: 20px;
+    height: 20px;
+}
+.ladderNav > *[class*="ladderNav--item"] > a > i[class*="ladderNav--icon"]::before,
+.ladderNav > *[class*="ladderNav--item"] > div > i[class*="ladderNav--icon"]::before {
+    content: '';
+    display: inline-block;
+    margin: 0;
+    width: 20px;
+    height: 20px;
+    background: var(--color-bg-dark);
+    transition: all ease-in-out 150ms;
+}
+.ladderNav > *[class*="ladderNav--item"] a:focus-within > i[class*="ladderNav--icon"]::before,
+.ladderNav > *[class*="ladderNav--item"] a:focus > i[class*="ladderNav--icon"]::before,
+.ladderNav > *[class*="ladderNav--item"]:hover i[class*="ladderNav--icon"]::before { background: #3273dc; }
 .ladderNav > .ladderNav--item__has-sub .ladderNav--sub {
     display: flex;
+    flex-wrap: wrap;
     position: absolute;
     background: var(--color-bg-dark);
     z-index: -1;
-    transition: all ease-in-out 150ms;
+    transition: all ease-in-out 200ms;
 }
 .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] {
     min-width: 0;
@@ -103,6 +194,35 @@ table.table { background-color: transparent; }
 }
 .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] > a:hover,
 .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] > a:active { color: rgb(0, 159, 253); }
+.ladderNav > .ladderNav--item__has-sub .ladderNav--sub > .ladderNav--item__logout > a { color: rgb(255, 56, 96); }
+.ladderNav > .ladderNav--item__has-sub .ladderNav--sub > .ladderNav--item__logout > a:hover { color: var(--color-white); }
+
+/* Ladder navigation icons */
+.ladderNav > *[class*="ladderNav--item"] > a > i.ladderNav--icon__flag::before,
+.ladderNav > *[class*="ladderNav--item"] > div > i.ladderNav--icon__flag::before {
+    mask: url('../svg/flag.svg') top left / cover;
+    -webkit-mask: url('../svg/flag.svg') top left / cover;
+}
+.ladderNav > *[class*="ladderNav--item"] > a > i.ladderNav--icon__leaderboard::before,
+.ladderNav > *[class*="ladderNav--item"] > div > i.ladderNav--icon__leaderboard::before {
+    mask: url('../svg/trophy.svg') top left / cover;
+    -webkit-mask: url('../svg/trophy.svg') top left / cover;
+}
+.ladderNav > *[class*="ladderNav--item"] > a > i.ladderNav--icon__stats::before,
+.ladderNav > *[class*="ladderNav--item"] > div > i.ladderNav--icon__stats::before {
+    mask: url('../svg/bar-chart.svg') top left / cover;
+    -webkit-mask: url('../svg/bar-chart.svg') top left / cover;
+}
+.ladderNav > *[class*="ladderNav--item"] > a > i.ladderNav--icon__doc::before,
+.ladderNav > *[class*="ladderNav--item"] > div > i.ladderNav--icon__doc::before {
+    mask: url('../svg/doc.svg') top left / cover;
+    -webkit-mask: url('../svg/doc.svg') top left / cover;
+}
+.ladderNav > *[class*="ladderNav--item"] > a > i.ladderNav--icon__account::before,
+.ladderNav > *[class*="ladderNav--item"] > div > i.ladderNav--icon__account::before {
+    mask: url('../svg/user.svg') top left / cover;
+    -webkit-mask: url('../svg/user.svg') top left / cover;
+}
 
 @media only screen and (max-width: 768px){
     .navContainer {
@@ -168,9 +288,10 @@ table.table { background-color: transparent; }
         border-bottom-right-radius: 20px;
         clip-path: circle(0% at 50% 0%);
     }
+    .ladderNav > *[class*="ladderNav--item"]:nth-last-child(-n+2) .ladderNav--sub { right: 0; }
     .ladderNav > .ladderNav--item__has-sub a:focus-within + .ladderNav--sub,
     .ladderNav > .ladderNav--item__has-sub a:focus + .ladderNav--sub,
-    .ladderNav > .ladderNav--item__has-sub:hover .ladderNav--sub { clip-path: circle(100% at 50% 0%); }
+    .ladderNav > .ladderNav--item__has-sub:hover .ladderNav--sub { clip-path: circle(150% at 50% 0%); }
     .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] > a { line-height: 3; }
 }
 @media only screen and (max-width: 1023px) {
@@ -180,10 +301,12 @@ table.table { background-color: transparent; }
         left: 0;
         width: 100%;
     }
+    .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] { flex: 0 50%; } 
     .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] > a { text-align: center; }
 }
 @media only screen and (min-width: 1024px) {
     .ladderNav > *[class*="ladderNav--item"] {
+        position: relative;
         font-size: .75rem;
     }
     .ladderNav > *[class*="ladderNav--item"] > a,
@@ -192,11 +315,46 @@ table.table { background-color: transparent; }
     }
     .ladderNav > .ladderNav--item__has-sub .ladderNav--sub {
         flex-direction: column;
+        display:inline-block;
+        white-space:nowrap;
     }
     .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] { display: block; }
     .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] > a { padding: 0 1rem; }
 }
 /* }}} Ladder navigation */
+
+/* {{{ Ladder footer */
+footer.footer { background: var(--color-box); }
+.FooterLinks--link {
+    display: inline-block;
+    list-style-type: none;
+}
+.FooterLinks--link:not(:last-child) { margin-right: 1rem; }
+
+a[class*="Link--icon"]::before {
+    content: '';
+    display: block;
+
+    width: 24px;
+    height: 24px;
+
+    background: var(--color-bg-dark);
+    transition: all ease-in-out 150ms;
+}
+a[class*="Link--icon"]:hover::before { background: #3273dc; }
+.Link--icon__discord::before {
+    mask: url('../svg/discord.svg');
+    -webkit-mask: url('../svg/discord.svg');
+}
+.Link--icon__github::before {
+    mask: url('../svg/github.svg');
+    -webkit-mask: url('../svg/github.svg');
+}
+
+@media only screen and (max-width: 768px){
+    footer.footer { padding: 1.5rem 1.5rem 3rem; }
+}
+/* }}} Ladder footer */
 
 /* {{{ Homepage */
 .homeHeader {
@@ -527,6 +685,8 @@ table[class*="leaderboardTable"] .leaderboardTable--player .Ranking--deviation {
 /* }}} Leaderboard */
 
 /* {{{ Schedule */
+.ConfirmedRaces { padding: 1.5rem; }
+
 .upcomingRace--title {
     padding-left: 1rem;
     font-size: 3.6rem;
@@ -538,6 +698,18 @@ table[class*="leaderboardTable"] .leaderboardTable--player .Ranking--deviation {
     opacity: .2;
 }
 
+@media only screen and (max-width: 768px) {
+    .ConfirmedRaces + .section { padding-top: 0; }
+}
+@media only screen and (min-width: 769px) {
+    .ConfirmedRaces--block {
+        position: absolute;
+        top: 0;
+        width: 100%;
+    
+        transform: translateY(-50%);
+    }
+}
 @media only screen and (max-width: 1215px) {
     .upcomingRace--title { transform: translateY(30%); }
 }
@@ -747,3 +919,142 @@ ul.spoilers--hash li {
 .playerPage .StreamLink:hover {
     background-color: #DDD;
 }
+/* {{{ Profile page */
+.SiteHeader--profile::after {
+    content: '';
+    width: 8rem;
+    height: 8rem;
+
+    position: absolute;
+    bottom: 0;
+    right: 1.5rem;
+
+    opacity: .2;
+    transform: translateY(1rem);
+
+    background: var(--color-white);
+    mask: url('../svg/user.svg') top left / cover;
+    -webkit-mask: url('../svg/user.svg') top left / cover;
+}
+.PlayerName { font-weight: bold; }
+.Player--dateInscription { color: var(--color-body-bg-color); }
+a[class*="Player--streamLink"] { display: inline-block; }
+a[class*="Player--streamLink"]::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 24px;
+
+    background-color: var(--color-body-bg-color);
+}
+.Player--streamLink__generic {
+    mask: url('../svg/live-generic.svg');
+    -webkit-mask: url('../svg/live-generic.svg');
+}
+.Player--streamLink__twitch {
+    mask: url('../svg/live-twitch.svg');
+    -webkit-mask: url('../svg/live-twitch.svg');
+}
+.Player--streamLink__facebook {
+    mask: url('../svg/live-facebook.svg');
+    -webkit-mask: url('../svg/live-facebook.svg');
+}
+.Player--streamLink__youtube {
+    mask: url('../svg/live-youtube.svg');
+    -webkit-mask: url('../svg/live-youtube.svg');
+}
+
+.QuickStats {
+    position: absolute;
+    top: 0;
+
+    transform: translateY(-50%);
+}
+.Stat {
+    margin-right: 1.5rem;
+    float: left;
+    background: var(--color-bg-dark);
+    border-radius: 20px;
+    box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.03), 0 0 0 1px rgba(10,10,10,.02);
+    overflow: hidden;
+}
+.Stat:last-child::after {
+    content: '';
+    clear: both;
+}
+.Stat--name {
+    float: left;
+    margin: 0;
+    padding: 0 1.25rem;
+    line-height: 2rem;
+    background: var(--color-box);
+}
+.Stat--value {
+    float: left;
+    margin: 0;
+    font-weight: bold;
+    line-height: 2rem;
+    color: var(--color-white);
+}
+#PlayerPerformances .WLRatio { margin-bottom: 1.5rem; }
+.WLRatio > .level { margin-bottom: .25rem; }
+.RatingVariation { margin-bottom: 1.5rem; }
+
+div[class*="PlayerMatch"]:not(:last-child) { margin-bottom: .5rem; }
+
+.PlayerMatch--result { font-weight: bold; }
+.PlayerMatch__win .PlayerMatch--result { color: #257942; }
+.PlayerMatch__lose .PlayerMatch--result { color: #cc0f35; }
+.PlayerMatch__tie .PlayerMatch--result { color: #947600; }
+
+.tab-content { display: none; }
+.tab-content.is-active { display: block; }
+
+.SeasonResults .columns { margin-top: 0; }
+.NumSaison {
+    margin: 0;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    font-size: 5rem;
+    font-weight: bolder;
+    text-transform: uppercase;
+    color: #3273dc;
+
+    opacity: .1;
+    z-index: 0;
+    transform: translate(0%, 40%);
+}
+.SeasonResults .WLRatio {
+    position: relative;
+    z-index: 1;
+}
+
+@media only screen and (max-width: 768px) {
+    .QuickStats {
+        width: 100%;
+        padding: 0 1.25rem;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .Stat { margin-right: .5rem; }
+    .Stat--name,
+    .Stat--value {
+        padding: 0 .5rem;
+        font-size: .6rem;
+        line-height: 1.75rem;
+    }
+    .tab-content { padding: 0 .5rem; }
+    div[class*="PlayerMatch"] { font-size: .8em; }
+
+    .SeasonResults .columns > .column { padding: 0 .75rem .75rem; }
+    .tag:not(body).SeasonResults--league { font-size: .75rem; }
+    .NumSaison { font-size: 3rem; }
+}
+@media only screen and (min-width: 769px) {
+    .Stat--name,
+    .Stat--value { padding: 0 1.25rem; }
+    .tab-content { padding: 0 1.5rem; }
+}
+/* }}} Profile page */

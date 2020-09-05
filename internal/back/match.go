@@ -227,6 +227,18 @@ func (m *Match) GetPlayerAndOpponentEntries(playerID util.UUIDAsBlob) (MatchEntr
 	return MatchEntry{}, MatchEntry{}, fmt.Errorf("could not find MatchEntry for player %s in Match %v", playerID, m.ID)
 }
 
+// HACK: template can't handle multiple results
+func (m *Match) TPLGetSelfEntry(playerID util.UUIDAsBlob) MatchEntry {
+	e, _, _ := m.GetPlayerAndOpponentEntries(playerID)
+	return e
+}
+
+// HACK: template can't handle multiple results
+func (m *Match) TPLGetOpponentEntry(playerID util.UUIDAsBlob) MatchEntry {
+	_, e, _ := m.GetPlayerAndOpponentEntries(playerID)
+	return e
+}
+
 func getFirstMatchStartOfLeague(tx *sqlx.Tx, leagueID util.UUIDAsBlob) (util.TimeAsTimestamp, error) {
 	var ret util.NullTimeAsTimestamp
 	if err := tx.Get(

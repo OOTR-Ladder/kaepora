@@ -1,0 +1,60 @@
+{{define "player_matches"}}
+
+<div id="raceList">
+
+{{ range $k, $v := .Payload.Matches }}
+{{ $self := $v.TPLGetSelfEntry $.Payload.Player.ID }}
+{{ $against := $v.TPLGetOpponentEntry $.Payload.Player.ID }}
+{{ $class := "win" }}
+{{ $title := t $.Locale "Victory"}}
+{{ $opponentName := (index $.Payload.Players $against.PlayerID).Name }}
+{{ $leagueName := (index $.Payload.Leagues $v.LeagueID).Name }}
+
+{{ if not $self.HasWon }}
+    {{ if $v.IsDoubleForfeit }}
+        {{ $class = "tie" }}
+        {{ $title = t $.Locale "Tied"}}
+    {{ else }}
+        {{ if $self.HasForfeit }}
+            {{ $class = "forfeit" }}
+            {{ $title = t $.Locale "Forfeit"}}
+        {{ else }}
+            {{ $class = "lose" }}
+            {{ $title = t $.Locale "Defeat"}}
+        {{ end }}
+    {{ end }}
+{{ end }}
+
+<div class="level is-mobile PlayerMatch__{{$class}}">
+        <div class="level-left">
+            <div class="level-item">
+                <div>
+                    <span
+                        title="{{datetime $v.StartedAt}}"
+                        class="PlayerMatch--result">{{$title}}</span> vs
+                    <a
+                        class="PlayerMatch--opponent"
+                        href="{{uri $.Locale "player" $opponentName}}"
+                    >{{$opponentName}}</a>
+                </div>
+            </div>
+        </div>
+        <div class="level-right">
+            <div class="level-item is-hidden-touch">
+                <span class="tag PlayerMatch--league">{{$leagueName}}</span>
+            </div>
+            <div class="level-item">
+                <a
+                    href="{{uri $.Locale "matches" $v.ID.String "spoilers"}}"
+                    class="PlayerMatch--spoiler button is-rounded is-small is-outlined is-info is-light"
+                >
+                    {{t $.Locale "Spoiler log"}}
+                </a>
+            </div>
+        </div>
+    </div>
+{{ end }}
+
+</div>
+
+{{end}}

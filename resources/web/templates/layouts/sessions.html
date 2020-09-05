@@ -1,13 +1,13 @@
 {{define "content"}}
-    <section class="hero is-dark homeHeader">
+    <section class="hero SiteHeader--sessions">
         <div class="hero-head">
             {{- template "menu" . -}}
         </div>
 
         <div class="hero-body">
             <div class="container">
-                <h1 class="title">{{t .Locale "Races history"}}</h1>
-                <h2 class="subtitle">{{t .Locale "Races completed in the last 30 days"}}</h2>
+                <h1 class="PageTitle">{{t .Locale "Races history"}}</h1>
+                <div class="heading">{{t .Locale "Races completed in the last 30 days"}}</div>
             </div>
         </div>
     </section>
@@ -21,7 +21,7 @@
                         {{if gt $x 1}}
                         <a href="{{uri $.Locale "sessions" $v.ID.String}}" class="box is-clipped SessionBox">
                         {{else}}
-                        <div class="box is-clipped SessionBox__no-match is-unselectable">
+                        <div class="box is-clipped is-shadowless SessionBox__no-match is-unselectable">
                         {{end}}
                             <div class="SessionBox--league">{{(index $.Payload.Leagues $v.LeagueID).Name}}</div>
                             <div class="SessionBox--datetime">{{$v.StartDate | datetime}}</div>
@@ -41,4 +41,6 @@
             </div>
         </div>
     </section>
+
+    {{- template "footer" . -}}
 {{end}}

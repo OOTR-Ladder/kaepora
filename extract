@@ -82,12 +82,12 @@ function find_templateN(): array {
 }
 
 function parse_template(string $str): ?string {
-    preg_match('`\{\{\s*t(md)?\s+\$?\.Locale\s+"([^"]*)".*\}\}`', $str, $matches);
-    if (count($matches) < 3) {
+    preg_match('`\{\{\s*(.+\:?=\s*)?\s*t(md)?\s+\$?\.Locale\s+"([^"]*)".*\}\}`', $str, $matches);
+    if (count($matches) < 4) {
         return null;
     }
 
-    return encode($matches[2]);
+    return encode($matches[3]);
 }
 
 function parse_templateN(string $str): ?array {

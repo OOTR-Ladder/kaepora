@@ -1,12 +1,12 @@
 {{define "content"}}
-<section class="hero is-dark homeHeader">
+<section class="hero SiteHeader--documentation">
     <div class="hero-head">
         {{- template "menu" . -}}
     </div>
 
     <div class="hero-body">
         <div class="container">
-            <h1 class="title">{{.Payload.Title}}</h1>
+            <h1 class="PageTitle">{{.Payload.Title}}</h1>
         </div>
     </div>
 </section>
@@ -20,4 +20,6 @@
         </div>
     </div>
 </section>
+
+{{- template "footer" . -}}
 {{end}}
