@@ -5,39 +5,39 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: internal/web/templates.go:134
+#: internal/web/templates.go:144
 msgid "Planned"
 msgstr ""
 
-#: internal/web/templates.go:137
+#: internal/web/templates.go:147
 msgid "Joinable"
 msgstr ""
 
-#: internal/web/templates.go:140
+#: internal/web/templates.go:150
 msgid "Preparing"
 msgstr ""
 
-#: internal/web/templates.go:143
+#: internal/web/templates.go:153
 msgid "Race in progress"
 msgstr ""
 
-#: internal/web/templates.go:146
+#: internal/web/templates.go:156
 msgid "Closed"
 msgstr ""
 
-#: internal/web/templates.go:195
+#: internal/web/templates.go:205
 msgid "not started"
 msgstr ""
 
-#: internal/web/templates.go:197
+#: internal/web/templates.go:207
 msgid "in progress"
 msgstr ""
 
-#: internal/web/templates.go:201
+#: internal/web/templates.go:211
 msgid "before start"
 msgstr ""
 
-#: internal/web/templates.go:206
+#: internal/web/templates.go:216
 msgid "forfeit (%s)"
 msgstr ""
 
@@ -121,6 +121,26 @@ msgstr ""
 
 #: resources/web/templates/includes/past_matches.html:34
 msgid "Not enough players joined this session."
+msgstr ""
+
+#: resources/web/templates/includes/player_matches.html:9
+msgid "Victory"
+msgstr ""
+
+#: resources/web/templates/includes/player_matches.html:16
+msgid "Tied"
+msgstr ""
+
+#: resources/web/templates/includes/player_matches.html:20
+msgid "Forfeit"
+msgstr ""
+
+#: resources/web/templates/includes/player_matches.html:23
+msgid "Defeat"
+msgstr ""
+
+#: resources/web/templates/includes/player_matches.html:51
+msgid "Spoiler log"
 msgstr ""
 
 #: resources/web/templates/includes/spoilers_spheres_locations.html:13
@@ -341,11 +361,11 @@ msgstr ""
 msgid "The leaderboard is currently empty."
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:15
+#: resources/web/templates/layouts/one_player.html:10
 msgid "Climbing the ladder since %s"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:21
+#: resources/web/templates/layouts/one_player.html:19
 msgid "Matches played"
 msgstr ""
 
@@ -353,27 +373,39 @@ msgstr ""
 msgid "Matches won"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:38
+#: resources/web/templates/layouts/one_player.html:28
 msgid "Most played league"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:38
-msgid "This season"
+#: resources/web/templates/layouts/one_player.html:40
+msgid "Statistics"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:70
+#: resources/web/templates/layouts/one_player.html:59
+msgid "%d victory"
+msgid_plural "%d victories"
+msgstr[0] ""
+msgstr[1] ""
+
+#: resources/web/templates/layouts/one_player.html:64
+msgid "%d loss"
+msgid_plural "%d losses"
+msgstr[0] ""
+msgstr[1] ""
+
+#: resources/web/templates/layouts/one_player.html:73
 msgid "Ratings graph"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:74
+#: resources/web/templates/layouts/one_player.html:77
 msgid "Seed completion times graph"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:82
+#: resources/web/templates/layouts/one_player.html:86
 msgid "Past seasons"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:112
+#: resources/web/templates/layouts/one_player.html:118
 msgid "Past races"
 msgstr ""
 
@@ -389,19 +421,15 @@ msgstr ""
 msgid "Schedule"
 msgstr ""
 
-#: resources/web/templates/layouts/schedule.html:15
+#: resources/web/templates/layouts/schedule.html:12
 msgid "Upcoming race"
 msgstr ""
 
-#: resources/web/templates/layouts/schedule.html:17
+#: resources/web/templates/layouts/schedule.html:14
 msgid "Current race"
 msgstr ""
 
-#: resources/web/templates/layouts/schedule.html:37
-msgid "Next races"
-msgstr ""
-
-#: resources/web/templates/layouts/schedule.html:45
+#: resources/web/templates/layouts/schedule.html:51
 msgid "in"
 msgstr ""
 
