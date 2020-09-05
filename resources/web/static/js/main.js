@@ -137,5 +137,11 @@ window.Kaepora = {
 (function (){
     document.addEventListener('DOMContentLoaded', () => {
         window.Kaepora.updateLocalDatetimes();
+
+        document.querySelectorAll(".js-navbar a").forEach(a => {
+            if (a.getAttribute("href") == "#") {
+                a.addEventListener('click', e => e.preventDefault());
+            }
+        });
     });
 })();

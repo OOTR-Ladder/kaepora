@@ -1,5 +1,5 @@
 {{define "menu"}}
-<header class="navbar is-transparent is-spaced" role="navigation" aria-label="main navigation">
+<header class="js-navbar navbar is-transparent is-spaced" role="navigation" aria-label="main navigation">
     {{if .AuthenticatedPlayer }}
     <div class="Logo AuthenticatedPlayer">
     {{else}}
@@ -18,7 +18,7 @@
         <nav class="navContainer--navbar">
             <ul class="ladderNav">
                 <li class="ladderNav--item__has-sub">
-                    <a href="#" onclick="return false;" tabindex="1">
+                    <a href="#" tabindex="1">
                         <i class="ladderNav--icon__flag"></i>
                         {{t .Locale "Races"}}
                     </a>
@@ -33,7 +33,7 @@
                     </ul>
                 </li>
                 <li class="ladderNav--item__has-sub">
-                    <a href="#" onclick="return false;" tabindex="1">
+                    <a href="#" tabindex="1">
                         <i class="ladderNav--icon__leaderboard"></i>
                         {{t .Locale "Rankings"}}
                     </a>
@@ -47,7 +47,7 @@
                     </ul>
                 </li>
                 <li class="ladderNav--item__has-sub">
-                    <a href="#" onclick="return false;" tabindex="1">
+                    <a href="#" tabindex="1">
                         <i class="ladderNav--icon__stats"></i>
                         {{t .Locale "Stats"}}
                     </a>
@@ -61,7 +61,7 @@
                     </ul>
                 </li>
                 <li class="ladderNav--item__has-sub">
-                    <a href="#" onclick="return false;" tabindex="1">
+                    <a href="#" tabindex="1">
                         <i class="ladderNav--icon__doc"></i>
                         {{t .Locale "Resources"}}
                     </a>
@@ -83,7 +83,7 @@
                 </li>
                 {{if .AuthenticatedPlayer }}
                     <li class="ladderNav--item__has-sub">
-                        <a href="#" onclick="return false;" tabindex="1">
+                        <a href="#" tabindex="1">
                             <i class="ladderNav--icon__account"></i>
                             {{t .Locale "Account"}}
                         </a>
