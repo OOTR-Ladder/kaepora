@@ -88,6 +88,7 @@ section[class*="SiteHeader"] {
 /* {{{ Ladder navigation */
 .ladderNav {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     position: relative;
@@ -139,6 +140,7 @@ section[class*="SiteHeader"] {
 .ladderNav > *[class*="ladderNav--item"]:hover i[class*="ladderNav--icon"]::before { background: #3273dc; }
 .ladderNav > .ladderNav--item__has-sub .ladderNav--sub {
     display: flex;
+    flex-wrap: wrap;
     position: absolute;
     background: var(--color-bg-dark);
     z-index: -1;
@@ -154,6 +156,8 @@ section[class*="SiteHeader"] {
 }
 .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] > a:hover,
 .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] > a:active { color: rgb(0, 159, 253); }
+.ladderNav > .ladderNav--item__has-sub .ladderNav--sub > .ladderNav--item__logout > a { color: rgb(255, 56, 96); }
+.ladderNav > .ladderNav--item__has-sub .ladderNav--sub > .ladderNav--item__logout > a:hover { color: var(--color-white); }
 
 /* Ladder navigation icons */
 .ladderNav > *[class*="ladderNav--item"] > a > i.ladderNav--icon__flag::before,
@@ -246,6 +250,7 @@ section[class*="SiteHeader"] {
         border-bottom-right-radius: 20px;
         clip-path: circle(0% at 50% 0%);
     }
+    .ladderNav > *[class*="ladderNav--item"]:nth-last-child(-n+2) .ladderNav--sub { right: 0; }
     .ladderNav > .ladderNav--item__has-sub a:focus-within + .ladderNav--sub,
     .ladderNav > .ladderNav--item__has-sub a:focus + .ladderNav--sub,
     .ladderNav > .ladderNav--item__has-sub:hover .ladderNav--sub { clip-path: circle(150% at 50% 0%); }
@@ -258,10 +263,12 @@ section[class*="SiteHeader"] {
         left: 0;
         width: 100%;
     }
+    .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] { flex: 0 50%; } 
     .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] > a { text-align: center; }
 }
 @media only screen and (min-width: 1024px) {
     .ladderNav > *[class*="ladderNav--item"] {
+        position: relative;
         font-size: .75rem;
     }
     .ladderNav > *[class*="ladderNav--item"] > a,
@@ -270,6 +277,8 @@ section[class*="SiteHeader"] {
     }
     .ladderNav > .ladderNav--item__has-sub .ladderNav--sub {
         flex-direction: column;
+        display:inline-block;
+        white-space:nowrap;
     }
     .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] { display: block; }
     .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] > a { padding: 0 1rem; }
