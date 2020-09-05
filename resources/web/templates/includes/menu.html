@@ -1,12 +1,16 @@
 {{define "menu"}}
 <header class="navbar is-transparent is-spaced" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-        <a href="{{uri .Locale}}" class="navbar-item">
+    {{if .AuthenticatedPlayer }}
+    <div class="Logo AuthenticatedPlayer">
+    {{else}}
+    <div class="Logo">
+    {{end}}
+        <a href="{{uri .Locale}}" class="Logo--link">
             <img src="/_/img/logo.png" alt="logo" width="32" height="32" />
-            OoTR Ladder
-            {{if .AuthenticatedPlayer }}
-                 - {{.AuthenticatedPlayer.Name}}
-            {{end}}
+            <div>
+                <span>OoTR Ladder</span>
+                {{if .AuthenticatedPlayer }}<span class="heading">{{t .Locale "Logged in as"}} {{.AuthenticatedPlayer.Name}}</span>{{end}}
+            </div>
         </a>
     </div>
 

@@ -24,6 +24,44 @@ body { font-family: "Avenir", "Ubuntu", "Noto Sans", "Segoe UI", sans-serif; }
 table.table { background-color: transparent; }
 .box { border-radius: 20px; }
 
+.Logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 1rem 0 0 1rem;
+}
+.Logo--link {
+    display: inline-block;
+    padding: 1rem 0;
+    height: 2rem;
+    box-sizing: content-box;
+}
+.Logo--link > img {
+    float: left;
+    margin-right: .5rem;
+}
+.Logo--link > div {
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: bolder;
+    height: 2rem;
+    text-transform: uppercase;
+    color: var(--color-white);
+}
+.Logo--link > div > span {
+    display: inline-block;
+    line-height: 2rem;
+}
+
+.Logo .Logo--link > div > span:not(.heading) {line-height: 2rem; }
+.Logo.AuthenticatedPlayer .Logo--link > div { transform: translateY(-3px); }
+.Logo.AuthenticatedPlayer .Logo--link > div > span:not(.heading) { line-height: 20px; }
+.Logo.AuthenticatedPlayer .Logo--link > div > span.heading {
+    display: block;
+    margin: 0;
+    line-height: 12px;
+}
+
 .title.is-display {
     margin-top: 2rem;
     font-size: 2rem;
