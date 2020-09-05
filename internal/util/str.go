@@ -36,6 +36,8 @@ func Datetime(iface interface{}) string {
 		t = iface.Time()
 	case TimeAsTimestamp:
 		t = iface.Time()
+	case NullTimeAsTimestamp:
+		t = iface.Time.Time()
 	default:
 		panic(fmt.Errorf("unexpected type %T", iface))
 	}
@@ -53,6 +55,8 @@ func Timestamp(iface interface{}) int64 {
 		t = iface.Time()
 	case TimeAsTimestamp:
 		t = iface.Time()
+	case NullTimeAsTimestamp:
+		t = iface.Time.Time()
 	default:
 		panic(fmt.Errorf("unexpected type %T", iface))
 	}

@@ -309,7 +309,7 @@ func (s PlayerStats) MatchesPlayed() int {
 }
 
 func (s PlayerStats) MostPlayedLeagueID() util.UUIDAsBlob {
-	var maxMatches int
+	maxMatches := -1 // ensure a league will be picked if both are 0
 	var id util.UUIDAsBlob
 
 	for k := range s.Performances {

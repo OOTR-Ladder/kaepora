@@ -228,6 +228,8 @@ func tplUntil(iface interface{}, trunc string) string {
 		t = iface
 	case util.TimeAsDateTimeTZ:
 		t = iface.Time()
+	case util.NullTimeAsTimestamp:
+		t = iface.Time.Time()
 	default:
 		panic(fmt.Errorf("unexpected type %T", iface))
 	}
@@ -253,6 +255,8 @@ func tplFuture(iface interface{}) bool {
 		t = iface
 	case util.TimeAsDateTimeTZ:
 		t = iface.Time()
+	case util.NullTimeAsTimestamp:
+		t = iface.Time.Time()
 	default:
 		panic(fmt.Errorf("unexpected type %T", iface))
 	}
