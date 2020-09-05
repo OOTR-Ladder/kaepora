@@ -15,18 +15,20 @@
 <div class="container">
     <div class="QuickStats">
         <div class="QuickStats--stat Stat">
-            <div class="Stat--value">150</div>
+            <div class="Stat--value">{{.Payload.PlayerStats.MatchesPlayed}}</div>
             <div class="Stat--name heading">{{t .Locale "Matches played"}}</div>
         </div>
 
         <div class="QuickStats--stat Stat">
-            <div class="Stat--value">75</div>
+            <div class="Stat--value">{{.Payload.PlayerStats.MatchesWon}}</div>
             <div class="Stat--name heading">{{t .Locale "Matches won"}}</div>
         </div>
 
         <div class="QuickStats--stat Stat is-hidden-touch">
             <div class="Stat--name heading">{{t .Locale "Most played league"}}</div>
-            <div class="Stat--value">Standard</div>
+            <div class="Stat--value">
+                {{ (index $.Payload.Leagues $.Payload.PlayerStats.MostPlayedLeagueID).Name }}
+            </div>
         </div>
     </div>
 </div>
@@ -54,12 +56,12 @@
                                         <div class="level is-mobile">
                                             <div class="level-left">
                                                 <div class="level-item">
-                                                    <span class="has-text-success has-text-weight-bold">{{ t $.Locale "%s victories" (percentage $v.Wins $v.Wins $v.Losses) }}</span>
+                                                    <span class="has-text-success has-text-weight-bold">{{ tn $.Locale "%d victory" "%d victories" $v.Wins $v.Wins }}</span>
                                                 </div>
                                             </div>
                                             <div class="level-right">
                                                 <div class="level-item">
-                                                    <span class="has-text-danger has-text-weight-bold">{{ t $.Locale "%s losses" (percentage $v.Losses $v.Wins $v.Losses) }}</span>
+                                                    <span class="has-text-danger has-text-weight-bold">{{ tn $.Locale "%d loss" "%d losses" $v.Losses $v.Losses }}</span>
                                                 </div>
                                             </div>
                                         </div>
