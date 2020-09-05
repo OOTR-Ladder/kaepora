@@ -37,7 +37,7 @@
     <div class="container">
         <div class="columns">
             <div class="column is-half">
-                <h2 class="title is-display is-size-4-touch">{{t .Locale "This season"}}</h2>
+                <h2 class="title is-display is-size-4-touch">{{t .Locale "Statistics"}}</h2>
                 <div class="box is-shadowless">
                     <div id="PlayerPerformances">
                         <div class="tabs is-toggle is-fullwidth">
@@ -82,6 +82,7 @@
                     </div>
                 </div>
 
+                {{if 0}}
                 <h2 class="title is-display is-size-4-touch">{{t .Locale "Past seasons"}}</h2>
                 <div class="box is-shadowless is-clipped is-relative SeasonResults">
                     <h3 class="NumSaison">Saison 1</h3>
@@ -110,6 +111,8 @@
                         </div>
                     {{ end }}
                 </div>
+                {{end}}
+
             </div>
             <div class="column">
                 <h2 class="title is-display is-size-4-touch">{{t .Locale "Past races"}}</h2>
