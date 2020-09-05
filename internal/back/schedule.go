@@ -65,7 +65,11 @@ func (s *Schedule) NextBetween(t time.Time, max time.Time) time.Time {
 	}
 
 	// No match, attempt starting at next day.
-	return s.NextBetween(t.AddDate(0, 0, 1), max)
+	nextDay := time.Date(
+		t.Year(), t.Month(), t.Day(),
+		0, 0, 0, 0, t.Location(),
+	).AddDate(0, 0, 1)
+	return s.NextBetween(nextDay, max)
 }
 
 // flattenHours get all hours in the week of the given time.

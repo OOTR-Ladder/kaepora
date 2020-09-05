@@ -34,7 +34,7 @@ type nextRacesTemplateData struct {
 func (s *Server) getIndexTemplateData() (nextRacesTemplateData, error) {
 	sessions, leagues, err := s.back.GetMatchSessions(
 		time.Now().Add(-12*time.Hour),
-		time.Now().Add(12*time.Hour),
+		time.Now().Add(48*time.Hour),
 		[]back.MatchSessionStatus{
 			back.MatchSessionStatusWaiting,
 			back.MatchSessionStatusJoinable,
