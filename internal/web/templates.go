@@ -93,6 +93,7 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 		"date":           util.Date,
 		"future":         tplFuture,
 		"percentage":     tplPercentage,
+		"rawPercentage":  tplRawPercentage,
 		"ranking":        tplRanking,
 		"until":          tplUntil,
 		"unsafe": func(v string) template.HTML {
@@ -115,16 +116,25 @@ func tplLocalDateTime(iface interface{}) template.HTML {
 }
 
 func tplPercentage(x int, parts ...int) string {
+	pct := tplRawPercentage(x, parts...)
+	if pct < 0 {
+		return "- %"
+	}
+
+	return fmt.Sprintf("%d %%", pct)
+}
+
+func tplRawPercentage(x int, parts ...int) int {
 	var total int
 	for _, v := range parts {
 		total += v
 	}
 
 	if total == 0 {
-		return "- %"
+		return -1
 	}
 
-	return fmt.Sprintf("%d %%", int(math.Round(float64(x)/float64(total)*100.0)))
+	return int(math.Round(float64(x) / float64(total) * 100.0))
 }
 
 func (s *Server) tplMatchSessionStatusTag(locale string, status back.MatchSessionStatus) template.HTML {

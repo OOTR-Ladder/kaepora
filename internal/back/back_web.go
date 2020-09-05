@@ -4,8 +4,6 @@ package back
 // Please do not call them outside of the webserver.
 
 import (
-	"fmt"
-	"html/template"
 	"kaepora/internal/util"
 	"time"
 
@@ -279,7 +277,6 @@ func (b *Back) GetPlayerByID(id util.UUIDAsBlob) (player Player, _ error) {
 type PlayerPerformance struct {
 	LeagueID util.UUIDAsBlob
 	Rating   PlayerRating
-	WLGraph  template.HTML // Win/Losses pie chart, SVG
 
 	Wins, Losses, Draws, Forfeits int
 }
@@ -323,15 +320,6 @@ func (b *Back) GetPlayerStats(playerID util.UUIDAsBlob) (stats PlayerStats, _ er
 		}
 
 		for k := range stats.Performances {
-			wlGraph, err := generateWLGraph(
-				float64(stats.Performances[k].Wins),
-				float64(stats.Performances[k].Losses),
-			)
-			if err != nil {
-				return fmt.Errorf("WLGraph: %s", err)
-			}
-			stats.Performances[k].WLGraph = template.HTML(wlGraph) // nolint:gosec
-
 			for l := range ratings {
 				if stats.Performances[k].LeagueID == ratings[l].LeagueID {
 					stats.Performances[k].Rating = ratings[l]

@@ -222,33 +222,6 @@ func generateSeedTimesGraph(times []int) ([]byte, error) {
 	return renderChart(graph)
 }
 
-func generateWLGraph(wins, losses float64) ([]byte, error) {
-	if wins == 0 && losses == 0 {
-		return nil, nil
-	}
-
-	graph := chart.PieChart{
-		Width:      200,
-		Height:     200,
-		Canvas:     chart.Style{FillColor: chart.ColorTransparent},
-		Background: chart.Style{FillColor: chart.ColorTransparent},
-		Values: []chart.Value{
-			{
-				Value: wins,
-				Label: fmt.Sprintf("Victories (%.0f %%)", (wins/(losses+wins))*100.0),
-				Style: chart.Style{FillColor: drawing.ColorFromHex("FDF1DC")},
-			},
-			{
-				Value: losses,
-				Label: fmt.Sprintf("Losses (%.0f %%)", (losses/(losses+wins))*100.0),
-				Style: chart.Style{FillColor: drawing.ColorFromHex("F2E1D7")},
-			},
-		},
-	}
-
-	return renderChart(graph)
-}
-
 func (b *Back) GetPlayerRatingGraph(playerName, shortcode string) ([]byte, error) {
 	var ret []byte
 	if err := b.transaction(func(tx *sqlx.Tx) error {
