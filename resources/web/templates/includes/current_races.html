@@ -3,7 +3,7 @@
 {{if .Payload.MatchSessions}}
 {{range $k, $v := .Payload.MatchSessions}}
 <div class="box is-relative is-shadowless nextRace">
-    <div class="title has-text-dark nextRace--league">{{t $.Locale "%s league" (index $.Payload.Leagues $v.LeagueID).Name}}</div>
+    <div class="title has-text-dark nextRace--league">{{(index $.Payload.Leagues $v.LeagueID).Name}}</div>
     <div class="subtitle has-text-dark is-size-6-mobile nextRace--schedule">{{$v.StartDate | datetime}}</div>
 
     <!-- if joinable race -->
