@@ -402,7 +402,8 @@ func (s *Server) shuffledSettings(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) contentSecurityPolicy(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("Content-Security-Policy", "default-src 'self';")
+		// TODO: Remove inline SVG.
+		w.Header().Add("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline';")
 		h.ServeHTTP(w, r)
 	})
 }
