@@ -313,8 +313,10 @@ func (s PlayerStats) MostPlayedLeagueID() util.UUIDAsBlob {
 	var id util.UUIDAsBlob
 
 	for k := range s.Performances {
-		if s.Performances[k].MatchesPlayed() > maxMatches {
+		matchesPlayed := s.Performances[k].MatchesPlayed()
+		if matchesPlayed > maxMatches {
 			id = s.Performances[k].LeagueID
+			maxMatches = matchesPlayed
 		}
 	}
 
