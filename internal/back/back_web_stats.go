@@ -16,6 +16,8 @@ import (
 	"github.com/wcharczuk/go-chart/drawing"
 )
 
+const emptySVG = `<svg xmlns="http://www.w3.org/2000/svg"/>`
+
 func (b *Back) GetRatingsDistributionGraph(shortcode string) (template.HTML, error) {
 	start := time.Now()
 	defer func() { log.Printf("info: computed ratings stats in %s", time.Since(start)) }()
@@ -206,7 +208,7 @@ func generateSeedTimesGraph(times []int) ([]byte, error) {
 
 	if !hasValue {
 		// go-chart does not like it when all values are 0
-		return nil, nil
+		return []byte(emptySVG), nil
 	}
 
 	graph := chart.BarChart{
@@ -289,7 +291,7 @@ func generateRRDGraph(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) ([]byte, 
 
 	if len(history) < 2 {
 		// Not enough data, return nothing.
-		return nil, nil
+		return []byte(emptySVG), nil
 	}
 
 	r := make([]float64, len(history))
