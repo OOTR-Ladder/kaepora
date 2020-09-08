@@ -2,7 +2,6 @@ package web
 
 import (
 	"encoding/hex"
-	"html/template"
 	"kaepora/internal/back"
 	"log"
 	"math"
@@ -13,15 +12,14 @@ import (
 )
 
 type leagueStats struct {
-	Misc                           back.StatsMisc
-	Attendance                     []attendanceEntry
-	Seed                           statsSeed
-	ShortCode                      string
-	ExtendedStats                  bool
-	SeedTimes, RatingsDistribution template.HTML
+	Misc          back.StatsMisc
+	Attendance    []attendanceEntry
+	Seed          statsSeed
+	ShortCode     string
+	ExtendedStats bool
 }
 
-func (s *Server) stats(w http.ResponseWriter, r *http.Request) {
+func (s *Server) leagueStats(w http.ResponseWriter, r *http.Request) {
 	shortcode := chi.URLParam(r, "shortcode")
 	statsIface, expiresIn, err := memoizer(
 		s.statsCache,
@@ -40,6 +38,34 @@ func (s *Server) stats(w http.ResponseWriter, r *http.Request) {
 
 	s.cache(w, r, expiresIn)
 	s.response(w, r, http.StatusOK, "stats.html", stats)
+}
+
+func (s *Server) leagueStatsGraph(w http.ResponseWriter, r *http.Request) {
+	shortcode := chi.URLParam(r, "shortcode")
+
+	var (
+		graph []byte
+		err   error
+	)
+	switch chi.URLParam(r, "graphName") {
+	case "ratings":
+		graph, err = s.back.GetRatingsDistributionGraph(shortcode)
+	case "seedtime":
+		graph, err = s.back.GetLeagueSeedTimesGraph(shortcode)
+	default:
+		s.notFound(w, r)
+		return
+	}
+	if err != nil {
+		s.error(w, r, err, http.StatusInternalServerError)
+		return
+	}
+
+	s.cache(w, r, 1*time.Hour)
+	w.Header().Set("Content-Type", "image/svg+xml")
+	if _, err := w.Write(graph); err != nil {
+		log.Printf("warning: error when writing graph: %s", err)
+	}
 }
 
 func (s *Server) computeLeagueStats(shortcode string) (*leagueStats, error) {
@@ -63,16 +89,6 @@ func (s *Server) computeLeagueStats(shortcode string) (*leagueStats, error) {
 	}
 
 	payload.Attendance, err = s.getAttendanceStats(payload.ShortCode)
-	if err != nil {
-		return nil, err
-	}
-
-	payload.SeedTimes, err = s.back.GetLeagueSeedTimesGraph(payload.ShortCode)
-	if err != nil {
-		return nil, err
-	}
-
-	payload.RatingsDistribution, err = s.back.GetRatingsDistributionGraph(payload.ShortCode)
 	if err != nil {
 		return nil, err
 	}

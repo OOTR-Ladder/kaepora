@@ -3,7 +3,6 @@ package back
 import (
 	"bytes"
 	"fmt"
-	"html/template"
 	"io"
 	"kaepora/internal/util"
 	"log"
@@ -18,7 +17,7 @@ import (
 
 const emptySVG = `<svg xmlns="http://www.w3.org/2000/svg"/>`
 
-func (b *Back) GetRatingsDistributionGraph(shortcode string) (template.HTML, error) {
+func (b *Back) GetRatingsDistributionGraph(shortcode string) ([]byte, error) {
 	start := time.Now()
 	defer func() { log.Printf("info: computed ratings stats in %s", time.Since(start)) }()
 
@@ -29,7 +28,7 @@ func (b *Back) GetRatingsDistributionGraph(shortcode string) (template.HTML, err
 		StrokeWidth: 1,
 	})
 	if err != nil {
-		return template.HTML(""), err
+		return nil, err
 	}
 
 	graph := chart.BarChart{
@@ -51,10 +50,10 @@ func (b *Back) GetRatingsDistributionGraph(shortcode string) (template.HTML, err
 
 	svg, err := renderChart(graph)
 	if err != nil {
-		return template.HTML(""), err
+		return nil, err
 	}
 
-	return template.HTML(svg), nil // nolint:gosec
+	return svg, nil
 }
 
 func (b *Back) getRatingsStats(
@@ -104,7 +103,7 @@ func (b *Back) getRatingsStats(
 	return bars, float64(maxValue) / float64(valuesCount), nil
 }
 
-func (b *Back) GetLeagueSeedTimesGraph(shortcode string) (template.HTML, error) {
+func (b *Back) GetLeagueSeedTimesGraph(shortcode string) ([]byte, error) {
 	var svg []byte
 	start := time.Now()
 	defer func() { log.Printf("info: computed seed completion stats in %s", time.Since(start)) }()
@@ -122,10 +121,10 @@ func (b *Back) GetLeagueSeedTimesGraph(shortcode string) (template.HTML, error) 
 
 		return nil
 	}); err != nil {
-		return template.HTML(""), err
+		return nil, err
 	}
 
-	return template.HTML(svg), nil // nolint:gosec
+	return svg, nil
 }
 
 func generatePlayerSeedTimesGraph(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) ([]byte, error) {
