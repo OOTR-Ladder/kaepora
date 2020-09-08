@@ -54,16 +54,21 @@
             {{- end -}}
         </table>
     </div>
-    <div class="column is-half has-text-centered">
-        <p>{{t .Locale "Ratings distribution"}}</p>
-        <img src="{{ uri $.Locale "stats" $.Payload.ShortCode "graph" "ratings.svg" }}">
+
+    <div class="column">
+        <p>{{t .Locale "avg. matches per day"}}</p>
+        <img src="{{ uri $.Locale "stats" $.Payload.ShortCode "graph" "daily_matches.svg" }}">
     </div>
 </div>
 
-<div class="columns is-centered">
+<div class="columns is-centered has-text-centered">
     <div class="column">
         <p>{{t .Locale "Seed completion time"}}</p>
         <img src="{{ uri $.Locale "stats" $.Payload.ShortCode "graph" "seedtime.svg" }}">
+    </div>
+    <div class="column">
+        <p>{{t .Locale "Ratings distribution"}}</p>
+        <img src="{{ uri $.Locale "stats" $.Payload.ShortCode "graph" "ratings.svg" }}">
     </div>
 </div>
 

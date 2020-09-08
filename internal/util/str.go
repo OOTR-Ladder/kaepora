@@ -80,3 +80,8 @@ func Date(iface interface{}) string {
 
 	return t.Format("2006-01-02")
 }
+
+func WeeklyGraphFormatter(v interface{}) string {
+	y, w := time.Unix(int64(v.(float64)), 0).ISOWeek()
+	return fmt.Sprintf("%d w%d", y, w)
+}

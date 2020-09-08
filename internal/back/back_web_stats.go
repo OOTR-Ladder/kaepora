@@ -2,7 +2,6 @@ package back
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"kaepora/internal/util"
 	"log"
@@ -121,6 +120,76 @@ func (b *Back) GetLeagueSeedTimesGraph(shortcode string) ([]byte, error) {
 
 		return nil
 	}); err != nil {
+		return nil, err
+	}
+
+	return svg, nil
+}
+
+func (b *Back) GetLeagueDailyMatchesGraph(shortcode string) ([]byte, error) {
+	query := `
+        SELECT MIN(Match.StartedAt) as Date,
+               strftime("%Y-w%W", Match.StartedAt,"unixepoch") AS Grp,
+               COUNT(*) / 7.0 AS Cnt
+        FROM Match
+        INNER JOIN MatchSession ON (MatchSession.ID = Match.MatchSessionID)
+        INNER JOIN League ON (League.ID = Match.LeagueID)
+        WHERE MatchSession.Status = ? AND League.ShortCode = ?
+        GROUP BY Grp ORDER BY Grp ASC
+    `
+
+	var (
+		svg    []byte
+		values []struct {
+			Date int64
+			Grp  string
+			Cnt  float64
+		}
+	)
+
+	if err := b.transaction(func(tx *sqlx.Tx) error {
+		if err := tx.Select(&values, query, MatchSessionStatusClosed, shortcode); err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
+	// We remove the current week, so we need at least three.
+	if len(values) < 3 {
+		return []byte(emptySVG), nil
+	}
+	values = values[:len(values)-1]
+
+	period := make([]float64, len(values))
+	avg := make([]float64, len(values))
+	for i := range values {
+		period[i] = float64(values[i].Date)
+		avg[i] = values[i].Cnt
+	}
+
+	graph := chart.Chart{
+		Width:      620,
+		Height:     180,
+		Canvas:     chart.Style{FillColor: chart.ColorTransparent},
+		Background: chart.Style{FillColor: chart.ColorTransparent},
+		XAxis: chart.XAxis{
+			TickPosition:   chart.TickPositionBetweenTicks,
+			ValueFormatter: util.WeeklyGraphFormatter,
+		},
+		Series: []chart.Series{
+			chart.ContinuousSeries{
+				Name:    "avg. Matches",
+				XValues: period,
+				YValues: avg,
+			},
+		},
+	}
+
+	svg, err := renderChart(graph)
+	if err != nil {
 		return nil, err
 	}
 
@@ -309,11 +378,8 @@ func generateRRDGraph(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) ([]byte, 
 		Canvas:     chart.Style{FillColor: chart.ColorTransparent},
 		Background: chart.Style{FillColor: chart.ColorTransparent},
 		XAxis: chart.XAxis{
-			TickPosition: chart.TickPositionBetweenTicks,
-			ValueFormatter: func(v interface{}) string {
-				y, w := time.Unix(int64(v.(float64)), 0).ISOWeek()
-				return fmt.Sprintf("%d w%d", y, w)
-			},
+			TickPosition:   chart.TickPositionBetweenTicks,
+			ValueFormatter: util.WeeklyGraphFormatter,
 		},
 		Series: []chart.Series{
 			chart.ContinuousSeries{

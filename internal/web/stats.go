@@ -52,6 +52,8 @@ func (s *Server) leagueStatsGraph(w http.ResponseWriter, r *http.Request) {
 		graph, err = s.back.GetRatingsDistributionGraph(shortcode)
 	case "seedtime":
 		graph, err = s.back.GetLeagueSeedTimesGraph(shortcode)
+	case "daily_matches":
+		graph, err = s.back.GetLeagueDailyMatchesGraph(shortcode)
 	default:
 		s.notFound(w, r)
 		return
