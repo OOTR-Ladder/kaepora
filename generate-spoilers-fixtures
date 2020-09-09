@@ -1,0 +1,185 @@
+#!/usr/bin/env php
+<?php
+
+error_reporting(-1);
+
+const ALWAYS_HINT = [
+    '10 Big Poes',
+    '30 Gold Skulltula Reward',
+    '40 Gold Skulltula Reward',
+    '50 Gold Skulltula Reward',
+    'Biggoron',
+    'Deku Theater Skull Mask',
+    'Sheik in Kakariko',
+    'Song from Ocarina of Time',
+];
+
+const SOMETIMES_HINT = [
+    '10 Big Poes',
+    '20 Gold Skulltula Reward',
+    '30 Gold Skulltula Reward',
+    '40 Gold Skulltula Reward',
+    '50 Gold Skulltula Reward',
+    'Adult Shooting Gallery',
+    'Anjus Chickens',
+    'Biggoron',
+    'Boomerang Chest',
+    'Bottom of the Well Defeat Boss',
+    'Bottom of the Well MQ Compass Chest',
+    'Composer Grave Chest',
+    'DMC Deku Scrub Bombs',
+    'Darunias Joy',
+    'Deku Theater Skull Mask',
+    'Deku Tree MQ After Spinning Log Chest',
+    'Fire Temple MQ West Tower Top Chest',
+    'Fire Temple Megaton Hammer Chest',
+    'Fire Temple Scarecrow Chest',
+    'Forest Temple Floormaster Chest',
+    'GS Deku Tree MQ Basement Ceiling',
+    'GS Fire Temple MQ Above Fire Wall Maze',
+    'GS Hyrule Castle Grotto',
+    'GS Hyrule Field Near Gerudo Valley',
+    'GS Jabu Jabu MQ Invisible Enemies Room',
+    'GS Spirit Temple MQ Lower Adult Right',
+    'GS Wasteland Ruins',
+    'GS Water Temple MQ North Basement',
+    'GS Zora\'s Fountain Hidden Cave',
+    'Gerudo Training Grounds MQ Ice Arrows Chest',
+    'Gerudo Training Grounds MQ Underwater Silver Rupee Chest',
+    'Gerudo Training Grounds Maze Path Final Chest',
+    'Gerudo Training Grounds Underwater Silver Rupee Chest',
+    'Gerudo Valley Hammer Rocks Chest',
+    'Goron City Leftmost Maze Chest',
+    'Goron City Pot Freestanding PoH',
+    'Haunted Wasteland Structure Chest',
+    'Heart Piece Grave Chest',
+    'Horseback Archery 1500 Points',
+    'King Zora Thawed',
+    'Lake Hylia Sun',
+    'Links House Cow',
+    'Mirror Shield Chest',
+    'Ocarina of Time',
+    'Shadow Temple Hidden Floormaster Chest',
+    'Shadow Temple MQ Bomb Flower Chest',
+    'Sheik Forest Song',
+    'Sheik at Colossus',
+    'Sheik at Temple',
+    'Sheik in Crater',
+    'Sheik in Ice Cavern',
+    'Sheik in Kakariko',
+    'Silver Gauntlets Chest',
+    'Skull Kid',
+    'Song from Composer Grave',
+    'Song from Ocarina of Time',
+    'Spirit Temple MQ Child Center Chest',
+    'Spirit Temple MQ Lower Adult Right Chest',
+    'Treasure Chest Game',
+    'Water Temple Boss Key Chest',
+    'Water Temple MQ Boss Key Chest',
+    'Water Temple MQ Freestanding Key',
+    'Water Temple River Chest',
+    'Zoras Fountain Bottom Freestanding PoH',
+];
+
+exit(main($argv));
+
+function main(array $argv): int {
+    if (count($argv) !== 2) {
+        fprintf(STDERR, "Usage: {$argv[0]} RANDOMIZER_DIR\n");
+        return 1;
+    }
+
+    $base = $argv[1];
+    if (!file_exists($base) || !is_dir($base)) {
+        throw new \RuntimeException("'$base' could not be found");
+    }
+
+    $map = get_location_to_region($base);
+    $sql = locmap_to_sql($map);
+    echo $sql;
+
+    return 0;
+}
+
+function locmap_to_sql(array $a): string {
+    $ret = 'INSERT INTO Region ("ID", "Name") VALUES' . "\n";
+
+    $lastRegionID = 0;
+    $regions = [];
+    foreach ($a as $location => $region) {
+        if (!array_key_exists($region, $regions)) {
+            $regions[$region] = ++$lastRegionID;
+            $ret .= "    ($lastRegionID, '$region'),\n";
+        }
+    }
+    $ret = substr($ret, 0, -2) . "\n;\n";
+
+    $ret = "\n". 'INSERT INTO Location ("Name", "RegionID", "HintType") VALUES' . "\n";
+    foreach ($a as $location => $region) {
+        $hint = 0;
+        if (in_array($location, SOMETIMES_HINT)) {
+            $hint = 1;
+        }
+        if (in_array($location, ALWAYS_HINT)) {
+            $hint = 2;
+        }
+
+        $ret .= "    ('$location', {$regions[$region]}, $hint),\n";
+    }
+    $ret = substr($ret, 0, -2) . "\n;\n";
+
+    return $ret;
+}
+
+function get_location_to_region(string $basePath): array {
+    $path = "$basePath/LocationList.py";
+    $locations = []; // name => region
+    $raw = file($path, FILE_IGNORE_NEW_LINES);
+    if ($raw === false) {
+        throw new \RuntimeException("could not open $path");
+    }
+
+     // HARDCODED lines, extract location_table
+    if ($raw[4] != 'location_table = {' || $raw[801] !== '}') {
+        throw new \RuntimeException('table changed');
+    }
+    $raw = array_slice($raw, 5, 796);
+
+    foreach ($raw as $k => $v) {
+        $raw[$k] = str_replace(
+            ['(', ')', ':', 'None'],
+            ['[', ']', '=>', 'null'],
+            $v,
+        );
+
+        $raw[$k] = preg_replace('`shop_address\[\d+,\s+\d+\]`', 'null', $raw[$k]);
+    }
+
+    // lol
+    $locations =  eval('return [' . implode("\n", $raw) . '];');
+
+    $ret = [];
+    foreach ($locations as $k => $v) {
+        list($type, , , , $where) = $v;
+        if ($where === null || in_array($type, ['Event', 'Drop'], true)) {
+            continue;
+        }
+
+        $ret[$k] = $where[0];
+    }
+
+    return $ret;
+}
+
+function parse_loc_json(string $path): array {
+    // There's newlines and comments in the strings, this is not valid JSON.
+    $raw = file_get_contents($path);
+    $raw = preg_replace("`#.+\n`", '', $raw);
+    $raw = str_replace("\n", ' ', $raw);
+    $ret = json_decode($raw, true);
+    if ($ret === null) {
+        throw new \RuntimeException("invalid JSON in $path");
+    }
+
+    return $ret;
+}
