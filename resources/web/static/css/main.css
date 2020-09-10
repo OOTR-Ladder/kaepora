@@ -82,16 +82,23 @@ section[class*="SiteHeader"] {
 
     box-shadow: 0 -0.5em 1em 0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
 }
-section[class*="SiteHeader--"]::after {
+section[class*="SiteHeader--"] .HeaderIcon { width: 100%; }
+section[class*="SiteHeader--"] .HeaderIcon--icon {
     width: 8rem;
     height: 8rem;
     overflow: hidden;
 
     position: absolute;
     bottom: 0;
-    right: 1.5rem;
+    right: 0;
 
     opacity: .2;
+    z-index: 0;
+}
+section[class*="SiteHeader--"] .HeaderIcon--icon::after {
+    display: block;
+    width: 8rem;
+    height: 8rem;
 }
 
 .PageTitle {
@@ -979,7 +986,7 @@ ul.spoilers--hash li {
     background-color: #DDD;
 }
 /* {{{ Profile page */
-.SiteHeader--profile::after {
+.SiteHeader--profile .HeaderIcon--icon::after {
     content: '';
     width: 8rem;
     height: 8rem;
@@ -991,8 +998,10 @@ ul.spoilers--hash li {
     -webkit-mask: url('../svg/user.svg') top left / cover;
 }
 .PlayerName {
+    position: relative;
     font-size: 2.5rem;
-    font-weight: bold; 
+    font-weight: bold;
+    z-index: 1; 
 }
 .Player--dateInscription { color: var(--color-body-bg-color); }
 a[class*="Player--streamLink"] { display: inline-block; }
