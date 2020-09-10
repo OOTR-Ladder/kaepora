@@ -990,7 +990,10 @@ ul.spoilers--hash li {
     mask: url('../svg/user.svg') top left / cover;
     -webkit-mask: url('../svg/user.svg') top left / cover;
 }
-.PlayerName { font-weight: bold; }
+.PlayerName {
+    font-size: 2.5rem;
+    font-weight: bold; 
+}
 .Player--dateInscription { color: var(--color-body-bg-color); }
 a[class*="Player--streamLink"] { display: inline-block; }
 a[class*="Player--streamLink"]::before {
@@ -1086,12 +1089,6 @@ div[class*="PlayerMatch"]:not(:last-child) { margin-bottom: .5rem; }
 }
 
 @media only screen and (max-width: 768px) {
-    .QuickStats {
-        width: 100%;
-        padding: 0 1.25rem;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
     .Stat { margin-right: .5rem; }
     .Stat--name,
     .Stat--value {
@@ -1110,5 +1107,13 @@ div[class*="PlayerMatch"]:not(:last-child) { margin-bottom: .5rem; }
     .Stat--name,
     .Stat--value { padding: 0 1.25rem; }
     .tab-content { padding: 0 1.5rem; }
+}
+@media only screen and (max-width: 1023px) {
+    .QuickStats {
+        width: 100%;
+        padding: 0 1.25rem;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 }
 /* }}} Profile page */
