@@ -9,7 +9,6 @@
 {{ $title := t $.Locale "Victory"}}
 {{ $opponentName := (index $.Payload.Players $against.PlayerID).Name }}
 {{ $leagueName := (index $.Payload.Leagues $v.LeagueID).Name }}
-{{ $sessionDate := datetime $v.StartedAt}}
 
 {{ if not $self.HasWon }}
     {{ if $v.IsDoubleForfeit }}
@@ -30,10 +29,7 @@
         <div class="level-left">
             <div class="level-item">
                 <div>
-                    <span
-                        title="{{datetime $v.StartedAt}}"
-                        class="PlayerMatch--result">{{$title}}</span> vs
-                    <a
+                    <span class="PlayerMatch--result">{{$title}}</span> vs <a
                         class="PlayerMatch--opponent"
                         href="{{uri $.Locale "player" $opponentName}}"
                     >{{$opponentName}}</a>
@@ -43,7 +39,7 @@
         <div class="level-right">
             <div class="level-item tags is-hidden-mobile">
                 <span class="tag is-normal PlayerMatch--details">{{$leagueName}}</span>
-                <span class="tag is-normal is-light is-info PlayerMatch--details">{{$sessionDate}}</span>
+                <span class="tag is-normal is-light is-info PlayerMatch--details">{{datetime $v.StartedAt}}</span>
             </div>
             <div class="level-item">
                 <a
