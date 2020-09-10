@@ -175,8 +175,8 @@ func generateLeagueSeedTimesGraph(tx *sqlx.Tx, leagueID util.UUIDAsBlob) ([]byte
 func generateSeedTimesGraph(times []int) ([]byte, error) {
 	style := chart.Style{
 		FontColor:   drawing.ColorBlack,
-		FillColor:   drawing.ColorFromHex("285577"),
-		StrokeColor: drawing.ColorFromHex("4c7899"),
+		FillColor:   drawing.ColorFromHex("1d72aa"),
+		StrokeColor: drawing.ColorFromHex("363636"),
 		StrokeWidth: 1,
 	}
 
@@ -305,7 +305,7 @@ func generateRRDGraph(tx *sqlx.Tx, playerID, leagueID util.UUIDAsBlob) ([]byte, 
 
 	graph := chart.Chart{
 		Width:      620,
-		Height:     180,
+		Height:     200,
 		Canvas:     chart.Style{FillColor: chart.ColorTransparent},
 		Background: chart.Style{FillColor: chart.ColorTransparent},
 		XAxis: chart.XAxis{
