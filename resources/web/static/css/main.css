@@ -24,6 +24,21 @@ body { font-family: "Avenir", "Ubuntu", "Noto Sans", "Segoe UI", sans-serif; }
 table.table { background-color: transparent; }
 .box { border-radius: 20px; }
 
+.TriforceIcon {
+    display: block;
+    margin: auto;
+    width: 10rem;
+    height: 8rem;
+
+    background: #3273dc;
+    mask: url('../svg/triforce.svg') top left / contain;
+    -webkit-mask: url('../svg/triforce.svg') top left / contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    opacity: .05;
+}
+
 .Logo {
     position: absolute;
     top: 0;
@@ -70,7 +85,6 @@ table.table { background-color: transparent; }
 
 section[class*="SiteHeader"] {
     position: relative;
-    overflow: hidden;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
 
@@ -83,6 +97,24 @@ section[class*="SiteHeader"] {
 
     box-shadow: 0 -0.5em 1em 0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
 }
+section[class*="SiteHeader--"] .HeaderIcon { width: 100%; }
+section[class*="SiteHeader--"] .HeaderIcon--icon {
+    width: 8rem;
+    height: 8rem;
+    overflow: hidden;
+
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    opacity: .2;
+    z-index: 0;
+}
+section[class*="SiteHeader--"] .HeaderIcon--icon::after {
+    display: block;
+    width: 8rem;
+    height: 8rem;
+}
 
 .PageTitle {
     font-size: 2.5rem;
@@ -94,6 +126,7 @@ section[class*="SiteHeader"] {
 
 @media only screen and (max-width: 768px) {
     body { padding-bottom: calc(75px - 1rem); }
+    .PageTitle { font-size: 1.5rem; }
 }
 
 /* Fix uglyness */
@@ -325,6 +358,8 @@ section[class*="SiteHeader"] {
 
 /* {{{ Ladder footer */
 footer.footer { background: var(--color-box); }
+.content ul.FooterLinks { margin-left: 0; }
+.content ul.FooterLinks li+li { margin-top: 0; }
 .FooterLinks--link {
     display: inline-block;
     list-style-type: none;
@@ -355,6 +390,20 @@ a[class*="Link--icon"]:hover::before { background: #3273dc; }
     footer.footer { padding: 1.5rem 1.5rem 3rem; }
 }
 /* }}} Ladder footer */
+
+/* {{{ Markdown pages and specific documentation pages */
+.SiteHeader--documentation .HeaderIcon--icon::after {
+    content: '';
+    width: 8rem;
+    height: 8rem;
+
+    transform: translateY(1.5rem);
+
+    background: var(--color-white);
+    mask: url('../svg/doc.svg') top left / cover;
+    -webkit-mask: url('../svg/doc.svg') top left / cover;
+}
+/* }}} Markdown pages and specific documentation pages */
 
 /* {{{ Homepage */
 .homeHeader {
@@ -529,6 +578,18 @@ div[class^="nextRace--contextual--"] > i {
 /* }}} Homepage */
 
 /* {{{ Leaderboard */
+.SiteHeader--leaderboard .HeaderIcon--icon::after {
+    content: '';
+    width: 8rem;
+    height: 8rem;
+
+    transform: translateY(1rem);
+
+    background: var(--color-white);
+    mask: url('../svg/trophy.svg') top left / cover;
+    -webkit-mask: url('../svg/trophy.svg') top left / cover;
+}
+
 table[class*="leaderboardTable"] thead th,
 table[class*="leaderboardTable"] tbody td { border-width: 0; }
 table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child(2n) { background-color: transparent; }
@@ -685,6 +746,17 @@ table[class*="leaderboardTable"] .leaderboardTable--player .Ranking--deviation {
 /* }}} Leaderboard */
 
 /* {{{ Schedule */
+.SiteHeader--schedule .HeaderIcon--icon::after {
+    content: '';
+    width: 8rem;
+    height: 8rem;
+
+    transform: translateY(1.5rem);
+
+    background: var(--color-white);
+    mask: url('../svg/calendar.svg') top left / cover;
+    -webkit-mask: url('../svg/calendar.svg') top left / cover;
+}
 .ConfirmedRaces { padding: 1.5rem; }
 
 .upcomingRace--title {
@@ -739,6 +811,18 @@ table.table.stats--attendance td {
 /* }}} Stats */
 
 /* {{{ History */
+.SiteHeader--sessions .HeaderIcon--icon::after {
+    content: '';
+    width: 8rem;
+    height: 8rem;
+
+    transform: translateY(1.5rem);
+
+    background: var(--color-white);
+    mask: url('../svg/history.svg') top left / cover;
+    -webkit-mask: url('../svg/history.svg') top left / cover;
+}
+
 .box[class*="SessionBox"] { position: relative; }
 .SessionBox--league {
     font-size: 2rem;
@@ -920,23 +1004,23 @@ ul.spoilers--hash li {
     background-color: #DDD;
 }
 /* {{{ Profile page */
-.SiteHeader--profile::after {
+.SiteHeader--profile .HeaderIcon--icon::after {
     content: '';
     width: 8rem;
     height: 8rem;
 
-    position: absolute;
-    bottom: 0;
-    right: 1.5rem;
-
-    opacity: .2;
     transform: translateY(1rem);
 
     background: var(--color-white);
     mask: url('../svg/user.svg') top left / cover;
     -webkit-mask: url('../svg/user.svg') top left / cover;
 }
-.PlayerName { font-weight: bold; }
+.PlayerName {
+    position: relative;
+    font-size: 2.5rem;
+    font-weight: bold;
+    z-index: 1; 
+}
 .Player--dateInscription { color: var(--color-body-bg-color); }
 a[class*="Player--streamLink"] { display: inline-block; }
 a[class*="Player--streamLink"]::before {
@@ -1007,6 +1091,8 @@ div[class*="PlayerMatch"]:not(:last-child) { margin-bottom: .5rem; }
 .PlayerMatch__lose .PlayerMatch--result { color: #cc0f35; }
 .PlayerMatch__tie .PlayerMatch--result { color: #947600; }
 
+.tags .tag.PlayerMatch--details { margin-bottom: 0; }
+
 .tab-content { display: none; }
 .tab-content.is-active { display: block; }
 
@@ -1031,13 +1117,16 @@ div[class*="PlayerMatch"]:not(:last-child) { margin-bottom: .5rem; }
     z-index: 1;
 }
 
+.noData .TriforceIcon + p {
+    padding: 1rem 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #3273dc;
+
+    opacity: .1;
+}
+
 @media only screen and (max-width: 768px) {
-    .QuickStats {
-        width: 100%;
-        padding: 0 1.25rem;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
     .Stat { margin-right: .5rem; }
     .Stat--name,
     .Stat--value {
@@ -1056,5 +1145,16 @@ div[class*="PlayerMatch"]:not(:last-child) { margin-bottom: .5rem; }
     .Stat--name,
     .Stat--value { padding: 0 1.25rem; }
     .tab-content { padding: 0 1.5rem; }
+}
+@media only screen and (max-width: 1023px) {
+    .QuickStats {
+        width: 100%;
+        padding: 0 1.25rem;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    section.noData { padding: 8.5rem 1.5rem; }
+    .noData .TriforceIcon + p { font-size: 1.25rem; }
 }
 /* }}} Profile page */

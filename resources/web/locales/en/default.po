@@ -139,7 +139,7 @@ msgstr ""
 msgid "Defeat"
 msgstr ""
 
-#: resources/web/templates/includes/player_matches.html:51
+#: resources/web/templates/includes/player_matches.html:49
 msgid "Spoiler log"
 msgstr ""
 
@@ -341,23 +341,23 @@ msgstr ""
 msgid "%s league"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:24
+#: resources/web/templates/layouts/leaderboard.html:28
 msgid "Rating"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:25
+#: resources/web/templates/layouts/leaderboard.html:29
 msgid "Victories"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:26
+#: resources/web/templates/layouts/leaderboard.html:30
 msgid "Losses"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:27
+#: resources/web/templates/layouts/leaderboard.html:31
 msgid "Forfeits"
 msgstr ""
 
-#: resources/web/templates/layouts/leaderboard.html:74
+#: resources/web/templates/layouts/leaderboard.html:78
 msgid "The leaderboard is currently empty."
 msgstr ""
 
@@ -365,48 +365,52 @@ msgstr ""
 msgid "Climbing the ladder since %s"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:19
+#: resources/web/templates/layouts/one_player.html:23
 msgid "Matches played"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:24
+#: resources/web/templates/layouts/one_player.html:28
 msgid "Matches won"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:28
+#: resources/web/templates/layouts/one_player.html:33
 msgid "Most played league"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:40
+#: resources/web/templates/layouts/one_player.html:47
 msgid "Statistics"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:59
+#: resources/web/templates/layouts/one_player.html:66
 msgid "%d victory"
 msgid_plural "%d victories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: resources/web/templates/layouts/one_player.html:64
+#: resources/web/templates/layouts/one_player.html:71
 msgid "%d loss"
 msgid_plural "%d losses"
 msgstr[0] ""
 msgstr[1] ""
 
-#: resources/web/templates/layouts/one_player.html:73
+#: resources/web/templates/layouts/one_player.html:82
 msgid "Ratings graph"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:77
+#: resources/web/templates/layouts/one_player.html:88
 msgid "Seed completion times graph"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:86
+#: resources/web/templates/layouts/one_player.html:99
 msgid "Past seasons"
 msgstr ""
 
-#: resources/web/templates/layouts/one_player.html:118
+#: resources/web/templates/layouts/one_player.html:131
 msgid "Past races"
+msgstr ""
+
+#: resources/web/templates/layouts/one_player.html:145
+msgid "No match played yet"
 msgstr ""
 
 #: resources/web/templates/layouts/one_session.html:9
@@ -429,7 +433,7 @@ msgstr ""
 msgid "Current race"
 msgstr ""
 
-#: resources/web/templates/layouts/schedule.html:51
+#: resources/web/templates/layouts/schedule.html:55
 msgid "in"
 msgstr ""
 
@@ -441,7 +445,7 @@ msgstr ""
 msgid "Races completed in the last 30 days"
 msgstr ""
 
-#: resources/web/templates/layouts/sessions.html:28
+#: resources/web/templates/layouts/sessions.html:32
 msgid "player"
 msgid_plural "players"
 msgstr[0] ""

@@ -10,6 +10,10 @@
             <div class="heading Player--dateInscription">{{ t .Locale "Climbing the ladder since %s" (date .Payload.Player.CreatedAt) }}</div>
         </div>
     </div>
+
+    <div class="container HeaderIcon">
+        <div class="HeaderIcon--icon"></div>
+    </div>
 </section>
 
 <div class="container">
@@ -24,19 +28,22 @@
             <div class="Stat--name heading">{{t .Locale "Matches won"}}</div>
         </div>
 
+        {{if .Payload.PlayerStats.Performances}}
         <div class="QuickStats--stat Stat is-hidden-touch">
             <div class="Stat--name heading">{{t .Locale "Most played league"}}</div>
             <div class="Stat--value">
                 {{ (index $.Payload.Leagues $.Payload.PlayerStats.MostPlayedLeagueID).Name }}
             </div>
         </div>
+        {{end}}
     </div>
 </div>
 
+{{if .Payload.PlayerStats.Performances}}
 <section class="section">
     <div class="container">
-        <div class="columns">
-            <div class="column is-half">
+        <div class="columns is-multiline">
+            <div class="column is-full-tablet is-half-widescreen">
                 <h2 class="title is-display is-size-4-touch">{{t .Locale "Statistics"}}</h2>
                 <div class="box is-shadowless">
                     <div id="PlayerPerformances">
@@ -69,12 +76,18 @@
                                         <progress class="progress is-small is-success" value="{{$pct}}" max="100">{{$pct}}</progress>
                                     </div>
 
-                                    <div class="RatingVariation">
-                                        <img src="{{ uri $.Locale "player" $.Payload.Player.Name "graph" (index $.Payload.Leagues $v.LeagueID).ShortCode "rating.svg" }}" alt="{{ t $.Locale "Ratings graph" }}" >
-                                    </div>
+                                    <div class="columns is-multiline">
+                                        <div class="column is-half-tablet is-full-widescreen">
+                                            <div class="RatingVariation">
+                                                <img src="{{ uri $.Locale "player" $.Payload.Player.Name "graph" (index $.Payload.Leagues $v.LeagueID).ShortCode "rating.svg" }}" alt="{{ t $.Locale "Ratings graph" }}" >
+                                            </div>
+                                        </div>
 
-                                    <div class="SeedDurations">
-                                        <img src="{{ uri $.Locale "player" $.Payload.Player.Name "graph" (index $.Payload.Leagues $v.LeagueID).ShortCode "seedtime.svg" }}" alt="{{ t $.Locale "Seed completion times graph" }}" >
+                                        <div class="column is-half-tablet is-full-widescreen">
+                                            <div class="SeedDurations">
+                                                <img src="{{ uri $.Locale "player" $.Payload.Player.Name "graph" (index $.Payload.Leagues $v.LeagueID).ShortCode "seedtime.svg" }}" alt="{{ t $.Locale "Seed completion times graph" }}" >
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             {{ end }}
@@ -114,7 +127,7 @@
                 {{end}}
 
             </div>
-            <div class="column">
+            <div class="column is-full-tablet is-half-widescreen">
                 <h2 class="title is-display is-size-4-touch">{{t .Locale "Past races"}}</h2>
 
                 {{template "player_matches" .}}
@@ -122,6 +135,20 @@
         </div>
     </div>
 </section>
+{{else}}
+<section class="section is-medium noData">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <div>
+                    <div class="TriforceIcon"></div>
+                    <p class="has-text-centered">{{t .Locale "No match played yet"}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{{end}}
 
 {{- template "footer" . -}}
 <script src="{{assetURL "js/one-player.js"}}" integrity="{{assetIntegrity "js/one-player.js"}}" ></script>
