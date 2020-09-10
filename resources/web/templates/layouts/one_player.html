@@ -42,8 +42,8 @@
 {{if .Payload.PlayerStats.Performances}}
 <section class="section">
     <div class="container">
-        <div class="columns">
-            <div class="column is-half">
+        <div class="columns is-multiline">
+            <div class="column is-full-tablet is-half-widescreen">
                 <h2 class="title is-display is-size-4-touch">{{t .Locale "Statistics"}}</h2>
                 <div class="box is-shadowless">
                     <div id="PlayerPerformances">
@@ -76,12 +76,18 @@
                                         <progress class="progress is-small is-success" value="{{$pct}}" max="100">{{$pct}}</progress>
                                     </div>
 
-                                    <div class="RatingVariation">
-                                        <img src="{{ uri $.Locale "player" $.Payload.Player.Name "graph" (index $.Payload.Leagues $v.LeagueID).ShortCode "rating.svg" }}" alt="{{ t $.Locale "Ratings graph" }}" >
-                                    </div>
+                                    <div class="columns is-multiline">
+                                        <div class="column is-half-tablet is-full-widescreen">
+                                            <div class="RatingVariation">
+                                                <img src="{{ uri $.Locale "player" $.Payload.Player.Name "graph" (index $.Payload.Leagues $v.LeagueID).ShortCode "rating.svg" }}" alt="{{ t $.Locale "Ratings graph" }}" >
+                                            </div>
+                                        </div>
 
-                                    <div class="SeedDurations">
-                                        <img src="{{ uri $.Locale "player" $.Payload.Player.Name "graph" (index $.Payload.Leagues $v.LeagueID).ShortCode "seedtime.svg" }}" alt="{{ t $.Locale "Seed completion times graph" }}" >
+                                        <div class="column is-half-tablet is-full-widescreen">
+                                            <div class="SeedDurations">
+                                                <img src="{{ uri $.Locale "player" $.Payload.Player.Name "graph" (index $.Payload.Leagues $v.LeagueID).ShortCode "seedtime.svg" }}" alt="{{ t $.Locale "Seed completion times graph" }}" >
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             {{ end }}
@@ -121,7 +127,7 @@
                 {{end}}
 
             </div>
-            <div class="column">
+            <div class="column is-full-tablet is-half-widescreen">
                 <h2 class="title is-display is-size-4-touch">{{t .Locale "Past races"}}</h2>
 
                 {{template "player_matches" .}}

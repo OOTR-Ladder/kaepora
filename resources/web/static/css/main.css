@@ -1091,6 +1091,8 @@ div[class*="PlayerMatch"]:not(:last-child) { margin-bottom: .5rem; }
 .PlayerMatch__lose .PlayerMatch--result { color: #cc0f35; }
 .PlayerMatch__tie .PlayerMatch--result { color: #947600; }
 
+.tags .tag.PlayerMatch--details { margin-bottom: 0; }
+
 .tab-content { display: none; }
 .tab-content.is-active { display: block; }
 
