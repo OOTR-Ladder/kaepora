@@ -24,6 +24,21 @@ body { font-family: "Avenir", "Ubuntu", "Noto Sans", "Segoe UI", sans-serif; }
 table.table { background-color: transparent; }
 .box { border-radius: 20px; }
 
+.TriforceIcon {
+    display: block;
+    margin: auto;
+    width: 10rem;
+    height: 8rem;
+
+    background: #3273dc;
+    mask: url('../svg/triforce.svg') top left / contain;
+    -webkit-mask: url('../svg/triforce.svg') top left / contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    opacity: .05;
+}
+
 .Logo {
     position: absolute;
     top: 0;
@@ -1098,6 +1113,15 @@ div[class*="PlayerMatch"]:not(:last-child) { margin-bottom: .5rem; }
     z-index: 1;
 }
 
+.noData .TriforceIcon + p {
+    padding: 1rem 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #3273dc;
+
+    opacity: .1;
+}
+
 @media only screen and (max-width: 768px) {
     .Stat { margin-right: .5rem; }
     .Stat--name,
@@ -1125,5 +1149,8 @@ div[class*="PlayerMatch"]:not(:last-child) { margin-bottom: .5rem; }
         left: 50%;
         transform: translate(-50%, -50%);
     }
+
+    section.noData { padding: 8.5rem 1.5rem; }
+    .noData .TriforceIcon + p { font-size: 1.25rem; }
 }
 /* }}} Profile page */

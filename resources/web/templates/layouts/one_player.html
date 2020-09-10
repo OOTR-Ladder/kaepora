@@ -28,15 +28,18 @@
             <div class="Stat--name heading">{{t .Locale "Matches won"}}</div>
         </div>
 
+        {{if not .Payload.PlayerStats.Performances}}
         <div class="QuickStats--stat Stat is-hidden-touch">
             <div class="Stat--name heading">{{t .Locale "Most played league"}}</div>
             <div class="Stat--value">
                 {{ (index $.Payload.Leagues $.Payload.PlayerStats.MostPlayedLeagueID).Name }}
             </div>
         </div>
+        {{end}}
     </div>
 </div>
 
+{{if not .Payload.PlayerStats.Performances}}
 <section class="section">
     <div class="container">
         <div class="columns">
@@ -126,6 +129,20 @@
         </div>
     </div>
 </section>
+{{else}}
+<section class="section is-medium noData">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <div>
+                    <div class="TriforceIcon"></div>
+                    <p class="has-text-centered">{{t .Locale "No match played yet"}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{{end}}
 
 {{- template "footer" . -}}
 <script src="{{assetURL "js/one-player.js"}}" integrity="{{assetIntegrity "js/one-player.js"}}" ></script>

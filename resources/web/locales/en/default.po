@@ -409,6 +409,10 @@ msgstr ""
 msgid "Past races"
 msgstr ""
 
+#: resources/web/templates/layouts/one_player.html:139
+msgid "No match played yet"
+msgstr ""
+
 #: resources/web/templates/layouts/one_session.html:9
 msgid "Session recap"
 msgstr ""
