@@ -70,7 +70,6 @@ table.table { background-color: transparent; }
 
 section[class*="SiteHeader"] {
     position: relative;
-    overflow: hidden;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
 
@@ -83,6 +82,17 @@ section[class*="SiteHeader"] {
 
     box-shadow: 0 -0.5em 1em 0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
 }
+section[class*="SiteHeader--"]::after {
+    width: 8rem;
+    height: 8rem;
+    overflow: hidden;
+
+    position: absolute;
+    bottom: 0;
+    right: 1.5rem;
+
+    opacity: .2;
+}
 
 .PageTitle {
     font-size: 2.5rem;
@@ -94,6 +104,7 @@ section[class*="SiteHeader"] {
 
 @media only screen and (max-width: 768px) {
     body { padding-bottom: calc(75px - 1rem); }
+    .PageTitle { font-size: 1.5rem; }
 }
 
 /* Fix uglyness */
@@ -356,6 +367,19 @@ a[class*="Link--icon"]:hover::before { background: #3273dc; }
 }
 /* }}} Ladder footer */
 
+/* {{{ Markdown pages and specific documentation pages */
+.SiteHeader--documentation::after {
+    content: '';
+    width: 8rem;
+    height: 8rem;
+
+    transform: translateY(1.5rem);
+
+    background: var(--color-white);
+    mask: url('../svg/doc.svg') top left / cover;
+    -webkit-mask: url('../svg/doc.svg') top left / cover;
+}
+
 /* {{{ Homepage */
 .homeHeader {
     background-color: #2a2a72;
@@ -529,6 +553,18 @@ div[class^="nextRace--contextual--"] > i {
 /* }}} Homepage */
 
 /* {{{ Leaderboard */
+.SiteHeader--leaderboard::after {
+    content: '';
+    width: 8rem;
+    height: 8rem;
+
+    transform: translateY(1rem);
+
+    background: var(--color-white);
+    mask: url('../svg/trophy.svg') top left / cover;
+    -webkit-mask: url('../svg/trophy.svg') top left / cover;
+}
+
 table[class*="leaderboardTable"] thead th,
 table[class*="leaderboardTable"] tbody td { border-width: 0; }
 table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child(2n) { background-color: transparent; }
@@ -685,6 +721,17 @@ table[class*="leaderboardTable"] .leaderboardTable--player .Ranking--deviation {
 /* }}} Leaderboard */
 
 /* {{{ Schedule */
+.SiteHeader--schedule::after {
+    content: '';
+    width: 8rem;
+    height: 8rem;
+
+    transform: translateY(1.5rem);
+
+    background: var(--color-white);
+    mask: url('../svg/calendar.svg') top left / cover;
+    -webkit-mask: url('../svg/calendar.svg') top left / cover;
+}
 .ConfirmedRaces { padding: 1.5rem; }
 
 .upcomingRace--title {
@@ -739,6 +786,18 @@ table.table.stats--attendance td {
 /* }}} Stats */
 
 /* {{{ History */
+.SiteHeader--sessions::after {
+    content: '';
+    width: 8rem;
+    height: 8rem;
+
+    transform: translateY(1.5rem);
+
+    background: var(--color-white);
+    mask: url('../svg/history.svg') top left / cover;
+    -webkit-mask: url('../svg/history.svg') top left / cover;
+}
+
 .box[class*="SessionBox"] { position: relative; }
 .SessionBox--league {
     font-size: 2rem;
@@ -925,11 +984,6 @@ ul.spoilers--hash li {
     width: 8rem;
     height: 8rem;
 
-    position: absolute;
-    bottom: 0;
-    right: 1.5rem;
-
-    opacity: .2;
     transform: translateY(1rem);
 
     background: var(--color-white);
