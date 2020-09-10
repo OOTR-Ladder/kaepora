@@ -28,7 +28,7 @@
             <div class="Stat--name heading">{{t .Locale "Matches won"}}</div>
         </div>
 
-        {{if not .Payload.PlayerStats.Performances}}
+        {{if .Payload.PlayerStats.Performances}}
         <div class="QuickStats--stat Stat is-hidden-touch">
             <div class="Stat--name heading">{{t .Locale "Most played league"}}</div>
             <div class="Stat--value">
@@ -39,7 +39,7 @@
     </div>
 </div>
 
-{{if not .Payload.PlayerStats.Performances}}
+{{if .Payload.PlayerStats.Performances}}
 <section class="section">
     <div class="container">
         <div class="columns">

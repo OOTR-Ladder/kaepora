@@ -358,6 +358,8 @@ section[class*="SiteHeader--"] .HeaderIcon--icon::after {
 
 /* {{{ Ladder footer */
 footer.footer { background: var(--color-box); }
+.content ul.FooterLinks { margin-left: 0; }
+.content ul.FooterLinks li+li { margin-top: 0; }
 .FooterLinks--link {
     display: inline-block;
     list-style-type: none;
