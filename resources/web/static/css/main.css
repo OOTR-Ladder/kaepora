@@ -375,7 +375,7 @@ a[class*="Link--icon"]:hover::before { background: #3273dc; }
 /* }}} Ladder footer */
 
 /* {{{ Markdown pages and specific documentation pages */
-.SiteHeader--documentation::after {
+.SiteHeader--documentation .HeaderIcon--icon::after {
     content: '';
     width: 8rem;
     height: 8rem;
@@ -386,6 +386,7 @@ a[class*="Link--icon"]:hover::before { background: #3273dc; }
     mask: url('../svg/doc.svg') top left / cover;
     -webkit-mask: url('../svg/doc.svg') top left / cover;
 }
+/* }}} Markdown pages and specific documentation pages */
 
 /* {{{ Homepage */
 .homeHeader {
@@ -560,7 +561,7 @@ div[class^="nextRace--contextual--"] > i {
 /* }}} Homepage */
 
 /* {{{ Leaderboard */
-.SiteHeader--leaderboard::after {
+.SiteHeader--leaderboard .HeaderIcon--icon::after {
     content: '';
     width: 8rem;
     height: 8rem;
@@ -728,7 +729,7 @@ table[class*="leaderboardTable"] .leaderboardTable--player .Ranking--deviation {
 /* }}} Leaderboard */
 
 /* {{{ Schedule */
-.SiteHeader--schedule::after {
+.SiteHeader--schedule .HeaderIcon--icon::after {
     content: '';
     width: 8rem;
     height: 8rem;
@@ -793,7 +794,7 @@ table.table.stats--attendance td {
 /* }}} Stats */
 
 /* {{{ History */
-.SiteHeader--sessions::after {
+.SiteHeader--sessions .HeaderIcon--icon::after {
     content: '';
     width: 8rem;
     height: 8rem;
