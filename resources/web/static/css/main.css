@@ -70,7 +70,6 @@ table.table { background-color: transparent; }
 
 section[class*="SiteHeader"] {
     position: relative;
-    overflow: hidden;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
 
@@ -82,6 +81,17 @@ section[class*="SiteHeader"] {
     );
 
     box-shadow: 0 -0.5em 1em 0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
+}
+section[class*="SiteHeader--"]::after {
+    width: 8rem;
+    height: 8rem;
+    overflow: hidden;
+
+    position: absolute;
+    bottom: 0;
+    right: 1.5rem;
+
+    opacity: .2;
 }
 
 .PageTitle {
@@ -925,11 +935,6 @@ ul.spoilers--hash li {
     width: 8rem;
     height: 8rem;
 
-    position: absolute;
-    bottom: 0;
-    right: 1.5rem;
-
-    opacity: .2;
     transform: translateY(1rem);
 
     background: var(--color-white);
