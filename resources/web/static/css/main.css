@@ -774,12 +774,9 @@ table[class*="leaderboardTable"] .leaderboardTable--player .Ranking--deviation {
     .ConfirmedRaces + .section { padding-top: 0; }
 }
 @media only screen and (min-width: 769px) {
-    .ConfirmedRaces--block {
-        position: absolute;
-        top: 0;
-        width: 100%;
-    
-        transform: translateY(-50%);
+    .ConfirmedRaces {
+        padding: 0 1.5rem;
+        margin-top: -3rem;
     }
 }
 @media only screen and (max-width: 1215px) {
