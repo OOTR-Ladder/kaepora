@@ -644,34 +644,48 @@ table[class*="leaderboardTable"].is-striped tbody tr:not(.is-selected):nth-child
     text-decoration: underline;
 }
 
-.iconLeaderBoard {
+div[class*="iconLeaderBoard"]:not(.noFFReward) {
     overflow: hidden;
     width: 100%;
     text-align: right;
 }
-.iconLeaderBoard svg {
+div[class*="iconLeaderBoard"]:not(.noFFReward)::before {
+    content: '';
+    display: block;
     width: 100%;
+    height: 100%;
     position: absolute;
-    top: 50%;
-    left: -1.5rem;
+    top: 60%;
+    left: -1rem;
     opacity: .15;
-    fill: transparent;
-    stroke-linecap: square;
 
     transform: rotate(10deg) scale(1.2) translate(0, -35%);
     transform-origin: center center;
 }
-.leaderboardTable--player:nth-child(1) .iconLeaderBoard svg {
-    max-width: 9rem;
-    stroke: var(--color-gold-dark);
+.leaderboardTable--player:nth-child(1) div[class*="iconLeaderBoard"]:not(.noFFReward)::before {
+    max-width: 8rem;
+    background: var(--color-gold-dark);
 }
-.leaderboardTable--player:nth-child(2) .iconLeaderBoard svg {
-    max-width: 7rem;
-    stroke: var(--color-silver-dark);
- }
-.leaderboardTable--player:nth-child(3) .iconLeaderBoard svg {
+.leaderboardTable--player:nth-child(2) div[class*="iconLeaderBoard"]:not(.noFFReward)::before {
     max-width: 6rem;
-    stroke: var(--color-bronze-dark);
+    background: var(--color-silver-dark);
+ }
+.leaderboardTable--player:nth-child(3) div[class*="iconLeaderBoard"]:not(.noFFReward)::before {
+    max-width: 3rem;
+    background: var(--color-bronze-dark);
+}
+
+.iconLeaderBoard__trophy::before{
+    mask: url('../svg/trophy.svg') top left / contain;
+    -webkit-mask: url('../svg/trophy.svg') top left / contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+}
+.iconLeaderBoard__medal::before{
+    mask: url('../svg/medal.svg') top left / contain;
+    -webkit-mask: url('../svg/medal.svg') top left / contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
 }
 
 table[class*="leaderboardTable"] .leaderboardTable--player .leaderboardTable--stream { vertical-align: middle; }
