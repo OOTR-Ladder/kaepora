@@ -251,10 +251,18 @@ func (s *Server) schedule(w http.ResponseWriter, r *http.Request) {
 	}
 
 	lastStartDate := time.Now()
-	if len(data.MatchSessions) > 1 {
-		data.MatchSessions = data.MatchSessions[:1]
-		lastStartDate = data.MatchSessions[0].StartDate.Time()
+	curSessions := make([]back.MatchSession, 0, len(data.MatchSessions))
+	for _, v := range data.MatchSessions {
+		if v.Status == back.MatchSessionStatusWaiting {
+			continue
+		}
+
+		curSessions = append(curSessions, v)
+		if v.StartDate.Time().After(lastStartDate) {
+			lastStartDate = v.StartDate.Time()
+		}
 	}
+	data.MatchSessions = curSessions
 
 	schedules, err := s.getSchedulesBetween(
 		lastStartDate,
