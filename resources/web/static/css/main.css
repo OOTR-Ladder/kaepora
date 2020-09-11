@@ -704,7 +704,7 @@ table[class*="leaderboardTable"] .leaderboardTable--player .leaderboardTable--st
 }
 .StreamLink[href*="twitch"]::before { background-image: url('../svg/live-twitch.svg'); }
 .StreamLink[href*="youtu"]::before { background-image: url('../svg/live-youtube.svg'); }
-.StreamLink[href*="mixer"]::before { background-image: url('../svg/live-mixer.svg'); }
+.StreamLink[href*="facebook"]::before { background-image: url('../svg/live-facebook.svg'); }
 
 table[class*="leaderboardTable"] .Ranking { position: relative; }
 table[class*="leaderboardTable"] .leaderboardTable--player .leaderboardTable--forfeits { position: relative; }
