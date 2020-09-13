@@ -433,8 +433,16 @@ msgstr ""
 msgid "Schedule"
 msgstr ""
 
-#: resources/web/templates/layouts/schedule.html:11
-msgid "Current races"
+#: resources/web/templates/layouts/schedule.html:12
+msgid "Upcoming race"
+msgstr ""
+
+#: resources/web/templates/layouts/schedule.html:14
+msgid "Current race"
+msgstr ""
+
+#: resources/web/templates/layouts/schedule.html:17
+msgid "No current races yet"
 msgstr ""
 
 #: resources/web/templates/layouts/schedule.html:51

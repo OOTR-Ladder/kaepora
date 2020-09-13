@@ -8,7 +8,13 @@
             <div class="container">
                 <h1 class="PageTitle">{{t .Locale "Schedule"}}</h1>
                 {{if .Payload.MatchSessions}}
-                    <div class="heading">{{t .Locale "Current races"}}</div>
+                    {{if future (index .Payload.MatchSessions 0).StartDate}}
+                        <div class="heading">{{t .Locale "Upcoming race"}}</div>
+                    {{else}}
+                        <div class="heading">{{t .Locale "Current race"}}</div>
+                    {{end}}
+                {{else}}
+                    <div class="heading">{{t .Locale "No current races yet"}}</div>
                 {{end}}
             </div>
         </div>

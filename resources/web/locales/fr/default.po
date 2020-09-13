@@ -437,9 +437,17 @@ msgstr "Session du %s"
 msgid "Schedule"
 msgstr "Planning"
 
-#: resources/web/templates/layouts/schedule.html:11
-msgid "Current races"
-msgstr "Courses en cours"
+#: resources/web/templates/layouts/schedule.html:12
+msgid "Upcoming race"
+msgstr "Course à venir"
+
+#: resources/web/templates/layouts/schedule.html:14
+msgid "Current race"
+msgstr "Course en cours"
+
+#: resources/web/templates/layouts/schedule.html:17
+msgid "No current races yet"
+msgstr "Aucune course en cours pour le moment"
 
 #: resources/web/templates/layouts/schedule.html:51
 msgid "in"
