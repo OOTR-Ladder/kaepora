@@ -1,23 +1,24 @@
 {{define "content"}}
-<section class="hero is-dark homeHeader">
+<section class="hero SiteHeader--sessions">
     <div class="hero-head">
         {{- template "menu" . -}}
     </div>
 
     <div class="hero-body">
         <div class="container">
-            <h1 class="title">{{t .Locale "Session recap"}}</h1>
+            <h1 class="PageTitle">{{t .Locale "Session recap"}}</h1>
+            <div class="heading">{{t .Locale "%s league" .Payload.League.Name}} - {{t .Locale "Race started at %s" (.Payload.MatchSession.StartDate | datetime) | unsafe}}</div>
         </div>
+    </div>
+
+    <div class="container HeaderIcon">
+        <div class="HeaderIcon--icon"></div>
     </div>
 </section>
 
 <section class="section">
     <div class="container">
-        <div class="columns is-multiline">
-            <div class="column">
-                <h2 class="title">{{t .Locale "%s league" .Payload.League.Name}}</h2>
-                <h3 class="subtitle">{{t .Locale "Race started at %s" (.Payload.MatchSession.StartDate | datetime) | unsafe}}</h3>
-            </div>
+        <div class="columns is-centered is-multiline">
 
             {{template "past_matches" .}}
         </div>
