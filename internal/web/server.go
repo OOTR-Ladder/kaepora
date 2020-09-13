@@ -270,11 +270,13 @@ func (s *Server) response(
 		Leagues             []back.League
 		AuthenticatedPlayer *back.Player
 		Payload             interface{}
+		Layout              string
 	}{
 		locale,
 		leagues,
 		playerFromContext(r),
 		payload,
+		template,
 	}
 
 	if err := tpl.ExecuteTemplate(w, "base", wrapped); err != nil {
