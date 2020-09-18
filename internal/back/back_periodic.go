@@ -125,10 +125,10 @@ func (b *Back) makeMatchSessionsJoinable() error {
 // makeMatchSessionsPreparing takes races that are past their "joinable" state
 // and put them in the "preparing" state. It returns the modified sessions.
 func (b *Back) makeMatchSessionsPreparing() ([]MatchSession, error) {
-	var sessions []MatchSession
+	var ret []MatchSession
 
 	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
-		sessions, err = getMatchSessionsToPrepare(tx)
+		sessions, err := getMatchSessionsToPrepare(tx)
 		if err != nil {
 			return err
 		}
@@ -156,6 +156,8 @@ func (b *Back) makeMatchSessionsPreparing() ([]MatchSession, error) {
 			if err := b.sendSessionStatusUpdateNotification(tx, sessions[k]); err != nil {
 				return err
 			}
+
+			ret = append(ret, sessions[k])
 		}
 
 		return nil
@@ -163,11 +165,11 @@ func (b *Back) makeMatchSessionsPreparing() ([]MatchSession, error) {
 		return nil, err
 	}
 
-	if cnt := len(sessions); cnt > 0 {
+	if cnt := len(ret); cnt > 0 {
 		log.Printf("info: marked %d MatchSession as preparing", cnt)
 	}
 
-	return sessions, nil
+	return ret, nil
 }
 
 func (b *Back) startMatchSessions() error {
