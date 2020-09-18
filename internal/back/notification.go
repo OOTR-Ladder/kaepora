@@ -12,6 +12,7 @@ import (
 	"text/tabwriter"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -151,7 +152,11 @@ func (b *Back) sendOddKickNotification(player Player) {
 	b.notifications <- notif
 }
 
-func (b *Back) sendMatchSessionEmptyNotification(tx *sqlx.Tx, session MatchSession) error {
+func (b *Back) sendMatchSessionEmptyNotification(
+	tx *sqlx.Tx,
+	session MatchSession,
+	playerIDs []uuid.UUID,
+) error {
 	league, err := getLeagueByID(tx, session.LeagueID)
 	if err != nil {
 		return err
@@ -167,6 +172,42 @@ func (b *Back) sendMatchSessionEmptyNotification(tx *sqlx.Tx, session MatchSessi
 		"The race for league `%s` is closed, you can no longer join.\n"+
 			"There was not enough players to start the race.\n",
 		league.ShortCode,
+	)
+	b.notifications <- notif
+
+	for _, v := range playerIDs {
+		var e []error
+		if err := b.sendMatchSessionEmptyPlayerNotification(tx, league.ShortCode, util.UUIDAsBlob(v)); err != nil {
+			e = append(e, err)
+		}
+		if err := util.ConcatErrors(e); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// Special case when there is _one_ player.
+func (b *Back) sendMatchSessionEmptyPlayerNotification(
+	tx *sqlx.Tx,
+	shortcode string,
+	playerID util.UUIDAsBlob,
+) error {
+	player, err := getPlayerByID(tx, playerID)
+	if err != nil {
+		return err
+	}
+
+	notif := Notification{
+		RecipientType: NotificationRecipientTypeDiscordUser,
+		Recipient:     player.DiscordID.String,
+		Type:          NotificationTypeMatchSessionEmpty,
+	}
+
+	notif.Printf(
+		"The race for league `%s` has closed, there was not enough players to start the race.",
+		shortcode,
 	)
 
 	b.notifications <- notif

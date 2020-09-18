@@ -42,7 +42,7 @@ func (b *Back) runPeriodicTasks() error {
 		return err
 	}
 
-	if err := b.endMatchSessionsAndUpdateRanks(); err != nil {
+	if err := b.closeMatchSessionsAndUpdateRanks(); err != nil {
 		return err
 	}
 
@@ -125,24 +125,25 @@ func (b *Back) makeMatchSessionsJoinable() error {
 // makeMatchSessionsPreparing takes races that are past their "joinable" state
 // and put them in the "preparing" state. It returns the modified sessions.
 func (b *Back) makeMatchSessionsPreparing() ([]MatchSession, error) {
-	var sessions []MatchSession
+	var ret []MatchSession
 
 	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
-		sessions, err = getMatchSessionsToPrepare(tx)
+		sessions, err := getMatchSessionsToPrepare(tx)
 		if err != nil {
 			return err
 		}
 
 		for k := range sessions {
-			if len(sessions[k].GetPlayerIDs()) < 2 {
+			if playerIDs := sessions[k].GetPlayerIDs(); len(playerIDs) < 2 {
 				sessions[k].Status = MatchSessionStatusClosed
 				log.Printf("info: no players for session %s", sessions[k].ID.UUID())
 				if err := sessions[k].update(tx); err != nil {
 					return err
 				}
-				if err := b.sendMatchSessionEmptyNotification(tx, sessions[k]); err != nil {
+				if err := b.sendMatchSessionEmptyNotification(tx, sessions[k], playerIDs); err != nil {
 					return err
 				}
+
 				continue
 			}
 
@@ -155,6 +156,8 @@ func (b *Back) makeMatchSessionsPreparing() ([]MatchSession, error) {
 			if err := b.sendSessionStatusUpdateNotification(tx, sessions[k]); err != nil {
 				return err
 			}
+
+			ret = append(ret, sessions[k])
 		}
 
 		return nil
@@ -162,11 +165,11 @@ func (b *Back) makeMatchSessionsPreparing() ([]MatchSession, error) {
 		return nil, err
 	}
 
-	if cnt := len(sessions); cnt > 0 {
+	if cnt := len(ret); cnt > 0 {
 		log.Printf("info: marked %d MatchSession as preparing", cnt)
 	}
 
-	return sessions, nil
+	return ret, nil
 }
 
 func (b *Back) startMatchSessions() error {
@@ -324,9 +327,7 @@ loop:
 		}
 
 		for j := range matches {
-			// HACK: A Match has no status but a date that is written only when
-			// closed, check match status with that date.
-			if !matches[j].EndedAt.Valid {
+			if !matches[j].HasEnded() {
 				continue loop
 			}
 		}
@@ -338,7 +339,7 @@ loop:
 	return ret, sessMatches, nil
 }
 
-func (b *Back) endMatchSessionsAndUpdateRanks() error {
+func (b *Back) closeMatchSessionsAndUpdateRanks() error {
 	var sessions []MatchSession
 	var matches map[util.UUIDAsBlob][]Match
 
