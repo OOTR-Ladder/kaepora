@@ -42,7 +42,7 @@ func (b *Back) runPeriodicTasks() error {
 		return err
 	}
 
-	if err := b.endMatchSessionsAndUpdateRanks(); err != nil {
+	if err := b.closeMatchSessionsAndUpdateRanks(); err != nil {
 		return err
 	}
 
@@ -327,9 +327,7 @@ loop:
 		}
 
 		for j := range matches {
-			// HACK: A Match has no status but a date that is written only when
-			// closed, check match status with that date.
-			if !matches[j].EndedAt.Valid {
+			if !matches[j].HasEnded() {
 				continue loop
 			}
 		}
@@ -341,7 +339,7 @@ loop:
 	return ret, sessMatches, nil
 }
 
-func (b *Back) endMatchSessionsAndUpdateRanks() error {
+func (b *Back) closeMatchSessionsAndUpdateRanks() error {
 	var sessions []MatchSession
 	var matches map[util.UUIDAsBlob][]Match
 

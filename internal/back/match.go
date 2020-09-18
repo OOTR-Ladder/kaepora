@@ -83,6 +83,8 @@ func (m *Match) end() {
 
 // HasEnded returns true if both players ended their race.
 func (m *Match) HasEnded() bool {
+	// HACK: A Match has no status but a date that is written only when
+	// closed, check match status with that date.
 	return m.EndedAt.Valid
 }
 
