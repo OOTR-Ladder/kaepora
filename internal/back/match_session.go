@@ -43,6 +43,11 @@ type MatchSession struct {
 	PlayerIDs util.UUIDArrayAsJSON // sorted by join date asc
 }
 
+// IsJoinable returns true if players can join the session (tpl helper).
+func (s *MatchSession) IsJoinable() bool {
+	return s.Status == MatchSessionStatusJoinable
+}
+
 // GetPlayerIDs returns the list of players who joined the session and should
 // be matchmaked.
 func (s *MatchSession) GetPlayerIDs() []uuid.UUID {
@@ -166,14 +171,19 @@ func getPlayerActiveStartedSession(tx *sqlx.Tx, playerID util.UUIDAsBlob) (Match
 
 // PlayerIsInSession returns true if the player exists and is an active session.
 func (b *Back) PlayerIsInSession(playerID util.UUIDAsBlob) (ret bool) {
-	if err := b.transaction(func(tx *sqlx.Tx) error {
-		_, err := getPlayerActiveSession(tx, playerID)
+	_, err := b.GetPlayerActiveSession(playerID)
+	return err != nil
+}
+
+func (b *Back) GetPlayerActiveSession(playerID util.UUIDAsBlob) (session MatchSession, _ error) {
+	if err := b.transaction(func(tx *sqlx.Tx) (err error) {
+		session, err = getPlayerActiveSession(tx, playerID)
 		return err
 	}); err != nil {
-		return false
+		return MatchSession{}, err
 	}
 
-	return true
+	return session, nil
 }
 
 func getNextMatchSessionForLeague(tx *sqlx.Tx, leagueID util.UUIDAsBlob) (MatchSession, error) {

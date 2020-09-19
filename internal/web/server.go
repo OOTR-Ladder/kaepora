@@ -274,7 +274,7 @@ func (s *Server) response(
 	}{
 		locale,
 		leagues,
-		playerFromContext(r),
+		playerFromRequest(r),
 		payload,
 		template,
 	}
@@ -302,7 +302,7 @@ func (s *Server) error(w http.ResponseWriter, r *http.Request, err error, code i
 
 func (s *Server) cache(w http.ResponseWriter, r *http.Request, d time.Duration) {
 	scope := "public"
-	if playerFromContext(r) != nil {
+	if playerFromRequest(r) != nil {
 		scope = "private"
 	}
 

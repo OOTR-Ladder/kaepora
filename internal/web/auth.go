@@ -64,8 +64,12 @@ func (s *Server) playerFromCookie(r *http.Request) (*back.Player, error) {
 	return &player, nil
 }
 
-func playerFromContext(r *http.Request) *back.Player {
-	return r.Context().Value(ctxKeyAuthPlayer).(*back.Player)
+func playerFromContext(ctx context.Context) *back.Player {
+	return ctx.Value(ctxKeyAuthPlayer).(*back.Player)
+}
+
+func playerFromRequest(r *http.Request) *back.Player {
+	return playerFromContext(r.Context())
 }
 
 func withPlayer(ctx context.Context, player *back.Player) context.Context {
@@ -73,7 +77,7 @@ func withPlayer(ctx context.Context, player *back.Player) context.Context {
 }
 
 func (s *Server) isAuthenticatedUserAdmin(r *http.Request) bool {
-	player := playerFromContext(r)
+	player := playerFromRequest(r)
 	if player == nil {
 		return false
 	}
