@@ -147,6 +147,7 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 		r.Get("/stats/{shortcode}/graph/{graphName}.svg", s.leagueStatsGraph)
 
 		r.Get("/", s.index)
+		r.Post("/do", s.doAction)
 
 		r.NotFound(s.notFound)
 	})
@@ -266,15 +267,17 @@ func (s *Server) response(
 	}
 
 	wrapped := struct {
+		Path                string
 		Locale              string
 		Leagues             []back.League
 		AuthenticatedPlayer *back.Player
 		Payload             interface{}
 		Layout              string
 	}{
+		r.URL.Path,
 		locale,
 		leagues,
-		playerFromContext(r),
+		playerFromRequest(r),
 		payload,
 		template,
 	}
@@ -302,7 +305,7 @@ func (s *Server) error(w http.ResponseWriter, r *http.Request, err error, code i
 
 func (s *Server) cache(w http.ResponseWriter, r *http.Request, d time.Duration) {
 	scope := "public"
-	if playerFromContext(r) != nil {
+	if playerFromRequest(r) != nil {
 		scope = "private"
 	}
 

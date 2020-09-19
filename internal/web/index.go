@@ -1,6 +1,9 @@
 package web
 
 import (
+	"context"
+	"database/sql"
+	"errors"
 	"kaepora/internal/back"
 	"kaepora/internal/util"
 	"net/http"
@@ -16,7 +19,7 @@ func (s *Server) index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data, err := s.getIndexTemplateData()
+	data, err := s.getIndexTemplateData(r.Context())
 	if err != nil {
 		s.error(w, r, err, http.StatusInternalServerError)
 		return
@@ -29,9 +32,12 @@ type nextRacesTemplateData struct {
 	Top3          []back.LeaderboardEntry
 	MatchSessions []back.MatchSession
 	Leagues       map[util.UUIDAsBlob]back.League
+
+	// When we have an AuthenticatedPlayer
+	JoinedSession *back.MatchSession
 }
 
-func (s *Server) getIndexTemplateData() (nextRacesTemplateData, error) {
+func (s *Server) getIndexTemplateData(ctx context.Context) (nextRacesTemplateData, error) {
 	sessions, leagues, err := s.back.GetMatchSessions(
 		time.Now().Add(-12*time.Hour),
 		time.Now().Add(48*time.Hour),
@@ -57,10 +63,23 @@ func (s *Server) getIndexTemplateData() (nextRacesTemplateData, error) {
 		return nextRacesTemplateData{}, err
 	}
 
+	var joinedSession *back.MatchSession
+	if player := playerFromContext(ctx); player != nil {
+		session, err := s.back.GetPlayerActiveSession(player.ID)
+		if err != nil {
+			if !errors.Is(err, sql.ErrNoRows) {
+				return nextRacesTemplateData{}, err
+			}
+		} else {
+			joinedSession = &session
+		}
+	}
+
 	return nextRacesTemplateData{
 		top3,
 		sessions,
 		leagues,
+		joinedSession,
 	}, nil
 }
 

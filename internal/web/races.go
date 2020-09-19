@@ -154,7 +154,7 @@ func (s *Server) canAuthenticatedPlayerSeeSpoilerLog(r *http.Request, match back
 		return nil
 	}
 
-	player := playerFromContext(r)
+	player := playerFromRequest(r)
 	if player == nil {
 		return errForbidden
 	}
@@ -244,7 +244,7 @@ func (s *Server) leaderboard(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) schedule(w http.ResponseWriter, r *http.Request) {
-	data, err := s.getIndexTemplateData()
+	data, err := s.getIndexTemplateData(r.Context())
 	if err != nil {
 		s.error(w, r, err, http.StatusInternalServerError)
 		return

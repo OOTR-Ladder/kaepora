@@ -136,7 +136,7 @@ func haveRauruCancel(back *Back) error {
 	if _, err := back.ForfeitActiveMatch(player); err == nil {
 		return errors.New("expected an error when forfeiting a cancellable MatchSession")
 	}
-	if _, err := back.CancelActiveMatchSession(player); err != nil {
+	if _, err := back.CancelActiveMatchSession(player.ID); err != nil {
 		return err
 	}
 
@@ -209,7 +209,7 @@ func haveZeldaForfeit(back *Back) error {
 		return fmt.Errorf("cannot get player: %s", err)
 	}
 
-	if _, err := back.CancelActiveMatchSession(player); err == nil {
+	if _, err := back.CancelActiveMatchSession(player.ID); err == nil {
 		return errors.New("expected an error when cancelling after MatchSessionCancellableUntilOffset")
 	}
 

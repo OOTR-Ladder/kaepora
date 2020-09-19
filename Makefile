@@ -2,11 +2,15 @@ EXEC=./$(shell basename "$(shell pwd)")
 VERSION ?= $(shell git describe --tags 2>/dev/null || echo "unknown")
 GOLANGCI=./golangci-lint
 BUILDFLAGS=-tags 'sqlite_json' -ldflags '-X kaepora/internal/global.Version=${VERSION}'
+SRC=$(shell find internal pkg -type f -name "*.go")
 
-all: $(EXEC) migrate
+all: $(EXEC) migrate tags
 
 $(EXEC):
 	go build $(BUILDFLAGS)
+
+tags: $(SRC)
+	ctags-universal -R internal pkg
 
 migrate:
 	go build -tags "sqlite3 sqlite_json" github.com/golang-migrate/migrate/v4/cmd/migrate

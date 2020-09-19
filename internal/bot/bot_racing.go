@@ -56,7 +56,7 @@ func (bot *Bot) cmdCancel(m *discordgo.Message, _ []string, w io.Writer) error {
 		return err
 	}
 
-	if _, err := bot.back.CancelActiveMatchSession(player); err != nil {
+	if _, err := bot.back.CancelActiveMatchSession(player.ID); err != nil {
 		return err
 	}
 

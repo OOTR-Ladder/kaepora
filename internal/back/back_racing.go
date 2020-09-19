@@ -35,6 +35,22 @@ func (b *Back) JoinCurrentMatchSessionByShortcode(player Player, shortcode strin
 	return session, league, nil
 }
 
+func (b *Back) JoinMatchSessionByID(sessionID, playerID util.UUIDAsBlob) error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		session, err := getMatchSessionByID(tx, sessionID)
+		if err != nil {
+			return err
+		}
+
+		league, err := getLeagueByID(tx, session.LeagueID)
+		if err != nil {
+			return err
+		}
+
+		return joinMatchSessionTx(tx, session, playerID, league)
+	})
+}
+
 func joinCurrentMatchSessionTx(
 	tx *sqlx.Tx, player Player, league League,
 ) (MatchSession, error) {
@@ -47,22 +63,35 @@ func joinCurrentMatchSessionTx(
 		return MatchSession{}, err
 	}
 
-	if session.HasPlayerID(player.ID.UUID()) {
-		return MatchSession{}, util.ErrPublic(fmt.Sprintf(
-			"you are already registered for the next %s race", league.Name,
-		))
-	}
-
-	if err := ensurePlayerHasNoActiveMatch(tx, player.ID); err != nil {
-		return MatchSession{}, err
-	}
-
-	session.AddPlayerID(player.ID.UUID())
-	if err := session.update(tx); err != nil {
+	if err := joinMatchSessionTx(tx, session, player.ID, league); err != nil {
 		return MatchSession{}, err
 	}
 
 	return session, nil
+}
+
+func joinMatchSessionTx(
+	tx *sqlx.Tx,
+	session MatchSession,
+	playerID util.UUIDAsBlob,
+	league League,
+) error {
+	if session.HasPlayerID(playerID.UUID()) {
+		return util.ErrPublic(fmt.Sprintf(
+			"you are already registered for the next %s race", league.Name,
+		))
+	}
+
+	if err := ensurePlayerHasNoActiveMatch(tx, playerID); err != nil {
+		return err
+	}
+
+	session.AddPlayerID(playerID.UUID())
+	if err := session.update(tx); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // ensurePlayerHasNoActiveMatch returns an error if the player is currently in
@@ -160,11 +189,11 @@ func (b *Back) sendPrivateRecapForSessionID(sessionID util.UUIDAsBlob, player Pl
 // CancelActiveMatchSession removes the player from the currently joinable
 // session, it cannot be called if the session has begun its preparation
 // phase.
-func (b *Back) CancelActiveMatchSession(player Player) (MatchSession, error) {
+func (b *Back) CancelActiveMatchSession(playerID util.UUIDAsBlob) (MatchSession, error) {
 	var ret MatchSession
 
 	if err := b.transaction(func(tx *sqlx.Tx) error {
-		session, err := getPlayerActiveSession(tx, player.ID)
+		session, err := getPlayerActiveSession(tx, playerID)
 		if err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
 				return util.ErrPublic("you are not in any active race right now")
@@ -176,7 +205,7 @@ func (b *Back) CancelActiveMatchSession(player Player) (MatchSession, error) {
 			return err
 		}
 
-		session.RemovePlayerID(player.ID.UUID())
+		session.RemovePlayerID(playerID.UUID())
 		if err := session.update(tx); err != nil {
 			return err
 		}

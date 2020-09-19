@@ -45,11 +45,19 @@ msgstr "forfait (%s)"
 msgid "The Legend of Zelda: Ocarina of Time Randomizer racing leagues."
 msgstr "Compétitions de Randomizer sur The Legend of Zelda: Ocarina of Time."
 
-#: resources/web/templates/includes/current_races.html:13
+#: resources/web/templates/includes/current_races.html:14
+msgid "Cancel"
+msgstr "Annuler"
+
+#: resources/web/templates/includes/current_races.html:22
+msgid "Join"
+msgstr "S'enregistrer"
+
+#: resources/web/templates/includes/current_races.html:32
 msgid "Starts in %s"
 msgstr "Commence dans %s"
 
-#: resources/web/templates/includes/current_races.html:45
+#: resources/web/templates/includes/current_races.html:64
 msgid "There is no scheduled race right now."
 msgstr "Il n'y a pas de course programmée pour l'instant."
 
@@ -437,7 +445,7 @@ msgstr "Course en cours"
 msgid "No current races yet"
 msgstr "Aucune course en cours pour le moment"
 
-#: resources/web/templates/layouts/schedule.html:55
+#: resources/web/templates/layouts/schedule.html:53
 msgid "in"
 msgstr "dans"
 
