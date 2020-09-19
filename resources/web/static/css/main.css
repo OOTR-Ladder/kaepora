@@ -441,6 +441,10 @@ a[class*="Link--icon"]:hover::before { background: #3273dc; }
     transform: translate(0, -50%);
 }
 
+.nextRace--status form {
+    display: inline;
+}
+
 .nextRace--contextual {
     position: absolute;
     bottom: 0;

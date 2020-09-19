@@ -11,11 +11,13 @@
         {{if $.Payload.JoinedSession}}
             {{if eq $.Payload.JoinedSession.ID $v.ID}}
                 <form method="POST" action="{{uri $.Locale "do"}}">
-                    <input type="submit" class="button is-primary" value="{{t $.Locale "Cancel"}}" />
+                    <input type="submit" class="button is-small is-warning" value="{{t $.Locale "Cancel"}}" />
                     <input type="hidden" name="Redirect" value="{{$.Path}}" />
                     <input type="hidden" name="Action" value="cancel" />
                     <input type="hidden" name="MatchSessionID" value="{{$v.ID}}" />
                 </form>
+            {{else}}
+                {{matchSessionStatusTag $.Locale $v.Status}}
             {{end}}
         {{else if and $.AuthenticatedPlayer $v.IsJoinable }}
             <form method="POST" action="{{uri $.Locale "do"}}">
