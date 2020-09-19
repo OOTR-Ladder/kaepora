@@ -4,7 +4,7 @@ GOLANGCI=./golangci-lint
 BUILDFLAGS=-tags 'sqlite_json' -ldflags '-X kaepora/internal/global.Version=${VERSION}'
 SRC=$(shell find internal pkg -type f -name "*.go")
 
-all: $(EXEC) migrate tags
+all: $(EXEC) migrate
 
 $(EXEC):
 	go build $(BUILDFLAGS)
