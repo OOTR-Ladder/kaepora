@@ -10,17 +10,19 @@
     <div class="nextRace--status">
         {{if $.Payload.JoinedSession}}
             {{if eq $.Payload.JoinedSession.ID $v.ID}}
-                <form method="POST" action="/">
+                <form method="POST" action="{{uri $.Locale "do"}}">
                     <input type="submit" class="button is-primary" value="{{t $.Locale "Cancel"}}" />
-                    <input type="hidden" name="MatchSessionID" value="{{$v.ID}}" />
+                    <input type="hidden" name="Redirect" value="{{$.Path}}" />
                     <input type="hidden" name="Action" value="cancel" />
+                    <input type="hidden" name="MatchSessionID" value="{{$v.ID}}" />
                 </form>
             {{end}}
         {{else if and $.AuthenticatedPlayer $v.IsJoinable }}
-            <form method="POST" action="/">
+            <form method="POST" action="{{uri $.Locale "do"}}">
                 <input type="submit" class="button is-primary" value="{{t $.Locale "Join"}}" />
-                <input type="hidden" name="MatchSessionID" value="{{$v.ID}}" />
+                <input type="hidden" name="Redirect" value="{{$.Path}}" />
                 <input type="hidden" name="Action" value="join" />
+                <input type="hidden" name="MatchSessionID" value="{{$v.ID}}" />
             </form>
         {{else}}
             {{matchSessionStatusTag $.Locale $v.Status}}
