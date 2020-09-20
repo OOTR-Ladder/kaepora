@@ -28,7 +28,10 @@ import (
 	"golang.org/x/text/language"
 )
 
-var errForbidden = errors.New("forbidden")
+var (
+	errForbidden     = errors.New("forbidden")
+	availableLocales = []string{"en", "fr"}
+)
 
 // Server contains the state required to serve the OOTRLadder website over HTTP.
 type Server struct {
@@ -73,7 +76,7 @@ func NewServer(back *back.Back, config *config.Config) (*Server, error) {
 		},
 	}
 
-	for _, k := range []string{"en", "fr"} {
+	for _, k := range availableLocales {
 		s.locales[k] = gotext.NewLocale(filepath.Join(baseDir, "locales"), k)
 		s.locales[k].AddDomain("default")
 	}
@@ -266,11 +269,6 @@ func (s *Server) response(
 		locale = iface.(string)
 	}
 
-	locales := make([]string, 0, len(s.locales))
-	for k := range s.locales {
-		locales = append(locales, k)
-	}
-
 	wrapped := struct {
 		Path                string
 		Locale              string
@@ -282,7 +280,7 @@ func (s *Server) response(
 	}{
 		r.URL.Path,
 		locale,
-		locales,
+		availableLocales,
 		leagues,
 		playerFromRequest(r),
 		payload,
