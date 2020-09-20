@@ -43,7 +43,7 @@ test:
 	go test -tags docker,api --timeout=30s ./...
 
 run:
-	gin --all --bin "$(EXEC)" --buildArgs "${BUILDFLAGS}" -- serve
+	gin --all --bin "$(EXEC)" -x kaepora.db --buildArgs "${BUILDFLAGS}" -- serve
 
 runi:
 	gin --immediate --bin "$(EXEC)" --buildArgs "${BUILDFLAGS}" -- serve
