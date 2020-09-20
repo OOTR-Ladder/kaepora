@@ -266,9 +266,15 @@ func (s *Server) response(
 		locale = iface.(string)
 	}
 
+	locales := make([]string, 0, len(s.locales))
+	for k := range s.locales {
+		locales = append(locales, k)
+	}
+
 	wrapped := struct {
 		Path                string
 		Locale              string
+		AvailableLocales    []string
 		Leagues             []back.League
 		AuthenticatedPlayer *back.Player
 		Payload             interface{}
@@ -276,6 +282,7 @@ func (s *Server) response(
 	}{
 		r.URL.Path,
 		locale,
+		locales,
 		leagues,
 		playerFromRequest(r),
 		payload,

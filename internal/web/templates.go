@@ -86,6 +86,7 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 		"matchSeedURL":          s.tplMatchSeedURL,
 		"matchSessionStatusTag": s.tplMatchSessionStatusTag,
 
+		"alternate":      s.tplAlternate,
 		"assetIntegrity": tplAssetIntegrity(baseDir),
 		"gossipText":     tplGossipText,
 		"assetURL":       tplAssetURL(baseDir),
@@ -348,4 +349,16 @@ func tplAssetIntegrity(baseDir string) func(name string) (string, error) {
 		hashCache[name] = "sha512-" + base64.StdEncoding.EncodeToString(h.Sum(nil))
 		return hashCache[name], nil
 	}
+}
+
+func (s *Server) tplAlternate(path, lang string) string {
+	parts := strings.Split(strings.Trim(path, "/"), "/")
+	if len(parts) == 0 {
+		return ""
+	}
+
+	parts[0] = lang
+	alt := strings.Join(parts, "/")
+
+	return fmt.Sprintf("%s://%s/%s", s.config.Scheme(), s.config.Domain, alt)
 }
