@@ -112,6 +112,7 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 	})
 
 	r.Get("/favicon.ico", s.favicon(fs))
+	r.Get("/robots.txt", noContent)
 	r.Get("/dev/settings-relations.svg", s.devSettingsRelations)
 
 	r.Get("/auth/logout", func(w http.ResponseWriter, r *http.Request) {
@@ -438,4 +439,8 @@ func memoizer(
 	cache.Add(key, lifetime, generated)
 
 	return generated, lifetime, nil
+}
+
+func noContent(w http.ResponseWriter, _ *http.Request) {
+	w.WriteHeader(http.StatusNoContent)
 }
