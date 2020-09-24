@@ -141,12 +141,15 @@ func (s *Server) getSpoilerLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	stale := time.Since(match.CreatedAt.Time()) > (30 * 24 * time.Hour)
+
 	s.response(w, r, http.StatusOK, "spoilers.html", struct {
 		Match    back.Match
 		Settings map[string]back.SettingsDocumentationValueEntry
 		JSON     string
 		Log      oot.SpoilerLog
-	}{match, settings, string(raw), parsed})
+		Stale    bool // true if seed patch is no longer accessible on ootrandomizer.com
+	}{match, settings, string(raw), parsed, stale})
 }
 
 func (s *Server) canAuthenticatedPlayerSeeSpoilerLog(r *http.Request, match back.Match) error {

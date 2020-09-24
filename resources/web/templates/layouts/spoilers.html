@@ -24,7 +24,9 @@
 
                 <div class="column is-one-fifth">
                     <p>
+                        {{if not .Payload.Stale}}
                         <a class="button is-info" href="{{.Payload.Match | matchSeedURL }}">{{t .Locale "Download / Patch"}}</a>
+                        {{end}}
                         <a class="button is-info" href="?raw=1">{{t .Locale "Download raw JSON"}}</a>
                         <span class="tag">{{.Payload.Log.Version}}</span>
                     </p>
