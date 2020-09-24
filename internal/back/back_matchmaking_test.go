@@ -26,6 +26,15 @@ func TestMatchMaking(t *testing.T) {
 	innerTestMatchMaking(t, back)
 	innerTestMatchMaking(t, back)
 	innerTestMatchMaking(t, back)
+
+	if err := back.Rerank("testa"); err != nil {
+		t.Error(err)
+	}
+
+	// Zero matches, should not fail.
+	if err := back.Rerank("testb"); err != nil {
+		t.Error(err)
+	}
 }
 
 // nolint:funlen

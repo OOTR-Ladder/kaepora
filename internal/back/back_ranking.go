@@ -194,12 +194,19 @@ func (b *Back) Rerank(shortcode string) error {
 
 		firstMatchStart, err = getFirstMatchStartOfLeague(tx, league.ID)
 		if err != nil {
-			return fmt.Errorf("unable to find first match of league: %w", err)
+			log.Printf("warning: unable to find first match of league: %s", err)
+			firstMatchStart = util.TimeAsTimestamp{}
+			return nil
 		}
 
 		return nil
 	}); err != nil {
 		return err
+	}
+
+	// No matches, do nothing, gracefully.
+	if firstMatchStart.Time().IsZero() {
+		return nil
 	}
 
 	firstPeriodStart := currentPeriodStart(firstMatchStart.Time())
