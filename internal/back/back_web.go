@@ -143,31 +143,22 @@ func (b *Back) GetMatchSessions(
 			return err
 		}
 		query = tx.Rebind(query) + ` ORDER BY ` + order
-
-		if err := tx.Select(&sessions, query, args...); err != nil {
+		var allSessions []MatchSession
+		if err := tx.Select(&allSessions, query, args...); err != nil {
 			return err
 		}
-		ids := make([]util.UUIDAsBlob, 0, len(sessions))
-		for k := range sessions {
-			ids = append(ids, sessions[k].LeagueID)
+
+		// Filter out empty sessions.
+		sessions = make([]MatchSession, 0, len(allSessions))
+		for k := range allSessions {
+			if len(allSessions[k].PlayerIDs.Slice()) > 1 {
+				sessions = append(sessions, allSessions[k])
+			}
 		}
 
-		if len(ids) == 0 {
-			return nil
-		}
-
-		query, args, err = sqlx.In(`SELECT * FROM League WHERE ID IN (?)`, ids)
+		leagues, err = getLeagueMapFromSessions(tx, sessions)
 		if err != nil {
 			return err
-		}
-		query = tx.Rebind(query)
-		sLeagues := make([]League, 0, len(ids))
-		leagues = make(map[util.UUIDAsBlob]League, len(ids))
-		if err := tx.Select(&sLeagues, query, args...); err != nil {
-			return err
-		}
-		for _, v := range sLeagues {
-			leagues[v.ID] = v
 		}
 
 		return nil
@@ -176,6 +167,35 @@ func (b *Back) GetMatchSessions(
 	}
 
 	return sessions, leagues, nil
+}
+
+func getLeagueMapFromSessions(tx *sqlx.Tx, sessions []MatchSession) (map[util.UUIDAsBlob]League, error) {
+	// Get league IDs then fetch them, TODO: maybe reuse the Leagues we
+	// have in the standard response above the Payload.
+	ids := make([]util.UUIDAsBlob, 0, len(sessions))
+	for k := range sessions {
+		ids = append(ids, sessions[k].LeagueID)
+	}
+
+	if len(ids) == 0 {
+		return nil, nil
+	}
+
+	query, args, err := sqlx.In(`SELECT * FROM League WHERE ID IN (?)`, ids)
+	if err != nil {
+		return nil, err
+	}
+	query = tx.Rebind(query)
+	sLeagues := make([]League, 0, len(ids))
+	leagues := make(map[util.UUIDAsBlob]League, len(ids))
+	if err := tx.Select(&sLeagues, query, args...); err != nil {
+		return nil, err
+	}
+	for _, v := range sLeagues {
+		leagues[v.ID] = v
+	}
+
+	return leagues, nil
 }
 
 func (b *Back) GetPlayerRatings(shortcode string) (ret []PlayerRating, _ error) {
