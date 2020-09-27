@@ -20,7 +20,7 @@ via private message and this is also where you should type any other command.
 </div>
 
 When a race is coming up, _Kaepora_ will announce it in dedicated channels of
-the _IR Ladder_ category. After the announce is made you can send _Kaepora_ the
+the _Ladder Races_ category. After the announce is made you can send _Kaepora_ the
 `!join` command followed by the corresponding league short name. eg. for the
 _Standard_ league you would send `!join std`.  
 If you no longer wish to race you can send the `!cancel` command. This will not

@@ -22,7 +22,7 @@ les autres commandes.
 </div>
 
 Quand une session approche, _Kaepora_ fera une annonce sur un canal dédié dans
-la catégorie _IR Ladder_ du serveur. Après cette annonce, vous pourrez envoyer
+la catégorie _Ladder Races_ du serveur. Après cette annonce, vous pourrez envoyer
 à _Kaepora_ la commande `!join` suivie du nom court de la ligue dans laquelle
 vous voulez participer. Par exemple pour la ligue _Standard_ vous devrez
 envoyer `!join std`.  
