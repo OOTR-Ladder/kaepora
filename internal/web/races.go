@@ -41,11 +41,19 @@ func (s *Server) getAllMatchSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Filter out empty sessions.
+	filtered := make([]back.MatchSession, 0, len(sessions))
+	for k := range sessions {
+		if len(sessions[k].PlayerIDs.Slice()) > 1 {
+			filtered = append(filtered, sessions[k])
+		}
+	}
+
 	s.response(w, r, http.StatusOK, "sessions.html", struct {
 		MatchSessions []back.MatchSession
 		Leagues       map[util.UUIDAsBlob]back.League
 	}{
-		sessions,
+		filtered,
 		leagues,
 	})
 }

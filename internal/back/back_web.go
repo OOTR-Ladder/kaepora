@@ -143,17 +143,8 @@ func (b *Back) GetMatchSessions(
 			return err
 		}
 		query = tx.Rebind(query) + ` ORDER BY ` + order
-		var allSessions []MatchSession
-		if err := tx.Select(&allSessions, query, args...); err != nil {
+		if err := tx.Select(&sessions, query, args...); err != nil {
 			return err
-		}
-
-		// Filter out empty sessions.
-		sessions = make([]MatchSession, 0, len(allSessions))
-		for k := range allSessions {
-			if len(allSessions[k].PlayerIDs.Slice()) > 1 {
-				sessions = append(sessions, allSessions[k])
-			}
 		}
 
 		leagues, err = getLeagueMapFromSessions(tx, sessions)
