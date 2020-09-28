@@ -172,7 +172,7 @@ func getPlayerActiveStartedSession(tx *sqlx.Tx, playerID util.UUIDAsBlob) (Match
 // PlayerIsInSession returns true if the player exists and is an active session.
 func (b *Back) PlayerIsInSession(playerID util.UUIDAsBlob) (ret bool) {
 	_, err := b.GetPlayerActiveSession(playerID)
-	return err != nil
+	return err == nil
 }
 
 func (b *Back) GetPlayerActiveSession(playerID util.UUIDAsBlob) (session MatchSession, _ error) {
