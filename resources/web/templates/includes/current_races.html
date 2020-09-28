@@ -9,7 +9,7 @@
     <!-- if joinable race -->
     <div class="nextRace--status">
         {{if $.Payload.JoinedSession}}
-            {{if eq $.Payload.JoinedSession.ID $v.ID}}
+            {{if and (eq $.Payload.JoinedSession.ID $v.ID) $v.IsJoinable}}
                 <form method="POST" action="{{uri $.Locale "do"}}">
                     <input type="submit" class="button is-small is-warning" value="{{t $.Locale "Cancel"}}" />
                     <input type="hidden" name="Redirect" value="{{$.Path}}" />
