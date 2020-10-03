@@ -303,7 +303,8 @@ func (s *Server) getSchedulesBetween(start, end time.Time) ([]scheduleEntry, err
 
 	for k := range leagues {
 		lastFoundStart := start
-		for next := start; !next.IsZero() && next.Before(end); next = leagues[k].Scheduler().NextBetween(next, end) {
+		scheduler := leagues[k].Scheduler()
+		for next := start; !next.IsZero() && next.Before(end); next = scheduler.NextBetween(next, end) {
 			if next == lastFoundStart {
 				continue
 			}

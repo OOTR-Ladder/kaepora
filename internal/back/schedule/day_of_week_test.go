@@ -20,7 +20,7 @@ func TestDayOfWeekSchedulerNextBetween(t *testing.T) {
 	s.Tue = []string{"15:00 Europe/Paris", "15:00 Europe/Dublin"}
 	s.Fri = []string{"10:00 UTC"}
 
-	testDayOfWeekScheduler(t, s, []scheduleTestData{
+	testScheduler(t, &s, []scheduleTestData{
 		{
 			now:      "2020-04-07 12:59:59+00:00",
 			expected: "2020-04-07 15:00:00+02:00",
@@ -60,7 +60,7 @@ func TestDayOfWeekSchedulerNextMidnight(t *testing.T) {
 	s := schedule.NewDayOfWeekScheduler()
 	s.Mon = []string{"00:00 UTC", "12:00 UTC"}
 
-	testDayOfWeekScheduler(t, s, []scheduleTestData{
+	testScheduler(t, &s, []scheduleTestData{
 		{
 			now:      "2020-08-23 00:00:00+00:00",
 			expected: "2020-08-24 00:00:00+00:00",
@@ -82,7 +82,7 @@ func TestDayOfWeekSchedulerStd(t *testing.T) {
 	s.Thu = []string{"20:00 America/Los_Angeles", "20:00 America/New_York", "14:00 Europe/Paris", "20:00 Europe/Paris"}
 	s.Sun = []string{"20:00 America/Los_Angeles", "20:00 America/New_York", "14:00 Europe/Paris", "20:00 Europe/Paris"}
 
-	testDayOfWeekScheduler(t, s, []scheduleTestData{
+	testScheduler(t, &s, []scheduleTestData{
 		{
 			now:      "2020-04-15 10:00:00+00:00",
 			expected: "2020-04-15 15:00:00+02:00",
@@ -113,7 +113,7 @@ func TestDayOfWeekSchedulerShu(t *testing.T) {
 	s.Sat = []string{"05:00 UTC", "10:00 UTC", "21:00 Europe/Paris", "23:00 UTC"}
 	s.Sun = []string{"05:00 UTC", "10:00 UTC", "14:00 UTC", "21:00 Europe/Paris"}
 
-	testDayOfWeekScheduler(t, s, []scheduleTestData{
+	testScheduler(t, &s, []scheduleTestData{
 		{
 			now:      "2020-09-05 20:30:00+02:00",
 			expected: "2020-09-05 21:00:00+02:00",
@@ -138,7 +138,7 @@ type scheduleTestData struct {
 	expected string
 }
 
-func testDayOfWeekScheduler(t *testing.T, s schedule.DayOfWeekScheduler, tests []scheduleTestData) {
+func testScheduler(t *testing.T, s schedule.Scheduler, tests []scheduleTestData) {
 	t.Helper()
 
 	format := "2006-01-02 15:04:05-07:00"
@@ -150,7 +150,7 @@ func testDayOfWeekScheduler(t *testing.T, s schedule.DayOfWeekScheduler, tests [
 
 		actual := s.NextBetween(now, now.AddDate(0, 0, 7)).Format(format)
 		if actual != v.expected {
-			t.Errorf("now: %s,\texpected %s, got %s", now, v.expected, actual)
+			t.Errorf("\nnow:\t %s,\nexpected %s\ngot\t %s", now, v.expected, actual)
 		}
 	}
 }

@@ -44,8 +44,6 @@ func (s *DayOfWeekScheduler) SetAll(hours []string) {
 	s.Sun = hours
 }
 
-// NextBetween returns the first event occurring between two point in time or a
-// zero time if none is found.
 func (s *DayOfWeekScheduler) NextBetween(t time.Time, max time.Time) time.Time {
 	t, max = t.UTC(), max.UTC()
 	if t.After(max) {
@@ -128,7 +126,6 @@ func hourLocation(str string) (string, *time.Location, error) {
 	return parts[0], location, nil
 }
 
-// Next returns the next scheduled date in a week span.
 func (s *DayOfWeekScheduler) Next() time.Time {
 	now := time.Now()
 	return s.NextBetween(now, now.AddDate(0, 0, 7))

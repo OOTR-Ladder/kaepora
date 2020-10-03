@@ -15,6 +15,7 @@ type Type string
 
 const (
 	TypeDayOfWeek Type = "day-of-week"
+	TypeRolling   Type = "rolling"
 )
 
 func (c *Config) Scan(src interface{}) error {
