@@ -1,6 +1,7 @@
 package back
 
 import (
+	"kaepora/internal/back/schedule"
 	"kaepora/internal/util"
 	"time"
 
@@ -20,7 +21,7 @@ type League struct {
 	GameID    util.UUIDAsBlob
 	Generator string
 	Settings  string
-	Schedule  Schedule
+	Schedule  schedule.Config
 
 	AnnounceDiscordChannelID null.String
 }
@@ -34,8 +35,12 @@ func NewLeague(name string, shortCode string, gameID util.UUIDAsBlob, generator,
 		Name:      name,
 		ShortCode: shortCode,
 		Settings:  settings,
-		Schedule:  NewSchedule(),
+		Schedule:  schedule.Config{},
 	}
+}
+
+func (l *League) Scheduler() schedule.Scheduler {
+	return schedule.New(l.Schedule)
 }
 
 func (l *League) insert(tx *sqlx.Tx) error {

@@ -60,7 +60,7 @@ func (b *Back) createNextScheduledMatchSessions() error {
 
 		// Create MatchSession
 		for _, league := range leagues {
-			next := league.Schedule.Next()
+			next := league.Scheduler().Next()
 			if next.IsZero() {
 				continue
 			}
