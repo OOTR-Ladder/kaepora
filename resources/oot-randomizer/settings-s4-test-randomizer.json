@@ -1,0 +1,26 @@
+{
+    "bridge": [
+        {
+            "Value": "medallions",
+            "Cost": 1,
+            "Weight": 1
+        },
+        {
+            "Value": "stones",
+            "Cost": 1,
+            "Weight": 1
+        }
+    ],
+    "bridge_stones": [
+        {
+            "Value": 1,
+            "Cost": 1,
+            "Weight": 1
+        },
+        {
+            "Value": 2,
+            "Cost": 1,
+            "Weight": 1
+        }
+    ]
+}
