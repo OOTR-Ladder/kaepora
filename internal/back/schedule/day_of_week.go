@@ -1,8 +1,6 @@
-package back
+package schedule
 
 import (
-	"database/sql/driver"
-	"encoding/json"
 	"fmt"
 	"log"
 	"sort"
@@ -10,8 +8,9 @@ import (
 	"time"
 )
 
-// A Schedule is a per-weekday set hour local times at which sessions can occur.
-type Schedule struct {
+// A DayOfWeekScheduler scheduler is a per-weekday set hour local times at which
+// sessions can occur.
+type DayOfWeekScheduler struct {
 	Mon []string
 	Tue []string
 	Wed []string
@@ -21,8 +20,8 @@ type Schedule struct {
 	Sun []string
 }
 
-func NewSchedule() Schedule {
-	return Schedule{ // ensure we store "[]" and not "null"
+func NewDayOfWeekScheduler() DayOfWeekScheduler {
+	return DayOfWeekScheduler{ // ensure we store "[]" and not "null"
 		Mon: []string{},
 		Tue: []string{},
 		Wed: []string{},
@@ -34,7 +33,8 @@ func NewSchedule() Schedule {
 }
 
 // SetAll sets the same to of hours to all weekdays (the slice is not copied).
-func (s *Schedule) SetAll(hours []string) {
+// For debugging purposes.
+func (s *DayOfWeekScheduler) SetAll(hours []string) {
 	s.Mon = hours
 	s.Tue = hours
 	s.Wed = hours
@@ -44,9 +44,7 @@ func (s *Schedule) SetAll(hours []string) {
 	s.Sun = hours
 }
 
-// NextBetween returns the first event occurring between two point in time or a
-// zero time if none is found.
-func (s *Schedule) NextBetween(t time.Time, max time.Time) time.Time {
+func (s *DayOfWeekScheduler) NextBetween(t time.Time, max time.Time) time.Time {
 	t, max = t.UTC(), max.UTC()
 	if t.After(max) {
 		return time.Time{}
@@ -73,7 +71,7 @@ func (s *Schedule) NextBetween(t time.Time, max time.Time) time.Time {
 }
 
 // flattenHours get all hours in the week of the given time.
-func (s *Schedule) flattenHours(t time.Time) []time.Time {
+func (s *DayOfWeekScheduler) flattenHours(t time.Time) []time.Time {
 	ret := make([]time.Time, 0, s.totalHoursCount())
 
 	start := t.AddDate(0, 0, -int(t.Weekday()))
@@ -109,7 +107,7 @@ func (s *Schedule) flattenHours(t time.Time) []time.Time {
 }
 
 // totalHoursCount returns the number of hours set across all days.
-func (s *Schedule) totalHoursCount() int {
+func (s *DayOfWeekScheduler) totalHoursCount() int {
 	return len(s.Mon) + len(s.Tue) + len(s.Wed) + len(s.Thu) + len(s.Fri) +
 		len(s.Sat) + len(s.Sun)
 }
@@ -128,32 +126,11 @@ func hourLocation(str string) (string, *time.Location, error) {
 	return parts[0], location, nil
 }
 
-// Next returns the next scheduled date in a week span.
-func (s *Schedule) Next() time.Time {
+func (s *DayOfWeekScheduler) Next() time.Time {
 	now := time.Now()
 	return s.NextBetween(now, now.AddDate(0, 0, 7))
 }
 
-func (s *Schedule) hoursForDow(dow int) []string {
+func (s *DayOfWeekScheduler) hoursForDow(dow int) []string {
 	return [][]string{s.Sun, s.Mon, s.Tue, s.Wed, s.Thu, s.Fri, s.Sat}[dow]
-}
-
-func (s *Schedule) Scan(src interface{}) error {
-	switch src := src.(type) {
-	case string:
-		return json.Unmarshal([]byte(src), s)
-	case []byte:
-		return json.Unmarshal(src, s)
-	default:
-		return fmt.Errorf("expected []byte or string, got %T", src)
-	}
-}
-
-func (s Schedule) Value() (driver.Value, error) {
-	str, err := json.Marshal(s)
-	if err != nil {
-		return nil, err
-	}
-
-	return driver.Value(str), nil
 }

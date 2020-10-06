@@ -1,26 +1,26 @@
-package back_test
+package schedule_test
 
 import (
-	"kaepora/internal/back"
+	"kaepora/internal/back/schedule"
 	"testing"
 	"time"
 )
 
-func TestScheduleNewIsNotNil(t *testing.T) {
-	s := back.NewSchedule()
+func TestDayOfWeekSchedulerNewIsNotNil(t *testing.T) {
+	s := schedule.NewDayOfWeekScheduler()
 	if s.Mon == nil || s.Tue == nil || s.Wed == nil || s.Thu == nil ||
 		s.Fri == nil || s.Sat == nil || s.Sun == nil {
 		t.Error("A newly created schedule should have empty slices, not nil slices.")
 	}
 }
 
-func TestScheduleNextBetween(t *testing.T) {
-	s := back.NewSchedule()
+func TestDayOfWeekSchedulerNextBetween(t *testing.T) {
+	s := schedule.NewDayOfWeekScheduler()
 	s.Mon = []string{"05:00 Europe/Paris", "05:00 Europe/Dublin"}
 	s.Tue = []string{"15:00 Europe/Paris", "15:00 Europe/Dublin"}
 	s.Fri = []string{"10:00 UTC"}
 
-	testSchedule(t, s, []scheduleTestData{
+	testScheduler(t, &s, []scheduleTestData{
 		{
 			now:      "2020-04-07 12:59:59+00:00",
 			expected: "2020-04-07 15:00:00+02:00",
@@ -56,11 +56,11 @@ func TestScheduleNextBetween(t *testing.T) {
 	})
 }
 
-func TestScheduleNextMidnight(t *testing.T) {
-	s := back.NewSchedule()
+func TestDayOfWeekSchedulerNextMidnight(t *testing.T) {
+	s := schedule.NewDayOfWeekScheduler()
 	s.Mon = []string{"00:00 UTC", "12:00 UTC"}
 
-	testSchedule(t, s, []scheduleTestData{
+	testScheduler(t, &s, []scheduleTestData{
 		{
 			now:      "2020-08-23 00:00:00+00:00",
 			expected: "2020-08-24 00:00:00+00:00",
@@ -68,8 +68,8 @@ func TestScheduleNextMidnight(t *testing.T) {
 	})
 }
 
-func TestScheduleStd(t *testing.T) {
-	s := back.NewSchedule()
+func TestDayOfWeekSchedulerStd(t *testing.T) {
+	s := schedule.NewDayOfWeekScheduler()
 	s.SetAll([]string{
 		"21:00 America/Los_Angeles",
 		"21:00 America/New_York",
@@ -82,7 +82,7 @@ func TestScheduleStd(t *testing.T) {
 	s.Thu = []string{"20:00 America/Los_Angeles", "20:00 America/New_York", "14:00 Europe/Paris", "20:00 Europe/Paris"}
 	s.Sun = []string{"20:00 America/Los_Angeles", "20:00 America/New_York", "14:00 Europe/Paris", "20:00 Europe/Paris"}
 
-	testSchedule(t, s, []scheduleTestData{
+	testScheduler(t, &s, []scheduleTestData{
 		{
 			now:      "2020-04-15 10:00:00+00:00",
 			expected: "2020-04-15 15:00:00+02:00",
@@ -102,8 +102,8 @@ func TestScheduleStd(t *testing.T) {
 	})
 }
 
-func TestScheduleShu(t *testing.T) {
-	s := back.NewSchedule()
+func TestDayOfWeekSchedulerShu(t *testing.T) {
+	s := schedule.NewDayOfWeekScheduler()
 
 	s.Mon = []string{"05:00 UTC", "21:00 Europe/Paris"}
 	s.Tue = []string{"13:00 UTC", "22:00 UTC"}
@@ -113,7 +113,7 @@ func TestScheduleShu(t *testing.T) {
 	s.Sat = []string{"05:00 UTC", "10:00 UTC", "21:00 Europe/Paris", "23:00 UTC"}
 	s.Sun = []string{"05:00 UTC", "10:00 UTC", "14:00 UTC", "21:00 Europe/Paris"}
 
-	testSchedule(t, s, []scheduleTestData{
+	testScheduler(t, &s, []scheduleTestData{
 		{
 			now:      "2020-09-05 20:30:00+02:00",
 			expected: "2020-09-05 21:00:00+02:00",
@@ -138,7 +138,7 @@ type scheduleTestData struct {
 	expected string
 }
 
-func testSchedule(t *testing.T, s back.Schedule, tests []scheduleTestData) {
+func testScheduler(t *testing.T, s schedule.Scheduler, tests []scheduleTestData) {
 	t.Helper()
 
 	format := "2006-01-02 15:04:05-07:00"
@@ -150,7 +150,7 @@ func testSchedule(t *testing.T, s back.Schedule, tests []scheduleTestData) {
 
 		actual := s.NextBetween(now, now.AddDate(0, 0, 7)).Format(format)
 		if actual != v.expected {
-			t.Errorf("now: %s,\texpected %s, got %s", now, v.expected, actual)
+			t.Errorf("\nnow:\t %s,\nexpected %s\ngot\t %s", now, v.expected, actual)
 		}
 	}
 }

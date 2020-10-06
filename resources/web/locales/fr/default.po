@@ -5,39 +5,39 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: internal/web/templates.go:144
+#: internal/web/templates.go:145
 msgid "Planned"
 msgstr "Planifiée"
 
-#: internal/web/templates.go:147
+#: internal/web/templates.go:148
 msgid "Joinable"
 msgstr "Inscriptions ouvertes"
 
-#: internal/web/templates.go:150
+#: internal/web/templates.go:151
 msgid "Preparing"
 msgstr "En préparation"
 
-#: internal/web/templates.go:153
+#: internal/web/templates.go:154
 msgid "Race in progress"
 msgstr "Course en cours"
 
-#: internal/web/templates.go:156
+#: internal/web/templates.go:157
 msgid "Closed"
 msgstr "Fermée"
 
-#: internal/web/templates.go:205
+#: internal/web/templates.go:206
 msgid "not started"
 msgstr "pas commencé"
 
-#: internal/web/templates.go:207
+#: internal/web/templates.go:208
 msgid "in progress"
 msgstr "en cours"
 
-#: internal/web/templates.go:211
+#: internal/web/templates.go:212
 msgid "before start"
 msgstr "avant départ"
 
-#: internal/web/templates.go:216
+#: internal/web/templates.go:217
 msgid "forfeit (%s)"
 msgstr "forfait (%s)"
 
@@ -49,15 +49,15 @@ msgstr "Compétitions de Randomizer sur The Legend of Zelda: Ocarina of Time."
 msgid "Cancel"
 msgstr "Annuler"
 
-#: resources/web/templates/includes/current_races.html:22
+#: resources/web/templates/includes/current_races.html:24
 msgid "Join"
 msgstr "S'enregistrer"
 
-#: resources/web/templates/includes/current_races.html:32
+#: resources/web/templates/includes/current_races.html:34
 msgid "Starts in %s"
 msgstr "Commence dans %s"
 
-#: resources/web/templates/includes/current_races.html:64
+#: resources/web/templates/includes/current_races.html:66
 msgid "There is no scheduled race right now."
 msgstr "Il n'y a pas de course programmée pour l'instant."
 
@@ -438,14 +438,10 @@ msgid "Schedule"
 msgstr "Planning"
 
 #: resources/web/templates/layouts/schedule.html:11
-msgid "Current race"
-msgstr "Course en cours"
+msgid "Current races"
+msgstr "Courses en cours"
 
-#: resources/web/templates/layouts/schedule.html:13
-msgid "No current races yet"
-msgstr "Aucune course en cours pour le moment"
-
-#: resources/web/templates/layouts/schedule.html:53
+#: resources/web/templates/layouts/schedule.html:51
 msgid "in"
 msgstr "dans"
 
@@ -471,43 +467,43 @@ msgstr "Documentation des Shuffled Settings"
 msgid "Spoiler Log for seed `%s`"
 msgstr "Solution pour la seed `%s`"
 
-#: resources/web/templates/layouts/spoilers.html:27
+#: resources/web/templates/layouts/spoilers.html:28
 msgid "Download / Patch"
 msgstr "Télécharger / Patcher"
 
-#: resources/web/templates/layouts/spoilers.html:28
+#: resources/web/templates/layouts/spoilers.html:30
 msgid "Download raw JSON"
 msgstr "Télécharger le JSON brut"
 
-#: resources/web/templates/layouts/spoilers.html:44
+#: resources/web/templates/layouts/spoilers.html:46
 msgid "Spheres & Locations"
 msgstr "Sphères et Emplacements"
 
-#: resources/web/templates/layouts/spoilers.html:50
+#: resources/web/templates/layouts/spoilers.html:52
 msgid "Gossip stones"
 msgstr "Pierres à Potins"
 
-#: resources/web/templates/layouts/spoilers.html:54
+#: resources/web/templates/layouts/spoilers.html:56
 msgid "Entrances"
 msgstr "Entrées / Sorties"
 
-#: resources/web/templates/layouts/spoilers.html:78
+#: resources/web/templates/layouts/spoilers.html:80
 msgid "Location"
 msgstr "Emplacement"
 
-#: resources/web/templates/layouts/spoilers.html:79
+#: resources/web/templates/layouts/spoilers.html:81
 msgid "Gossip"
 msgstr "Potin"
 
-#: resources/web/templates/layouts/spoilers.html:98
+#: resources/web/templates/layouts/spoilers.html:100
 msgid "Scene"
 msgstr "Scène"
 
-#: resources/web/templates/layouts/spoilers.html:99
+#: resources/web/templates/layouts/spoilers.html:101
 msgid "Exit"
 msgstr "Sortie"
 
-#: resources/web/templates/layouts/spoilers.html:100
+#: resources/web/templates/layouts/spoilers.html:102
 msgid "Destination"
 msgstr "Destination"
 

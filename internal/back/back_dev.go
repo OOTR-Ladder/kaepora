@@ -2,6 +2,7 @@ package back
 
 import (
 	"fmt"
+	"kaepora/internal/back/schedule"
 	"kaepora/internal/generator/factory"
 	"kaepora/internal/generator/oot"
 	"kaepora/internal/util"
@@ -65,12 +66,9 @@ func (b *Back) LoadFixtures() error {
 		NewLeague("Random", "random", game.ID, oot.SettingsRandomizerName+":5.2.13", "s3.json"),
 	}
 
-	// 20h PST is 05h CEST, Los Angeles was chosen because it observes DST
-	leagues[0].Schedule.SetAll([]string{"14:00 Europe/Paris", "20:00 Europe/Paris"})
-	leagues[0].Schedule.Mon = []string{"15:00 Europe/Paris", "21:00 Europe/Paris"}
-	leagues[0].Schedule.Wed = []string{"15:00 Europe/Paris", "21:00 Europe/Paris"}
-	leagues[0].Schedule.Fri = []string{"15:00 Europe/Paris", "21:00 Europe/Paris"}
-	leagues[0].Schedule.Sat = []string{"15:00 Europe/Paris", "21:00 Europe/Paris"}
+	leagues[0].Schedule = schedule.Config{
+		Type: schedule.TypeDayOfWeek,
+	}
 
 	return b.transaction(func(tx *sqlx.Tx) error {
 		if err := game.insert(tx); err != nil {
