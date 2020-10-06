@@ -1,6 +1,7 @@
 package back
 
 import (
+	"database/sql"
 	"io"
 	"kaepora/internal/util"
 	"log"
@@ -66,7 +67,7 @@ func (b *Back) GetMiscStats(shortcode string) (misc StatsMisc, _ error) { // nol
 			},
 			{
 				&misc.TotalSeedTime,
-				`SELECT (? * SUM(MatchEntry.EndedAt - MatchEntry.StartedAt)) FROM MatchEntry
+				`SELECT COALESCE(? * SUM(MatchEntry.EndedAt - MatchEntry.StartedAt), 0) FROM MatchEntry
                 INNER JOIN Match ON (MatchEntry.MatchID = Match.ID)
                 INNER JOIN MatchSession ON (Match.MatchSessionID = MatchSession.ID)
                 WHERE Match.LeagueID = ? AND MatchSession.Status = ?`,
@@ -81,13 +82,13 @@ func (b *Back) GetMiscStats(shortcode string) (misc StatsMisc, _ error) { // nol
 			},
 			{
 				&misc.AveragePlayersPerRace,
-				`SELECT round(avg(json_array_length(PlayerIDs)))
+				`SELECT COALESCE(round(avg(json_array_length(PlayerIDs))), 0)
                 FROM MatchSession WHERE LeagueID = ? AND MatchSession.Status = ?`,
 				[]interface{}{league.ID, MatchSessionStatusClosed},
 			},
 			{
 				&misc.MostPlayersInARace,
-				`SELECT max(json_array_length(PlayerIDs))
+				`SELECT COALESCE(max(json_array_length(PlayerIDs)), 0)
                 FROM MatchSession WHERE LeagueID = ? AND MatchSession.Status = ?`,
 				[]interface{}{league.ID, MatchSessionStatusClosed},
 			},
@@ -95,7 +96,10 @@ func (b *Back) GetMiscStats(shortcode string) (misc StatsMisc, _ error) { // nol
 
 		for _, v := range queries {
 			if err := tx.Get(v.Dst, v.Query, v.Args...); err != nil {
-				return err
+				// Ignore empty results, that's just an empty league.
+				if err != sql.ErrNoRows {
+					return err
+				}
 			}
 		}
 

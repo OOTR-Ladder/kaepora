@@ -31,6 +31,10 @@ func (b *Back) GetRatingsDistributionGraph(shortcode string) ([]byte, error) {
 		return nil, err
 	}
 
+	if len(bars) == 0 { // no bars, no stats.
+		return []byte(emptySVG), nil
+	}
+
 	graph := chart.BarChart{
 		Height: 300,
 		Width:  600,
