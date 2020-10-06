@@ -31,10 +31,6 @@ func testCreateSeed_inner(t *testing.T, api *ootrapi.API) {
 		t.Fatal(err)
 	}
 
-	if len(state.SettingsPatch) != 0 {
-		t.Errorf("non empty list of shuffled settings")
-	}
-
 	if state.ID == "" {
 		t.Errorf("empty OOTR seed ID")
 	}

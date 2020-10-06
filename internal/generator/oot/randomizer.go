@@ -25,7 +25,6 @@ type State struct {
 	// For API-generated seeds only.
 	ID string `json:",omitempty"`
 
-	// For shuffled settings seeds only.
 	SettingsPatch map[string]interface{} `json:",omitempty"`
 }
 
