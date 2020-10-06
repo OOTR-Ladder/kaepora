@@ -13,7 +13,7 @@ type SpoilerLog struct {
 	Seed           string   `json:":seed"`
 	SettingsString string   `json:":settings_string"`
 
-	Entrances     map[Exit]string                                       `json:"entrances"`
+	Entrances     map[Exit]interface{}                                  `json:"entrances"`
 	Settings      map[string]interface{}                                `json:"settings"`
 	ItemPool      map[string]int                                        `json:"item_pool"`
 	Locations     map[SpoilerLogLocation]SpoilerLogItem                 `json:"locations"`
