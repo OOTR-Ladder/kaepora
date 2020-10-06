@@ -17,7 +17,6 @@ import (
 // The probability is there to ensure some values are scarcely or never used.
 // It is an integer that only has meaning relative to the sum of all
 // probabilities.
-// TODO check "warp_songs" and "spawn_positions" in the fork.
 type Settings map[string]Setting // name (json key) => possible values
 
 // DefaultName is the default name of the file containing the shuffled settings parameters.

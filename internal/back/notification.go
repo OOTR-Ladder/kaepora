@@ -346,9 +346,14 @@ func (b *Back) sendMatchSeedNotification(
 // maybeWriteSettingsPatchInfo sends OOTR-specific documentation about the
 // settings used to generate the seed (used in shuffled settings).
 func maybeWriteSettingsPatchInfo(w io.Writer, stateJSON []byte) error {
+	if stateJSON == nil {
+		log.Printf("debug: got a nil state, not sending settings patch info")
+		return nil
+	}
+
 	var state oot.State
 	if err := json.Unmarshal(stateJSON, &state); err != nil {
-		return err
+		return fmt.Errorf("unable to unmarshal state: %w", err)
 	}
 	if len(state.SettingsPatch) == 0 {
 		return nil

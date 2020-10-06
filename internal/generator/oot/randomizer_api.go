@@ -33,7 +33,26 @@ func (g *RandomizerAPI) Generate(settingsName, seed string) (generator.Output, e
 		return generator.Output{}, err
 	}
 
-	return g.generateFromSettings(settings, seed)
+	out, err := g.generateFromSettings(settings, seed)
+	if err != nil {
+		return generator.Output{}, err
+	}
+
+	base, err := GetBaseDir()
+	if err != nil {
+		return generator.Output{}, err
+	}
+	settingsPath := filepath.Join(base, settingsName)
+	rawSettings, err := readSettingsFile(settingsPath)
+	if err != nil {
+		return generator.Output{}, fmt.Errorf("unable to read settings: %w", err)
+	}
+	out.State, err = patchStateWithSettings(out.State, rawSettings)
+	if err != nil {
+		return generator.Output{}, fmt.Errorf("unable to patch state with settings: %w", err)
+	}
+
+	return out, nil
 }
 
 func (g *RandomizerAPI) generateFromSettings(settings map[string]interface{}, seed string) (generator.Output, error) {

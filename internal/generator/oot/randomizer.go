@@ -2,6 +2,7 @@ package oot
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"kaepora/internal/generator"
@@ -52,8 +53,17 @@ func (g *Randomizer) Generate(settingsName, seed string) (generator.Output, erro
 		return generator.Output{}, fmt.Errorf("unable to generate seed: %s", err)
 	}
 
+	settings, err := readSettingsFile(settingsPath)
+	if err != nil {
+		return generator.Output{}, fmt.Errorf("unable to read settings: %w", err)
+	}
+	state, err := patchStateWithSettings(nil, settings)
+	if err != nil {
+		return generator.Output{}, fmt.Errorf("unable to patch state with settings: %w", err)
+	}
+
 	return generator.Output{
-		State:      nil,
+		State:      state,
 		SeedPatch:  zpf,
 		SpoilerLog: spoilerLog,
 	}, nil
@@ -142,4 +152,20 @@ func (g *Randomizer) IsExternal() bool {
 
 func (g *Randomizer) UnlockSpoilerLog([]byte) error {
 	return nil
+}
+
+func readSettingsFile(path string) (map[string]interface{}, error) {
+	r, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+
+	dec := json.NewDecoder(r)
+
+	var settings map[string]interface{}
+	if err := dec.Decode(&settings); err != nil {
+		return nil, err
+	}
+
+	return settings, nil
 }
