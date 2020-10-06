@@ -25,7 +25,7 @@
             {
                 "Value": "medallions",
                 "Title": "Médaillons",
-                "Description": "Le pont donnant accès au château de Ganon apparait une fois les six médaillons obtenus."
+                "Description": "Le pont donnant accès au château de Ganon apparait après l'obtention d'un nombre prédéfini de médaillions."
             },
             {
                 "Value": "dungeons",
@@ -40,12 +40,32 @@
             {
                 "Value": "stones",
                 "Title": "Pierres",
-                "Description": "Le pont donnant accès au château de Ganon apparait une fois les trois pierres ancestrales obtenues."
+                "Description": "Le pont donnant accès au château de Ganon apparait après l'obtention d'un nombre prédéfini de médaillions."
             },
             {
                 "Value": "vanilla",
                 "Title": "Vanille",
                 "Description": "Le pont donnant accès au château de Ganon apparait une fois que le médaillon de l'Ombre, de l'Esprit, et les Flèches de Lumière aient été obtenus."
+            }
+        ]
+    },
+    "bridge_medallions": {
+        "Title": "Médaillions du Pont Arc-en-Ciel",
+        "Values": [
+            {
+                "Value": 3,
+                "Title": "3",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de trois médaillions."
+            }
+        ]
+    },
+    "complete_mask_quest": {
+        "Title": "Quête du mask terminée",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "oui",
+                "Description": "Tous les masques sont déjà vendus, le Masque de Vérité et le Masque Tête de Mort sont disponibles."
             }
         ]
     },
@@ -234,13 +254,28 @@
             }
         ]
     },
+    "lacs_medallions": {
+        "Title": "Médallions pour la cinématique des Flèches de Lumière",
+        "Values": [
+            {
+                "Value": 6,
+                "Title": "6",
+                "Description": "Tous les médaillions sont requis pour activer la cinématique des Flèches de Lumière."
+            }
+        ]
+    },
     "shuffle_ganon_bosskey": {
         "Title": "Grande clef du Château de Ganon",
         "Values": [
             {
                 "Value": "lacs_vanilla",
-                "Title": "Sur la cinématique des Flèches de Lumière vanille",
+                "Title": "Flèches de Lumière vanille",
                 "Description": "La Grande clef du Château de Ganon est sur la cinématique des Flèches de lumière, qui se déclenche une fois les médaillons de l'Ombre et de l'Esprit obtenus."
+            },
+            {
+                "Value": "lacs_medallions",
+                "Title": "Flèches de Lumière sur médaillions",
+                "Description": "La Grande clef du Château de Ganon est sur la cinématique des Flèches de lumière, qui se déclenche une fois un nombre prédéfini de médaillions obtenu."
             },
             {
                 "Value": "dungeon",
@@ -251,6 +286,16 @@
                 "Value": "keysanity",
                 "Title": "Partout",
                 "Description": "La Grande clef du Château de Ganon peut être n'importe où des objets sont obtenables."
+            }
+        ]
+    },
+    "free_zelda": {
+        "Title": "Zelda Gratos",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "yes",
+                "Description": "Vous commencez avez la Lettre donnée par Zelda et le chant donné par Impa."
             }
         ]
     },

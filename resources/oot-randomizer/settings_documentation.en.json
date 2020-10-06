@@ -25,7 +25,7 @@
             {
                 "Value": "medallions",
                 "Title": "medallions",
-                "Description": "The bridge to Ganon's Castle appears after all six medaillons are obtained."
+                "Description": "The bridge to Ganon's Castle appears after a set number of medaillons is obtained."
             },
             {
                 "Value": "dungeons",
@@ -40,12 +40,32 @@
             {
                 "Value": "stones",
                 "Title": "stones",
-                "Description": "The bridge to Ganon's Castle appears after all three Spiritual Stones are obtained."
+                "Description": "The bridge to Ganon's Castle appears after a set number of Spiritual Stones is obtained."
             },
             {
                 "Value": "vanilla",
                 "Title": "vanilla",
                 "Description": "The bridge to Ganon's Castle appears after the Shadow Medaillon, Spirit Medaillon and Light Arrows are obtained."
+            }
+        ]
+    },
+    "bridge_medallions": {
+        "Title": "Rainbow Bridge medallions requirements",
+        "Values": [
+            {
+                "Value": 3,
+                "Title": "3",
+                "Description": "The bridge to Ganon's Castle appears after any three medallions are obtained."
+            }
+        ]
+    },
+    "complete_mask_quest": {
+        "Title": "Complete mask quest",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "yes",
+                "Description": "All masks are already sold, both the Skull Mask and the Mask of Truth are available from the start."
             }
         ]
     },
@@ -234,13 +254,28 @@
             }
         ]
     },
+    "lacs_medallions": {
+        "Title": "Light Arrow Cutscene Medallions requirement",
+        "Values": [
+            {
+                "Value": 6,
+                "Title": "6",
+                "Description": "All medallions are required to activate the Light Arrow cutscene."
+            }
+        ]
+    },
     "shuffle_ganon_bosskey": {
         "Title": "Shuffle Ganon Boss Key",
         "Values": [
             {
                 "Value": "lacs_vanilla",
-                "Title": "vanilla Light Arrow custcene",
+                "Title": "vanilla Light Arrow cutscene",
                 "Description": "Ganon's Castle Boss Key is on the Light Arrow cutscene which unlocks when you get both Shadow and Spirit medallions."
+            },
+            {
+                "Value": "lacs_medallions",
+                "Title": "Medallions Light Arrow cutscene",
+                "Description": "Ganon's Castle Boss Key is on the Light Arrow cutscene which unlocks when you get a set number of medallions."
             },
             {
                 "Value": "dungeon",
@@ -386,6 +421,16 @@
                 "Value": true,
                 "Title": "yes",
                 "Description": "Pieces of the Triforce have been scattered around the world. Find 20 of them to finish the game!"
+            }
+        ]
+    },
+    "free_zelda": {
+        "Title": "Free Zelda",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "yes",
+                "Description": "Start having already met Zelda and obtained Zelda's Letter along with the song from Impa."
             }
         ]
     },

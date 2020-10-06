@@ -1,17 +1,16 @@
 {
     "compress_rom": "Patch",
+    "create_spoiler": true,
 
     "all_reachable": true,
     "big_poe_count": 1,
     "big_poe_count_random": false,
     "bombchus_in_logic": false,
     "bridge": "medallions",
-    "bridge_tokens": 1,
     "chicken_count": 7,
     "chicken_count_random": false,
     "clearer_hints": true,
     "correct_chest_sizes": false,
-    "create_spoiler": true,
     "damage_multiplier": "normal",
     "disabled_locations": ["Deku Theater Mask of Truth"],
     "enhance_map_compass": false,
