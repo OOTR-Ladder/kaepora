@@ -19,13 +19,18 @@ func NewSettingsRandomizerAPI(version string, api *ootrapi.API) *SettingsRandomi
 	}
 }
 
-func (r *SettingsRandomizerAPI) Generate(baseSettingsName, seed string) (generator.Output, error) {
+func (r *SettingsRandomizerAPI) Generate(combinedSettingsName, seed string) (generator.Output, error) {
 	baseDir, err := GetBaseDir()
 	if err != nil {
 		return generator.Output{}, err
 	}
 
-	settingsDiff, err := getShuffledSettings(seed, SettingsCostBudget, baseDir)
+	baseSettingsName, shuffledSettingsName, err := getBaseAndShuffledFromCombinedSettings(combinedSettingsName)
+	if err != nil {
+		return generator.Output{}, err
+	}
+
+	settingsDiff, err := getShuffledSettings(seed, SettingsCostBudget, baseDir, shuffledSettingsName)
 	if err != nil {
 		return generator.Output{}, err
 	}

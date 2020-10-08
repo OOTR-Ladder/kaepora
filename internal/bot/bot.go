@@ -178,13 +178,13 @@ func (bot *Bot) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) 
 	bot.createWriterAndDispatch(s, m.Message, m.Author.ID)
 }
 
-func (bot *Bot) createWriterAndDispatch(s *discordgo.Session, m *discordgo.Message, authorID string) {
+func (bot *Bot) createWriterAndDispatch(s *discordgo.Session, m *discordgo.Message, recipientID string) {
 	// Ignore non-commands.
 	if !strings.HasPrefix(m.Content, "!") {
 		return
 	}
 
-	out, err := newUserChannelWriter(s, authorID)
+	out, err := newUserChannelWriter(s, recipientID)
 	if err != nil {
 		log.Printf("error: could not create channel writer: %s", err)
 	}
@@ -198,7 +198,7 @@ func (bot *Bot) createWriterAndDispatch(s *discordgo.Session, m *discordgo.Messa
 		out.Reset()
 		fmt.Fprintln(out, "There was an error processing your command.")
 
-		if errors.Is(err, util.ErrPublic("")) {
+		if errors.Is(err, util.ErrPublic("")) || bot.config.IsDiscordIDAdmin(recipientID) {
 			fmt.Fprintf(out, "```%s\n```\nIf you need help, send `!help`.", err)
 		}
 

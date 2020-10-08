@@ -18,7 +18,7 @@ func TestCreateSettingsRandomizerAPISeed(t *testing.T) {
 
 func testCreateSettingsRandomizerAPISeed_inner(t *testing.T, api *ootrapi.API) {
 	g := oot.NewSettingsRandomizerAPI("5.2.0", api)
-	out, err := g.Generate("s3.json", "DEADBEEF")
+	out, err := g.Generate("s3.json:shu-shuffled.json", "DEADBEEF")
 	if err != nil {
 		t.Fatal(err)
 	}

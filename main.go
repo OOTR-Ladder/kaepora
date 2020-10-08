@@ -127,7 +127,7 @@ func generateSettingsStats() error {
 		return err
 	}
 
-	s, err := settings.Load(filepath.Join(baseDir, settings.DefaultName))
+	s, err := settings.Load(filepath.Join(baseDir, "debug.json"))
 	if err != nil {
 		return err
 	}

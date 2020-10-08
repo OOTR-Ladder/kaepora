@@ -11,6 +11,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/go-chi/chi"
 )
 
 func (s *Server) devSettingsRelations(w http.ResponseWriter, r *http.Request) {
@@ -21,7 +23,8 @@ func (s *Server) devSettingsRelations(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) writeSettingsRelationSVG(w http.ResponseWriter, r *http.Request) error {
-	dot, err := getSettingsRelationsDOT()
+	name := chi.URLParam(r, "name") + ".json"
+	dot, err := getSettingsRelationsDOT(name)
 	if err != nil {
 		return err
 	}
@@ -49,13 +52,17 @@ func (s *Server) writeSettingsRelationSVG(w http.ResponseWriter, r *http.Request
 	return nil
 }
 
-func getSettingsRelationsDOT() (string, error) {
+func getSettingsRelationsDOT(name string) (string, error) {
+	if strings.ContainsAny(name, "./") {
+		return "", fmt.Errorf("invalid name: %s", name)
+	}
+
 	dir, err := oot.GetBaseDir()
 	if err != nil {
 		return "", err
 	}
 
-	s, err := settings.Load(filepath.Join(dir, settings.DefaultName))
+	s, err := settings.Load(filepath.Join(dir, name))
 	if err != nil {
 		return "", err
 	}

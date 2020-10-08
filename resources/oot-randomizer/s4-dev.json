@@ -7,6 +7,7 @@
     "big_poe_count_random": false,
     "bombchus_in_logic": false,
     "bridge": "medallions",
+    "bridge_stones": 0,
     "bridge_medallions": 3,
     "chicken_count_random": true,
     "clearer_hints": true,

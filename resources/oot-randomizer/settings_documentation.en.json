@@ -49,8 +49,28 @@
             }
         ]
     },
+    "bridge_stones": {
+        "Title": "Rainbow Bridge stones requirement",
+        "Values": [
+            {
+                "Value": 1,
+                "Title": "1",
+                "Description": "The bridge to Ganon's Castle appears after any Spiritual Stone is obtained."
+            },
+            {
+                "Value": 2,
+                "Title": "2",
+                "Description": "The bridge to Ganon's Castle appears after any two Spiritual Stones are obtained."
+            },
+            {
+                "Value": 3,
+                "Title": "3",
+                "Description": "The bridge to Ganon's Castle appears after all three Spiritual Stones are obtained."
+            }
+        ]
+    },
     "bridge_medallions": {
-        "Title": "Rainbow Bridge medallions requirements",
+        "Title": "Rainbow Bridge medallions requirement",
         "Values": [
             {
                 "Value": 3,
