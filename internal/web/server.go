@@ -113,7 +113,7 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 
 	r.Get("/favicon.ico", s.favicon(fs))
 	r.Get("/robots.txt", noContent)
-	r.Get("/dev/settings-relations.svg", s.devSettingsRelations)
+	r.Get("/dev/settings-relations/{name}.svg", s.devSettingsRelations)
 
 	r.Get("/auth/logout", func(w http.ResponseWriter, r *http.Request) {
 		if err := s.deleteCookie(w, authCookieName); err != nil {

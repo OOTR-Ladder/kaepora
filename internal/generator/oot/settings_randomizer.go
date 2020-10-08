@@ -8,6 +8,7 @@ import (
 	"kaepora/internal/generator/oot/settings"
 	"os"
 	"path/filepath"
+	"strings"
 
 	jsonpatch "github.com/evanphx/json-patch"
 )
@@ -30,9 +31,9 @@ func NewSettingsRandomizer(version string) *SettingsRandomizer {
 
 func getShuffledSettings(
 	seed string, cost int,
-	baseDir string,
+	baseDir, shuffledSettingsName string,
 ) (map[string]interface{}, error) {
-	s, err := settings.Load(filepath.Join(baseDir, settings.DefaultName))
+	s, err := settings.Load(filepath.Join(baseDir, shuffledSettingsName))
 	if err != nil {
 		return nil, err
 	}
@@ -85,8 +86,19 @@ func getMergedShuffledSettingsPath(
 	return settingsPath, nil
 }
 
+// getBaseAndShuffledFromCombinedSettings splits the base settings file and the
+// shuffled configuration from the value in the Settings field of a League.
+func getBaseAndShuffledFromCombinedSettings(combined string) (string, string, error) {
+	parts := strings.Split(combined, ":")
+	if len(parts) != 2 {
+		return "", "", fmt.Errorf("expected Settings to be in the form '<basefile.json>:<shuffled.json>', got '%s'", combined)
+	}
+
+	return parts[0], parts[1], nil
+}
+
 func (r *SettingsRandomizer) Generate(
-	baseSettingsName,
+	combinedSettingsName,
 	seed string,
 ) (generator.Output, error) {
 	baseDir, err := GetBaseDir()
@@ -94,7 +106,12 @@ func (r *SettingsRandomizer) Generate(
 		return generator.Output{}, err
 	}
 
-	settings, err := getShuffledSettings(seed, SettingsCostBudget, baseDir)
+	baseSettingsName, shuffledSettingsName, err := getBaseAndShuffledFromCombinedSettings(combinedSettingsName)
+	if err != nil {
+		return generator.Output{}, err
+	}
+
+	settings, err := getShuffledSettings(seed, SettingsCostBudget, baseDir, shuffledSettingsName)
 	if err != nil {
 		return generator.Output{}, err
 	}

@@ -1,0 +1,32 @@
+{
+    "bridge": [
+        {
+            "Value": "medallions",
+            "Cost": 1,
+            "Weight": 1,
+            "Implies": {
+                "bridge_stones": 0
+            }
+        },
+        {
+            "Value": "stones",
+            "Cost": 1,
+            "Weight": 1,
+            "Implies": {
+                "bridge_medallions": 0
+            }
+        }
+    ],
+    "bridge_stones": [
+        {
+            "Value": 1,
+            "Cost": 1,
+            "Weight": 1
+        },
+        {
+            "Value": 2,
+            "Cost": 1,
+            "Weight": 1
+        }
+    ]
+}

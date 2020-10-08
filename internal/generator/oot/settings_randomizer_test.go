@@ -18,7 +18,7 @@ func TestOOTSettingsRandomizer(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	out, err := g.Generate("s3.json", "DEADBEEF")
+	out, err := g.Generate("s3.json:shu-shuffled.json", "DEADBEEF")
 	if err != nil {
 		t.Fatal(err)
 	}

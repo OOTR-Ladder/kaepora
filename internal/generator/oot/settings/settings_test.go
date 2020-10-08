@@ -12,7 +12,8 @@ func TestShuffle(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	s, err := settings.Load("resources/oot-randomizer/" + settings.DefaultName)
+	// HARDCODED
+	s, err := settings.Load("resources/oot-randomizer/shu-shuffled.json")
 	if err != nil {
 		t.Fatal(err)
 	}

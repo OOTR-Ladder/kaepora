@@ -50,12 +50,32 @@
         ]
     },
     "bridge_medallions": {
-        "Title": "Médaillions du Pont Arc-en-Ciel",
+        "Title": "Médaillions pour le Pont Arc-en-Ciel",
         "Values": [
             {
                 "Value": 3,
                 "Title": "3",
                 "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de trois médaillions."
+            }
+        ]
+    },
+    "bridge_stones": {
+        "Title": "Pierres Ancestraces pour le Pont Arc-en-Ciel",
+        "Values": [
+            {
+                "Value": 1,
+                "Title": "1",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention d'une pierre ancestrale."
+            },
+            {
+                "Value": 2,
+                "Title": "2",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de deux pierres ancestrales."
+            },
+            {
+                "Value": 3,
+                "Title": "3",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de trois pierres ancestrales."
             }
         ]
     },
