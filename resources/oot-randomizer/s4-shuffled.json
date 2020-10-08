@@ -1,32 +1,30 @@
 {
-    "bridge": [
+    "bridge_medallions": [
         {
-            "Value": "medallions",
-            "Cost": 1,
-            "Weight": 1,
+            "Value": 3,
+            "Cost": 20,
+            "Weight": 2,
             "Implies": {
-                "bridge_stones": 0
-            }
-        },
-        {
-            "Value": "stones",
-            "Cost": 1,
-            "Weight": 1,
-            "Implies": {
-                "bridge_medallions": 0
+                "bridge": "medallions"
             }
         }
     ],
     "bridge_stones": [
         {
             "Value": 1,
-            "Cost": 1,
-            "Weight": 1
+            "Cost": 20,
+            "Weight": 1,
+            "Implies": {
+                "bridge": "stones"
+            }
         },
         {
             "Value": 2,
-            "Cost": 1,
-            "Weight": 1
+            "Cost": 20,
+            "Weight": 1,
+            "Implies": {
+                "bridge": "stones"
+            }
         }
     ]
 }
