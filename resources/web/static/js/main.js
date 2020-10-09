@@ -80,6 +80,10 @@ window.Kaepora = {
     },
 
     updateLocalDatetimes() {
+        if ((new Date().getTimezoneOffset()) === 0) {
+            return;
+        }
+
         const els = document.querySelectorAll('.js-local-datetime');
         for (let el of els) {
             const date = new Date(el.dataset.timestamp * 1000);
@@ -89,6 +93,7 @@ window.Kaepora = {
                 day: 'numeric',
                 hour: 'numeric',
                 minute: 'numeric',
+                timeZoneName: 'short',
             });
         }
     },
