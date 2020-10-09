@@ -26,6 +26,7 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 !dev panic                   # panic and abort
 !dev rerank SHORTCODE        # erase and recompute all the ranking history for a league
 !dev setannounce SHORTCODE   # configure a league to post its announcements in the channel the command was sent in
+!dev startrace SHORTCODE     # create an in-progress race including you and random players
 !dev uptime                  # display for how long the server has been running
 !dev url                     # display the link to use when adding the bot to a new server
 %[1]s`,
@@ -45,6 +46,8 @@ func (bot *Bot) cmdDev(m *discordgo.Message, args []string, out io.Writer) error
 		fmt.Fprintf(out, "The bot has been online for %s", time.Since(bot.startedAt).Round(time.Second))
 	case "error":
 		return util.ErrPublic("here's your error")
+	case "startrace":
+		return bot.cmdDevStartRace(m, args, out)
 	case "url":
 		fmt.Fprintf(
 			out,
@@ -129,6 +132,14 @@ func (bot *Bot) cmdDevAs(m *discordgo.Message, args []string, _ io.Writer) error
 	bot.createWriterAndDispatch(bot.dg, m, m.Author.ID)
 
 	return nil
+}
+
+func (bot *Bot) cmdDevStartRace(m *discordgo.Message, args []string, _ io.Writer) error {
+	if len(args) < 2 {
+		return util.ErrPublic("expected a shortcode")
+	}
+
+	return bot.back.StartDevRace(args[1], m.Author.ID)
 }
 
 func (bot *Bot) cmdDevTo(_ *discordgo.Message, args []string, _ io.Writer) error {
