@@ -267,17 +267,24 @@ func tplFuture(iface interface{}) bool {
 
 // nolint:gosec
 func tplGossipText(gossip oot.SpoilerLogGossip) template.HTML {
-	str := gossip.Text
+	str := strings.ReplaceAll(gossip.Text, "^", "\n")
+
+	r := strings.NewReplacer("^", "\n", "&", " ", "@", "Link")
+	str = r.Replace(str)
 
 	var i int
-	for strings.Contains(str, "#") {
-		str = strings.Replace(
-			str, "#",
-			fmt.Sprintf(`<span style="color: %s">`, gossipColorToCSSColor(gossip.Colors[i])),
-			1,
-		)
+	for ; strings.Contains(str, "#"); i++ {
+		if len(gossip.Colors) == 0 {
+			str = strings.Replace(str, "#", `<span style="font-weight: bold">`, 1)
+		} else {
+			str = strings.Replace(
+				str, "#",
+				fmt.Sprintf(`<span style="color: %s">`, gossipColorToCSSColor(gossip.Colors[i])),
+				1,
+			)
+		}
+
 		str = strings.Replace(str, "#", `</span>`, 1)
-		i++
 	}
 
 	return template.HTML(str)
