@@ -260,7 +260,7 @@ func (s *Server) Serve(wg *sync.WaitGroup, done <-chan struct{}) {
 }
 
 // response renders the given template with the given payload available in ".Payload".
-func (s *Server) response(
+func (s *Server) response( // nolint:funlen
 	w http.ResponseWriter,
 	r *http.Request,
 	code int, // HTTP return code to write
@@ -290,12 +290,16 @@ func (s *Server) response(
 		locale = iface.(string)
 	}
 
+	authenticatedPlayer := playerFromRequest(r)
+	isAdmin := authenticatedPlayer != nil && s.config.IsDiscordIDAdmin(authenticatedPlayer.DiscordID.String)
+
 	wrapped := struct {
 		Path                string
 		Locale              string
 		AvailableLocales    []string
 		Leagues             []back.League
 		AuthenticatedPlayer *back.Player
+		IsAdmin             bool
 		Payload             interface{}
 		Layout              string
 	}{
@@ -303,7 +307,8 @@ func (s *Server) response(
 		locale,
 		availableLocales,
 		leagues,
-		playerFromRequest(r),
+		authenticatedPlayer,
+		isAdmin,
 		payload,
 		template,
 	}

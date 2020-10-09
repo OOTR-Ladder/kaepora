@@ -2,70 +2,93 @@
 {{$page := .Layout}}
 
 {{if .Payload.MatchSessions}}
-{{range $k, $v := .Payload.MatchSessions}}
-{{if eq $page "schedule.html"}}
-<div class="column is-half">
-{{end}}
-<div class="box is-relative is-shadowless nextRace">
-    <div class="title has-text-dark nextRace--league">{{(index $.Payload.Leagues $v.LeagueID).Name}}</div>
-    <div class="subtitle has-text-dark is-size-6-mobile nextRace--schedule">{{$v.StartDate | datetime}}</div>
 
-    <!-- if joinable race -->
-    <div class="nextRace--status">
+{{- range $k, $v := .Payload.MatchSessions -}}
+    {{if eq $page "schedule.html"}}
+        <div class="column is-half">
+    {{end}}
+
+    {{ $makeClickable := false }}
+    {{if $v.IsInProgress }}
         {{if $.Payload.JoinedSession}}
-            {{if and (eq $.Payload.JoinedSession.ID $v.ID) $v.IsJoinable}}
+            {{$makeClickable = eq $.Payload.JoinedSession.ID $v.ID}}
+        {{end}}
+
+        {{if $.IsAdmin}}
+            {{$makeClickable = true}}
+        {{end}}
+    {{end}}
+
+    <div class="box is-relative is-shadowless nextRace">
+        {{if $makeClickable}}
+            <a href="{{uri "sessions" $v.ID.String}}">
+        {{end}}
+
+        <div class="title has-text-dark nextRace--league">{{(index $.Payload.Leagues $v.LeagueID).Name}}</div>
+        <div class="subtitle has-text-dark is-size-6-mobile nextRace--schedule">{{$v.StartDate | datetime}}</div>
+
+        <!-- if joinable race -->
+        <div class="nextRace--status">
+            {{if $.Payload.JoinedSession}}
+                {{if and (eq $.Payload.JoinedSession.ID $v.ID) $v.IsJoinable}}
+                    <form method="POST" action="{{uri "do"}}">
+                        <input type="submit" class="button is-small is-warning" value="{{t "Cancel"}}" />
+                        <input type="hidden" name="Redirect" value="{{$.Path}}" />
+                        <input type="hidden" name="Action" value="cancel" />
+                        <input type="hidden" name="MatchSessionID" value="{{$v.ID}}" />
+                    </form>
+                {{else}}
+                    {{matchSessionStatusTag $v.Status}}
+                {{end}}
+            {{else if and $.AuthenticatedPlayer $v.IsJoinable }}
                 <form method="POST" action="{{uri "do"}}">
-                    <input type="submit" class="button is-small is-warning" value="{{t "Cancel"}}" />
+                    <input type="submit" class="button is-primary" value="{{t "Join"}}" />
                     <input type="hidden" name="Redirect" value="{{$.Path}}" />
-                    <input type="hidden" name="Action" value="cancel" />
+                    <input type="hidden" name="Action" value="join" />
                     <input type="hidden" name="MatchSessionID" value="{{$v.ID}}" />
                 </form>
             {{else}}
                 {{matchSessionStatusTag $v.Status}}
             {{end}}
-        {{else if and $.AuthenticatedPlayer $v.IsJoinable }}
-            <form method="POST" action="{{uri "do"}}">
-                <input type="submit" class="button is-primary" value="{{t "Join"}}" />
-                <input type="hidden" name="Redirect" value="{{$.Path}}" />
-                <input type="hidden" name="Action" value="join" />
-                <input type="hidden" name="MatchSessionID" value="{{$v.ID}}" />
-            </form>
-        {{else}}
-            {{matchSessionStatusTag $v.Status}}
-        {{end}}
 
-        {{if and (future $v.StartDate) (gt (len $v.PlayerIDs) 0)}}
-        <span class="tag is-info is-light is-medium is-rounded is-hidden-mobile">{{t "Starts in %s" (until $v.StartDate "m")}}</span>
-        {{end}}
-    </div>
-
-    <div class="nextRace--contextual">
-        <!-- not joinable / no players -->
-        {{if and (future $v.StartDate) (eq (len $v.PlayerIDs) 0)}}
-        <div class="nextRace--contextual--countdown">
-            <i class="ri-time-line"></i>
-            <div>
-                {{t "in"}} <span>{{(until $v.StartDate "m")}}</span>
-            </div>
+            {{if and (future $v.StartDate) (gt (len $v.PlayerIDs) 0)}}
+            <span class="tag is-info is-light is-medium is-rounded is-hidden-mobile">{{t "Starts in %s" (until $v.StartDate "m")}}</span>
+            {{end}}
         </div>
-        {{end}}
 
-        <!-- joinable or w/ players -->
-        {{if gt (len $v.PlayerIDs) 0}}
-        <div class="nextRace--contextual--players">
-            <i class="ri-group-fill"></i>
-            <div>
-                <span class="nbPlayers">{{len $v.PlayerIDs}}</span>
-                {{tn "player" "players" (len $v.PlayerIDs)}}
+        <div class="nextRace--contextual">
+            <!-- not joinable / no players -->
+            {{if and (future $v.StartDate) (eq (len $v.PlayerIDs) 0)}}
+            <div class="nextRace--contextual--countdown">
+                <i class="ri-time-line"></i>
+                <div>
+                    {{t "in"}} <span>{{(until $v.StartDate "m")}}</span>
+                </div>
             </div>
+            {{end}}
+
+            <!-- joinable or w/ players -->
+            {{if gt (len $v.PlayerIDs) 0}}
+            <div class="nextRace--contextual--players">
+                <i class="ri-group-fill"></i>
+                <div>
+                    <span class="nbPlayers">{{len $v.PlayerIDs}}</span>
+                    {{tn "player" "players" (len $v.PlayerIDs)}}
+                </div>
+            </div>
+            {{end}}
         </div>
+
+        {{if $makeClickable}}
+            </a>
         {{end}}
-    </div>
-</div><!-- box -->
-{{if eq $page "schedule.html"}}
-</div>
-{{end}}
-{{end}}
+    </div><!-- box -->
+
+    {{if eq $page "schedule.html"}}
+        </div>
+    {{end}}
+
+{{- end -}}<!-- range -->
 
 {{else}}
 <article class="message is-danger">

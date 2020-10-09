@@ -48,6 +48,10 @@ func (s *MatchSession) IsJoinable() bool {
 	return s.Status == MatchSessionStatusJoinable
 }
 
+func (s *MatchSession) IsInProgress() bool {
+	return s.Status == MatchSessionStatusInProgress
+}
+
 // GetPlayerIDs returns the list of players who joined the session and should
 // be matchmaked.
 func (s *MatchSession) GetPlayerIDs() []uuid.UUID {
