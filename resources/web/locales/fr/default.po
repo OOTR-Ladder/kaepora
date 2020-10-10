@@ -45,19 +45,19 @@ msgstr "forfait (%s)"
 msgid "The Legend of Zelda: Ocarina of Time Randomizer racing leagues."
 msgstr "Compétitions de Randomizer sur The Legend of Zelda: Ocarina of Time."
 
-#: resources/web/templates/includes/current_races.html:14
+#: resources/web/templates/includes/current_races.html:18
 msgid "Cancel"
 msgstr "Annuler"
 
-#: resources/web/templates/includes/current_races.html:24
+#: resources/web/templates/includes/current_races.html:28
 msgid "Join"
 msgstr "S'enregistrer"
 
-#: resources/web/templates/includes/current_races.html:34
+#: resources/web/templates/includes/current_races.html:38
 msgid "Starts in %s"
 msgstr "Commence dans %s"
 
-#: resources/web/templates/includes/current_races.html:66
+#: resources/web/templates/includes/current_races.html:73
 msgid "There is no scheduled race right now."
 msgstr "Il n'y a pas de course programmée pour l'instant."
 
@@ -429,27 +429,19 @@ msgstr "Aucun match n'a encore été joué"
 msgid "Session recap"
 msgstr "Récapitulatif de session"
 
-#: resources/web/templates/layouts/one_session.html:10
-msgid "Race started at %s"
-msgstr "Session du %s"
-
 #: resources/web/templates/layouts/schedule.html:9
 msgid "Schedule"
 msgstr "Planning"
 
 #: resources/web/templates/layouts/schedule.html:12
-msgid "Upcoming race"
-msgstr "Course à venir"
+msgid "Upcoming races"
+msgstr "Courses à venir"
 
 #: resources/web/templates/layouts/schedule.html:14
-msgid "Current race"
-msgstr "Course en cours"
+msgid "Current races"
+msgstr "Courses en cours"
 
-#: resources/web/templates/layouts/schedule.html:17
-msgid "No current races yet"
-msgstr "Aucune course en cours pour le moment"
-
-#: resources/web/templates/layouts/schedule.html:51
+#: resources/web/templates/layouts/schedule.html:53
 msgid "in"
 msgstr "dans"
 

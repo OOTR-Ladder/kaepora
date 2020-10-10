@@ -9,12 +9,10 @@
                 <h1 class="PageTitle">{{t .Locale "Schedule"}}</h1>
                 {{if .Payload.MatchSessions}}
                     {{if future (index .Payload.MatchSessions 0).StartDate}}
-                        <div class="heading">{{t .Locale "Upcoming race"}}</div>
+                        <div class="heading">{{t .Locale "Upcoming races"}}</div>
                     {{else}}
-                        <div class="heading">{{t .Locale "Current race"}}</div>
+                        <div class="heading">{{t .Locale "Current races"}}</div>
                     {{end}}
-                {{else}}
-                    <div class="heading">{{t .Locale "No current races yet"}}</div>
                 {{end}}
             </div>
         </div>
@@ -28,7 +26,7 @@
         <section class="section ConfirmedRaces">
             <div class="container">
                 <div class="ConfirmedRaces--block">
-                    <div class="columns is-centered is-multiline">          
+                    <div class="columns is-centered is-multiline">
                         {{- template "current_races" . -}}
                     </div>
                 </div>
