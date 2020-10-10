@@ -8,7 +8,11 @@
             <div class="container">
                 <h1 class="PageTitle">{{t .Locale "Schedule"}}</h1>
                 {{if .Payload.MatchSessions}}
-                    <div class="heading">{{t .Locale "Current races"}}</div>
+                    {{if future (index .Payload.MatchSessions 0).StartDate}}
+                        <div class="heading">{{t .Locale "Upcoming races"}}</div>
+                    {{else}}
+                        <div class="heading">{{t .Locale "Current races"}}</div>
+                    {{end}}
                 {{end}}
             </div>
         </div>
@@ -23,9 +27,7 @@
             <div class="container">
                 <div class="ConfirmedRaces--block">
                     <div class="columns is-centered is-multiline">
-                        <div class="column is-half">
-                            {{- template "current_races" . -}}
-                        </div>
+                        {{- template "current_races" . -}}
                     </div>
                 </div>
             </div>

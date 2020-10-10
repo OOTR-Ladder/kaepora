@@ -1,7 +1,11 @@
 {{- define "current_races" -}}
+{{$page := .Layout}}
 
 {{if .Payload.MatchSessions}}
 {{range $k, $v := .Payload.MatchSessions}}
+{{if eq $page "schedule.html"}}
+<div class="column is-half">
+{{end}}
 <div class="box is-relative is-shadowless nextRace">
     <div class="title has-text-dark nextRace--league">{{(index $.Payload.Leagues $v.LeagueID).Name}}</div>
     <div class="subtitle has-text-dark is-size-6-mobile nextRace--schedule">{{$v.StartDate | datetime}}</div>
@@ -58,6 +62,9 @@
         {{end}}
     </div>
 </div><!-- box -->
+{{if eq $page "schedule.html"}}
+</div>
+{{end}}
 {{end}}
 
 {{else}}
