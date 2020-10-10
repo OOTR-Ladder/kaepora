@@ -6,6 +6,8 @@ import (
 	"kaepora/internal/generator/factory"
 	"kaepora/internal/generator/oot"
 	"kaepora/internal/util"
+	"log"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 	"gopkg.in/guregu/null.v4"
@@ -79,6 +81,50 @@ func (b *Back) LoadFixtures() error {
 			if err := v.insert(tx); err != nil {
 				return err
 			}
+		}
+
+		return nil
+	})
+}
+
+// StartDevRace creates a in-progress race with random players plus the one with the given Discord ID.
+func (b *Back) StartDevRace(shortcode, userDiscordID string) error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		league, err := getLeagueByShortCode(tx, shortcode)
+		if err != nil {
+			return err
+		}
+
+		session := NewMatchSession(league.ID, time.Now().Add(-45*time.Minute))
+		session.Status = MatchSessionStatusPreparing
+		var players []Player
+		if err := tx.Select(&players, `SELECT * FROM Player WHERE DiscordID IS NULL ORDER BY RANDOM() LIMIT 11`); err != nil {
+			return err
+		}
+		player, err := getPlayerByDiscordID(tx, userDiscordID)
+		if err != nil {
+			return err
+		}
+		players = append(players, player)
+
+		for k := range players {
+			log.Printf("debug: adding %s to race", players[k].Name)
+			session.AddPlayerID(players[k].ID.UUID())
+		}
+
+		if err := session.insert(tx); err != nil {
+			return err
+		}
+
+		if err := b.matchMakeSession(tx, session); err != nil {
+			return err
+		}
+
+		if err := session.start(tx); err != nil {
+			return err
+		}
+		if err := session.update(tx); err != nil {
+			return err
 		}
 
 		return nil
