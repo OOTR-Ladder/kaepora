@@ -53,9 +53,19 @@
         "Title": "Médaillions pour le Pont Arc-en-Ciel",
         "Values": [
             {
+                "Value": 2,
+                "Title": "2",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de deux médaillions."
+            },
+            {
                 "Value": 3,
                 "Title": "3",
                 "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de trois médaillions."
+            },
+            {
+                "Value": 6,
+                "Title": "6",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de tous les médaillions."
             }
         ]
     },

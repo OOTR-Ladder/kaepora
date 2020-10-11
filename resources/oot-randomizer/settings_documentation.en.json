@@ -73,6 +73,11 @@
         "Title": "Rainbow Bridge medallions requirement",
         "Values": [
             {
+                "Value": 2,
+                "Title": "2",
+                "Description": "The bridge to Ganon's Castle appears after any two medallions are obtained."
+            },
+            {
                 "Value": 3,
                 "Title": "3",
                 "Description": "The bridge to Ganon's Castle appears after any three medallions are obtained."
