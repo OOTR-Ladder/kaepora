@@ -95,7 +95,12 @@
             {
                 "Value": true,
                 "Title": "yes",
-                "Description": "All masks are already sold, both the Skull Mask and the Mask of Truth are available from the start."
+                "Description": "All masks are already sold, both the Skull Mask and the Mask of Truth are available after you give Zelda's Letter to the guard."
+            },
+            {
+                "Value": false,
+                "Title": "no",
+                "Description": "The mask quest is not complete, giving Zelda's Letter to the guard opens the shop."
             }
         ]
     },
