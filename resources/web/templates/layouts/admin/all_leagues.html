@@ -1,0 +1,40 @@
+{{define "content"}}
+<div class="admin">
+    <section class="hero is-dark homeHeader">
+        {{- template "menu" . -}}
+
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">{{t .Locale "Leagues administration"}}</h1>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>ShortCode</th>
+                    <th>Generator</th>
+                    <th>Settings</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {{- range $v := .Payload.Leagues -}}
+                <tr>
+                    <td><a href="{{uri $.Locale "admin" "leagues" $v.ID.String}}"><code>{{ $v.ID }}</code></a></td>
+                    <td>{{ $v.Name }}</td>
+                    <td>{{ $v.ShortCode }}</td>
+                    <td>{{ $v.Generator }}</td>
+                    <td>{{ $v.Settings }}</td>
+                </tr>
+                {{- end -}}
+
+            </tbody>
+        </table>
+    </section>
+</div>
+{{end}}

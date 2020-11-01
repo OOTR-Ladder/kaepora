@@ -5,6 +5,7 @@ import (
 	"crypto/sha512"
 	"encoding/base64"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"io"
@@ -23,13 +24,34 @@ import (
 	"github.com/russross/blackfriday/v2"
 )
 
+func multiGlob(patterns ...string) ([]string, error) {
+	var ret []string // nolint:prealloc
+
+	for _, v := range patterns {
+		matches, err := filepath.Glob(v)
+		if err != nil {
+			return nil, err
+		}
+
+		ret = append(ret, matches...)
+	}
+
+	return ret, nil
+}
+
 func (s *Server) loadTemplates(baseDir string) (map[string]*template.Template, error) {
-	layouts, err := filepath.Glob(filepath.Join(baseDir, "templates/layouts/*.html"))
+	layouts, err := multiGlob(
+		filepath.Join(baseDir, "templates/layouts/*.html"),
+		filepath.Join(baseDir, "templates/layouts/*/*.html"),
+	)
 	if err != nil {
 		return nil, err
 	}
 
-	includes, err := filepath.Glob(filepath.Join(baseDir, "templates/includes/*.html"))
+	includes, err := multiGlob(
+		filepath.Join(baseDir, "templates/includes/*.html"),
+		filepath.Join(baseDir, "templates/includes/*/*.html"),
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -86,6 +108,7 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 		"matchSeedURL":          s.tplMatchSeedURL,
 		"matchSessionStatusTag": s.tplMatchSessionStatusTag,
 
+		"isAdmin":        s.isPlayerAdmin,
 		"alternate":      s.tplAlternate,
 		"assetIntegrity": tplAssetIntegrity(baseDir),
 		"gossipText":     tplGossipText,
@@ -97,6 +120,7 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 		"rawPercentage":  tplRawPercentage,
 		"ranking":        tplRanking,
 		"until":          tplUntil,
+		"json":           tplJSON,
 		"unsafe": func(v string) template.HTML {
 			return template.HTML(v) // nolint:gosec
 		},
@@ -368,4 +392,14 @@ func (s *Server) tplAlternate(path, lang string) string {
 	alt := strings.Join(parts, "/")
 
 	return fmt.Sprintf("%s://%s/%s", s.config.Scheme(), s.config.Domain, alt)
+}
+
+func tplJSON(v interface{}) string {
+	ret, err := json.MarshalIndent(v, "", "    ")
+	if err != nil {
+		log.Printf("erorr: unable to unmarshal JSON: %s", err)
+		return "{}"
+	}
+
+	return string(ret)
 }

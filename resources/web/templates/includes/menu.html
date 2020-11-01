@@ -18,7 +18,7 @@
         <nav class="navContainer--navbar">
             <ul class="ladderNav">
                 <li class="ladderNav--item__has-sub">
-                    <a href="#" tabindex="1">
+                    <a href="#">
                         <i class="ladderNav--icon__flag"></i>
                         {{t .Locale "Races"}}
                     </a>
@@ -33,7 +33,7 @@
                     </ul>
                 </li>
                 <li class="ladderNav--item__has-sub">
-                    <a href="#" tabindex="1">
+                    <a href="#">
                         <i class="ladderNav--icon__leaderboard"></i>
                         {{t .Locale "Rankings"}}
                     </a>
@@ -47,7 +47,7 @@
                     </ul>
                 </li>
                 <li class="ladderNav--item__has-sub">
-                    <a href="#" tabindex="1">
+                    <a href="#">
                         <i class="ladderNav--icon__stats"></i>
                         {{t .Locale "Stats"}}
                     </a>
@@ -61,7 +61,7 @@
                     </ul>
                 </li>
                 <li class="ladderNav--item__has-sub">
-                    <a href="#" tabindex="1">
+                    <a href="#">
                         <i class="ladderNav--icon__doc"></i>
                         {{t .Locale "Resources"}}
                     </a>
@@ -81,9 +81,25 @@
                         </li>
                     </ul>
                 </li>
+
+                {{if isAdmin .AuthenticatedPlayer  }}
+                <li class="ladderNav--item__has-sub">
+                    <a href="#">
+                        <i class="ladderNav--icon__gear"></i>
+                        {{t .Locale "Admin"}}
+                    </a>
+
+                    <ul class="ladderNav--sub">
+                        <li class="ladderNav--item">
+                            <a href="{{uri .Locale "admin" "leagues"}}">{{t .Locale "Leagues"}}</a>
+                        </li>
+                    </ul>
+                </li>
+                {{end}}
+
                 {{if .AuthenticatedPlayer }}
                     <li class="ladderNav--item__has-sub">
-                        <a href="#" tabindex="1">
+                        <a href="#">
                             <i class="ladderNav--icon__account"></i>
                             {{t .Locale "Account"}}
                         </a>

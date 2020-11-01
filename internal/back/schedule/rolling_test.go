@@ -17,10 +17,13 @@ func TestRollingScheduler(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	s := schedule.New(schedule.Config{
+	s, err := schedule.New(schedule.Config{
 		Type:    schedule.TypeRolling,
 		Payload: conf,
 	})
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	testScheduler(t, s, []scheduleTestData{
 		{

@@ -134,6 +134,11 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 	}
 
 	r.With(s.langDetect).Route("/{locale}", func(r chi.Router) {
+		r.With(s.ensureAdmin).Route("/admin", func(r chi.Router) {
+			r.Get("/leagues", s.adminAllLeagues)
+			r.HandleFunc("/leagues/{id}", s.adminOneLeague)
+		})
+
 		r.Get("/rules", s.markdownContent(baseDir, "rules.md"))
 		r.Get("/documentation", s.markdownContent(baseDir, "documentation.md"))
 		r.Get("/shuffled-settings", s.shuffledSettings)
@@ -182,6 +187,17 @@ func chooseLocale(candidates ...string) string {
 	return base.String()
 }
 
+func (s *Server) ensureAdmin(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !s.isAuthenticatedUserAdmin(r) {
+			s.forbidden(w, r)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 func (s *Server) langDetect(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		param := chi.URLParam(r, "locale")
@@ -205,6 +221,10 @@ func (s *Server) langDetect(next http.Handler) http.Handler {
 
 func (s *Server) notFound(w http.ResponseWriter, r *http.Request) {
 	s.error(w, r, errors.New(http.StatusText(http.StatusNotFound)), http.StatusNotFound)
+}
+
+func (s *Server) forbidden(w http.ResponseWriter, r *http.Request) {
+	s.error(w, r, errors.New(http.StatusText(http.StatusForbidden)), http.StatusForbidden)
 }
 
 // getResourcesDir returns the absolute path to the web server static resources.

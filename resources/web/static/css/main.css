@@ -251,6 +251,11 @@ section[class*="SiteHeader--"] .HeaderIcon--icon::after {
     mask: url('../svg/doc.svg') top left / cover;
     -webkit-mask: url('../svg/doc.svg') top left / cover;
 }
+.ladderNav > *[class*="ladderNav--item"] > a > i.ladderNav--icon__gear::before,
+.ladderNav > *[class*="ladderNav--item"] > div > i.ladderNav--icon__gear::before {
+    mask: url('../svg/gear.svg') top left / cover;
+    -webkit-mask: url('../svg/gear.svg') top left / cover;
+}
 .ladderNav > *[class*="ladderNav--item"] > a > i.ladderNav--icon__account::before,
 .ladderNav > *[class*="ladderNav--item"] > div > i.ladderNav--icon__account::before {
     mask: url('../svg/user.svg') top left / cover;
@@ -281,7 +286,7 @@ section[class*="SiteHeader--"] .HeaderIcon--icon::after {
         clip-path: circle(0% at 50% 100%);
     }
     .ladderNav > .ladderNav--item__has-sub:focus > a + .ladderNav--sub,
-    .ladderNav > .ladderNav--item__has-suba a:focus-within + .ladderNav--sub,
+    .ladderNav > .ladderNav--item__has-sub a:focus-within + .ladderNav--sub,
     .ladderNav > .ladderNav--item__has-sub a:focus + .ladderNav--sub { clip-path: circle(100% at 50% 100%); }
     .ladderNav > .ladderNav--item__has-sub .ladderNav--sub > *[class*="ladderNav--item"] > a { line-height: 4; }
 }

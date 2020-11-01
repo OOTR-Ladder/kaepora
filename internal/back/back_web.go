@@ -118,6 +118,10 @@ func (b *Back) GetLeague(id util.UUIDAsBlob) (ret League, _ error) {
 	})
 }
 
+func (b *Back) UpdateLeague(l League) error {
+	return b.transaction(l.update)
+}
+
 // GetMatchSessions returns sessions in a timeframe that have the given
 // statuses ordered by the given SQL clause.
 // The leagues the sessions belong to are returned indexed by their ID.
@@ -429,4 +433,10 @@ func (b *Back) GetPlayerMatches(playerID util.UUIDAsBlob) ([]Match, map[util.UUI
 	}
 
 	return matches, players, nil
+}
+
+func (b *Back) DeleteLeague(id util.UUIDAsBlob) error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		return deleteLeague(tx, id)
+	})
 }

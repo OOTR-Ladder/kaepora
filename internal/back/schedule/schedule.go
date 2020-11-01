@@ -2,7 +2,7 @@ package schedule
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"time"
 )
 
@@ -16,24 +16,24 @@ type Scheduler interface {
 	NextBetween(start, end time.Time) time.Time
 }
 
-func New(conf Config) Scheduler { // TODO, error instead of panic
+func New(conf Config) (Scheduler, error) {
 	switch conf.Type {
 	case TypeDayOfWeek:
 		s := NewDayOfWeekScheduler()
 		if err := json.Unmarshal(conf.Payload, &s); err != nil {
-			panic(err)
+			return nil, err
 		}
-		return &s
+		return &s, nil
+
 	case TypeRolling:
 		s := NewRollingScheduler()
 		if err := json.Unmarshal(conf.Payload, &s); err != nil {
-			panic(err)
+			return nil, err
 		}
-		return &s
+		return &s, nil
 	}
 
-	log.Printf("warning: invalid scheduler type '%s'", conf.Type)
-	return &VoidScheduler{}
+	return &VoidScheduler{}, fmt.Errorf("invalid scheduler type '%s'", conf.Type)
 }
 
 type VoidScheduler struct{}

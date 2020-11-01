@@ -1,0 +1,89 @@
+{{define "content"}}
+<div class="admin">
+    <section class="hero is-dark homeHeader">
+        {{- template "menu" . -}}
+
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">{{t .Locale "League administration"}}</h1>
+                <h2 class="subtitle">{{.Payload.League.Name}}</h1>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+
+            {{if .Payload.Saved }}
+            <div class="message is-success">
+                <div class="message-body">
+                    <p>{{t .Locale "Saved."}}</p>
+                </div>
+            </div>
+            {{ end }}
+
+            {{if .Payload.Error }}
+            <div class="message is-danger">
+                <div class="message-body">
+                    <p>{{ .Payload.Error }}</p>
+                </div>
+            </div>
+            {{ end }}
+
+            <form method="POST" action="{{uri .Locale "admin" "leagues" .Payload.League.ID.String}}">
+                <div class="field">
+                    <label class="label" for="form-ID">ID</label>
+                    <div class="control">
+                        <input disabled readonly name="ID" id="form-ID" class="input is-family-monospace" type="text" value="{{.Payload.League.ID.String}}">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="form-Name">Name</label>
+                    <div class="control">
+                        <input required name="Name" id="form-Name" class="input" type="text" value="{{.Payload.League.Name}}">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="form-ShortCode">ShortCode</label>
+                    <div class="control">
+                        <input name="ShortCode" required id="form-ShortCode" class="input" type="text" value="{{.Payload.League.ShortCode}}">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="form-Generator">Generator</label>
+                    <div class="control">
+                        <input name="Generator" id="form-Generator" class="input" type="text" value="{{.Payload.League.Generator}}">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="form-Settings">Settings</label>
+                    <div class="control">
+                        <input name="Settings" id="form-Settings" class="input" type="text" value="{{.Payload.League.Settings}}">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="form-Schedule">Schedule</label>
+                    <div class="control">
+                        <textarea rows="15" name="Schedule" id="form-Schedule" class="is-family-monospace textarea">{{.Payload.League.Schedule | json}}</textarea>
+                    </div>
+                </div>
+
+                <div class="field is-grouped">
+                    <div class="control">
+                        <input type="submit" name="action-save" class="button is-link" value="{{t .Locale "Save"}}">
+                    </div>
+                    <div class="control">
+                        <input type="submit" name="action-delete" class="button is-danger" value="{{t .Locale "Delete"}}">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </section>
+</div>
+{{end}}

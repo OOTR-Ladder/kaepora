@@ -77,17 +77,20 @@ func withPlayer(ctx context.Context, player *back.Player) context.Context {
 }
 
 func (s *Server) isAuthenticatedUserAdmin(r *http.Request) bool {
-	player := playerFromRequest(r)
-	if player == nil {
+	return s.isPlayerAdmin(playerFromRequest(r))
+}
+
+func (s *Server) isPlayerAdmin(p *back.Player) bool {
+	if p == nil {
 		return false
 	}
 
 	// Don't allow access to spoiler logs and stuff if the user is in a race.
-	if !s.config.DevMode && s.back.PlayerIsInSession(player.ID) {
+	if !s.config.DevMode && s.back.PlayerIsInSession(p.ID) {
 		return false
 	}
 
-	return s.config.IsDiscordIDAdmin(player.DiscordID.String)
+	return s.config.IsDiscordIDAdmin(p.DiscordID.String)
 }
 
 func (s *Server) authDiscord(w http.ResponseWriter, r *http.Request) {
