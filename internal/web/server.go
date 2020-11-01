@@ -136,7 +136,7 @@ func (s *Server) setupRouter(baseDir string) *chi.Mux {
 	r.With(s.langDetect).Route("/{locale}", func(r chi.Router) {
 		r.With(s.ensureAdmin).Route("/admin", func(r chi.Router) {
 			r.Get("/leagues", s.adminAllLeagues)
-			r.Get("/leagues/{id}", s.adminOneLeague)
+			r.HandleFunc("/leagues/{id}", s.adminOneLeague)
 		})
 
 		r.Get("/rules", s.markdownContent(baseDir, "rules.md"))

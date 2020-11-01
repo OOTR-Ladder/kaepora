@@ -5,6 +5,7 @@ import (
 	"crypto/sha512"
 	"encoding/base64"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"io"
@@ -119,6 +120,7 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 		"rawPercentage":  tplRawPercentage,
 		"ranking":        tplRanking,
 		"until":          tplUntil,
+		"json":           tplJSON,
 		"unsafe": func(v string) template.HTML {
 			return template.HTML(v) // nolint:gosec
 		},
@@ -390,4 +392,14 @@ func (s *Server) tplAlternate(path, lang string) string {
 	alt := strings.Join(parts, "/")
 
 	return fmt.Sprintf("%s://%s/%s", s.config.Scheme(), s.config.Domain, alt)
+}
+
+func tplJSON(v interface{}) string {
+	ret, err := json.MarshalIndent(v, "", "    ")
+	if err != nil {
+		log.Printf("erorr: unable to unmarshal JSON: %s", err)
+		return "{}"
+	}
+
+	return string(ret)
 }

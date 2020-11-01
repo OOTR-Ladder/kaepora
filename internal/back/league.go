@@ -3,6 +3,7 @@ package back
 import (
 	"kaepora/internal/back/schedule"
 	"kaepora/internal/util"
+	"log"
 	"time"
 
 	"github.com/Masterminds/squirrel"
@@ -40,7 +41,12 @@ func NewLeague(name string, shortCode string, gameID util.UUIDAsBlob, generator,
 }
 
 func (l *League) Scheduler() schedule.Scheduler {
-	return schedule.New(l.Schedule)
+	s, err := schedule.New(l.Schedule)
+	if err != nil { // HACK accommodate tests
+		log.Printf("warning: %s", err)
+	}
+
+	return s
 }
 
 func (l *League) insert(tx *sqlx.Tx) error {

@@ -34,7 +34,7 @@ func (f Factory) NewGenerator(id string) (generator.Generator, error) {
 	case "test":
 		return generator.NewTest(), nil
 	default:
-		return nil, fmt.Errorf("unknown generator: %s", id)
+		return nil, fmt.Errorf("unknown generator: %s", name)
 	}
 }
 
