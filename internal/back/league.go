@@ -129,3 +129,23 @@ func getLeagueByID(tx *sqlx.Tx, id util.UUIDAsBlob) (League, error) {
 
 	return ret, nil
 }
+
+func deleteLeague(tx *sqlx.Tx, id util.UUIDAsBlob) error {
+	queries := []string{
+		"DELETE FROM PlayerRatingHistory WHERE LeagueID = ?",
+		"DELETE FROM PlayerRating WHERE LeagueID = ?",
+		"DELETE FROM MatchEntry WHERE MatchID IN (" +
+			"SELECT Match.ID FROM Match WHERE Match.LeagueID = ?)",
+		"DELETE FROM Match WHERE LeagueID = ?",
+		"DELETE FROM MatchSession WHERE LeagueID = ?",
+		"DELETE FROM League WHERE ID = ?",
+	}
+
+	for _, v := range queries {
+		if _, err := tx.Exec(v, id); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}

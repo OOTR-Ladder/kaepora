@@ -434,3 +434,9 @@ func (b *Back) GetPlayerMatches(playerID util.UUIDAsBlob) ([]Match, map[util.UUI
 
 	return matches, players, nil
 }
+
+func (b *Back) DeleteLeague(id util.UUIDAsBlob) error {
+	return b.transaction(func(tx *sqlx.Tx) error {
+		return deleteLeague(tx, id)
+	})
+}

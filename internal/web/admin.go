@@ -42,13 +42,26 @@ func (s *Server) adminOneLeague(w http.ResponseWriter, r *http.Request) {
 		saved  bool
 		errStr string
 	)
+
 	if r.Method == "POST" {
-		var err error
-		league, err = s.adminSaveOneLeague(r, league)
-		if err != nil {
-			errStr = err.Error()
-		} else {
-			saved = true
+		switch {
+		case r.PostFormValue("action-save") != "":
+			var err error
+			league, err = s.adminSaveOneLeague(r, league)
+			if err != nil {
+				errStr = err.Error()
+			} else {
+				saved = true
+			}
+		case r.PostFormValue("action-delete") != "":
+			if err := s.back.DeleteLeague(id); err != nil {
+				s.error(w, r, err, http.StatusInternalServerError)
+				return
+			}
+
+			locale := r.Context().Value(ctxKeyLocale).(string)
+			http.Redirect(w, r, "/"+locale+"/admin/leagues", http.StatusFound)
+			return
 		}
 	}
 

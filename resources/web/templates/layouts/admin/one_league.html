@@ -73,8 +73,13 @@
                     </div>
                 </div>
 
-                <div class="control">
-                    <button class="button is-link">{{t .Locale "Save"}}</button>
+                <div class="field is-grouped">
+                    <div class="control">
+                        <input type="submit" name="action-save" class="button is-link" value="{{t .Locale "Save"}}">
+                    </div>
+                    <div class="control">
+                        <input type="submit" name="action-delete" class="button is-danger" value="{{t .Locale "Delete"}}">
+                    </div>
                 </div>
 
             </form>
