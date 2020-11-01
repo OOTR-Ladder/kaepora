@@ -1,0 +1,19 @@
+{{define "content"}}
+<div class="admin">
+    <section class="hero is-dark homeHeader">
+        {{- template "menu" . -}}
+
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">{{t .Locale "League administration"}}</h1>
+                <h2 class="subtitle">{{.Payload.League.Name}}</h1>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+        </div>
+    </section>
+</div>
+{{end}}
