@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/csv"
+	"errors"
 	"flag"
 	"fmt"
 	"kaepora/internal/back"
@@ -34,7 +35,7 @@ func main() {
 		fmt.Fprint(os.Stdout, help())
 		return
 	case "settings":
-		if err := generateSettingsStats(); err != nil {
+		if err := generateSettingsStats(flag.Arg(1)); err != nil {
 			log.Fatal(err)
 		}
 		return
@@ -81,10 +82,10 @@ COMMANDS
     fixtures    create default data for quick testing during development
     help        display this help
     serve       start the Discord bot
-    settings    output settings randomizer stats
     version     display the current version
 
-    rerank SHORTCODE  recompute all rankings in a league
+    rerank SHORTCODE   recompute all rankings in a league
+    settings FILENAME  output settings randomizer stats
 `,
 		os.Args[0],
 	)
@@ -121,13 +122,17 @@ func serve(b *back.Back, conf *config.Config) error {
 	return nil
 }
 
-func generateSettingsStats() error {
+func generateSettingsStats(path string) error {
+	if path == "" {
+		return errors.New("you must specify a shuffled JSON configuration file name")
+	}
+
 	baseDir, err := oot.GetBaseDir()
 	if err != nil {
 		return err
 	}
 
-	s, err := settings.Load(filepath.Join(baseDir, "debug.json"))
+	s, err := settings.Load(filepath.Join(baseDir, path))
 	if err != nil {
 		return err
 	}

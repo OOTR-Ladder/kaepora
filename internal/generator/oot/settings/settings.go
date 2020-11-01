@@ -3,7 +3,6 @@ package settings
 import (
 	"encoding/json"
 	"hash/fnv"
-	"log"
 	"math/rand"
 	"os"
 	"sort"
@@ -129,13 +128,6 @@ func (s Settings) Shuffle(seedStr string, costMax int) map[string]interface{} { 
 
 		tolerance = iterations / 100
 		iterations++
-	}
-
-	if iterations >= maxIterations {
-		log.Printf(
-			"warning: reached max %d iterations (%d tolerance), using a total cost of %d instead of reaching %d  ",
-			maxIterations, tolerance, costSum, costMax,
-		)
 	}
 
 	return ret
