@@ -14,28 +14,28 @@
     <div class="nextRace--status">
         {{if $.Payload.JoinedSession}}
             {{if and (eq $.Payload.JoinedSession.ID $v.ID) $v.IsJoinable}}
-                <form method="POST" action="{{uri $.Locale "do"}}">
-                    <input type="submit" class="button is-small is-warning" value="{{t $.Locale "Cancel"}}" />
+                <form method="POST" action="{{uri "do"}}">
+                    <input type="submit" class="button is-small is-warning" value="{{t "Cancel"}}" />
                     <input type="hidden" name="Redirect" value="{{$.Path}}" />
                     <input type="hidden" name="Action" value="cancel" />
                     <input type="hidden" name="MatchSessionID" value="{{$v.ID}}" />
                 </form>
             {{else}}
-                {{matchSessionStatusTag $.Locale $v.Status}}
+                {{matchSessionStatusTag $v.Status}}
             {{end}}
         {{else if and $.AuthenticatedPlayer $v.IsJoinable }}
-            <form method="POST" action="{{uri $.Locale "do"}}">
-                <input type="submit" class="button is-primary" value="{{t $.Locale "Join"}}" />
+            <form method="POST" action="{{uri "do"}}">
+                <input type="submit" class="button is-primary" value="{{t "Join"}}" />
                 <input type="hidden" name="Redirect" value="{{$.Path}}" />
                 <input type="hidden" name="Action" value="join" />
                 <input type="hidden" name="MatchSessionID" value="{{$v.ID}}" />
             </form>
         {{else}}
-            {{matchSessionStatusTag $.Locale $v.Status}}
+            {{matchSessionStatusTag $v.Status}}
         {{end}}
 
         {{if and (future $v.StartDate) (gt (len $v.PlayerIDs) 0)}}
-        <span class="tag is-info is-light is-medium is-rounded is-hidden-mobile">{{t $.Locale "Starts in %s" (until $v.StartDate "m")}}</span>
+        <span class="tag is-info is-light is-medium is-rounded is-hidden-mobile">{{t "Starts in %s" (until $v.StartDate "m")}}</span>
         {{end}}
     </div>
 
@@ -45,7 +45,7 @@
         <div class="nextRace--contextual--countdown">
             <i class="ri-time-line"></i>
             <div>
-                {{t $.Locale "in"}} <span>{{(until $v.StartDate "m")}}</span>
+                {{t "in"}} <span>{{(until $v.StartDate "m")}}</span>
             </div>
         </div>
         {{end}}
@@ -56,7 +56,7 @@
             <i class="ri-group-fill"></i>
             <div>
                 <span class="nbPlayers">{{len $v.PlayerIDs}}</span>
-                {{tn $.Locale "player" "players" (len $v.PlayerIDs)}}
+                {{tn "player" "players" (len $v.PlayerIDs)}}
             </div>
         </div>
         {{end}}
@@ -70,7 +70,7 @@
 {{else}}
 <article class="message is-danger">
     <div class="message-body">
-        {{t .Locale "There is no scheduled race right now."}}
+        {{t "There is no scheduled race right now."}}
     </div>
 </article>
 {{end}}

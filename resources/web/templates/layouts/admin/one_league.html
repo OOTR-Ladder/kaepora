@@ -5,7 +5,7 @@
 
         <div class="hero-body">
             <div class="container">
-                <h1 class="title">{{t .Locale "League administration"}}</h1>
+                <h1 class="title">{{t "League administration"}}</h1>
                 <h2 class="subtitle">{{.Payload.League.Name}}</h1>
             </div>
         </div>
@@ -17,7 +17,7 @@
             {{if .Payload.Saved }}
             <div class="message is-success">
                 <div class="message-body">
-                    <p>{{t .Locale "Saved."}}</p>
+                    <p>{{t "Saved."}}</p>
                 </div>
             </div>
             {{ end }}
@@ -30,7 +30,7 @@
             </div>
             {{ end }}
 
-            <form method="POST" action="{{uri .Locale "admin" "leagues" .Payload.League.ID.String}}">
+            <form method="POST" action="{{uri "admin" "leagues" .Payload.League.ID.String}}">
                 <div class="field">
                     <label class="label" for="form-ID">ID</label>
                     <div class="control">
@@ -75,10 +75,10 @@
 
                 <div class="field is-grouped">
                     <div class="control">
-                        <input type="submit" name="action-save" class="button is-link" value="{{t .Locale "Save"}}">
+                        <input type="submit" name="action-save" class="button is-link" value="{{t "Save"}}">
                     </div>
                     <div class="control">
-                        <input type="submit" name="action-delete" class="button is-danger" value="{{t .Locale "Delete"}}">
+                        <input type="submit" name="action-delete" class="button is-danger" value="{{t "Delete"}}">
                     </div>
                 </div>
 

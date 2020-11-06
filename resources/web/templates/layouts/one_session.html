@@ -6,8 +6,8 @@
 
     <div class="hero-body">
         <div class="container">
-            <h1 class="PageTitle">{{t .Locale "Session recap"}}</h1>
-            <div class="heading">{{t .Locale "%s league" .Payload.League.Name}} - {{t .Locale "Race started at %s" (.Payload.MatchSession.StartDate | datetime) | unsafe}}</div>
+            <h1 class="PageTitle">{{t "Session recap"}}</h1>
+            <div class="heading">{{t "%s league" .Payload.League.Name}} - {{t "Race started at %s" (.Payload.MatchSession.StartDate | datetime) | unsafe}}</div>
         </div>
     </div>
 

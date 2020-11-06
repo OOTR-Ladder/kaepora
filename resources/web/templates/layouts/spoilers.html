@@ -8,7 +8,7 @@
         <div class="container">
             <div class="columns">
                 <div class="column">
-                <h1 class="title">{{tmd .Locale "Spoiler Log for seed `%s`" .Payload.Match.Seed}}</h1>
+                <h1 class="title">{{tmd "Spoiler Log for seed `%s`" .Payload.Match.Seed}}</h1>
                 <h2 class="subtitle">
                     <ul class="spoilers--hash">
                     {{- range $item := .Payload.Log.FileHash -}}
@@ -25,9 +25,9 @@
                 <div class="column is-one-fifth">
                     <p>
                         {{if not .Payload.Stale}}
-                        <a class="button is-info" href="{{.Payload.Match | matchSeedURL }}">{{t .Locale "Download / Patch"}}</a>
+                        <a class="button is-info" href="{{.Payload.Match | matchSeedURL }}">{{t "Download / Patch"}}</a>
                         {{end}}
-                        <a class="button is-info" href="?raw=1">{{t .Locale "Download raw JSON"}}</a>
+                        <a class="button is-info" href="?raw=1">{{t "Download raw JSON"}}</a>
                         <span class="tag">{{.Payload.Log.Version}}</span>
                     </p>
                 </div>
@@ -43,22 +43,22 @@
         <div class="tabs spoilers--tabs">
             <ul class="js-spoilers-tabs" role="tablist">
                 <li data-target=".js-spoilers-tab-spheres" class="is-active">
-                    <a href="#spheres" role="tab" aria-controls="spoilers-spheres">{{t .Locale "Spheres & Locations"}}</a>
+                    <a href="#spheres" role="tab" aria-controls="spoilers-spheres">{{t "Spheres & Locations"}}</a>
                 </li>
                 <li data-target=".js-spoilers-tab-woths">
-                    <a href="#woths" role="tab" aria-controls="spoilers-woths">{{t .Locale "WotH & barrens"}}</a>
+                    <a href="#woths" role="tab" aria-controls="spoilers-woths">{{t "WotH & barrens"}}</a>
                 </li>
                 <li data-target=".js-spoilers-tab-gossip">
-                    <a href="#gossip" role="tab" aria-controls="spoilers-gossip">{{t .Locale "Gossip stones"}}</a>
+                    <a href="#gossip" role="tab" aria-controls="spoilers-gossip">{{t "Gossip stones"}}</a>
                 </li>
                 {{- if len .Payload.Log.Entrances -}}
                 <li data-target=".js-spoilers-tab-entrances">
-                    <a href="#entrances" role="tab" aria-controls="spoilers-entrances">{{t .Locale "Entrances"}}</a>
+                    <a href="#entrances" role="tab" aria-controls="spoilers-entrances">{{t "Entrances"}}</a>
                 </li>
                 {{- end -}}
                 {{- if len .Payload.Settings -}}
                 <li data-target=".js-spoilers-tab-settings">
-                    <a href="#settings" role="tab" aria-controls="spoilers-settings">{{t .Locale "Settings"}}</a>
+                    <a href="#settings" role="tab" aria-controls="spoilers-settings">{{t "Settings"}}</a>
                 </li>
                 {{- end -}}
             </ul>
@@ -77,8 +77,8 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>{{t .Locale "Location"}}</th>
-                    <th>{{t .Locale "Gossip"}}</th>
+                    <th>{{t "Location"}}</th>
+                    <th>{{t "Gossip"}}</th>
                 </tr>
             </thead>
             <tbody>
@@ -97,9 +97,9 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>{{t .Locale "Scene"}}</th>
-                    <th>{{t .Locale "Exit"}}</th>
-                    <th>{{t .Locale "Destination"}}</th>
+                    <th>{{t "Scene"}}</th>
+                    <th>{{t "Exit"}}</th>
+                    <th>{{t "Destination"}}</th>
                 </tr>
             </thead>
             <tbody>

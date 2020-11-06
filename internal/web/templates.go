@@ -1,7 +1,9 @@
 package web
 
+// nolint:gci
 import (
-	"crypto/md5" // nolint:gosec,gci
+	"context"
+	"crypto/md5" // nolint:gosec
 	"crypto/sha512"
 	"encoding/base64"
 	"encoding/hex"
@@ -59,7 +61,14 @@ func (s *Server) loadTemplates(baseDir string) (map[string]*template.Template, e
 	ret := make(map[string]*template.Template, len(layouts))
 	for _, layout := range layouts {
 		tpl, err := template.New("").
-			Funcs(s.getTemplateFuncMap(baseDir)).
+			// Funcs is called twice, once before parsing to "register" the
+			// funcs, and once before executing to overwrite them to get the
+			// request context.
+			// This is the only way to inject context in the funcMap as Funcs
+			// can't be called only after parsing.
+			// Pass a nil context here to ensure we'll crash and burn if for
+			// any reason the actual request context is not used.
+			Funcs(s.getTemplateFuncMap(nil, baseDir)). // nolint:staticcheck
 			ParseFiles(append(includes, layout)...)
 		if err != nil {
 			return nil, err
@@ -72,17 +81,20 @@ func (s *Server) loadTemplates(baseDir string) (map[string]*template.Template, e
 	return ret, nil
 }
 
-func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
+func (s *Server) getTemplateFuncMap(ctx context.Context, baseDir string) template.FuncMap { // nolint:funlen
 	return template.FuncMap{
-		"t": func(locale string, str string, args ...interface{}) string {
+		"t": func(str string, args ...interface{}) string {
+			locale := ctx.Value(ctxKeyLocale).(string)
 			return s.locales[locale].Get(str, args...)
 		},
 
-		"tn": func(locale, singular, plural string, count int, args ...interface{}) string {
+		"tn": func(singular, plural string, count int, args ...interface{}) string {
+			locale := ctx.Value(ctxKeyLocale).(string)
 			return s.locales[locale].GetN(singular, plural, count, args...)
 		},
 
-		"uri": func(locale string, parts ...string) string {
+		"uri": func(parts ...string) string {
+			locale := ctx.Value(ctxKeyLocale).(string)
 			if len(parts) == 0 {
 				return "/" + locale
 			}
@@ -90,7 +102,8 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 			return "/" + locale + "/" + filepath.Join(parts...)
 		},
 
-		"tmd": func(locale, str string, args ...interface{}) template.HTML {
+		"tmd": func(str string, args ...interface{}) template.HTML {
+			locale := ctx.Value(ctxKeyLocale).(string)
 			return template.HTML(blackfriday.Run( // nolint:gosec
 				[]byte(s.locales[locale].Get(str, args...)),
 			))
@@ -104,9 +117,16 @@ func (s *Server) getTemplateFuncMap(baseDir string) template.FuncMap {
 			return strconv.Itoa(i)
 		},
 
-		"matchEntryStatus":      s.tplMatchEntryStatus,
-		"matchSeedURL":          s.tplMatchSeedURL,
-		"matchSessionStatusTag": s.tplMatchSessionStatusTag,
+		"matchEntryStatus": func(e back.MatchEntry) string {
+			locale := ctx.Value(ctxKeyLocale).(string)
+			return s.tplMatchEntryStatus(locale, e)
+		},
+		"matchSessionStatusTag": func(status back.MatchSessionStatus) template.HTML {
+			locale := ctx.Value(ctxKeyLocale).(string)
+			return s.tplMatchSessionStatusTag(locale, status)
+		},
+
+		"matchSeedURL": s.tplMatchSeedURL,
 
 		"isAdmin":        s.isPlayerAdmin,
 		"alternate":      s.tplAlternate,

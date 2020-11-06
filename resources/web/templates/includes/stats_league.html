@@ -2,23 +2,23 @@
 <div class="columns is-centered">
     <div class="column is-one-third">
         <ul>
-            <li>{{t .Locale "First ladder race: %s" (.Payload.Misc.FirstLadderRace | datetime) | unsafe}}</li>
-            <li>{{t .Locale "Ranked players: %d" .Payload.Misc.RankedPlayers}}</li>
-            <li>{{t .Locale "Players on leaderboard: %d" .Payload.Misc.PlayersOnLeaderboard}}</li>
+            <li>{{t "First ladder race: %s" (.Payload.Misc.FirstLadderRace | datetime) | unsafe}}</li>
+            <li>{{t "Ranked players: %d" .Payload.Misc.RankedPlayers}}</li>
+            <li>{{t "Players on leaderboard: %d" .Payload.Misc.PlayersOnLeaderboard}}</li>
         </ul>
     </div>
     <div class="column is-one-third">
         <ul>
-            <li>{{t .Locale "Matches played: %d" .Payload.Misc.SeedsPlayed}}</li>
-            <li>{{t .Locale "Forfeits: %d" .Payload.Misc.Forfeits}}</li>
-            <li>{{t .Locale "Double forfeits: %d" .Payload.Misc.DoubleForfeits}}</li>
+            <li>{{t "Matches played: %d" .Payload.Misc.SeedsPlayed}}</li>
+            <li>{{t "Forfeits: %d" .Payload.Misc.Forfeits}}</li>
+            <li>{{t "Double forfeits: %d" .Payload.Misc.DoubleForfeits}}</li>
         </ul>
     </div>
     <div class="column is-one-third">
         <ul>
-            <li>{{t .Locale "Average players per race: %d" .Payload.Misc.AveragePlayersPerRace}}</li>
-            <li>{{t .Locale "Most players in a race: %d" .Payload.Misc.MostPlayersInARace}}</li>
-            <li>{{t .Locale "Total time played: %s" .Payload.Misc.TotalSeedTime}}</li>
+            <li>{{t "Average players per race: %d" .Payload.Misc.AveragePlayersPerRace}}</li>
+            <li>{{t "Most players in a race: %d" .Payload.Misc.MostPlayersInARace}}</li>
+            <li>{{t "Total time played: %s" .Payload.Misc.TotalSeedTime}}</li>
         </ul>
     </div>
 </div>
@@ -26,17 +26,17 @@
 <div class="columns is-centered">
     <div class="column is-half">
         <table class="table stats--attendance">
-            <caption>{{t .Locale "Attendance (avg.)"}}</caption>
+            <caption>{{t "Attendance (avg.)"}}</caption>
             <tr>
                 <th>UTC</th>
 
-                <th>{{t .Locale "Monday"}}</th>
-                <th>{{t .Locale "Tuesday"}}</th>
-                <th>{{t .Locale "Wednesday"}}</th>
-                <th>{{t .Locale "Thursday"}}</th>
-                <th>{{t .Locale "Friday"}}</th>
-                <th>{{t .Locale "Saturday"}}</th>
-                <th>{{t .Locale "Sunday"}}</th>
+                <th>{{t "Monday"}}</th>
+                <th>{{t "Tuesday"}}</th>
+                <th>{{t "Wednesday"}}</th>
+                <th>{{t "Thursday"}}</th>
+                <th>{{t "Friday"}}</th>
+                <th>{{t "Saturday"}}</th>
+                <th>{{t "Sunday"}}</th>
             </tr>
 
             {{- range $v := .Payload.Attendance -}}
@@ -55,15 +55,15 @@
         </table>
     </div>
     <div class="column is-half has-text-centered">
-        <p>{{t .Locale "Ratings distribution"}}</p>
-        <img src="{{ uri $.Locale "stats" $.Payload.ShortCode "graph" "ratings.svg" }}">
+        <p>{{t "Ratings distribution"}}</p>
+        <img src="{{uri "stats" $.Payload.ShortCode "graph" "ratings.svg" }}">
     </div>
 </div>
 
 <div class="columns is-centered">
     <div class="column">
-        <p>{{t .Locale "Seed completion time"}}</p>
-        <img src="{{ uri $.Locale "stats" $.Payload.ShortCode "graph" "seedtime.svg" }}">
+        <p>{{t "Seed completion time"}}</p>
+        <img src="{{uri "stats" $.Payload.ShortCode "graph" "seedtime.svg" }}">
     </div>
 </div>
 

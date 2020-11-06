@@ -9,28 +9,28 @@
             <div class="columns is-vcentered is-variable is-8">
 
                 <div class="column is-two-thirds">
-                    <h2 class="title is-1">{{t .Locale "Next races"}}</h2>
+                    <h2 class="title is-1">{{t "Next races"}}</h2>
 
                     {{- template "current_races" . -}}
 
                     <div class="level is-mobile">
                         <div class="level-left">
                             <div class="buttons">
-                                <a href="{{uri .Locale "schedule"}}" class="button is-outlined is-white is-small is-rounded is-mobile-fullwidth detailButton">
+                                <a href="{{uri "schedule"}}" class="button is-outlined is-white is-small is-rounded is-mobile-fullwidth detailButton">
                                     <span class="icon">
                                         <i class="ri-calendar-2-fill"></i>
                                     </span>
-                                    <span>{{t .Locale "Scheduled races"}}</span>
+                                    <span>{{t "Scheduled races"}}</span>
                                 </a>
                             </div>
                         </div>
 
                         <div class="level-right">
-                            <a href="{{uri .Locale "sessions"}}" class="button is-outlined is-white is-small is-rounded is-mobile-fullwidth detailButton">
+                            <a href="{{uri "sessions"}}" class="button is-outlined is-white is-small is-rounded is-mobile-fullwidth detailButton">
                                 <span class="icon">
                                     <i class="ri-history-line"></i>
                                 </span>
-                                <span>{{t .Locale "Races history"}}</span>
+                                <span>{{t "Races history"}}</span>
                             </a>
                         </div>
                     </div> <!-- level -->
@@ -40,7 +40,7 @@
                 {{- if len .Payload.MatchSessions -}}
                 <div class="column has-text-centered">
                 {{- with $id := ((index .Payload.MatchSessions 0).LeagueID) -}}
-                    <h2 class="title">{{t $.Locale "Leaderboard"}}</h2>
+                    <h2 class="title">{{t "Leaderboard"}}</h2>
                     <h3 class="subtitle">{{- (index $.Payload.Leagues $id).Name -}}</h3>
 
                     <div class="ldbrd">
@@ -48,15 +48,15 @@
                             {{range $i, $v := $.Payload.Top3}}
                             <div class="player">
                                 <span class="icon"><i class="ri-trophy-fill"></i></span>
-                                <a href="{{uri $.Locale "player" $v.PlayerName}}">{{$v.PlayerName}}</a>
+                                <a href="{{uri "player" $v.PlayerName}}">{{$v.PlayerName}}</a>
                             </div>
                             {{end}}
                         </div>
                     </div>
 
-                    <a href="{{uri $.Locale "leaderboard" (index $.Payload.Leagues $id).ShortCode}}" class="button is-outlined is-white is-fullwidth is-rounded detailButton">
+                    <a href="{{uri "leaderboard" (index $.Payload.Leagues $id).ShortCode}}" class="button is-outlined is-white is-fullwidth is-rounded detailButton">
                         <span class="icon"><i class="ri-trophy-line"></i></span>
-                        <span>{{t $.Locale "Full leaderboard"}}</span>
+                        <span>{{t "Full leaderboard"}}</span>
                     </a>
                 {{- end -}}
                 </div> <!-- column -->

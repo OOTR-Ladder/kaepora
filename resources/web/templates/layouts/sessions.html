@@ -6,8 +6,8 @@
 
         <div class="hero-body">
             <div class="container">
-                <h1 class="PageTitle">{{t .Locale "Races history"}}</h1>
-                <div class="heading">{{t .Locale "Races completed in the last 30 days"}}</div>
+                <h1 class="PageTitle">{{t "Races history"}}</h1>
+                <div class="heading">{{t "Races completed in the last 30 days"}}</div>
             </div>
         </div>
 
@@ -23,13 +23,13 @@
                     {{$x := len $v.PlayerIDs}}
                     <div class="column is-full">
                         {{if gt $x 1}}
-                        <a href="{{uri $.Locale "sessions" $v.ID.String}}" class="box is-clipped SessionBox">
+                        <a href="{{uri "sessions" $v.ID.String}}" class="box is-clipped SessionBox">
                         {{else}}
                         <div class="box is-clipped is-shadowless SessionBox__no-match is-unselectable">
                         {{end}}
                             <div class="SessionBox--league">{{(index $.Payload.Leagues $v.LeagueID).Name}}</div>
                             <div class="SessionBox--datetime">{{$v.StartDate | datetime}}</div>
-                            <div class="SessionBox--players"><span>{{$x}}</span>{{tn $.Locale "player" "players" (len $v.PlayerIDs)}}</div>
+                            <div class="SessionBox--players"><span>{{$x}}</span>{{tn "player" "players" (len $v.PlayerIDs)}}</div>
                             {{if gt $x 1}}
                             <div class="SessionBox--layer Layer">
                                 <img src="/_/svg/arrow-right-line.svg" />

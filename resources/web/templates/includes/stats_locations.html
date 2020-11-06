@@ -1,20 +1,20 @@
 {{define "stats_locations"}}
 <div class="long-table-container">
-    <h4 class="title">{{t .Locale "Items"}}</h4>
+    <h4 class="title">{{t "Items"}}</h4>
     <table class="table is-fullwidth js-table-sortable">
         <thead>
             <tr>
-                <th class="sticky is-unselectable">{{t .Locale "Location"}}&nbsp;<span>↓</span></th>
-                <th class="sticky has-text-right is-unselectable">{{t .Locale "% items"}}&nbsp;<span></span></th>
-                <th class="sticky has-text-right is-unselectable">{{t .Locale "% junk"}}&nbsp;<span></span></th>
-                <th class="sticky has-text-right is-unselectable">{{t .Locale "% ice traps"}}&nbsp;<span></span></th>
-                <th class="sticky has-text-right is-unselectable">{{t .Locale "% pieces of heart"}}&nbsp;<span></span></th>
-                <th class="sticky has-text-right is-unselectable">{{t .Locale "% bombchus"}}&nbsp;<span></span></th>
-                <th class="sticky has-text-right is-unselectable">{{t .Locale "% small keys"}}&nbsp;<span></span></th>
-                <th class="sticky has-text-right is-unselectable">{{t .Locale "% boss keys"}}&nbsp;<span></span></th>
+                <th class="sticky is-unselectable">{{t "Location"}}&nbsp;<span>↓</span></th>
+                <th class="sticky has-text-right is-unselectable">{{t "% items"}}&nbsp;<span></span></th>
+                <th class="sticky has-text-right is-unselectable">{{t "% junk"}}&nbsp;<span></span></th>
+                <th class="sticky has-text-right is-unselectable">{{t "% ice traps"}}&nbsp;<span></span></th>
+                <th class="sticky has-text-right is-unselectable">{{t "% pieces of heart"}}&nbsp;<span></span></th>
+                <th class="sticky has-text-right is-unselectable">{{t "% bombchus"}}&nbsp;<span></span></th>
+                <th class="sticky has-text-right is-unselectable">{{t "% small keys"}}&nbsp;<span></span></th>
+                <th class="sticky has-text-right is-unselectable">{{t "% boss keys"}}&nbsp;<span></span></th>
                 {{if $.Payload.ExtendedStats}}
-                <th class="sticky has-text-right is-unselectable">{{t .Locale "% songs"}}&nbsp;<span></span></th>
-                <th class="sticky has-text-right is-unselectable">{{t .Locale "% triforce"}}&nbsp;<span></span></th>
+                <th class="sticky has-text-right is-unselectable">{{t "% songs"}}&nbsp;<span></span></th>
+                <th class="sticky has-text-right is-unselectable">{{t "% triforce"}}&nbsp;<span></span></th>
                 {{end}}
             </tr>
         </thead>

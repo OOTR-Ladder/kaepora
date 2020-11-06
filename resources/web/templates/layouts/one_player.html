@@ -7,7 +7,7 @@
     <div class="hero-body">
         <div class="container">
             <h1 class="PageTitle PlayerName">{{ .Payload.Player.Name }} {{if ne "" .Payload.Player.StreamURL}} <a class="Player--streamLink__twitch" href="{{.Payload.Player.StreamURL}}"></a> {{end}}</h1>
-            <div class="heading Player--dateInscription">{{ t .Locale "Climbing the ladder since %s" (date .Payload.Player.CreatedAt) }}</div>
+            <div class="heading Player--dateInscription">{{t "Climbing the ladder since %s" (date .Payload.Player.CreatedAt) }}</div>
         </div>
     </div>
 
@@ -20,17 +20,17 @@
     <div class="QuickStats">
         <div class="QuickStats--stat Stat">
             <div class="Stat--value">{{.Payload.PlayerStats.MatchesPlayed}}</div>
-            <div class="Stat--name heading">{{t .Locale "Matches played"}}</div>
+            <div class="Stat--name heading">{{t "Matches played"}}</div>
         </div>
 
         <div class="QuickStats--stat Stat">
             <div class="Stat--value">{{.Payload.PlayerStats.MatchesWon}}</div>
-            <div class="Stat--name heading">{{t .Locale "Matches won"}}</div>
+            <div class="Stat--name heading">{{t "Matches won"}}</div>
         </div>
 
         {{if .Payload.PlayerStats.Performances}}
         <div class="QuickStats--stat Stat is-hidden-touch">
-            <div class="Stat--name heading">{{t .Locale "Most played league"}}</div>
+            <div class="Stat--name heading">{{t "Most played league"}}</div>
             <div class="Stat--value">
                 {{ (index $.Payload.Leagues $.Payload.PlayerStats.MostPlayedLeagueID).Name }}
             </div>
@@ -44,7 +44,7 @@
     <div class="container">
         <div class="columns is-multiline">
             <div class="column is-full-tablet is-half-widescreen">
-                <h2 class="title is-display is-size-4-touch">{{t .Locale "Statistics"}}</h2>
+                <h2 class="title is-display is-size-4-touch">{{t "Statistics"}}</h2>
                 <div class="box is-shadowless">
                     <div id="PlayerPerformances">
                         <div class="tabs is-toggle is-fullwidth">
@@ -63,12 +63,12 @@
                                         <div class="level is-mobile">
                                             <div class="level-left">
                                                 <div class="level-item">
-                                                    <span class="has-text-success has-text-weight-bold">{{ tn $.Locale "%d victory" "%d victories" $v.Wins $v.Wins }}</span>
+                                                    <span class="has-text-success has-text-weight-bold">{{tn "%d victory" "%d victories" $v.Wins $v.Wins }}</span>
                                                 </div>
                                             </div>
                                             <div class="level-right">
                                                 <div class="level-item">
-                                                    <span class="has-text-danger has-text-weight-bold">{{ tn $.Locale "%d loss" "%d losses" $v.Losses $v.Losses }}</span>
+                                                    <span class="has-text-danger has-text-weight-bold">{{tn "%d loss" "%d losses" $v.Losses $v.Losses }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -79,13 +79,13 @@
                                     <div class="columns is-multiline">
                                         <div class="column is-half-tablet is-full-widescreen">
                                             <div class="RatingVariation">
-                                                <img src="{{ uri $.Locale "player" $.Payload.Player.Name "graph" (index $.Payload.Leagues $v.LeagueID).ShortCode "rating.svg" }}" alt="{{ t $.Locale "Ratings graph" }}" >
+                                                <img src="{{uri "player" $.Payload.Player.Name "graph" (index $.Payload.Leagues $v.LeagueID).ShortCode "rating.svg" }}" alt="{{t "Ratings graph" }}" >
                                             </div>
                                         </div>
 
                                         <div class="column is-half-tablet is-full-widescreen">
                                             <div class="SeedDurations">
-                                                <img src="{{ uri $.Locale "player" $.Payload.Player.Name "graph" (index $.Payload.Leagues $v.LeagueID).ShortCode "seedtime.svg" }}" alt="{{ t $.Locale "Seed completion times graph" }}" >
+                                                <img src="{{uri "player" $.Payload.Player.Name "graph" (index $.Payload.Leagues $v.LeagueID).ShortCode "seedtime.svg" }}" alt="{{t "Seed completion times graph" }}" >
                                             </div>
                                         </div>
                                     </div>
@@ -96,7 +96,7 @@
                 </div>
 
                 {{if 0}}
-                <h2 class="title is-display is-size-4-touch">{{t .Locale "Past seasons"}}</h2>
+                <h2 class="title is-display is-size-4-touch">{{t "Past seasons"}}</h2>
                 <div class="box is-shadowless is-clipped is-relative SeasonResults">
                     <h3 class="NumSaison">Saison 1</h3>
                     {{ range $k, $v := .Payload.PlayerStats.Performances }}
@@ -128,7 +128,7 @@
 
             </div>
             <div class="column is-full-tablet is-half-widescreen">
-                <h2 class="title is-display is-size-4-touch">{{t .Locale "Past races"}}</h2>
+                <h2 class="title is-display is-size-4-touch">{{t "Past races"}}</h2>
 
                 {{template "player_matches" .}}
             </div>
@@ -142,7 +142,7 @@
             <div class="column is-half">
                 <div>
                     <div class="TriforceIcon"></div>
-                    <p class="has-text-centered">{{t .Locale "No match played yet"}}</p>
+                    <p class="has-text-centered">{{t "No match played yet"}}</p>
                 </div>
             </div>
         </div>

@@ -4,13 +4,13 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>{{t .Locale "Location"}}</th>
-                    <th>{{t .Locale "Item"}}</th>
+                    <th>{{t "Location"}}</th>
+                    <th>{{t "Item"}}</th>
                 </tr>
             </thead>
             <tbody>
                 {{- range $id, $pool := .Payload.Log.Spheres -}}
-                <tr><td class="subtitle has-text-centered" colspan="2">{{t $.Locale "Sphere #%d" (add $id 1)}}</td></tr>
+                <tr><td class="subtitle has-text-centered" colspan="2">{{t "Sphere #%d" (add $id 1)}}</td></tr>
                     {{- range $location, $item := $pool -}}
                     <tr>
                         <td>{{$location}}</td>
@@ -26,8 +26,8 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>{{t .Locale "Location"}}</th>
-                    <th>{{t .Locale "Item"}}</th>
+                    <th>{{t "Location"}}</th>
+                    <th>{{t "Item"}}</th>
                 </tr>
             </thead>
             <tbody>

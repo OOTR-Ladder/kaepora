@@ -5,11 +5,11 @@
     {{else}}
     <div class="Logo">
     {{end}}
-        <a href="{{uri .Locale}}" class="Logo--link">
+        <a href="{{uri}}" class="Logo--link">
             <img src="/_/img/logo.png" alt="logo" width="32" height="32" />
             <div>
                 <span>OoTR Ladder</span>
-                {{if .AuthenticatedPlayer }}<span class="heading">{{t .Locale "Logged in as"}} {{.AuthenticatedPlayer.Name}}</span>{{end}}
+                {{if .AuthenticatedPlayer }}<span class="heading">{{t "Logged in as"}} {{.AuthenticatedPlayer.Name}}</span>{{end}}
             </div>
         </a>
     </div>
@@ -20,28 +20,28 @@
                 <li class="ladderNav--item__has-sub">
                     <a href="#">
                         <i class="ladderNav--icon__flag"></i>
-                        {{t .Locale "Races"}}
+                        {{t "Races"}}
                     </a>
 
                     <ul class="ladderNav--sub">
                         <li class="ladderNav--item">
-                            <a href="{{uri .Locale "schedule"}}">{{t .Locale "Schedule"}}</a>
+                            <a href="{{uri "schedule"}}">{{t "Schedule"}}</a>
                         </li>
                         <li class="ladderNav--item">
-                            <a href="{{uri .Locale "sessions"}}">{{t .Locale "Races history"}}</a>
+                            <a href="{{uri "sessions"}}">{{t "Races history"}}</a>
                         </li>
                     </ul>
                 </li>
                 <li class="ladderNav--item__has-sub">
                     <a href="#">
                         <i class="ladderNav--icon__leaderboard"></i>
-                        {{t .Locale "Rankings"}}
+                        {{t "Rankings"}}
                     </a>
 
                     <ul class="ladderNav--sub">
                         {{range $v := .Leagues}}
                             <li class="ladderNav--item">
-                                <a href="{{uri $.Locale "leaderboard" $v.ShortCode}}">{{$v.Name}}</a>
+                                <a href="{{uri "leaderboard" $v.ShortCode}}">{{$v.Name}}</a>
                             </li>
                         {{end}}
                     </ul>
@@ -49,13 +49,13 @@
                 <li class="ladderNav--item__has-sub">
                     <a href="#">
                         <i class="ladderNav--icon__stats"></i>
-                        {{t .Locale "Stats"}}
+                        {{t "Stats"}}
                     </a>
 
                     <ul class="ladderNav--sub">
                         {{range $v := .Leagues}}
                             <li class="ladderNav--item">
-                                <a href="{{uri $.Locale "stats" $v.ShortCode}}">{{$v.Name}}</a>
+                                <a href="{{uri "stats" $v.ShortCode}}">{{$v.Name}}</a>
                             </li>
                         {{end}}
                     </ul>
@@ -63,21 +63,21 @@
                 <li class="ladderNav--item__has-sub">
                     <a href="#">
                         <i class="ladderNav--icon__doc"></i>
-                        {{t .Locale "Resources"}}
+                        {{t "Resources"}}
                     </a>
 
                     <ul class="ladderNav--sub">
                         <li class="ladderNav--item">
-                            <a href="{{uri .Locale "documentation"}}">{{t .Locale "Documentation"}}</a>
+                            <a href="{{uri "documentation"}}">{{t "Documentation"}}</a>
                         </li>
                         <li class="ladderNav--item">
-                            <a href="{{uri .Locale "rules"}}">{{t .Locale "Rules"}}</a>
+                            <a href="{{uri "rules"}}">{{t "Rules"}}</a>
                         </li>
                         <li class="ladderNav--item">
-                            <a href="{{uri .Locale "shuffled-settings"}}">{{t .Locale "Shuffled Settings"}}</a>
+                            <a href="{{uri "shuffled-settings"}}">{{t "Shuffled Settings"}}</a>
                         </li>
                         <li class="ladderNav--item">
-                            <a href="https://discord.gg/yZtdURz" target="_blank">{{t .Locale "Discord Server"}}</a>
+                            <a href="https://discord.gg/yZtdURz" target="_blank">{{t "Discord Server"}}</a>
                         </li>
                     </ul>
                 </li>
@@ -86,12 +86,12 @@
                 <li class="ladderNav--item__has-sub">
                     <a href="#">
                         <i class="ladderNav--icon__gear"></i>
-                        {{t .Locale "Admin"}}
+                        {{t "Admin"}}
                     </a>
 
                     <ul class="ladderNav--sub">
                         <li class="ladderNav--item">
-                            <a href="{{uri .Locale "admin" "leagues"}}">{{t .Locale "Leagues"}}</a>
+                            <a href="{{uri "admin" "leagues"}}">{{t "Leagues"}}</a>
                         </li>
                     </ul>
                 </li>
@@ -101,15 +101,15 @@
                     <li class="ladderNav--item__has-sub">
                         <a href="#">
                             <i class="ladderNav--icon__account"></i>
-                            {{t .Locale "Account"}}
+                            {{t "Account"}}
                         </a>
 
                         <ul class="ladderNav--sub">
                             <li class="ladderNav--item">
-                                <a href="{{uri .Locale "player"}}/{{.AuthenticatedPlayer.Name}}">{{t .Locale "My profile"}}</a>
+                                <a href="{{uri "player"}}/{{.AuthenticatedPlayer.Name}}">{{t "My profile"}}</a>
                             </li>
                             <li class="ladderNav--item__logout">
-                                <a href="/auth/logout">{{t .Locale "Sign out"}}</a>
+                                <a href="/auth/logout">{{t "Sign out"}}</a>
                             </li>
                         </ul>
                     </li>
@@ -117,7 +117,7 @@
                     <li class="ladderNav--item">
                         <a href="/auth/oauth2/discord">
                             <i class="ladderNav--icon__account"></i>
-                            {{t .Locale "Sign in"}}
+                            {{t "Sign in"}}
                         </a>
                     </li>
                 {{end}}

@@ -6,7 +6,7 @@
 
         <div class="hero-body">
             <div class="container">
-                <h1 class="title">{{t .Locale "Ladder & Seed statistics"}}</h1>
+                <h1 class="title">{{t "Ladder & Seed statistics"}}</h1>
             </div>
         </div>
     </section>
@@ -18,21 +18,21 @@
             <div class="tabs stats--tabs">
                 <ul class="js-stats-tabs" role="tablist">
                     <li data-target=".js-stats-tab-ladder" class="is-active">
-                        <a href="#ladder" role="tab" aria-controls="stats-ladder">{{t .Locale "Ladder stats"}}</a>
+                        <a href="#ladder" role="tab" aria-controls="stats-ladder">{{t "Ladder stats"}}</a>
                     </li>
                     <li data-target=".js-stats-tab-seeds">
-                        <a href="#seeds" role="tab" aria-controls="stats-seeds">{{t .Locale "WotH & barrens"}}</a>
+                        <a href="#seeds" role="tab" aria-controls="stats-seeds">{{t "WotH & barrens"}}</a>
                     </li>
                     <li data-target=".js-stats-tab-locations">
-                        <a href="#locations" role="tab" aria-controls="stats-locations">{{t .Locale "Locations"}}</a>
+                        <a href="#locations" role="tab" aria-controls="stats-locations">{{t "Locations"}}</a>
                     </li>
                     <li data-target=".js-stats-tab-items">
-                        <a href="#items" role="tab" aria-controls="stats-items">{{t .Locale "Items"}}</a>
+                        <a href="#items" role="tab" aria-controls="stats-items">{{t "Items"}}</a>
                     </li>
 
                     {{if $.Payload.ExtendedStats}}
                     <li data-target=".js-stats-tab-settings">
-                        <a href="#settings" role="tab" aria-controls="stats-settings">{{t .Locale "Settings"}}</a>
+                        <a href="#settings" role="tab" aria-controls="stats-settings">{{t "Settings"}}</a>
                     </li>
                     {{end}}
 

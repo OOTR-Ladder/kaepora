@@ -308,7 +308,14 @@ func (s *Server) response(
 		template,
 	}
 
-	if err := tpl.ExecuteTemplate(w, "base", wrapped); err != nil {
+	baseDir, err := getResourcesDir()
+	if err != nil {
+		log.Printf("error: unable to get resources dir during render: %s", err)
+		return
+	}
+
+	if err := tpl.Funcs(s.getTemplateFuncMap(r.Context(), baseDir)).
+		ExecuteTemplate(w, "base", wrapped); err != nil {
 		log.Printf("error: unable to render template: %s", err)
 	}
 }

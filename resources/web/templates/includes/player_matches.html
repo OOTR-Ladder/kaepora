@@ -6,21 +6,21 @@
 {{ $self := $v.TPLGetSelfEntry $.Payload.Player.ID }}
 {{ $against := $v.TPLGetOpponentEntry $.Payload.Player.ID }}
 {{ $class := "win" }}
-{{ $title := t $.Locale "Victory"}}
+{{ $title := t "Victory"}}
 {{ $opponentName := (index $.Payload.Players $against.PlayerID).Name }}
 {{ $leagueName := (index $.Payload.Leagues $v.LeagueID).Name }}
 
 {{ if not $self.HasWon }}
     {{ if $v.IsDoubleForfeit }}
         {{ $class = "tie" }}
-        {{ $title = t $.Locale "Tied"}}
+        {{ $title = t "Tied"}}
     {{ else }}
         {{ if $self.HasForfeit }}
             {{ $class = "forfeit" }}
-            {{ $title = t $.Locale "Forfeit"}}
+            {{ $title = t "Forfeit"}}
         {{ else }}
             {{ $class = "lose" }}
-            {{ $title = t $.Locale "Defeat"}}
+            {{ $title = t "Defeat"}}
         {{ end }}
     {{ end }}
 {{ end }}
@@ -31,7 +31,7 @@
                 <div>
                     <span class="PlayerMatch--result">{{$title}}</span> vs <a
                         class="PlayerMatch--opponent"
-                        href="{{uri $.Locale "player" $opponentName}}"
+                        href="{{uri "player" $opponentName}}"
                     >{{$opponentName}}</a>
                 </div>
             </div>
@@ -43,10 +43,10 @@
             </div>
             <div class="level-item">
                 <a
-                    href="{{uri $.Locale "matches" $v.ID.String "spoilers"}}"
+                    href="{{uri "matches" $v.ID.String "spoilers"}}"
                     class="PlayerMatch--spoiler button is-rounded is-small is-outlined is-info is-light"
                 >
-                    {{t $.Locale "Spoiler log"}}
+                    {{t "Spoiler log"}}
                 </a>
             </div>
         </div>

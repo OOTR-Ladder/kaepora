@@ -5,7 +5,7 @@
 
         <div class="hero-body">
             <div class="container">
-                <h1 class="title">{{t .Locale "Leagues administration"}}</h1>
+                <h1 class="title">{{t "Leagues administration"}}</h1>
             </div>
         </div>
     </section>
@@ -25,7 +25,7 @@
 
                 {{- range $v := .Payload.Leagues -}}
                 <tr>
-                    <td><a href="{{uri $.Locale "admin" "leagues" $v.ID.String}}"><code>{{ $v.ID }}</code></a></td>
+                    <td><a href="{{uri "admin" "leagues" $v.ID.String}}"><code>{{ $v.ID }}</code></a></td>
                     <td>{{ $v.Name }}</td>
                     <td>{{ $v.ShortCode }}</td>
                     <td>{{ $v.Generator }}</td>

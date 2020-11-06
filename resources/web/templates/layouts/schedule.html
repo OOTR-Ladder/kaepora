@@ -6,12 +6,12 @@
 
         <div class="hero-body">
             <div class="container">
-                <h1 class="PageTitle">{{t .Locale "Schedule"}}</h1>
+                <h1 class="PageTitle">{{t "Schedule"}}</h1>
                 {{if .Payload.MatchSessions}}
                     {{if future (index .Payload.MatchSessions 0).StartDate}}
-                        <div class="heading">{{t .Locale "Upcoming races"}}</div>
+                        <div class="heading">{{t "Upcoming races"}}</div>
                     {{else}}
-                        <div class="heading">{{t .Locale "Current races"}}</div>
+                        <div class="heading">{{t "Current races"}}</div>
                     {{end}}
                 {{end}}
             </div>
@@ -36,7 +36,7 @@
 
     <section class="section">
         <div class="container">
-            <h2 class="title is-display">{{t .Locale "Next races" }}</h2>
+            <h2 class="title is-display">{{t "Next races" }}</h2>
 
             <div class="columns is-multiline">
                 {{range $v := .Payload.Schedules}}
@@ -50,7 +50,7 @@
                                 <div class="nextRace--contextual--countdown">
                                     <i class="ri-time-line"></i>
                                     <div>
-                                        {{t $.Locale "in"}} <span>{{until $v.StartDate "m"}}</span>
+                                        {{t "in"}} <span>{{until $v.StartDate "m"}}</span>
                                     </div>
                                 </div>
                             </div>
