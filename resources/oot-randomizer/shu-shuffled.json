@@ -32,7 +32,7 @@
         {
             "Value": "dungeons",
             "Cost": 7,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "open",
@@ -42,7 +42,7 @@
         {
             "Value": "stones",
             "Cost": 3,
-            "Weight": 1
+            "Weight": 0
         },
         {
             "Value": "tokens",
@@ -55,11 +55,161 @@
             "Weight": 0.75
         }
     ],
+     "bridge_medallions": [
+        {
+            "Value": 1,
+            "Cost": 4,
+            "Weight": 0.5
+        },
+        {
+            "Value": 2,
+            "Cost": 4,
+            "Weight": 0.75
+        },
+        {
+            "Value": 3,
+            "Cost": 4,
+            "Weight": 1
+        },
+        {
+            "Value": 4,
+            "Cost": 4,
+            "Weight": 1
+        },
+        {
+            "Value": 5,
+            "Cost": 4,
+            "Weight": 1
+        },
+        {
+            "Value": 6,
+            "Cost": 4,
+            "Weight": 1
+        }
+    ],
+    "bridge_stones": [
+        {
+            "Value": 1,
+            "Cost": 3,
+            "Weight": 0.75
+        },
+        {
+            "Value": 2,
+            "Cost": 3,
+            "Weight": 1
+        }, 
+        {
+            "Value": 3,
+            "Cost": 3,
+            "Weight": 1
+        }
+    ],
+    "bridge_rewards": [
+        {
+            "Value": 1,
+            "Cost": 5,
+            "Weight": 0.25,
+            "Implies": {
+                "shuffle_mapcompass": false,
+            }
+        },
+        {
+            "Value": 2,
+            "Cost": 5,
+            "Weight": 0.5,
+            "Implies": {
+                "shuffle_mapcompass": false,
+            }
+        }, 
+        {
+            "Value": 3,
+            "Cost": 5,
+            "Weight": 0.75,
+            "Implies": {
+                "shuffle_mapcompass": false,
+            }
+        },
+        {
+            "Value": 4,
+            "Cost": 5,
+            "Weight": 1,
+            "Implies": {
+                "shuffle_mapcompass": false,
+            }
+        },
+        {
+            "Value": 5,
+            "Cost": 5,
+            "Weight": 1,
+            "Implies": {
+                "shuffle_mapcompass": false,
+            }
+        },
+        {
+            "Value": 6,
+            "Cost": 5,
+            "Weight": 1,
+            "Implies": {
+                "shuffle_mapcompass": false,
+            }
+        },
+        {
+            "Value": 7,
+            "Cost": 5,
+            "Weight": 0.75,
+            "Implies": {
+                "shuffle_mapcompass": false,
+            }
+        },
+        {
+            "Value": 8,
+            "Cost": 6,
+            "Weight": 0.5,
+            "Implies": {
+                "shuffle_mapcompass": false,
+            }
+        },
+        {
+            "Value": 9,
+            "Cost": 7,
+            "Weight": 0.25,
+            "Implies": {
+                "shuffle_mapcompass": false,
+            }
+        }
+    ],
+     "bridge_tokens": [
+        {
+            "Value": 10,
+            "Cost": 6,
+            "Weight": 0.5
+        },
+        {
+            "Value": 20,
+            "Cost": 6,
+            "Weight": 0.75
+        }, 
+        {
+            "Value": 30,
+            "Cost": 6,
+            "Weight": 1
+        },
+        {
+            "Value": 40,
+            "Cost": 6,
+            "Weight": 0.75
+        },
+        {
+            "Value": 50,
+            "Cost": 6,
+            "Weight": 0.5
+        },
+    ],
     "correct_chest_sizes": [
         {
             "Value": true,
             "Cost": 1,
-            "Weight": 0.3
+            "Weight": 0.4
         },
         {
             "Value": false,
@@ -94,30 +244,92 @@
             "Weight": 0.5
         }
     ],
-    "entrance_shuffle": [
+    "shuffle_interior_entrances": [
         {
             "Value": "off",
             "Cost": 0,
             "Weight": 0
         },
         {
-            "Value": "dungeons",
+            "Value": "simple",
             "Cost": 8,
             "Weight": 0.6
         },
         {
-            "Value": "simple-indoors",
+            "Value": "all",
             "Cost": 12,
-            "Weight": 0.25
-        },
+            "Weight": 0.6
+        }
+    ],
+    "shuffle_grotto_entrances": [
         {
-            "Value": "all-indoors",
-            "Cost": 20,
+            "Value": false,
+            "Cost": 0,
             "Weight": 0
         },
         {
-            "Value": "all",
-            "Cost": 30,
+            "Value": true,
+            "Cost": 8,
+            "Weight": 0.6
+        }
+    ],
+    "shuffle_overworld_entrances": [
+        {
+            "Value": false,
+            "Cost": 0,
+            "Weight": 0
+        },
+        {
+            "Value": true,
+            "Cost": 20,
+            "Weight": 0
+        }
+    ],
+    "shuffle_dungeon_entrances": [
+        {
+            "Value": false,
+            "Cost": 0,
+            "Weight": 0
+        },
+        {
+            "Value": true,
+            "Cost": 8,
+            "Weight": 0.6
+        }
+    ],
+    "owl_drops": [
+        {
+            "Value": false,
+            "Cost": 0,
+            "Weight": 0
+        },
+        {
+            "Value": true,
+            "Cost": 3,
+            "Weight": 0.75
+        }
+    ],
+    "warp_songs": [
+        {
+            "Value": false,
+            "Cost": 0,
+            "Weight": 0
+        },
+        {
+            "Value": true,
+            "Cost": 6,
+            "Weight": 0.75
+        }
+    ],
+    "spawn_positions": [
+        {
+            "Value": false,
+            "Cost": 1,
+            "Weight": 0.5
+        },
+        {
+            "Value": true,
+            "Cost": 0,
             "Weight": 0
         }
     ],
@@ -184,7 +396,7 @@
     "one_item_per_dungeon": [
         {
             "Value": true,
-            "Cost": 3,
+            "Cost": 4,
             "Weight": 0.5
         },
         {
@@ -208,13 +420,13 @@
     "open_forest": [
         {
             "Value": "open",
-            "Cost": 0,
-            "Weight": 0
+            "Cost": 2,
+            "Weight": 0.75
         },
         {
             "Value": "closed_deku",
             "Cost": 3,
-            "Weight": 1,
+            "Weight": 0,
             "Implies": {
                 "shuffle_kokiri_sword": true
             }
@@ -293,6 +505,16 @@
             "Value": "dungeon",
             "Cost": 0,
             "Weight": 0
+        },        
+        {
+            "Value": "overworld",
+            "Cost": 8,
+            "Weight": 0.5
+        },
+        {
+            "Value": "any_dungeon",
+            "Cost": 8,
+            "Weight": 0.5
         },
         {
             "Value": "keysanity",
@@ -329,12 +551,34 @@
         {
             "Value": "dungeon",
             "Cost": 2,
-            "Weight": 1
+            "Weight": 1,
+            "Implies": {
+                "triforce_hunt": false
+            }
+        },
+        {
+            "Value": "overworld",
+            "Cost": 4,
+            "Weight": 0.5,
+            "Implies": {
+                "triforce_hunt": false
+            }
+        },
+        {
+            "Value": "any_dungeon",
+            "Cost": 4,
+            "Weight": 0.5,
+            "Implies": {
+                "triforce_hunt": false
+            }
         },
         {
             "Value": "keysanity",
             "Cost": 4,
-            "Weight": 0.5
+            "Weight": 0.5,
+            "Implies": {
+                "triforce_hunt": false
+            }
         }
     ],
     "shuffle_gerudo_card": [
@@ -412,6 +656,16 @@
             "Weight": 0
         },
         {
+            "Value": "overworld",
+            "Cost": 9,
+            "Weight": 0.2
+        },
+        {
+            "Value": "any_dungeon",
+            "Cost": 9,
+            "Weight": 0.2
+        },
+        {
             "Value": "keysanity",
             "Cost": 18,
             "Weight": 0.2
@@ -419,12 +673,23 @@
     ],
     "shuffle_song_items": [
         {
-            "Value": true,
+            "Value": "any",
             "Cost": 5,
-            "Weight": 1
+            "Weight": 1, 
+            "Implies": {
+                "free_zelda": false
+            }
+        },        
+        {
+            "Value": "dungeon",
+            "Cost": 5,
+            "Weight": 1,
+            "Implies": {
+                "free_zelda": false
+            }
         },
         {
-            "Value": false,
+            "Value": "song",
             "Cost": 0,
             "Weight": 0
         }
@@ -516,7 +781,7 @@
         {
             "Value": true,
             "Cost": 6,
-            "Weight": 0.25,
+            "Weight": 0,
             "Implies": {
                 "shuffle_ganon_bosskey": "remove",
                 "item_pool_value": "balanced"
@@ -526,6 +791,58 @@
             "Value": false,
             "Cost": 0,
             "Weight": 0
+        }
+    ],
+    "triforce_goal_per_world" : [
+         {
+            "Value": 15,
+            "Cost": 6,
+            "Weight": 0.2,
+            "Implies": {
+                "triforce_hunt": true,
+                "shuffle_ganon_bosskey": "remove",
+                "item_pool_value": "balanced"
+            }
+        },
+        {
+            "Value": 30,
+            "Cost": 6,
+            "Weight": 0.25,
+            "Implies": {
+                "triforce_hunt": true,
+                "shuffle_ganon_bosskey": "remove",
+                "item_pool_value": "balanced"
+            }
+        },
+        {
+            "Value": 45,
+            "Cost": 6,
+            "Weight": 0.3,
+            "Implies": {
+                "triforce_hunt": true,
+                "shuffle_ganon_bosskey": "remove",
+                "item_pool_value": "balanced"
+            }
+        },
+        {
+            "Value": 60,
+            "Cost": 6,
+            "Weight": 0.25,
+            "Implies": {
+                "triforce_hunt": true,
+                "shuffle_ganon_bosskey": "remove",
+                "item_pool_value": "balanced"
+            }
+        },
+        {
+            "Value": 75,
+            "Cost": 6,
+            "Weight": 0.2,
+            "Implies": {
+                "triforce_hunt": true,
+                "shuffle_ganon_bosskey": "remove",
+                "item_pool_value": "balanced"
+            }
         }
     ],
     "free_scarecrow": [
@@ -590,5 +907,64 @@
             "Cost": 4,
             "Weight": 0.75
         }
-    ]
+    ],
+    "shuffle_mapcompass": [
+        {
+            "Value": "remove",
+            "Cost": 0,
+            "Weight": 0
+        },
+        {
+            "Value": "vanilla",
+            "Cost": 2,
+            "Weight": 0.75,
+            "Implies": {
+                "enhance_map_compass": true,
+            }
+        },
+        {
+            "Value": "dungeon",
+            "Cost": 3,
+            "Weight": 0.75,
+            "Implies": {
+                "enhance_map_compass": true
+            }
+        },
+        {
+            "Value": "overworld",
+            "Cost": 4,
+            "Weight": 0.75,
+            "Implies": {
+                "enhance_map_compass": true
+            }
+        },
+        {
+            "Value": "any_dungeon",
+            "Cost": 4,
+            "Weight": 0.75,
+            "Implies": {
+                "enhance_map_compass": true
+            }
+        },
+        {
+            "Value": "keysanity",
+            "Cost": 4,
+            "Weight": 0.75,
+            "Implies": {
+                "enhance_map_compass": true
+            }
+        },
+    ], 
+    "mq_dungeons": [
+        {
+            "Value": 0,
+            "Cost": 1,
+            "Weight": 0
+        },
+        {
+            "Value": 1,
+            "Cost": 4,
+            "Weight": 0.25
+        }
+    ],
 }
