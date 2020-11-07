@@ -3,9 +3,11 @@ package settings
 import (
 	"encoding/json"
 	"hash/fnv"
+	"log"
 	"math/rand"
 	"os"
 	"sort"
+	"strings"
 )
 
 // Settings holds every setting we want to randomize, along with their possible
@@ -122,6 +124,9 @@ func (s Settings) Shuffle(seedStr string, costMax int) map[string]interface{} { 
 					ret[impliedKey] = impliedValue
 				}
 
+				// Disable other bridge settings if we picked one.
+				handleBridgeSettings(k, s[k][i].Value, ret)
+
 				break
 			}
 		}
@@ -131,6 +136,46 @@ func (s Settings) Shuffle(seedStr string, costMax int) map[string]interface{} { 
 	}
 
 	return ret
+}
+
+// handleBridgeSettings is a magic/auto Implies statement to disable all other
+// bridge settings once one has been picked.
+func handleBridgeSettings(name string, value interface{}, ret map[string]interface{}) {
+	if !strings.HasPrefix(name, "bridge") {
+		return
+	}
+
+	// If we manually set bridge, ensure we're not picking any other bridge setting.
+	if name == "bridge" {
+		vStr, ok := value.(string)
+		if !ok {
+			log.Printf("error: 'bridge' set with non-string value '%v'", value)
+			return
+		}
+		if vStr != "open" && vStr != "vanilla" {
+			log.Printf("error: 'bridge' can only be set to 'open' or 'vanilla', '%s' provided", vStr)
+			return
+		}
+		ret["bridge_tokens"] = 0
+		ret["bridge_stones"] = 0
+		ret["bridge_rewards"] = 0
+		ret["bridge_medallions"] = 0
+		return
+	}
+
+	typ := strings.Split(name, "_")[1] // will panic on bad value, 'tis ok.
+	if typ == "rewards" {
+		ret["bridge"] = "dungeons" // OOTR and consistency…
+	} else {
+		ret["bridge"] = typ
+	}
+
+	// Set all other settings to 0 to ensure they cannot be picked later.
+	for _, v := range []string{"stones", "medallions", "rewards", "tokens"} {
+		if v != typ {
+			ret["bridge_"+v] = 0
+		}
+	}
 }
 
 // A Setting is a collection of values that can be given to a setting key.
