@@ -131,6 +131,11 @@ func computeLocationStats(l oot.SpoilerLog, locationsAcc map[string]map[oot.Spoi
 
 func computeSettingsStats(l oot.SpoilerLog, settings map[string]map[string]int) {
 	for name, value := range l.Settings {
+		// HACK, ugly array we don't care about.
+		if name == "allowed_tricks" {
+			continue
+		}
+
 		if _, ok := settings[name]; !ok {
 			settings[name] = map[string]int{}
 		}
