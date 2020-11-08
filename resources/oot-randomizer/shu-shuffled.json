@@ -182,27 +182,27 @@
         {
             "Value": 10,
             "Cost": 6,
-            "Weight": 0.5
+            "Weight": 0.25
         },
         {
             "Value": 20,
             "Cost": 6,
-            "Weight": 0.75
+            "Weight": 0.35
         },
         {
             "Value": 30,
             "Cost": 6,
-            "Weight": 1
+            "Weight": 0.5
         },
         {
             "Value": 40,
             "Cost": 6,
-            "Weight": 0.75
+            "Weight": 0.35
         },
         {
             "Value": 50,
             "Cost": 6,
-            "Weight": 0.5
+            "Weight": 0.25
         }
     ],
     "correct_chest_sizes": [
