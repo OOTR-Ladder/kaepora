@@ -101,7 +101,7 @@
                 "Value": 5,
                 "Title": "5",
                 "Description": "The bridge to Ganon's Castle appears after any five medallions are obtained."
-            },            
+            },
             {
                 "Value": 6,
                 "Title": "6",
@@ -136,29 +136,29 @@
                 "Value": 5,
                 "Title": "5",
                 "Description": "The bridge to Ganon's Castle appears after any five rewards out of all nine medaillions and Spiritual Stones are obtained."
-            },            
+            },
             {
                 "Value": 6,
                 "Title": "6",
                 "Description": "The bridge to Ganon's Castle appears after any six rewards out of all nine medaillions and Spiritual Stones are obtained."
-            },            
+            },
             {
                 "Value": 7,
                 "Title": "7",
                 "Description": "The bridge to Ganon's Castle appears after any seven rewards out of all nine medaillions and Spiritual Stones are obtained."
-            },            
+            },
             {
                 "Value": 8,
                 "Title": "8",
                 "Description": "The bridge to Ganon's Castle appears after any eight rewards out of all nine medaillions and Spiritual Stones are obtained."
-            },            
+            },
             {
                 "Value": 9,
                 "Title": "9",
                 "Description": "The bridge to Ganon's Castle appears after of all nine medaillions and Spiritual Stones are obtained."
             }
         ]
-    },  
+    },
     "bridge_tokens": {
         "Title": "Rainbow Bridge tokens requirement",
         "Values": [
@@ -181,8 +181,8 @@
                 "Value": 40,
                 "Title": "40",
                 "Description": "The bridge to Ganon's Castle appears after 40 Gold Skulltulas Tokens are obtained."
-            }
-                {
+            },
+            {
                 "Value": 50,
                 "Title": "50",
                 "Description": "The bridge to Ganon's Castle appears after 50 Gold Skulltulas Tokens are obtained."
@@ -211,8 +211,8 @@
                 "Value": 60,
                 "Title": "60",
                 "Description": "Find 60 Triforce Pieces to finish the game."
-            }
-                {
+            },
+            {
                 "Value": 75,
                 "Title": "75",
                 "Description": "Find 75 Triforce Pieces to finish the game."
@@ -276,7 +276,7 @@
                 "Value": "all",
                 "Title": "all",
                 "Description": "Shuffle Great Fairies and all Houses entrances."
-            },
+            }
         ]
     },
     "shuffle_dungeon_entrances": {
@@ -728,7 +728,7 @@
                 "Description": "Randomize where each of the 6 warp songs leads to."
             }
         ]
-    },    
+    },
     "spawn_positions": {
         "Title": "Warp Songs",
         "Values": [
@@ -766,9 +766,9 @@
                 "Value": "keysanity",
                 "Title": "Anywhere",
                 "Description": "Maps and Compasses are shuffled anywhere. Maps will tell if a dungeon is Master Quest, Compasses will tell what medaillion or Stone is within."
-            },
+            }
         ]
-    },    
+    },
     "mq_dungeons": {
         "Title": "Master Quest Dungeons",
         "Values": [
@@ -778,5 +778,5 @@
                 "Description": "One dungeon is the Master Quest version."
             }
         ]
-    },
+    }
 }

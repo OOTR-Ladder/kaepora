@@ -56,7 +56,7 @@
     },
     "bridge_medallions": {
         "Title": "Médaillions pour le Pont Arc-en-Ciel",
-        "Values": [            
+        "Values": [
             {
                 "Value": 1,
                 "Title": "1",
@@ -136,22 +136,22 @@
                 "Value": 5,
                 "Title": "5",
                 "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de cinq pierres ancestrales ou médaillions."
-            },            
+            },
             {
                 "Value": 6,
                 "Title": "6",
                 "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de six pierres ancestrales ou médaillions."
-            },            
+            },
             {
                 "Value": 7,
                 "Title": "7",
                 "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de sept pierres ancestrales ou médaillions."
-            },            
+            },
             {
                 "Value": 8,
                 "Title": "8",
                 "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de huit pierres ancestrales ou médaillions."
-            },            
+            },
             {
                 "Value": 9,
                 "Title": "9",
@@ -181,8 +181,8 @@
                 "Value": 40,
                 "Title": "40",
                 "Description": "Le pont pour aller au château de Ganon apparaît une fois 40 Skulltula d'Or tuées."
-            }
-                {
+            },
+            {
                 "Value": 50,
                 "Title": "50",
                 "Description": "Le pont pour aller au château de Ganon apparaît une fois 50 Skulltula d'Or tuées."
@@ -211,8 +211,8 @@
                 "Value": 60,
                 "Title": "60",
                 "Description": "60 morceaux de Triforce sont nécessaires pour finir le jeu."
-            }
-                {
+            },
+            {
                 "Value": 75,
                 "Title": "75",
                 "Description": "75 morceaux de Triforce sont nécessaires pour finir le jeu."
@@ -271,9 +271,9 @@
                 "Value": "all",
                 "Title": "Toutes",
                 "Description": "Les fontaines de Grande Fées ainsi que toutes les entrées de maisons sont mélangées entre elles."
-            },
+            }
         ]
-    },   
+    },
     "shuffle_dungeon_entrances": {
         "Title": "Entrées de Donjons aléatoires",
         "Values": [
@@ -416,7 +416,7 @@
                 "Value": "remove",
                 "Title": "Retirées",
                 "Description": "Il n'y a pas de clefs de Boss et les portes vers les Boss sont toujours ouvertes."
-            },  
+            },
             {
                 "Value": "overworld",
                 "Title": "Hors donjons",
@@ -541,7 +541,7 @@
                 "Value": "remove",
                 "Title": "Retirées",
                 "Description": "Les petites clefs sont retirées, et toutes les portes des donjons sont ouvertes, excepté la porte du Boss."
-            },            
+            },
             {
                 "Value": "overworld",
                 "Title": "Hors donjons",
@@ -726,14 +726,14 @@
                 "Value": "any_dungeon",
                 "Title": "Donjons",
                 "Description": "Les cartes et boussoles sont seulement dans les donjons. Les cartes disent si le donjon est en version Master Quest, les boussoles le médaillion ou la pierre ancestrale correspondant au donjon."
-            }
+            },
             {
                 "Value": "keysanity",
                 "Title": "Partout",
                 "Description": "Les cartes et boussoles peuvent être n'importe où. Les cartes disent si le donjon est en version Master Quest, les boussoles le médaillion ou la pierre ancestrale correspondant au donjon."
-            },
+            }
         ]
-    },    
+    },
     "mq_dungeons": {
         "Title": "Donjons Master Quest",
         "Values": [
@@ -743,5 +743,5 @@
                 "Description": "Un donjon est en version Master Quest."
             }
         ]
-    },
+    }
 }

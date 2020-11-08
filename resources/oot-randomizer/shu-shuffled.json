@@ -55,7 +55,7 @@
             "Weight": 0.75
         }
     ],
-     "bridge_medallions": [
+    "bridge_medallions": [
         {
             "Value": 1,
             "Cost": 4,
@@ -97,7 +97,7 @@
             "Value": 2,
             "Cost": 3,
             "Weight": 1
-        }, 
+        },
         {
             "Value": 3,
             "Cost": 3,
@@ -110,7 +110,7 @@
             "Cost": 5,
             "Weight": 0.25,
             "Implies": {
-                "shuffle_mapcompass": false,
+                "shuffle_mapcompass": "startwith"
             }
         },
         {
@@ -118,15 +118,15 @@
             "Cost": 5,
             "Weight": 0.5,
             "Implies": {
-                "shuffle_mapcompass": false,
+                "shuffle_mapcompass": "startwith"
             }
-        }, 
+        },
         {
             "Value": 3,
             "Cost": 5,
             "Weight": 0.75,
             "Implies": {
-                "shuffle_mapcompass": false,
+                "shuffle_mapcompass": "startwith"
             }
         },
         {
@@ -134,7 +134,7 @@
             "Cost": 5,
             "Weight": 1,
             "Implies": {
-                "shuffle_mapcompass": false,
+                "shuffle_mapcompass": "startwith"
             }
         },
         {
@@ -142,7 +142,7 @@
             "Cost": 5,
             "Weight": 1,
             "Implies": {
-                "shuffle_mapcompass": false,
+                "shuffle_mapcompass": "startwith"
             }
         },
         {
@@ -150,7 +150,7 @@
             "Cost": 5,
             "Weight": 1,
             "Implies": {
-                "shuffle_mapcompass": false,
+                "shuffle_mapcompass": "startwith"
             }
         },
         {
@@ -158,7 +158,7 @@
             "Cost": 5,
             "Weight": 0.75,
             "Implies": {
-                "shuffle_mapcompass": false,
+                "shuffle_mapcompass": "startwith"
             }
         },
         {
@@ -166,7 +166,7 @@
             "Cost": 6,
             "Weight": 0.5,
             "Implies": {
-                "shuffle_mapcompass": false,
+                "shuffle_mapcompass": "startwith"
             }
         },
         {
@@ -174,11 +174,11 @@
             "Cost": 7,
             "Weight": 0.25,
             "Implies": {
-                "shuffle_mapcompass": false,
+                "shuffle_mapcompass": "startwith"
             }
         }
     ],
-     "bridge_tokens": [
+    "bridge_tokens": [
         {
             "Value": 10,
             "Cost": 6,
@@ -188,7 +188,7 @@
             "Value": 20,
             "Cost": 6,
             "Weight": 0.75
-        }, 
+        },
         {
             "Value": 30,
             "Cost": 6,
@@ -203,7 +203,7 @@
             "Value": 50,
             "Cost": 6,
             "Weight": 0.5
-        },
+        }
     ],
     "correct_chest_sizes": [
         {
@@ -505,7 +505,7 @@
             "Value": "dungeon",
             "Cost": 0,
             "Weight": 0
-        },        
+        },
         {
             "Value": "overworld",
             "Cost": 8,
@@ -675,11 +675,11 @@
         {
             "Value": "any",
             "Cost": 5,
-            "Weight": 1, 
+            "Weight": 1,
             "Implies": {
                 "free_zelda": false
             }
-        },        
+        },
         {
             "Value": "dungeon",
             "Cost": 5,
@@ -793,8 +793,8 @@
             "Weight": 0
         }
     ],
-    "triforce_goal_per_world" : [
-         {
+    "triforce_goal_per_world": [
+        {
             "Value": 15,
             "Cost": 6,
             "Weight": 0.2,
@@ -919,7 +919,7 @@
             "Cost": 2,
             "Weight": 0.75,
             "Implies": {
-                "enhance_map_compass": true,
+                "enhance_map_compass": true
             }
         },
         {
@@ -953,8 +953,8 @@
             "Implies": {
                 "enhance_map_compass": true
             }
-        },
-    ], 
+        }
+    ],
     "mq_dungeons": [
         {
             "Value": 0,
@@ -966,5 +966,5 @@
             "Cost": 4,
             "Weight": 0.25
         }
-    ],
+    ]
 }
