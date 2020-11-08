@@ -30,7 +30,7 @@
             {
                 "Value": "dungeons",
                 "Title": "dungeons",
-                "Description": "The bridge to Ganon's Castle appears after all six medaillons and all three Spiritual Stones are obtained."
+                "Description": "The bridge to Ganon's Castle appears after a set number of medaillons and/or Spiritual Stones are obtained."
             },
             {
                 "Value": "open",
@@ -46,6 +46,11 @@
                 "Value": "vanilla",
                 "Title": "vanilla",
                 "Description": "The bridge to Ganon's Castle appears after the Shadow Medaillon, Spirit Medaillon and Light Arrows are obtained."
+            },
+            {
+                "Value": "tokens",
+                "Title": "tokens",
+                "Description": "The bridge to Ganon's Castle appears after a set amount of Gold Skulltulas Tokens are obtained."
             }
         ]
     },
@@ -73,6 +78,11 @@
         "Title": "Rainbow Bridge medallions requirement",
         "Values": [
             {
+                "Value": 1,
+                "Title": "1",
+                "Description": "The bridge to Ganon's Castle appears after any one medallion is obtained."
+            },
+            {
                 "Value": 2,
                 "Title": "2",
                 "Description": "The bridge to Ganon's Castle appears after any two medallions are obtained."
@@ -83,9 +93,129 @@
                 "Description": "The bridge to Ganon's Castle appears after any three medallions are obtained."
             },
             {
+                "Value": 4,
+                "Title": "4",
+                "Description": "The bridge to Ganon's Castle appears after any four medallions are obtained."
+            },
+            {
+                "Value": 5,
+                "Title": "5",
+                "Description": "The bridge to Ganon's Castle appears after any five medallions are obtained."
+            },
+            {
                 "Value": 6,
                 "Title": "6",
                 "Description": "The bridge to Ganon's Castle appears after all medallions are obtained."
+            }
+        ]
+    },
+    "bridge_rewards": {
+        "Title": "Rainbow Bridge rewards requirement",
+        "Values": [
+            {
+                "Value": 1,
+                "Title": "1",
+                "Description": "The bridge to Ganon's Castle appears after any one medallion or Spiritual Stone is obtained."
+            },
+            {
+                "Value": 2,
+                "Title": "2",
+                "Description": "The bridge to Ganon's Castle appears after any two rewards out of all nine medaillions and Spiritual Stones are obtained."
+            },
+            {
+                "Value": 3,
+                "Title": "3",
+                "Description": "The bridge to Ganon's Castle appears after any three rewards out of all nine medaillions and Spiritual Stones are obtained."
+            },
+            {
+                "Value": 4,
+                "Title": "4",
+                "Description": "The bridge to Ganon's Castle appears after any four rewards out of all nine medaillions and Spiritual Stones are obtained."
+            },
+            {
+                "Value": 5,
+                "Title": "5",
+                "Description": "The bridge to Ganon's Castle appears after any five rewards out of all nine medaillions and Spiritual Stones are obtained."
+            },
+            {
+                "Value": 6,
+                "Title": "6",
+                "Description": "The bridge to Ganon's Castle appears after any six rewards out of all nine medaillions and Spiritual Stones are obtained."
+            },
+            {
+                "Value": 7,
+                "Title": "7",
+                "Description": "The bridge to Ganon's Castle appears after any seven rewards out of all nine medaillions and Spiritual Stones are obtained."
+            },
+            {
+                "Value": 8,
+                "Title": "8",
+                "Description": "The bridge to Ganon's Castle appears after any eight rewards out of all nine medaillions and Spiritual Stones are obtained."
+            },
+            {
+                "Value": 9,
+                "Title": "9",
+                "Description": "The bridge to Ganon's Castle appears after of all nine medaillions and Spiritual Stones are obtained."
+            }
+        ]
+    },
+    "bridge_tokens": {
+        "Title": "Rainbow Bridge tokens requirement",
+        "Values": [
+            {
+                "Value": 10,
+                "Title": "10",
+                "Description": "The bridge to Ganon's Castle appears after 10 Gold Skulltulas Tokens are obtained."
+            },
+            {
+                "Value": 20,
+                "Title": "20",
+                "Description": "The bridge to Ganon's Castle appears after 20 Gold Skulltulas Tokens are obtained."
+            },
+            {
+                "Value": 30,
+                "Title": "30",
+                "Description": "The bridge to Ganon's Castle appears after 30 Gold Skulltulas Tokens are obtained."
+            },
+            {
+                "Value": 40,
+                "Title": "40",
+                "Description": "The bridge to Ganon's Castle appears after 40 Gold Skulltulas Tokens are obtained."
+            },
+            {
+                "Value": 50,
+                "Title": "50",
+                "Description": "The bridge to Ganon's Castle appears after 50 Gold Skulltulas Tokens are obtained."
+            }
+        ]
+    },
+    "triforce_goal_per_world": {
+        "Title": "Required Triforce Pieces",
+        "Values": [
+            {
+                "Value": 15,
+                "Title": "15",
+                "Description": "Find 15 Triforce Pieces to finish the game."
+            },
+            {
+                "Value": 30,
+                "Title": "30",
+                "Description": "Find 30 Triforce Pieces to finish the game."
+            },
+            {
+                "Value": 45,
+                "Title": "45",
+                "Description": "Find 45 Triforce Pieces to finish the game."
+            },
+            {
+                "Value": 60,
+                "Title": "60",
+                "Description": "Find 60 Triforce Pieces to finish the game."
+            },
+            {
+                "Value": 75,
+                "Title": "75",
+                "Description": "Find 75 Triforce Pieces to finish the game."
             }
         ]
     },
@@ -134,18 +264,38 @@
             }
         ]
     },
-    "entrance_shuffle": {
-        "Title": "Entrance shuffle",
+    "shuffle_interior_entrances": {
+        "Title": "Interior Entrance shuffle",
         "Values": [
             {
-                "Value": "dungeons",
-                "Title": "dungeons",
-                "Description": "Dungeon entrances are shuffled with eachother, including Bottom of the Well, Ice Cavern, and Gerudo Training Grounds."
+                "Value": "simple",
+                "Title": "simple indoors",
+                "Description": "Shuffle Great Fairies and Houses entrances except Temple of Time, Link's House, Windmill and Kakariko Potion Shop."
             },
             {
-                "Value": "simple-indoors",
-                "Title": "simple indoors",
-                "Description": "Shuffle dungeon entrances along with simple Grotto and Interior entrances (i.e. most Houses and Great Fairies)."
+                "Value": "all",
+                "Title": "all",
+                "Description": "Shuffle Great Fairies and all Houses entrances."
+            }
+        ]
+    },
+    "shuffle_dungeon_entrances": {
+        "Title": "Dungeon Entrance shuffle",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "yes",
+                "Description": "Dungeon entrances are shuffled with eachother, including Bottom of the Well, Ice Cavern, and Gerudo Training Grounds."
+            }
+        ]
+    },
+    "shuffle_grottos_entrances": {
+        "Title": "Grotto Entrance shuffle",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "yes",
+                "Description": "Grotto entrances are shuffled with eachother, including all graves."
             }
         ]
     },
@@ -273,6 +423,16 @@
                 "Description": "Boss Keys are removed and all Boss doors are unlocked."
             },
             {
+                "Value": "overworld",
+                "Title": "overworld",
+                "Description": "Boss Keys will appear in the overworld."
+            },
+            {
+                "Value": "any_dungeon",
+                "Title": "any dungeon",
+                "Description": "Boss Keys will appear in dungeons only."
+            },
+            {
                 "Value": "keysanity",
                 "Title": "anywhere",
                 "Description": "Boss Keys can appear anywhere in the world."
@@ -316,6 +476,16 @@
                 "Value": "dungeon",
                 "Title": "dungeon",
                 "Description": "Ganon's Castle Boss Key can only appear inside Ganon's Castle."
+            },
+            {
+                "Value": "overworld",
+                "Title": "overworld",
+                "Description": "Ganon's Castle Boss Key can only appear in the overworld."
+            },
+            {
+                "Value": "any_dungeon",
+                "Title": "Any dungeon",
+                "Description": "Ganon's Castle Boss Key can only appear in a dungeon."
             },
             {
                 "Value": "keysanity",
@@ -368,6 +538,16 @@
                 "Description": "Small Keys are removed and all locked doors in dungeons will be unlocked, except Boss Door."
             },
             {
+                "Value": "overworld",
+                "Title": "overworld",
+                "Description": "Small Keys will only appear in the overworld."
+            },
+            {
+                "Value": "any_dungeon",
+                "Title": "Any dungeon",
+                "Description": "Small Keys will only appear in dungeons."
+            },
+            {
                 "Value": "keysanity",
                 "Title": "anywhere",
                 "Description": "Small Keys can appear anywhere in the world."
@@ -378,9 +558,14 @@
         "Title": "Shuffle Songs with Items",
         "Values": [
             {
-                "Value": true,
-                "Title": "yes",
+                "Value": "any",
+                "Title": "Anywhere",
                 "Description": "Shuffles the songs into the rest of the item pool."
+            },
+            {
+                "Value": "dungeon",
+                "Title": "Dungeon rewards",
+                "Description": "Songs appear at the end of dungeons, and an additional one at Zelda's Lullaby location."
             }
         ]
     },
@@ -455,7 +640,7 @@
             {
                 "Value": true,
                 "Title": "yes",
-                "Description": "Pieces of the Triforce have been scattered around the world. Find 20 of them to finish the game!"
+                "Description": "Pieces of the Triforce have been scattered around the world. Find the required amount to finish the game!"
             }
         ]
     },
@@ -521,6 +706,76 @@
                 "Value": 2,
                 "Title": "2",
                 "Description": "Two random trials in Ganon's Castle are active and need to be completed to reach Ganon's Tower."
+            }
+        ]
+    },
+    "owl_drops": {
+        "Title": "Owl Drops",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "yes",
+                "Description": "Randomize where Kaepora Gaebora (the Owl) drops you at when you talk to him at Lake Hylia or at the top of Death Mountain Trail."
+            }
+        ]
+    },
+    "warp_songs": {
+        "Title": "Warp Songs",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "yes",
+                "Description": "Randomize where each of the 6 warp songs leads to."
+            }
+        ]
+    },
+    "spawn_positions": {
+        "Title": "Warp Songs",
+        "Values": [
+            {
+                "Value": false,
+                "Title": "no",
+                "Description": "Child link starts at his house and Adult Link starts at Temple of Time when loading a save in the overworld."
+            }
+        ]
+    },
+    "shuffle_mapcompass": {
+        "Title": "Shuffles Maps and Compasses",
+        "Values": [
+            {
+                "Value": "vanilla",
+                "Title": "vanilla",
+                "Description": "Maps and Compasses are in their vanilla location. Maps will tell if a dungeon is Master Quest, Compasses will tell what medaillion or Stone is within."
+            },
+            {
+                "Value": "dungeon",
+                "Title": "dungeon",
+                "Description": "Maps and Compasses are shuffled in their dungeon. Maps will tell if a dungeon is Master Quest, Compasses will tell what medaillion or Stone is within."
+            },
+            {
+                "Value": "overworld",
+                "Title": "overworld",
+                "Description": "Maps and Compasses are shuffled in the overworld. Maps will tell if a dungeon is Master Quest, Compasses will tell what medaillion or Stone is within."
+            },
+            {
+                "Value": "any_dungeon",
+                "Title": "Any dungeon",
+                "Description": "Maps and Compasses are shuffled in all dungeons. Maps will tell if a dungeon is Master Quest, Compasses will tell what medaillion or Stone is within."
+            },
+            {
+                "Value": "keysanity",
+                "Title": "Anywhere",
+                "Description": "Maps and Compasses are shuffled anywhere. Maps will tell if a dungeon is Master Quest, Compasses will tell what medaillion or Stone is within."
+            }
+        ]
+    },
+    "mq_dungeons": {
+        "Title": "Master Quest Dungeons",
+        "Values": [
+            {
+                "Value": "1",
+                "Title": "1",
+                "Description": "One dungeon is the Master Quest version."
             }
         ]
     }

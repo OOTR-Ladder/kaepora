@@ -46,12 +46,22 @@
                 "Value": "vanilla",
                 "Title": "Vanille",
                 "Description": "Le pont donnant accès au château de Ganon apparait une fois que le médaillon de l'Ombre, de l'Esprit, et les Flèches de Lumière aient été obtenus."
+            },
+            {
+                "Value": "tokens",
+                "Title": "tokens",
+                "Description": "Le pont donnant accès au château de Ganon apparait après l'obtention d'un nombre prédéfini de Skulltulas d'Or tuées."
             }
         ]
     },
     "bridge_medallions": {
         "Title": "Médaillions pour le Pont Arc-en-Ciel",
         "Values": [
+            {
+                "Value": 1,
+                "Title": "1",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention d'un médaillion."
+            },
             {
                 "Value": 2,
                 "Title": "2",
@@ -63,6 +73,16 @@
                 "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de trois médaillions."
             },
             {
+                "Value": 4,
+                "Title": "4",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de quatre médaillions."
+            },
+            {
+                "Value": 5,
+                "Title": "5",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de cinq médaillions."
+            },
+            {
                 "Value": 6,
                 "Title": "6",
                 "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de tous les médaillions."
@@ -70,7 +90,7 @@
         ]
     },
     "bridge_stones": {
-        "Title": "Pierres Ancestraces pour le Pont Arc-en-Ciel",
+        "Title": "Pierres Ancestrales pour le Pont Arc-en-Ciel",
         "Values": [
             {
                 "Value": 1,
@@ -86,6 +106,116 @@
                 "Value": 3,
                 "Title": "3",
                 "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de trois pierres ancestrales."
+            }
+        ]
+    },
+    "bridge_rewards": {
+        "Title": "Pierres ou Médaillions pour le Pont Arc-en-Ciel",
+        "Values": [
+            {
+                "Value": 1,
+                "Title": "1",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention d'une pierre ancestrale ou médaillion."
+            },
+            {
+                "Value": 2,
+                "Title": "2",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de deux pierres ancestrales ou médaillions."
+            },
+            {
+                "Value": 3,
+                "Title": "3",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de trois pierres ancestrales ou médaillions."
+            },
+            {
+                "Value": 4,
+                "Title": "4",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de quatre pierres ancestrales ou médaillions."
+            },
+            {
+                "Value": 5,
+                "Title": "5",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de cinq pierres ancestrales ou médaillions."
+            },
+            {
+                "Value": 6,
+                "Title": "6",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de six pierres ancestrales ou médaillions."
+            },
+            {
+                "Value": 7,
+                "Title": "7",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de sept pierres ancestrales ou médaillions."
+            },
+            {
+                "Value": 8,
+                "Title": "8",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention de huit pierres ancestrales ou médaillions."
+            },
+            {
+                "Value": 9,
+                "Title": "9",
+                "Description": "Le pont pour aller au château de Ganon apparaît après l'obtention des 3 pierres ancestrales et des 6 médaillions."
+            }
+        ]
+    },
+    "bridge_tokens": {
+        "Title": "Skulltulas d'Or pour le pont Arc-en-Ciel",
+        "Values": [
+            {
+                "Value": 10,
+                "Title": "10",
+                "Description": "Le pont pour aller au château de Ganon apparaît une fois 10 Skulltula d'Or tuées."
+            },
+            {
+                "Value": 20,
+                "Title": "20",
+                "Description": "Le pont pour aller au château de Ganon apparaît une fois 20 Skulltula d'Or tuées."
+            },
+            {
+                "Value": 30,
+                "Title": "30",
+                "Description": "Le pont pour aller au château de Ganon apparaît une fois 30 Skulltula d'Or tuées."
+            },
+            {
+                "Value": 40,
+                "Title": "40",
+                "Description": "Le pont pour aller au château de Ganon apparaît une fois 40 Skulltula d'Or tuées."
+            },
+            {
+                "Value": 50,
+                "Title": "50",
+                "Description": "Le pont pour aller au château de Ganon apparaît une fois 50 Skulltula d'Or tuées."
+            }
+        ]
+    },
+    "triforce_goal_per_world": {
+        "Title": "Morceaux de Triforce",
+        "Values": [
+            {
+                "Value": 15,
+                "Title": "15",
+                "Description": "15 morceaux de Triforce sont nécessaires pour finir le jeu."
+            },
+            {
+                "Value": 30,
+                "Title": "30",
+                "Description": "30 morceaux de Triforce sont nécessaires pour finir le jeu."
+            },
+            {
+                "Value": 45,
+                "Title": "45",
+                "Description": "45 morceaux de Triforce sont nécessaires pour finir le jeu."
+            },
+            {
+                "Value": 60,
+                "Title": "60",
+                "Description": "60 morceaux de Triforce sont nécessaires pour finir le jeu."
+            },
+            {
+                "Value": 75,
+                "Title": "75",
+                "Description": "75 morceaux de Triforce sont nécessaires pour finir le jeu."
             }
         ]
     },
@@ -129,18 +259,38 @@
             }
         ]
     },
-    "entrance_shuffle": {
-        "Title": "Entrées aléatoires",
+    "shuffle_interior_entrances": {
+        "Title": "Entrées d'intérieur aléatoires",
         "Values": [
             {
-                "Value": "dungeons",
-                "Title": "Donjons",
-                "Description": "Les entrées des donjons sont mélangées entre elles, y compris le Puits, la Caverne Polaire et le Gymnase Gerudo."
+                "Value": "simple",
+                "Title": "Simple",
+                "Description": "Les fontaines de Grande Fées ainsi que les entrées de maisons sont mélangées entre elles, excepté le Temple du Temps, la maison de Link, le moulin et la boutique de potions du Village Cocorico."
             },
             {
-                "Value": "simple-indoors",
-                "Title": "Intérieurs simplifié",
-                "Description": "Les entrées des donjons sont mélangées entre elles. Les entrées de grottes sont mélangées entre elles. La plupart des maisons ainsi que les fontaines des grandes fées sont mélangées entre elles."
+                "Value": "all",
+                "Title": "Toutes",
+                "Description": "Les fontaines de Grande Fées ainsi que toutes les entrées de maisons sont mélangées entre elles."
+            }
+        ]
+    },
+    "shuffle_dungeon_entrances": {
+        "Title": "Entrées de Donjons aléatoires",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "vrai",
+                "Description": "Les entrées des donjons sont mélangées entre elles, y compris le Puits, la Caverne Polaire et le Gymnase Gerudo."
+            }
+        ]
+    },
+    "shuffle_grottos_entrances": {
+        "Title": "Grottes aléatoires",
+        "Values": [
+            {
+                "Value": true,
+                "Title": "vrai",
+                "Description": "Les grottes sont mélangées entre elles, y compris les tombes du Cimetière."
             }
         ]
     },
@@ -268,9 +418,19 @@
                 "Description": "Il n'y a pas de clefs de Boss et les portes vers les Boss sont toujours ouvertes."
             },
             {
+                "Value": "overworld",
+                "Title": "Hors donjons",
+                "Description": "Les clefs de Boss peuvent être n'importe où hormis les donjons."
+            },
+            {
+                "Value": "any_dungeon",
+                "Title": "Donjons seulement",
+                "Description": "Les clefs de Boss ne peuvent être que dans les donjons."
+            },
+            {
                 "Value": "keysanity",
                 "Title": "Partout",
-                "Description": "Les clefs de Boss peuvent être n'importe où des objets sont obtenables"
+                "Description": "Les clefs de Boss peuvent être n'importe où des objets sont obtenables."
             }
         ]
     },
@@ -311,6 +471,16 @@
                 "Value": "dungeon",
                 "Title": "Donjon",
                 "Description": "La Grande clef du Château de Ganon peut être n'importe où dans le château de Ganon."
+            },
+            {
+                "Value": "overworld",
+                "Title": "Hors donjons",
+                "Description": "La Grande clef du Château de Ganon peut être n'importe où hormis les donjons."
+            },
+            {
+                "Value": "any_dungeon",
+                "Title": "Donjons seulement",
+                "Description": "La Grande clef du Château de Ganon ne peut être que dans les donjons."
             },
             {
                 "Value": "keysanity",
@@ -373,6 +543,16 @@
                 "Description": "Les petites clefs sont retirées, et toutes les portes des donjons sont ouvertes, excepté la porte du Boss."
             },
             {
+                "Value": "overworld",
+                "Title": "Hors donjons",
+                "Description": "Les petites clefs peuvent être n'importe où hormis les donjons."
+            },
+            {
+                "Value": "any_dungeon",
+                "Title": "Donjons seulement",
+                "Description": "Les petites clefs ne peuvent être que dans les donjons."
+            },
+            {
                 "Value": "keysanity",
                 "Title": "Partout",
                 "Description": "Les petites clefs peuvent être n'importe où des objets sont obtenables."
@@ -386,6 +566,11 @@
                 "Value": true,
                 "Title": "Oui",
                 "Description": "Les chants peuvent être n'importe où des objets sont obtenables."
+            },
+            {
+                "Value": "dungeon",
+                "Title": "Récompenses de donjons",
+                "Description": "Les chants sont placés à la fin des donjons, excepté un sur l'emplacement de la Berceuse de Zelda."
             }
         ]
     },
@@ -516,6 +701,46 @@
                 "Value": 2,
                 "Title": "2",
                 "Description": "Deux des épreuves à l'intérieur du Château de Ganon sont activées et doivent être terminées pour ouvrir l'accès à la tour de Ganon."
+            }
+        ]
+    },
+    "shuffle_mapcompass": {
+        "Title": "Cartes et Boussoles aléatoires",
+        "Values": [
+            {
+                "Value": "vanilla",
+                "Title": "Vanille",
+                "Description": "Les cartes et boussoles sont à leur endroit d'origine. Les cartes disent si le donjon est en version Master Quest, les boussoles le médaillion ou la pierre ancestrale correspondant au donjon."
+            },
+            {
+                "Value": "dungeon",
+                "Title": "Donjon",
+                "Description": "Les cartes et boussoles sont aléatoires dans leur donjon. Les cartes disent si le donjon est en version Master Quest, les boussoles le médaillion ou la pierre ancestrale correspondant au donjon."
+            },
+            {
+                "Value": "overworld",
+                "Title": "Hors donjons",
+                "Description": "Les cartes et boussoles sont hors des donjons. Les cartes disent si le donjon est en version Master Quest, les boussoles le médaillion ou la pierre ancestrale correspondant au donjon."
+            },
+            {
+                "Value": "any_dungeon",
+                "Title": "Donjons",
+                "Description": "Les cartes et boussoles sont seulement dans les donjons. Les cartes disent si le donjon est en version Master Quest, les boussoles le médaillion ou la pierre ancestrale correspondant au donjon."
+            },
+            {
+                "Value": "keysanity",
+                "Title": "Partout",
+                "Description": "Les cartes et boussoles peuvent être n'importe où. Les cartes disent si le donjon est en version Master Quest, les boussoles le médaillion ou la pierre ancestrale correspondant au donjon."
+            }
+        ]
+    },
+    "mq_dungeons": {
+        "Title": "Donjons Master Quest",
+        "Values": [
+            {
+                "Value": "1",
+                "Title": "1",
+                "Description": "Un donjon est en version Master Quest."
             }
         ]
     }
